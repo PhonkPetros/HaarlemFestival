@@ -3,12 +3,14 @@ session_start();
 
 use controllers\home;
 use controllers\logincontroller;
+use controllers\Logoutcontroller;
 use controllers\registercontroller;
 
 
 require_once __DIR__ . '/../controllers/home.php';
 require_once __DIR__ . '/../controllers/registercontroller.php';
 require_once __DIR__ . '/../controllers/logincontroller.php';
+require_once __DIR__ . '/../controllers/logoutcontroller.php';
 
 
 $request = $_SERVER['REQUEST_URI'];
@@ -34,7 +36,11 @@ switch ($request) {
         } elseif ($method === 'POST') {
             $controller->registerAction();
         }
-        break;    
+        break;
+    case '/logout':
+        $logoutController = new Logoutcontroller();
+        $logoutController->logout();
+        break;      
     default:
         http_response_code(404);
         require __DIR__ . '/views/404.php';

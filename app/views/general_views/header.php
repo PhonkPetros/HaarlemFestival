@@ -45,10 +45,10 @@
                     $role = $_SESSION['role'];
                     if ($role == 'admin') {
                         echo ' <button class="btn btn-outline-success ms-2" type="button" onclick="location.href=\'dashboard\'">Dashboard</button> ';
-                        echo ' <button class="btn btn-danger ms-2" type="button" onclick="location.href=\'logout\'">Logout</button> ';
+                        echo ' <button class="btn btn-danger ms-2" type="button" onclick="confirmLogout()">Logout</button> ';
                     } elseif ($role == 'customer') {
                         echo ' <button class="btn btn-outline-success ms-2" type="button" onclick="location.href=\'Account\'">Account</button> ';
-                        echo ' <button class="btn btn-danger ms-2" type="button" onclick="location.href=\'logout\'">Logout</button> ';
+                        echo ' <button class="btn btn-danger ms-2" type="button" onclick="confirmLogout()">Logout</button> ';
                     } else {
                         echo ' <button class="btn btn-outline-success ms-2" type="button" onclick="location.href=\'login\'">Login</button> ';
                     }
@@ -63,6 +63,16 @@
       
     </div>
 </main>
+
+<script type="text/javascript">
+    function confirmLogout() {
+        var logout = confirm("Are you sure you want to log out?");
+        if (logout) {
+            window.location.href = '/logout'; 
+        }
+    }
+</script>
+
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-2C9a4f1e1e3c3fgbbH4s3Y7LHOTqP9ZQ8g+6A5V1WxJqQ9r0TKx07FQKu5nKvCZ/p" crossorigin="anonymous"></script>
 </body>

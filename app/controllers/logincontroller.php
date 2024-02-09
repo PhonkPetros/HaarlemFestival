@@ -35,13 +35,18 @@ class logincontroller
     {
         $user = $this->loginService->login($username, $password);
         if ($user) {
-            $_SESSION['user'] = $user; 
-            $_SESSION['role'] = $user->role; 
+            // Converting user object to array for session storage
+            $_SESSION['user'] = [
+                'userID' => $user->userID,
+                'username' => $user->username,
+                'role' => $user->role,
+                'email' => $user->email,
+            ];
+            $_SESSION['role'] = $user->role;
             header('Location: /');
             exit();
         } else {
             return false;
         }
     }
-    
 }
