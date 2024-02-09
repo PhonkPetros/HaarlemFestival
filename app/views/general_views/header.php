@@ -39,7 +39,23 @@
                         </ul>
                     </li>
                 </ul>
-                <button class="btn btn-outline-success ms-2" type="button" onclick="location.href='login'">Login</button> 
+               
+                <?php
+                  if (isset($_SESSION['role'])) {
+                    $role = $_SESSION['role'];
+                    if ($role == 'admin') {
+                        echo ' <button class="btn btn-outline-success ms-2" type="button" onclick="location.href=\'dashboard\'">Dashboard</button> ';
+                        echo ' <button class="btn btn-danger ms-2" type="button" onclick="location.href=\'logout\'">Logout</button> ';
+                    } elseif ($role == 'customer') {
+                        echo ' <button class="btn btn-outline-success ms-2" type="button" onclick="location.href=\'Account\'">Account</button> ';
+                        echo ' <button class="btn btn-danger ms-2" type="button" onclick="location.href=\'logout\'">Logout</button> ';
+                    } else {
+                        echo ' <button class="btn btn-outline-success ms-2" type="button" onclick="location.href=\'login\'">Login</button> ';
+                    }
+                } else {
+                    echo ' <button class="btn btn-outline-success ms-2" type="button" onclick="location.href=\'login\'">Login</button> ';
+                }
+                ?>
             </div>
         </div>
     </nav>
