@@ -1,9 +1,9 @@
 <?php
-namespace App\Repositories;
+namespace repositories;
 
 use PDO;
 
-class Repository
+class repository
 {
     protected $connection;
 
