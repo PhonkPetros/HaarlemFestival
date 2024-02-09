@@ -16,7 +16,7 @@
         <br>
         <h2>Please Login</h2>
         <br>
-        <form method="post" action="/loginAction">
+        <form method="POST" action="/login">
                 <div class="mb-3">
                     <label for="exampleInputEmail1" class="form-label">Username</label>
                     <input class="form-control" name="username" id="exampleInputEmail1" aria-describedby="emailHelp" required>
