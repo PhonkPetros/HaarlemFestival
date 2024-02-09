@@ -1,10 +1,13 @@
 <?php
 
 namespace repositories;
+use config\dbconfig;
 use PDO;
 
-class registerrepository extends Repository {
+require_once __DIR__ . '/../config/dbconfig.php';
 
 
+class registerrepository extends dbconfig {
+    
 
 }

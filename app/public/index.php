@@ -18,6 +18,12 @@ switch ($request) {
         $controller = new logincontroller();
         $controller->show();
         break;
+    case '/loginAction':
+        require_once '../controllers/logincontroller.php';
+        $controller = new logincontroller();
+        $controller->loginAction();
+        break;    
+        
     case '/register':
         require_once '../controllers/registercontroller.php';
         $controller = new registercontroller();
