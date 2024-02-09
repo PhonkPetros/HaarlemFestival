@@ -16,7 +16,7 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNavDropdown">
-                <ul class="navbar-nav ms-auto mb-2 mb-lg-0"> <!-- Changed here, from me-auto to ms-auto -->
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0"> 
                     <li class="nav-item">
                         <a class="nav-link" href="#">
                             <img src="./img/dutch.png" alt="NL" style="width: 20px;"> NL
@@ -36,16 +36,15 @@
                             <li><a class="dropdown-item" href="#">Music</a></li>
                             <li><a class="dropdown-item" href="#">Yummy!</a></li>
                             <li><a class="dropdown-item" href="#">Strolling Through History</a></li>
-                            <li><a class="dropdown-item" href="#">Art in the Open</a></li> <!-- Added fourth item -->
                         </ul>
                     </li>
                 </ul>
-                <button class="btn btn-outline-success ms-2" type="button">Login</button> <!-- Added ms-2 class for spacing -->
+                <button class="btn btn-outline-success ms-2" type="button" onclick="location.href='login'">Login</button> 
             </div>
         </div>
     </nav>
     <div class="container">
-        <!-- Content goes here -->
+      
     </div>
 </main>
 
