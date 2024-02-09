@@ -28,7 +28,6 @@ class registercontroller
         
             if (!$this->registerService->username_exists($username)) {
                 $this->registerService->register($username, $password, $email);
-                header("Location: /login");
                 exit;
             } else {
                echo "Error occurred when creating user";
