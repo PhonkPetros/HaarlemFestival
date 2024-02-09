@@ -26,9 +26,10 @@ class registerrepository extends dbconfig {
     
     public function registerUser($username, $password, $email) {
         if (!$this->usernameExists($username)) {
-            $user_ID = 2; // Also, ensure this is supposed to be static or if it should be dynamically set
+            $user_ID = 7;
             $role = "customer";
             $registration_date = new DateTime();
+            $formatted_date = $registration_date->format('Y-m-d H:i:s');
             $hashed_password = password_hash($password, PASSWORD_DEFAULT);
             
             try {
@@ -37,8 +38,8 @@ class registerrepository extends dbconfig {
                 $stmt->bindParam(':username', $username, PDO::PARAM_STR);
                 $stmt->bindParam(':password', $hashed_password, PDO::PARAM_STR);
                 $stmt->bindParam(':role', $role, PDO::PARAM_STR);
-                $stmt->bindParam(':user_ID', $user_ID, PDO::PARAM_INT); // Changed to :user_ID to match the SQL placeholder
-                $stmt->bindParam(':registration_date', $registration_date->format('Y-m-d H:i:s'), PDO::PARAM_STR);
+                $stmt->bindParam(':user_ID', $user_ID, PDO::PARAM_INT);
+                $stmt->bindParam(':registration_date', $formatted_date, PDO::PARAM_STR);
                 $stmt->execute();
                 
                 return true;
@@ -51,5 +52,6 @@ class registerrepository extends dbconfig {
             return false;
         }
     }
+    
     
 }

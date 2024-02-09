@@ -13,7 +13,7 @@
     <div class="d-flex flex-column justify-content-center align-items-center " style="min-height: 100vh;">
         <h2>Please Register</h2>
         <br>
-        <form method="post" action="/registerAction">
+        <form method="post" action="/register">
             <div class="mb-3">
                 <label for="username" class="form-label">Username</label>
                 <input type="text" class="form-control" name="username" id="username" required>

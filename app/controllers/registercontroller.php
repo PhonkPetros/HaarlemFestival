@@ -2,6 +2,7 @@
 
 namespace controllers;
 use model\user;
+
 use services\registerservice;
 
 require_once __DIR__ . '/../services/registerservice.php';
@@ -19,7 +20,6 @@ class registercontroller
     {
         require_once '../views/register.php';
     }
-
     public function registerAction() {
         if ($_SERVER['REQUEST_METHOD'] == "POST") {
             $username = htmlspecialchars($_POST['username']);
@@ -28,12 +28,13 @@ class registercontroller
         
             if (!$this->registerService->username_exists($username)) {
                 $this->registerService->register($username, $password, $email);
-                header("Location: /login");
+                header('Location: /login'); 
                 exit;
             } else {
-               echo "Error occurred when creating user";
+                echo "Error occurred when creating user";
             }
         }
     }
+    
 
 }
