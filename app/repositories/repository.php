@@ -3,17 +3,17 @@ namespace repositories;
 
 use PDO;
 
-class repository
-{
+class Repository {
     protected $connection;
 
-    function __construct()
-    {
-        require __DIR__ . '/../config/dbconfig.php';
+    function __construct() {
+        $server = "tcp:haarlem.database.windows.net,1433";
+        $database = "HaarlemFestival";
+        $username = "festivalAdmin";
+        $password = "Admin@123";
 
         try {
-            $this->connection = new PDO("$type:host=$servername;dbname=$database", $username, $password);
-            // set the PDO error mode to exception
+            $this->connection = new PDO("sqlsrv:Server=$server;Database=$database", $username, $password);
             $this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } catch (PDOException $e) {
             echo "Connection failed: " . $e->getMessage();
