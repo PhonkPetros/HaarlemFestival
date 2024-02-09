@@ -23,12 +23,16 @@ switch ($request) {
         $controller = new logincontroller();
         $controller->loginAction();
         break;    
-        
     case '/register':
         require_once '../controllers/registercontroller.php';
         $controller = new registercontroller();
         $controller->show();
-        break;         
+        break;
+    case '/registerAction':
+        require_once '../controllers/registercontroller.php';
+        $controller = new registercontroller();
+        $controller->registerAction();
+        break;            
     default:
         http_response_code(404);
         require __DIR__ . '/views/404.php';
