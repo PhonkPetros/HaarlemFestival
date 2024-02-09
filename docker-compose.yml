@@ -14,10 +14,8 @@ services:
             dockerfile: PHP.Dockerfile
         volumes:
             - ./app:/app
-        environment:
-            - CHATGPT_API_KEY=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
     mysql:
-        image: mariadb:latest
+        image: mysql:latest
         environment:
             MYSQL_ROOT_PASSWORD: 'secret123'
             MYSQL_USER: 'developer'
