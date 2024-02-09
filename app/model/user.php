@@ -6,7 +6,7 @@ use DateTime;
 class user
 {
     public int $userID; 
-    public int $ticketID;
+    public ?int $ticketID; 
     public string $username;
     public string $password; 
     public string $role;

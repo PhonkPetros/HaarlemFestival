@@ -12,7 +12,7 @@ class loginService
     }
 
     public function login($username, $password) {
-        $this->loginrepository->login($username, $password);
+        return $this->loginrepository->login($username, $password);
     }
 
 }

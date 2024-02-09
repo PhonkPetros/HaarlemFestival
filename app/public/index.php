@@ -1,12 +1,15 @@
 <?php
+session_start(); 
 
 use controllers\home;
 use controllers\logincontroller;
 use controllers\registercontroller;
 
+
 require_once __DIR__ . '/../controllers/home.php';
 require_once __DIR__ . '/../controllers/registercontroller.php';
 require_once __DIR__ . '/../controllers/logincontroller.php';
+
 
 $request = $_SERVER['REQUEST_URI'];
 $method = $_SERVER['REQUEST_METHOD']; 
@@ -37,4 +40,3 @@ switch ($request) {
         require __DIR__ . '/views/404.php';
         break;
 }
-

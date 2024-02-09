@@ -26,7 +26,7 @@ class registerrepository extends dbconfig {
     
     public function registerUser($username, $password, $email) {
         if (!$this->usernameExists($username)) {
-            $user_ID = 5;
+            $user_ID = 7;
             $role = "customer";
             $registration_date = new DateTime();
             $formatted_date = $registration_date->format('Y-m-d H:i:s');
