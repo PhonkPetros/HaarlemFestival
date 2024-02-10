@@ -1,8 +1,9 @@
 <?php
+
 namespace controllers;
+
 use services\loginService;
 require_once __DIR__ . '/../services/loginservice.php';
-
 
 class logincontroller
 {
@@ -23,19 +24,18 @@ class logincontroller
             $username = htmlspecialchars($_POST["username"]);
             $password = htmlspecialchars($_POST["password"]);
             $authenticated = $this->authenticateLogin($username, $password);
+
+            if (!$authenticated) {
+                $loginError = "Invalid username or password.";
+                require_once '../views/login.php'; 
+            }
         }
-        if (!$authenticated) {
-            $loginError = "Invalid username or password.";
-            require_once '../views/login.php'; 
-        }
-        
     }
 
-    public function authenticateLogin($username, $password)
+    private function authenticateLogin($username, $password)
     {
         $user = $this->loginService->login($username, $password);
         if ($user) {
-            // Converting user object to array for session storage
             $_SESSION['user'] = [
                 'userID' => $user->userID,
                 'username' => $user->username,

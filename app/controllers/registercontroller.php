@@ -1,7 +1,6 @@
 <?php
 
 namespace controllers;
-use model\user;
 
 use services\registerservice;
 
@@ -9,7 +8,6 @@ require_once __DIR__ . '/../services/registerservice.php';
 
 class registercontroller
 {
-
     public $registerService;
   
     public function __construct() {
@@ -20,8 +18,20 @@ class registercontroller
     {
         require_once '../views/register.php';
     }
+
     public function registerAction() {
         if ($_SERVER['REQUEST_METHOD'] == "POST") {
+            $captchaResponse = $_POST['g-recaptcha-response'];
+            $secretKey = "6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe"; 
+            $response = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret={$secretKey}&response={$captchaResponse}");
+            $responseKeys = json_decode($response, true);
+
+            if (!$responseKeys["success"]) {
+                $registrationStatus = "CAPTCHA verification failed. Please try again.";
+                require_once '../views/register.php';
+                return;
+            }
+
             $username = htmlspecialchars($_POST['username']);
             $password = htmlspecialchars($_POST['password']);
             $email = htmlspecialchars($_POST['email']);
@@ -31,11 +41,9 @@ class registercontroller
                 header('Location: /login'); 
                 exit;
             } else {
-                echo "Error occurred when creating user";
+                $registrationStatus = "Username already exists. Please choose a different one.";
+                require_once '../views/register.php';
             }
         }
     }
-    
-    //Add  a captcha confirmation and make sure that incremental ID is set
-
 }
