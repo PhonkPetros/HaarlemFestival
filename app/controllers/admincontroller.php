@@ -21,6 +21,7 @@ class admincontroller
     }
 
     public function manageUsers(){
+        $allUsers = $this->adminservice->getAllUsers();
         require_once '../views/admin/manage-users.php';
     }
 
