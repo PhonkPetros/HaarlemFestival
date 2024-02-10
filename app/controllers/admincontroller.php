@@ -16,7 +16,12 @@ class admincontroller
 
     public function show()
     {
+        $userDetails =  $_SESSION['user'];
         require_once '../views/admin/dashboard.php';
+    }
+
+    public function manageUsers(){
+        require_once '../views/admin/manage-users.php';
     }
 
 }

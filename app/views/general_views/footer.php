@@ -1,8 +1,16 @@
 
-<footer class="bg-dark text-white pt-4 pb-4">
+<style>
+    .fixed-footer {
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        z-index: 1030; 
+    }
+</style>
+
+<footer class="bg-dark text-white pt-4 pb-4 fixed-footer">
   <div class="container">
     <div class="row">
-
       <div class="col-lg-4 col-md-6 mb-4 mb-lg-0">
         <img src="/../img/logo.png" alt="Logo" width="52" height="52">
       </div>
