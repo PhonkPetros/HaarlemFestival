@@ -17,6 +17,32 @@
     .table th {
         padding: 0.75rem;
     }
+    #filterForm {
+        margin-bottom: 20px;
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+    }
+    #filterForm input, #filterForm select, #filterForm button {
+        padding: 5px 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+    }
+    #filterForm button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        cursor: pointer;
+    }
+    #filterForm button:hover {
+        background-color: #0056b3;
+    }
+    #resetBtn {
+        background-color: #6c757d;
+    }
+    #resetBtn:hover {
+        background-color: #545b62;
+    }
 </style>
 
 <nav class="navbar navbar-expand-lg navbar-secondary justify-content-center">
@@ -38,6 +64,22 @@
 
 <div class="content">
     <h1>Manage Users</h1>
+    <br>
+    <div id="filterForm">
+        <input type="text" name="username" placeholder="Username" id="username">
+        <select name="role" id="role">
+            <option value="">Select Role</option>
+            <option value="admin">Admin</option>
+            <option value="customer">Customer</option>
+            <option value="employee">Employee</option>
+        </select>
+        <button type="button" id="filterBtn">Filter</button>
+        <button type="button" id="resetBtn">Reset</button>
+        <div class="btn-group" role="group" aria-label="Basic example">
+            <button type="button" class="btn btn-secondary" title="Create New User">Create New User</button>
+        </div>
+    </div>
+  
     <div class="table-responsive">
         <table class="table">
             <thead>
@@ -51,31 +93,12 @@
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($allUsers as $user): ?>
-                    <tr>
-                        <td><?= htmlspecialchars($user['user_id'] ?? 'N/A') ?></td>
-                        <td><?= htmlspecialchars($user['username'] ?? 'N/A') ?></td>
-                        <td><?= htmlspecialchars($user['role'] ?? 'N/A') ?></td>
-                        <td><?= htmlspecialchars($user['e_mail'] ?? 'N/A') ?></td>
-                        <td><?= htmlspecialchars($user['registration_date'] ?? 'N/A') ?></td>
-                        <td>
-                            <form action="/admin/edit-user" method="post" style="display: inline-block;">
-                                <input type="hidden" name="user_id" value="<?= $user['user_id'] ?>">
-                                <button type="submit" class="btn btn-primary btn-sm">Edit</button>
-                            </form>
-                            <form action="/admin/delete-user" method="post" style="display: inline-block;" onsubmit="return confirm('Are you sure?')">
-                                <input type="hidden" name="user_id" value="<?= $user['user_id'] ?>">
-                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                            </form>
-                        </td>
-                    </tr>
-                <?php endforeach; ?>
+               
             </tbody>
         </table>
     </div>
-    <div class="btn-group" role="group" aria-label="Basic example">
-        <button type="button" class="btn btn-secondary" title="Create New User">Create New User</button>
-    </div>
 </div>
+
+<script src="/js/manage-users.js"></script>
 
 <?php include __DIR__ . '/../general_views/footer.php'; ?>

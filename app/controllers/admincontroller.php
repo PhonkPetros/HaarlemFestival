@@ -21,8 +21,13 @@ class admincontroller
     }
 
     public function manageUsers(){
-        $allUsers = $this->adminservice->getAllUsers();
         require_once '../views/admin/manage-users.php';
+    }
+
+    public function getAllUsers(){
+        header('Content-Type: application/json');
+        $allUsers = $this->adminservice->getAllUsers();
+        echo json_encode($allUsers);
     }
 
     public function editUsers($userID){
@@ -39,5 +44,14 @@ class admincontroller
         }
     }
     
+
+    public function filterUsers() {
+        header('Content-Type: application/json');
+        $username = '%'.($_POST['username'] ?? '').'%'; // Use % for LIKE SQL query
+        $role = $_POST['role'] ?? '';
+        $filteredUsers = $this->adminservice->filterUsers($username, $role);
+        echo json_encode($filteredUsers);
+    }
+
 
 }

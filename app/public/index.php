@@ -65,7 +65,19 @@ switch ($request) {
         if ($method === 'POST' && isset($_POST['user_id'])) {
             $controller->deleteUsers();
         }
-        break;   
+        break;
+    case '/admin/filter-users':
+        $controller = new admincontroller();
+        if ($method === 'POST') {
+            $controller->filterUsers();
+        }
+        break;
+    case '/admin/fetch-all-users':
+        $controller = new admincontroller();
+        if ($method === 'POST') {
+            $controller->getAllUsers();
+        }
+        break;
     default:
         http_response_code(404);
         require __DIR__ . '/../views/404.php';
