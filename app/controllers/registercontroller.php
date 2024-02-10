@@ -36,5 +36,6 @@ class registercontroller
         }
     }
     
+    //Add  a captcha confirmation and make sure that incremental ID is set
 
 }
