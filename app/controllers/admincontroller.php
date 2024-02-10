@@ -32,18 +32,12 @@ class admincontroller
     public function deleteUsers() {
         if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["user_id"])) {
             $userID = htmlspecialchars($_POST["user_id"]);
-            $result = $this->adminservice->deleteUsers($userID);
-            if ($result) {
-                header("Location: /admin/manage-users");
-                exit();
-            } else {
-                echo "Error deleting user";
-            }
+            $this->adminservice->deleteUsers($userID);
+            header('Location: /admin/manage-users'); 
         } else {
-            echo "Invalid request";
+            echo "Error deleting user";
         }
     }
-    
     
 
 }
