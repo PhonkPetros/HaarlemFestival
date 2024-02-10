@@ -29,10 +29,8 @@
         </li>
     </ul>
 </nav>
-
 <div class="content">
     <h1>Manage Users</h1>
-    <br>
     <div class="table-responsive">
         <table class="table">
             <thead>
@@ -56,18 +54,22 @@
                         <td><?= htmlspecialchars($user['e_mail'] ?? 'N/A') ?></td>
                         <td><?= htmlspecialchars($user['registration_date'] ?? 'N/A') ?></td>
                         <td>
-                            <a href="/admin/edit-user/<?= $user['user_id'] ?? '' ?>" class="btn btn-primary btn-sm">Edit</a>
-                            <a href="/admin/delete-user/<?= $user['user_id'] ?? '' ?>" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Delete</a>
+                            <form action="/admin/edit-user" method="post" style="display: inline-block;">
+                                <input type="hidden" name="user_id" value="<?= $user['user_id'] ?>">
+                                <button type="submit" class="btn btn-primary btn-sm">Edit</button>
+                            </form>
+                            <form action="/admin/manage-users" method="post" style="display: inline-block;" onsubmit="return confirm('Are you sure?')">
+                                <input type="hidden" name="user_id" value="<?= $user['user_id'] ?>">
+                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                            </form>
                         </td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>
         </table>
     </div>
-    <br>
     <div class="btn-group" role="group" aria-label="Basic example">
         <button type="button" class="btn btn-secondary" title="Create New User">Create New User</button>
     </div>
 </div>
-
 <?php include __DIR__ . '/../general_views/footer.php'; ?>

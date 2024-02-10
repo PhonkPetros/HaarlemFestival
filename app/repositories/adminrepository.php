@@ -39,4 +39,15 @@ class AdminRepository extends dbconfig {
         }
         return $users;
     }
+
+    public function deleteUsers($userID) {
+        try {
+            $stmt = $this->connection->prepare("DELETE FROM [User] WHERE user_id = :user_id");
+            $stmt->bindParam(':user_id', $userID, PDO::PARAM_INT);
+            $stmt->execute();
+        } catch (PDOException $e) {
+            error_log("Error deleting user: " . $e->getMessage());
+        }
+    }
+    
 }

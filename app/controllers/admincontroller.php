@@ -25,4 +25,25 @@ class admincontroller
         require_once '../views/admin/manage-users.php';
     }
 
+    public function editUsers($userID){
+
+    }
+
+    public function deleteUsers() {
+        if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["user_id"])) {
+            $userID = htmlspecialchars($_POST["user_id"]);
+            $result = $this->adminservice->deleteUsers($userID);
+            if ($result) {
+                header("Location: /admin/manage-users");
+                exit();
+            } else {
+                echo "Error deleting user";
+            }
+        } else {
+            echo "Invalid request";
+        }
+    }
+    
+    
+
 }

@@ -19,4 +19,8 @@ class AdminService {
     public function filterUsers($username, $role) {
         return $this->adminRepository->filterUsers($username, $role);
     }
+
+    public function deleteUsers($userID) {
+        return $this->adminRepository->deleteUsers($userID);
+    }
 }

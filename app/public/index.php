@@ -53,6 +53,15 @@ switch ($request) {
         if ($method === 'GET') {
             $controller->manageUsers();
         }
+        else if ($method === 'POST' && isset($_POST['user_id'])) {
+            $controller->deleteUsers();
+        }
+        break;
+    case '/admin/edit-user':
+        $controller = new admincontroller();
+        if ($method === 'POST' && isset($_POST['user_id'])) {
+            $controller->editUsers($_POST['user_id']);
+        }
         break;  
     default:
         http_response_code(404);
