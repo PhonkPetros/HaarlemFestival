@@ -5,12 +5,13 @@ use controllers\home;
 use controllers\logincontroller;
 use controllers\Logoutcontroller;
 use controllers\registercontroller;
-
+use controllers\admincontroller;
 
 require_once __DIR__ . '/../controllers/home.php';
 require_once __DIR__ . '/../controllers/registercontroller.php';
 require_once __DIR__ . '/../controllers/logincontroller.php';
 require_once __DIR__ . '/../controllers/logoutcontroller.php';
+require_once __DIR__ . '/../controllers/admincontroller.php';
 
 
 $request = $_SERVER['REQUEST_URI'];
@@ -40,9 +41,16 @@ switch ($request) {
     case '/logout':
         $logoutController = new Logoutcontroller();
         $logoutController->logout();
-        break;      
+        break;
+    case '/admin/dashboard':
+        $controller = new admincontroller();
+        if ($method === 'GET') {
+            $controller->show();
+        }
+        break; 
     default:
         http_response_code(404);
-        require __DIR__ . '/views/404.php';
+        require __DIR__ . '/../views/404.php';
         break;
+    
 }

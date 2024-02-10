@@ -4,7 +4,7 @@
     <div class="row">
 
       <div class="col-lg-4 col-md-6 mb-4 mb-lg-0">
-        <img src="./img/logo.png" alt="Logo" width="52" height="52">
+        <img src="/../img/logo.png" alt="Logo" width="52" height="52">
       </div>
 
       <div class="col-lg-4 col-md-6 mb-4 mb-lg-0">

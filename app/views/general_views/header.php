@@ -9,7 +9,7 @@
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">
-                <img src="./img/logo.png" alt="Logo" width="30" height="30">
+                <img src="/../img/logo.png" alt="Logo" width="30" height="30">
                 HAARLEM Festivals
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
@@ -19,11 +19,11 @@
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0"> 
                     <li class="nav-item">
                         <a class="nav-link" href="#">
-                            <img src="./img/dutch.png" alt="NL" style="width: 20px;"> NL
+                            <img src="/../img/dutch.png" alt="NL" style="width: 20px;"> NL
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Homepage</a>
+                        <a class="nav-link" href="/">Homepage</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">My Program</a>
@@ -44,7 +44,7 @@
                   if (isset($_SESSION['role'])) {
                     $role = $_SESSION['role'];
                     if ($role == 'admin') {
-                        echo ' <button class="btn btn-outline-success ms-2" type="button" onclick="location.href=\'dashboard\'">Dashboard</button> ';
+                        echo ' <button class="btn btn-outline-success ms-2" type="button" onclick="location.href=\'/admin/dashboard\'">Dashboard</button> ';
                         echo ' <button class="btn btn-danger ms-2" type="button" onclick="confirmLogout()">Logout</button> ';
                     } elseif ($role == 'customer') {
                         echo ' <button class="btn btn-outline-success ms-2" type="button" onclick="location.href=\'Account\'">Account</button> ';
