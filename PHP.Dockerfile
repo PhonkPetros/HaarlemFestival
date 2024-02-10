@@ -16,5 +16,8 @@ RUN apt-get update && ACCEPT_EULA=Y apt-get install -y \
         msodbcsql17 \
         mssql-tools \
         unixodbc \
-        && pecl install pdo_sqlsrv-5.10.0 sqlsrv-5.10.0 \
-        && docker-php-ext-enable pdo_sqlsrv sqlsrv
+    && pecl install pdo_sqlsrv sqlsrv \
+    && docker-php-ext-enable pdo_sqlsrv sqlsrv \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+

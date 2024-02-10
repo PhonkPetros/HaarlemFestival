@@ -8,7 +8,7 @@ class dbconfig {
     protected $connection;
 
     function __construct() {
-        $server = "tcp:haarlem.database.windows.net,1433";
+        $server = "tcp:haarlem.database.windows.net";
         $database = "HaarlemFestival";
         $username = "festivalAdmin";
         $password = "Admin@123";

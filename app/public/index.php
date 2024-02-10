@@ -1,17 +1,21 @@
 <?php
-session_start(); 
+session_start();
 
 use controllers\home;
 use controllers\logincontroller;
 use controllers\Logoutcontroller;
 use controllers\registercontroller;
 use controllers\admincontroller;
+use controllers\accountcontroller;
+
 
 require_once __DIR__ . '/../controllers/home.php';
 require_once __DIR__ . '/../controllers/registercontroller.php';
 require_once __DIR__ . '/../controllers/logincontroller.php';
 require_once __DIR__ . '/../controllers/logoutcontroller.php';
 require_once __DIR__ . '/../controllers/admincontroller.php';
+require_once __DIR__ . '/../controllers/accountcontroller.php';
+
 
 
 $request = $_SERVER['REQUEST_URI'];
@@ -76,6 +80,12 @@ switch ($request) {
         $controller = new admincontroller();
         if ($method === 'POST') {
             $controller->getAllUsers();
+        }
+        break;
+    case '/account':
+        $controller = new accountcontroller();
+        if ($method === 'GET') {
+            $controller->show();
         }
         break;
     default:
