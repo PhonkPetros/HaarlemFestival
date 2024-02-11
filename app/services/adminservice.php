@@ -39,4 +39,15 @@ class AdminService {
     public function email_exists($email) {
         return $this->registerRepository->emailExists($email);
     }
+
+    public function updateUser($userid, $username, $email, $role){
+        return $this->adminRepository->editUser($userid, $username, $email, $role);
+    }
+    public function getUserById($userid) {
+        return $this->adminRepository->getUserById($userid);
+    }
+
+ 
+
+
 }

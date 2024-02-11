@@ -91,5 +91,41 @@ class AdminRepository extends dbconfig {
             return false;
         }
     }
+
+    public function editUser($userid, $username, $email, $role) {
+        $currentDetails = $this->getUserById($userid);
+        if (!$currentDetails) {
+            return ['success' => false, 'message' => 'User not found.'];
+        }
+
+        try {
+            $stmt = $this->connection->prepare("UPDATE [User] SET username = :username, e_mail = :email, role = :role WHERE user_id = :userid");
+            $stmt->bindParam(':username', $username);
+            $stmt->bindParam(':email', $email);
+            $stmt->bindParam(':role', $role);
+            $stmt->bindParam(':userid', $userid, PDO::PARAM_INT);
+            $stmt->execute();
+    
+            return ['success' => true, 'message' => 'User information updated successfully.'];
+        } catch (PDOException $e) {
+            return ['success' => false, 'message' => 'Failed to update user information. Error: ' . $e->getMessage()];
+        }
+    }
+    
+    
+    public function getUserById($userid) {
+        try {
+            $stmt = $this->connection->prepare("SELECT * FROM [User] WHERE user_id = :userid");
+            $stmt->bindParam(':userid', $userid, PDO::PARAM_INT);
+            $stmt->execute();
+    
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $user ?: null;
+        } catch (PDOException $e) {
+            error_log('Error fetching user by ID: ' . $e->getMessage());
+            return null;
+        }
+    }
+    
     
 }

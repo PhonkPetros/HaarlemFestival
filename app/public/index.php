@@ -53,12 +53,6 @@ switch ($request) {
             $controller->manageUsers();
         }
         break;
-    case '/admin/edit-user':
-        $controller = new admincontroller();
-        if ($method === 'POST' && isset($_POST['user_id'])) {
-            $controller->editUsers($_POST['user_id']);
-        }
-        break;
     case '/admin/delete-user':
         $controller = new admincontroller();
         if ($method === 'POST' && isset($_POST['user_id'])) {
@@ -81,6 +75,12 @@ switch ($request) {
         $controller = new admincontroller();
         if ($method === 'POST') {
             $controller->addUsers();
+        }
+        break;
+    case '/admin/edit-user':
+        $controller = new admincontroller();
+        if ($method === 'POST') {
+            $controller->editUsers();
         }
         break;
     default:
