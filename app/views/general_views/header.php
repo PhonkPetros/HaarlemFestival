@@ -51,9 +51,11 @@
                         echo ' <button class="btn btn-danger ms-2" type="button" onclick="confirmLogout()">Logout</button> ';
                     } else {
                         echo ' <button class="btn btn-outline-success ms-2" type="button" onclick="location.href=\'login\'">Login</button> ';
+                        echo ' <button class="btn btn btn-dark ms-2" type="button" onclick="location.href=\'register\'">Register</button> ';
                     }
                 } else {
                     echo ' <button class="btn btn-outline-success ms-2" type="button" onclick="location.href=\'login\'">Login</button> ';
+                    echo ' <button class="btn btn btn-dark ms-2" type="button" onclick="location.href=\'register\'">Register</button> ';
                 }
                 ?>
             </div>

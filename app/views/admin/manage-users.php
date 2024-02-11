@@ -178,6 +178,7 @@
 
 <div class="content">
     <h1>Manage Users</h1>
+    <br>
     <div id="filterForm">
         <input type="text" name="username" placeholder="Username" id="username">
         <select name="role" id="role">
