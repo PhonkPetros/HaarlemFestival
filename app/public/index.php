@@ -13,7 +13,6 @@ require_once __DIR__ . '/../controllers/logincontroller.php';
 require_once __DIR__ . '/../controllers/logoutcontroller.php';
 require_once __DIR__ . '/../controllers/admincontroller.php';
 
-
 $request = $_SERVER['REQUEST_URI'];
 $method = $_SERVER['REQUEST_METHOD']; 
 
@@ -74,13 +73,18 @@ switch ($request) {
         break;
     case '/admin/fetch-all-users':
         $controller = new admincontroller();
-        if ($method === 'POST') {
+        if ($method === 'GET') {
             $controller->getAllUsers();
+        }
+        break;
+    case '/admin/add-user':
+        $controller = new admincontroller();
+        if ($method === 'POST') {
+            $controller->addUsers();
         }
         break;
     default:
         http_response_code(404);
         require __DIR__ . '/../views/404.php';
         break;
-    
 }

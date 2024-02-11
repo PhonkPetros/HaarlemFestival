@@ -23,4 +23,8 @@ class AdminService {
     public function deleteUsers($userID) {
         return $this->adminRepository->deleteUsers($userID);
     }
+
+    public function createUsers($username, $email, $role, $password) {
+        return $this->adminRepository->registerUser($username, $email, $role, $password);
+    }
 }

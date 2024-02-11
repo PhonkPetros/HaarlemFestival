@@ -5,11 +5,20 @@ namespace repositories;
 use config\dbconfig;
 use PDO;
 use PDOException;
+use DateTime;
+use repositories\registerrepository;
 
 require_once __DIR__ . '/../config/dbconfig.php';
+require_once __DIR__ . '/../repositories/registerrepository.php';
 
 class AdminRepository extends dbconfig {
     
+    public $registerRepo;
+
+    public function __construct() {
+        parent::__construct();
+        $this->registerRepo = new RegisterRepository();
+    }
     public function getAllUsers() {
         $users = [];
 
@@ -50,4 +59,31 @@ class AdminRepository extends dbconfig {
         }
     }
     
+    public function registerUser($username, $password, $role, $email) {
+        if (!$this->registerRepo->usernameExists($username)) {
+            $user_ID = 5;
+            $registration_date = new DateTime();
+            $formatted_date = $registration_date->format('Y-m-d H:i:s');
+            $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+            
+            try {
+                $stmt = $this->connection->prepare("INSERT INTO [User] (e_mail, username, password, role, user_ID, registration_date) VALUES (:email, :username, :password, :role, :user_ID, :registration_date)");
+                $stmt->bindParam(':email', $email, PDO::PARAM_STR);
+                $stmt->bindParam(':username', $username, PDO::PARAM_STR);
+                $stmt->bindParam(':password', $hashed_password, PDO::PARAM_STR);
+                $stmt->bindParam(':role', $role, PDO::PARAM_STR);
+                $stmt->bindParam(':user_ID', $user_ID, PDO::PARAM_INT);
+                $stmt->bindParam(':registration_date', $formatted_date, PDO::PARAM_STR);
+                $stmt->execute();
+                
+                return true;
+            } catch (PDOException $e) {
+                echo "Error: " . $e->getMessage();
+                return false;
+            }
+        } else {
+            echo "Username already exists.";
+            return false;
+        }
+    }
 }
