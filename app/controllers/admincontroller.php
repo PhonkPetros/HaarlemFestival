@@ -9,8 +9,7 @@ require_once __DIR__ . '/../services/AdminService.php';
 
 class AdminController
 {
-    public $adminservice;
-    public $registerservice;
+    private $adminservice;
   
     public function __construct() {
         $this->adminservice = new AdminService();
@@ -63,6 +62,24 @@ class AdminController
         $role = htmlspecialchars($_POST['role'] ?? '');
         $password = htmlspecialchars($_POST['password'] ?? '');
     
+        $usernameInUse = $this->adminservice->username_exists($username);
+        $emailInUse = $this->adminservice->email_exists($email);
+    
+        if($usernameInUse || $emailInUse){
+            $message = 'Username and/or email already in use';
+            if ($usernameInUse) {
+                $message = 'Username already in use';
+            }
+            if ($emailInUse) {
+                $message = 'Email already in use';
+            }
+            if ($usernameInUse && $emailInUse) {
+                $message = 'Both username and email are already in use';
+            }
+            echo json_encode(['success'=> false, 'message'=> $message]);
+            return; 
+        }
+
         $result = $this->adminservice->createUsers($username, $password, $role, $email);
     
         if ($result) {
@@ -71,5 +88,6 @@ class AdminController
             echo json_encode(['success' => false, 'message' => 'Failed to add user']);
         }
     }
+    
     
 }

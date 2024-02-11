@@ -13,7 +13,7 @@ require_once __DIR__ . '/../repositories/registerrepository.php';
 
 class AdminRepository extends dbconfig {
     
-    public $registerRepo;
+    private $registerRepo;
 
     public function __construct() {
         parent::__construct();
@@ -60,8 +60,8 @@ class AdminRepository extends dbconfig {
     }
     
     public function registerUser($username, $password, $role, $email) {
-        if (!$this->registerRepo->usernameExists($username)) {
-            $user_ID = 5;
+        if (!$this->registerRepo->usernameExists($username) && !$this->registerRepo->emailExists($email)) {
+            $user_ID = 5; 
             $registration_date = new DateTime();
             $formatted_date = $registration_date->format('Y-m-d H:i:s');
             $hashed_password = password_hash($password, PASSWORD_DEFAULT);
@@ -78,12 +78,18 @@ class AdminRepository extends dbconfig {
                 
                 return true;
             } catch (PDOException $e) {
-                echo "Error: " . $e->getMessage();
+                error_log("Error: " . $e->getMessage());
                 return false;
             }
         } else {
-            echo "Username already exists.";
+            if ($this->registerRepo->usernameExists($username)) {
+                error_log("Username already exists.");
+            }
+            if ($this->registerRepo->emailExists($email)) {
+                error_log("Email already exists.");
+            }
             return false;
         }
     }
+    
 }

@@ -23,9 +23,22 @@ class registerrepository extends dbconfig {
             return false;
         }
     }
-    
+
+    public function emailExists($email) {
+        try {
+            $stmt = $this->connection->prepare("SELECT * FROM [User] WHERE e_mail = :email");
+            $stmt->bindParam(':email', $email, PDO::PARAM_STR);
+            $stmt->execute();
+            
+            return $stmt->fetch(PDO::FETCH_ASSOC) !== false;
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+            return false;
+        }
+    }
+
     public function registerUser($username, $password, $email) {
-        if (!$this->usernameExists($username)) {
+        if (!$this->usernameExists($username) && !$this->emailExists($email)) {
             $user_ID = 5;
             $role = "employee";
             $registration_date = new DateTime();
