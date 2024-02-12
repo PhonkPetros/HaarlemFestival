@@ -95,9 +95,9 @@ class AdminRepository extends dbconfig {
         if (!$currentDetails) {
             return ['success' => false, 'message' => 'User not found.'];
         }
-
+    
         try {
-            $stmt = $this->connection->prepare("UPDATE [User] SET username = :username, email = :email, role = :role WHERE user_id = :userid");
+            $stmt = $this->connection->prepare("UPDATE [User] SET username = :username, email = :email, role = :role WHERE user_id = :user_id");
             $stmt->bindParam(':username', $username);
             $stmt->bindParam(':email', $email);
             $stmt->bindParam(':role', $role);
@@ -109,6 +109,7 @@ class AdminRepository extends dbconfig {
             return ['success' => false, 'message' => 'Failed to update user information. Error: ' . $e->getMessage()];
         }
     }
+    
     
     
     public function getUserById($userid) {

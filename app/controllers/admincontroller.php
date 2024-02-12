@@ -33,31 +33,23 @@ class AdminController
 
     public function editUsers() {
         header('Content-Type: application/json');
+        
         $userid = htmlspecialchars($_POST['user_id'] ?? '');
-        $newUsername = htmlspecialchars($_POST['username'] ?? '');
-        $newEmail = isset($_POST['email']) ? htmlspecialchars($_POST['email']) : false;
+        $username = htmlspecialchars($_POST['username'] ?? '');
+        $email = htmlspecialchars($_POST['email'] ?? '');
         $role = htmlspecialchars($_POST['role'] ?? '');
-        $currentUser = $this->adminservice->getUserById($userid);
-        if (!$currentUser) {
-            echo json_encode(['success' => false, 'message' => 'User not found.']);
+    
+        if (empty($userid) || empty($username) || empty($email) || empty($role)) {
+            echo json_encode(['success' => false, 'message' => 'Missing user details for update.']);
             return;
         }
-        $message = '';
-        if ($newUsername !== $currentUser['username'] && $this->adminservice->username_exists($newUsername)) {
-            $message = 'Username already in use.';
-        }
-        if ($newEmail !== false && $newEmail !== $currentUser['email'] && $this->adminservice->email_exists($newEmail)) {
-            $message = empty($message) ? 'Email already in use.' : $message . ' And email already in use.';
-        }
-        if (!empty($message)) {
-            echo json_encode(['success' => false, 'message' => $message]);
-            return;
-        }
-        $updateResult = $this->adminservice->updateUser($userid, $newUsername, $newEmail !== false ? $newEmail : $currentUser['e_mail'], $role);
-        if ($updateResult) {
-            echo json_encode(['success' => true, 'message' => 'User has been updated']);
+
+        $result = $this->adminservice->updateUser($userid, $username, $email, $role);
+
+        if ($result['success']) {
+            echo json_encode(['success' => true, 'message' => 'User has been updated successfully.']);
         } else {
-            echo json_encode(['success' => false, 'message' => 'Failed to update user']);
+            echo json_encode(['success' => false, 'message' => 'Failed to update user. ' . $result['message']]);
         }
     }
     

@@ -3,7 +3,15 @@ function setupEventListeners() {
     setupResetButton();
     setupModalControls();
     setupAddUserFormSubmission();
+    var editUserForm = document.getElementById('editUserForm');
+    if (editUserForm) {
+        editUserForm.onsubmit = function(event) {
+            event.preventDefault();
+            submitEditUserForm();
+        };
+    }
 }
+
 
 function setupFilterButton() {
     document.getElementById('filterBtn').addEventListener('click', function() {
