@@ -18,20 +18,20 @@
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">
-                <img src="./img/logo.png" alt="Logo" height="70">
+                <img src="/../img/logo.png" alt="Logo" height="70">
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNavDropdown">
-                <ul class="navbar-nav ms-auto mb-2 mb-lg-0"> 
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0"> <!-- Changed here, from me-auto to ms-auto -->
                     <li class="nav-item">
                         <a class="nav-link" href="#">
                             <img src="/../img/dutch.png" alt="NL" style="width: 20px;"> NL
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/">Homepage</a>
+                        <a class="nav-link" href="#">Homepage</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">My Program</a>
@@ -44,17 +44,14 @@
                             <li><a class="dropdown-item" href="#">Music</a></li>
                             <li><a class="dropdown-item" href="#">Yummy!</a></li>
                             <li><a class="dropdown-item" href="#">Strolling Through History</a></li>
+                            <li><a class="dropdown-item" href="#">Art in the Open</a></li> <!-- Added fourth item -->
                         </ul>
                     </li>
                 </ul>
-               
                 <?php
                   if (isset($_SESSION['role'])) {
                     $role = $_SESSION['role'];
-                    if ($role == 'admin') {
-                        echo ' <button class="btn btn-outline-success ms-2" type="button" onclick="location.href=\'/admin/dashboard\'">Dashboard</button> ';
-                        echo ' <button class="btn btn-danger ms-2" type="button" onclick="confirmLogout()">Logout</button> ';
-                    } elseif ($role == 'customer') {
+                   if ($role == 'customer') {
                         echo ' <button class="btn btn-outline-success ms-2" type="button" onclick="location.href=\'/account\'">Account</button> ';
                         echo ' <button class="btn btn-danger ms-2" type="button" onclick="confirmLogout()">Logout</button> ';
                     } else {
@@ -70,7 +67,7 @@
         </div>
     </nav>
     <div class="container">
-      
+        <!-- Content goes here -->
     </div>
 </main>
 
@@ -82,8 +79,3 @@
         }
     }
 </script>
-
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-2C9a4f1e1e3c3fgbbH4s3Y7LHOTqP9ZQ8g+6A5V1WxJqQ9r0TKx07FQKu5nKvCZ/p" crossorigin="anonymous"></script>
-</body>
-</html>
