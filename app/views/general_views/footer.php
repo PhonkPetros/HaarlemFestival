@@ -1,26 +1,12 @@
-<style>
-    .fixed-footer {
-        position: fixed;
-        bottom: 0;
-        width: 100%;
-        z-index: 1030; 
-    }
-    @media (max-width: 768px) {
-        .fixed-footer {
-            position: static;
-        }
-    }
-</style>
-
 <footer class="bg-light pt-4 pb-4">
   <div class="container">
     <div class="row">
 
       <div class="col-lg-4 col-md-6 mb-4 mb-lg-0">
-        <img src="./img/logo.png" alt="Logo"  height="52">
+        <img src="/../img/logo.png" alt="Logo"  height="52">
       </div>
 
-      <div class="col-12 col-md-6 col-lg-3 mb-4">
+      <div class="col-lg-4 col-md-6 mb-4 mb-lg-0">
         <h6>Contact us</h6>
         <ul class="list-unstyled mb-0">
           <li class="mb-2"><a href="tel:065456728" class="text-dark">065456728</a></li>
@@ -28,7 +14,7 @@
         </ul>
       </div>
 
-      <div class="col-12 col-md-6 col-lg-3 mb-4">
+      <div class="col-lg-4 col-md-6 mb-4 mb-lg-0">
         <h6>Follow us on</h6>
         <ul class="list-unstyled mb-0">
           <li class="mb-2"><a href="#" class="text-dark">Visit Haarlem</a></li>
@@ -36,7 +22,7 @@
         </ul>
       </div>
 
-      <div class="col-12 col-md-6 col-lg-3">
+      <div class="col-lg-4 col-md-6">
         <h6>Cookies</h6>
         <ul class="list-unstyled mb-0">
           <li><a href="#" class="text-dark">Functional cookies</a></li>
