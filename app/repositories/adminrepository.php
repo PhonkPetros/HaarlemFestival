@@ -61,19 +61,17 @@ class AdminRepository extends dbconfig {
     
     public function registerUser($username, $password, $role, $email) {
         if (!$this->registerRepo->usernameExists($username) && !$this->registerRepo->emailExists($email)) {
-            $user_ID = 5; 
             $registration_date = new DateTime();
             $formatted_date = $registration_date->format('Y-m-d H:i:s');
             $hashed_password = password_hash($password, PASSWORD_DEFAULT);
             
             try {
-                $stmt = $this->connection->prepare("INSERT INTO [User] (e_mail, username, password, role, user_ID, registration_date) VALUES (:email, :username, :password, :role, :user_ID, :registration_date)");
+                $stmt = $this->connection->prepare("INSERT INTO [User] (email, username, password_hash, role, created_at) VALUES (:email, :username, :password_hash, :role, :created_at)");
                 $stmt->bindParam(':email', $email, PDO::PARAM_STR);
                 $stmt->bindParam(':username', $username, PDO::PARAM_STR);
-                $stmt->bindParam(':password', $hashed_password, PDO::PARAM_STR);
+                $stmt->bindParam(':password_hash', $hashed_password, PDO::PARAM_STR);
                 $stmt->bindParam(':role', $role, PDO::PARAM_STR);
-                $stmt->bindParam(':user_ID', $user_ID, PDO::PARAM_INT);
-                $stmt->bindParam(':registration_date', $formatted_date, PDO::PARAM_STR);
+                $stmt->bindParam('created_at', $formatted_date, PDO::PARAM_STR);
                 $stmt->execute();
                 
                 return true;
@@ -99,7 +97,7 @@ class AdminRepository extends dbconfig {
         }
 
         try {
-            $stmt = $this->connection->prepare("UPDATE [User] SET username = :username, e_mail = :email, role = :role WHERE user_id = :userid");
+            $stmt = $this->connection->prepare("UPDATE [User] SET username = :username, email = :email, role = :role WHERE user_id = :userid");
             $stmt->bindParam(':username', $username);
             $stmt->bindParam(':email', $email);
             $stmt->bindParam(':role', $role);

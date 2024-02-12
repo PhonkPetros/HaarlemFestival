@@ -3,8 +3,13 @@ document.addEventListener('DOMContentLoaded', function() {
     setupEventListeners();
 });
 
-function fetchUsers() {
-    fetch('/admin/fetch-all-users', {
+function fetchUsers(sortParam = '') {
+    let url = '/admin/fetch-all-users';
+    if (sortParam) {
+        url += `?sort=${sortParam}`;
+    }
+    
+    fetch(url, {
         method: 'GET',
     })
     .then(response => response.json())
@@ -22,8 +27,8 @@ function updateTable(data) {
             <td>${user.user_id}</td>
             <td>${user.username}</td>
             <td>${user.role}</td>
-            <td>${user.e_mail}</td>
-            <td>${user.registration_date}</td>
+            <td>${user.email}</td>
+            <td>${user.created_at}</td>
             <td>
                 <button onclick="openEditUserModal('${user.user_id}','${user.username}', '${user.e_mail}', '${user.role}')" class="btn btn-primary btn-sm">Edit</button>
                 <button onclick="deleteUser(${user.user_id})" class="btn btn-danger btn-sm">Delete</button>
@@ -32,7 +37,6 @@ function updateTable(data) {
         tableBody.innerHTML += row;
     });
 }
-
 function filterUsers(username, role) {
     var formData = new FormData();
     formData.append('username', username);

@@ -26,7 +26,7 @@ class registerrepository extends dbconfig {
 
     public function emailExists($email) {
         try {
-            $stmt = $this->connection->prepare("SELECT * FROM [User] WHERE e_mail = :email");
+            $stmt = $this->connection->prepare("SELECT * FROM [User] WHERE email = :email");
             $stmt->bindParam(':email', $email, PDO::PARAM_STR);
             $stmt->execute();
             
@@ -39,20 +39,18 @@ class registerrepository extends dbconfig {
 
     public function registerUser($username, $password, $email) {
         if (!$this->usernameExists($username) && !$this->emailExists($email)) {
-            $user_ID = 5;
-            $role = "employee";
+            $role = "customer";
             $registration_date = new DateTime();
             $formatted_date = $registration_date->format('Y-m-d H:i:s');
             $hashed_password = password_hash($password, PASSWORD_DEFAULT);
             
             try {
-                $stmt = $this->connection->prepare("INSERT INTO [User] (e_mail, username, password, role, user_ID, registration_date) VALUES (:email, :username, :password, :role, :user_ID, :registration_date)");
+                $stmt = $this->connection->prepare("INSERT INTO [User] (email, username, password_hash, role, created_at) VALUES (:email, :username, :password_hash, :role, :created_at)");
                 $stmt->bindParam(':email', $email, PDO::PARAM_STR);
                 $stmt->bindParam(':username', $username, PDO::PARAM_STR);
-                $stmt->bindParam(':password', $hashed_password, PDO::PARAM_STR);
+                $stmt->bindParam(':password_hash', $hashed_password, PDO::PARAM_STR);
                 $stmt->bindParam(':role', $role, PDO::PARAM_STR);
-                $stmt->bindParam(':user_ID', $user_ID, PDO::PARAM_INT);
-                $stmt->bindParam(':registration_date', $formatted_date, PDO::PARAM_STR);
+                $stmt->bindParam(':created_at', $formatted_date, PDO::PARAM_STR);
                 $stmt->execute();
                 
                 return true;

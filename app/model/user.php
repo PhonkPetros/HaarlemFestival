@@ -21,7 +21,7 @@ class user
             'username' => $this->username,
             'role' => $this->role,
             'email' => $this->email,
-            'registrationDate' => $this->registrationDate->format('Y-m-d H:i:s'), 
+            'created_at' => $this->registrationDate->format('Y-m-d H:i:s'), 
         ];
     }
 }

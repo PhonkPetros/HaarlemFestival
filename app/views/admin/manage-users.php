@@ -151,6 +151,22 @@
     flex-grow: 1; 
 }
 
+.sorting-button {
+    background: none;
+    color: inherit;
+    border: none;
+    padding: 0;
+    margin: 0;
+    font: inherit;
+    cursor: pointer;
+}
+
+.sorting-button:hover, .sorting-button:focus {
+    background: none;
+    color: inherit;
+    text-decoration: underline;
+}
+
 
 @media screen and (max-width: 600px) {
     .modal-content {
@@ -196,12 +212,12 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th>User ID</th>
-                    <th>Username</th>
-                    <th>Role</th>
-                    <th>Email</th>
-                    <th>Registration Date</th>
-                    <th>Actions</th>
+                    <th><button data-sort="user_id" class="sorting-button">User ID</button></th>
+                    <th><button data-sort="username" class="sorting-button">Username</button></th>
+                    <th><button data-sort="role" class="sorting-button">Role</button></th>
+                    <th><button data-sort="email" class="sorting-button">Email</button></th>
+                    <th><button data-sort="registration_date" class="sorting-button">Registration Date</button></th>
+                    <th >Actions</th>
                 </tr>
             </thead>
             <tbody>
