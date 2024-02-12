@@ -30,7 +30,7 @@ function updateTable(data) {
             <td>${user.email}</td>
             <td>${user.created_at}</td>
             <td>
-                <button onclick="openEditUserModal('${user.user_id}','${user.username}', '${user.e_mail}', '${user.role}')" class="btn btn-primary btn-sm">Edit</button>
+                <button onclick="openEditUserModal('${user.user_id}','${user.username}', '${user.email}', '${user.role}')" class="btn btn-primary btn-sm">Edit</button>
                 <button onclick="deleteUser(${user.user_id})" class="btn btn-danger btn-sm">Delete</button>
             </td>
         </tr>`;

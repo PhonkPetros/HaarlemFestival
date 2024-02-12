@@ -8,7 +8,6 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('editUserEmail').value = email;
         document.getElementById('editUserRole').value = role;
     
-        var editUserModal = document.getElementById('editUserModal');
         editUserModal.style.display = "block";
     };
 
@@ -25,36 +24,38 @@ document.addEventListener('DOMContentLoaded', function() {
     var editUserForm = document.getElementById('editUserForm');
     editUserForm.onsubmit = function(event) {
         event.preventDefault();
-
-        function submitEditUserForm(){
-            var userId = document.getElementById('editUserId').value;
-            var username = document.getElementById('editUsername').value;
-            var email = document.getElementById('editUserEmail').value;
-            var role = document.getElementById('editUserRole').value;
-            let formData = new FormData();
-            formData.append('user_id', userId);
-            formData.append('username', username);
-            formData.append('email', email);
-            formData.append('role', role);
-
-            fetch('/admin/edit-user', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => {
-                if (response.ok) return response.json();
-                return Promise.reject('Failed to edit user');
-            })
-            .then(() => {
-                alert('User has been edited');
-                fetchUsers();
-                editUserModal.style.display = 'none';
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Error creating new user.');
-            });
-        }
         submitEditUserForm();
     };
+
+    function submitEditUserForm(){
+        var userId = document.getElementById('editUserId').value;
+        var username = document.getElementById('editUsername').value;
+        var email = document.getElementById('editUserEmail').value;
+        var role = document.getElementById('editUserRole').value;
+        let formData = new FormData();
+        formData.append('user_id', userId);
+        formData.append('username', username);
+        formData.append('email', email);
+        formData.append('role', role);
+
+        fetch('/admin/edit-user', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => {
+            if (response.ok) return response.json();
+            return response.text().then(text => {
+                throw new Error('Non-JSON response from server: ' + text);
+            });
+        })
+        .then(() => {
+            alert('User has been edited');
+            fetchUsers(); 
+            editUserModal.style.display = 'none';
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error updating user. ' + error);
+        });
+    }
 });

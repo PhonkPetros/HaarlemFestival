@@ -80,9 +80,9 @@ switch ($request) {
         $controller = new accountcontroller();
         if ($method === 'GET') {
             $controller->show();
-
-            break;
         }
+            break;
+       
     case '/admin/add-user':
         $controller = new admincontroller();
         if ($method === 'POST') {
@@ -94,6 +94,7 @@ switch ($request) {
         if ($method === 'POST') {
             $controller->editUsers();
         }
+        break;
     case '/festival':
         require_once '../controllers/overview.php';
         $controller = new overview();

@@ -35,7 +35,7 @@ class AdminController
         header('Content-Type: application/json');
         $userid = htmlspecialchars($_POST['user_id'] ?? '');
         $newUsername = htmlspecialchars($_POST['username'] ?? '');
-        $newEmail = isset($_POST['e_mail']) ? htmlspecialchars($_POST['e_mail']) : false;
+        $newEmail = isset($_POST['email']) ? htmlspecialchars($_POST['email']) : false;
         $role = htmlspecialchars($_POST['role'] ?? '');
         $currentUser = $this->adminservice->getUserById($userid);
         if (!$currentUser) {
@@ -46,7 +46,7 @@ class AdminController
         if ($newUsername !== $currentUser['username'] && $this->adminservice->username_exists($newUsername)) {
             $message = 'Username already in use.';
         }
-        if ($newEmail !== false && $newEmail !== $currentUser['e_mail'] && $this->adminservice->email_exists($newEmail)) {
+        if ($newEmail !== false && $newEmail !== $currentUser['email'] && $this->adminservice->email_exists($newEmail)) {
             $message = empty($message) ? 'Email already in use.' : $message . ' And email already in use.';
         }
         if (!empty($message)) {

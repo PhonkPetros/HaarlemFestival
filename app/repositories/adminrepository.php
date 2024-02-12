@@ -101,7 +101,7 @@ class AdminRepository extends dbconfig {
             $stmt->bindParam(':username', $username);
             $stmt->bindParam(':email', $email);
             $stmt->bindParam(':role', $role);
-            $stmt->bindParam(':userid', $userid, PDO::PARAM_INT);
+            $stmt->bindParam(':user_id', $userid, PDO::PARAM_INT);
             $stmt->execute();
     
             return ['success' => true, 'message' => 'User information updated successfully.'];
