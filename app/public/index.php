@@ -7,7 +7,7 @@ use controllers\Logoutcontroller;
 use controllers\registercontroller;
 use controllers\admincontroller;
 use controllers\accountcontroller;
-
+use controllers\overview;
 
 require_once __DIR__ . '/../controllers/home.php';
 require_once __DIR__ . '/../controllers/registercontroller.php';
@@ -15,6 +15,7 @@ require_once __DIR__ . '/../controllers/logincontroller.php';
 require_once __DIR__ . '/../controllers/logoutcontroller.php';
 require_once __DIR__ . '/../controllers/admincontroller.php';
 require_once __DIR__ . '/../controllers/accountcontroller.php';
+
 
 
 $request = $_SERVER['REQUEST_URI'];
@@ -93,6 +94,10 @@ switch ($request) {
         if ($method === 'POST') {
             $controller->editUsers();
         }
+    case '/festival':
+        require_once '../controllers/overview.php';
+        $controller = new overview();
+        $controller->show();
         break;
     default:
         http_response_code(404);
