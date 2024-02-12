@@ -16,9 +16,15 @@
 </head>
 <body>
 <main>
-<nav class="navbar navbar-expand-lg navbar-secondary justify-content-center">
-    <ul class="navbar-nav">
-        <li class="nav-item">
+<nav class="navbar navbar-expand-lg navbar-secondary bg-secondary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">HAARLEM FESTIVALS</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
+                <ul class="navbar-nav">
+                <li class="nav-item">
             <a class="nav-link" href="/admin/manage-users">Manage Users</a>
         </li>
         <li class="nav-item">
@@ -30,9 +36,14 @@
         <li class="nav-item">
             <a class="nav-link" href="#">Orders</a>
         </li>
-    </ul>
-    <button class="btn btn-danger ms-2" type="button" onclick="confirmLogout()">Logout</button>
-</nav>
+                    <!-- ... other nav-items ... -->
+                </ul>
+                <form class="d-flex">
+                    <button class="btn btn-danger" type="button" onclick="confirmLogout()">Logout</button>
+                </form>
+            </div>
+        </div>
+    </nav>
     <div class="container">
         <!-- Content goes here -->
     </div>
@@ -46,3 +57,4 @@
         }
     }
 </script>
+

@@ -1,63 +1,68 @@
-
 .content {
     text-align: center;
     padding: 2rem;
 }
+
 .table td, .table th {
     padding: 0.75rem;
 }
+
 #filterForm {
     margin-bottom: 20px;
     display: flex;
     justify-content: center;
+    flex-wrap: wrap;
     gap: 10px;
 }
+
 #filterForm input, #filterForm select, #filterForm button {
     padding: 5px 10px;
     border: 1px solid #ddd;
     border-radius: 5px;
+    margin: 5px 0;
 }
+
 #filterForm button {
     background-color: #007bff;
     color: white;
     border: none;
     cursor: pointer;
 }
+
 #filterForm button:hover {
     background-color: #0056b3;
 }
+
 #resetBtn {
     background-color: #6c757d;
 }
+
 #resetBtn:hover {
     background-color: #545b62;
 }
+
 .modal {
-    display: none; 
-    position: fixed; 
-    z-index: 1000; 
+    display: none;
+    position: fixed;
+    z-index: 1000;
     left: 0;
     top: 0;
-    width: 100%; 
-    height: 100%; 
-    overflow: auto; 
-    background-color: rgba(0,0,0,0.6); 
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.6);
 }
+
 .modal-content {
     position: relative;
     background-color: #fefefe;
-    margin: 5% auto; 
+    margin: 5% auto;
     padding: 20px;
     border: 1px solid #888;
-    width: 40%;
+    width: 90%;
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-    animation-name: modalopen;
-    animation-duration: 0.4s;
 }
-@keyframes modalopen {
-    from {top: -300px; opacity: 0}
-    to {top: 0; opacity: 1}
-}
+
 .closeBtn {
     position: absolute;
     top: 10px;
@@ -66,12 +71,14 @@
     font-size: 28px;
     font-weight: bold;
 }
+
 .closeBtn:hover,
 .closeBtn:focus {
     color: black;
     text-decoration: none;
     cursor: pointer;
 }
+
 #addUserForm input[type=text],
 #addUserForm input[type=email],
 #addUserForm input[type=password],
@@ -81,13 +88,11 @@
     padding: 10px;
     margin-top: 10px;
     margin-bottom: 10px;
-    display: inline-block;
     border: 1px solid #ccc;
     border-radius: 4px;
-    box-sizing: border-box;
 }
+
 #addUserForm button {
-    width: 100%;
     background-color: #4CAF50;
     color: white;
     padding: 14px 20px;
@@ -96,6 +101,7 @@
     border-radius: 4px;
     cursor: pointer;
 }
+
 #addUserForm button:hover {
     background-color: #45a049;
 }
@@ -108,13 +114,11 @@
     padding: 10px;
     margin-top: 10px;
     margin-bottom: 10px;
-    display: inline-block;
     border: 1px solid #ccc;
     border-radius: 4px;
-    box-sizing: border-box;
 }
+
 .modal-form button {
-    width: 100%;
     background-color: #4CAF50;
     color: white;
     padding: 14px 20px;
@@ -127,6 +131,7 @@
 .modal-form button:hover {
     background-color: #45a049;
 }
+
 .modal-form .form-group {
     display: flex;
     align-items: center;
@@ -134,13 +139,13 @@
 }
 
 .modal-form .form-group label {
-    margin-bottom: 0; 
+    margin-bottom: 0;
 }
 
 .modal-form input[type="text"],
 .modal-form input[type="email"],
 .modal-form select {
-    flex-grow: 1; 
+    flex-grow: 1;
 }
 
 .sorting-button {
@@ -148,20 +153,43 @@
     color: inherit;
     border: none;
     padding: 0;
-    margin: 0;
-    font: inherit;
     cursor: pointer;
 }
 
 .sorting-button:hover, .sorting-button:focus {
-    background: none;
-    color: inherit;
     text-decoration: underline;
 }
 
+@media screen and (max-width: 768px) {
+    #filterForm {
+        flex-direction: column;
+    }
 
-@media screen and (max-width: 600px) {
+    #filterForm input,
+    #filterForm select,
+    #filterForm button {
+        width: 100%;
+    }
+
     .modal-content {
         width: 95%;
+    }
+
+    .modal-form .form-group {
+        flex-direction: column;
+    }
+
+    .modal-form .form-group label,
+    .modal-form .form-group input,
+    .modal-form .form-group select {
+        width: 100%;
+    }
+
+    .table-responsive {
+        margin-bottom: 0;
+    }
+
+    .sorting-button {
+        padding: 0.5rem;
     }
 }
