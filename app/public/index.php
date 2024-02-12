@@ -17,7 +17,6 @@ require_once __DIR__ . '/../controllers/admincontroller.php';
 require_once __DIR__ . '/../controllers/accountcontroller.php';
 
 
-
 $request = $_SERVER['REQUEST_URI'];
 $method = $_SERVER['REQUEST_METHOD']; 
 
@@ -58,12 +57,6 @@ switch ($request) {
             $controller->manageUsers();
         }
         break;
-    case '/admin/edit-user':
-        $controller = new admincontroller();
-        if ($method === 'POST' && isset($_POST['user_id'])) {
-            $controller->editUsers($_POST['user_id']);
-        }
-        break;
     case '/admin/delete-user':
         $controller = new admincontroller();
         if ($method === 'POST' && isset($_POST['user_id'])) {
@@ -78,7 +71,7 @@ switch ($request) {
         break;
     case '/admin/fetch-all-users':
         $controller = new admincontroller();
-        if ($method === 'POST') {
+        if ($method === 'GET') {
             $controller->getAllUsers();
         }
         break;
@@ -86,11 +79,23 @@ switch ($request) {
         $controller = new accountcontroller();
         if ($method === 'GET') {
             $controller->show();
+
+            break;
+        }
+    case '/admin/add-user':
+        $controller = new admincontroller();
+        if ($method === 'POST') {
+            $controller->addUsers();
+        }
+        break;
+    case '/admin/edit-user':
+        $controller = new admincontroller();
+        if ($method === 'POST') {
+            $controller->editUsers();
         }
         break;
     default:
         http_response_code(404);
         require __DIR__ . '/../views/404.php';
         break;
-    
 }

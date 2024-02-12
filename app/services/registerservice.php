@@ -20,4 +20,8 @@ class registerservice
     public function username_exists($username){
         return $this->registerrepository->usernameExists($username);
     }
+
+    public function email_exists($email){
+        return $this->registerrepository->emailExists($email);
+    }
 }

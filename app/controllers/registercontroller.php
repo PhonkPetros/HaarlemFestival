@@ -8,7 +8,7 @@ require_once __DIR__ . '/../services/registerservice.php';
 
 class registercontroller
 {
-    public $registerService;
+    private $registerService;
   
     public function __construct() {
         $this->registerService = new registerservice();
@@ -36,7 +36,7 @@ class registercontroller
             $password = htmlspecialchars($_POST['password']);
             $email = htmlspecialchars($_POST['email']);
         
-            if (!$this->registerService->username_exists($username)) {
+            if (!$this->registerService->username_exists($username) && !$this->registerService->email_exists($email)) {
                 $this->registerService->register($username, $password, $email);
                 header('Location: /login'); 
                 exit;

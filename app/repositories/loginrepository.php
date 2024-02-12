@@ -20,14 +20,14 @@ class Loginrepository extends dbconfig {
             $stmt->execute(['username' => $username]);
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            if ($user && password_verify($password, $user['password'])) {
+            if ($user && password_verify($password, $user['password_hash'])) {
                 $currentUser = new User();
                 $currentUser->userID = $user['user_id'];
                 $currentUser->ticketID = $user['ticket_id'] ?? 0;
                 $currentUser->username = $user['username'];
                 $currentUser->role = $user['role'];
-                $currentUser->email = $user['e_mail'];
-                $currentUser->registrationDate = new DateTime($user['registration_date']);
+                $currentUser->email = $user['email'];
+                $currentUser->registrationDate = new DateTime($user['created_at']);
                 return $currentUser; 
                 // return $currentUser->currentUserData(); 
             } else {

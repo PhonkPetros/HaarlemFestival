@@ -1,10 +1,16 @@
 document.addEventListener('DOMContentLoaded', function() {
     fetchUsers();
+    setupEventListeners();
 });
 
-function fetchUsers() {
-    fetch('/admin/fetch-all-users', {
-        method: 'POST',
+function fetchUsers(sortParam = '') {
+    let url = '/admin/fetch-all-users';
+    if (sortParam) {
+        url += `?sort=${sortParam}`;
+    }
+    
+    fetch(url, {
+        method: 'GET',
     })
     .then(response => response.json())
     .then(data => {
@@ -21,29 +27,16 @@ function updateTable(data) {
             <td>${user.user_id}</td>
             <td>${user.username}</td>
             <td>${user.role}</td>
-            <td>${user.e_mail}</td>
-            <td>${user.registration_date}</td>
+            <td>${user.email}</td>
+            <td>${user.created_at}</td>
             <td>
-                <a href="/admin/edit-user-form?user_id=${user.user_id}" class="btn btn-primary btn-sm">Edit</a>
-                <button onclick="deleteUser('${user.user_id}')" class="btn btn-danger btn-sm">Delete</button>
+                <button onclick="openEditUserModal('${user.user_id}','${user.username}', '${user.e_mail}', '${user.role}')" class="btn btn-primary btn-sm">Edit</button>
+                <button onclick="deleteUser(${user.user_id})" class="btn btn-danger btn-sm">Delete</button>
             </td>
         </tr>`;
         tableBody.innerHTML += row;
     });
 }
-
-document.getElementById('filterBtn').addEventListener('click', function() {
-    var username = document.getElementById('username').value;
-    var role = document.getElementById('role').value;
-    filterUsers(username, role);
-});
-
-document.getElementById('resetBtn').addEventListener('click', function() {
-    document.getElementById('username').value = '';
-    document.getElementById('role').value = '';
-    fetchUsers();
-});
-
 function filterUsers(username, role) {
     var formData = new FormData();
     formData.append('username', username);
@@ -59,7 +52,6 @@ function filterUsers(username, role) {
     })
     .catch(error => console.error('Error:', error));
 }
-
 function deleteUser(userId) {
     const confirmed = confirm(`Are you sure you want to delete user ${userId}?`);
     if (confirmed) {
@@ -70,14 +62,16 @@ function deleteUser(userId) {
             method: 'POST',
             body: formData
         })
-        .then(response => {
-            if (response.ok) {
-                alert(`User ${userId} deleted.`);
-                document.getElementById(`user-${userId}`).remove();
-            } else {
-                alert('Error deleting user.');
-            }
+        .then(response => response.json())
+        .then(() => {
+            fetchUsers();
+            alert(`User ${userId} deleted.`);
         })
-        .catch(error => console.error('Error:', error));
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error deleting user.');
+        });
     }
 }
+
+

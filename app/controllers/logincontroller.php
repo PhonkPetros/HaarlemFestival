@@ -7,7 +7,7 @@ require_once __DIR__ . '/../services/loginservice.php';
 
 class logincontroller
 {
-    public $loginService;
+    private $loginService;
   
     public function __construct() {
         $this->loginService = new LoginService();
