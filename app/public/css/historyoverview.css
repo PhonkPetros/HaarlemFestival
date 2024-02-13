@@ -181,8 +181,9 @@
     z-index: 1;
   }
   .carousel-item img {
-    width: 500px;  
-    height: 500px; 
+    width: 100%; 
+    max-width: 400px; 
+    height: 400px; 
     object-fit: cover; 
     margin: auto; 
   }
@@ -194,13 +195,15 @@
   }
 
   .carousel-caption {
-    background: rgba(0, 0, 0, 0.5); 
-    width: 100%;
-    left: 0;
-    right: 0;
+    position: absolute;
     bottom: 0;
-    padding: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%; 
+    padding: 10px;
     text-align: center;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 5px; 
   }
 
   .carousel-control-prev-icon,
