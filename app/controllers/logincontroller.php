@@ -43,10 +43,10 @@ class logincontroller
                 'email' => $user->email,
             ];
             $_SESSION['role'] = $user->role;
-            if($_SESSION['role'] = 'admin'){
+            if($_SESSION['role'] == 'admin'){ 
                 header('Location: /admin/dashboard');
-
-            }else{
+                exit(); 
+            }else if ($_SESSION['role'] == 'customer'){ 
                 header('Location: /');
                 exit();
             }
@@ -54,4 +54,5 @@ class logincontroller
             return false;
         }
     }
+    
 }

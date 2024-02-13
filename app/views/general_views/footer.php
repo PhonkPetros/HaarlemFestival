@@ -33,6 +33,6 @@
 
 </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-2C9a4f1e1e3c3fgbbH4s3Y7LHOTqP9ZQ8g+6A5V1WxJqQ9r0TKx07FQKu5nKvCZ/p" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -23,7 +23,8 @@ $method = $_SERVER['REQUEST_METHOD'];
 
 switch ($request) {
     case '/':
-        $controller = new home();
+        require_once '../controllers/overview.php';
+        $controller = new overview();
         $controller->show();
         break;
     case '/login':
@@ -95,11 +96,12 @@ switch ($request) {
             $controller->editUsers();
         }
         break;
-    case '/festival':
-        require_once '../controllers/overview.php';
-        $controller = new overview();
-        $controller->show();
-        break;
+    case '/history/overview':
+        $controller = new admincontroller();
+        if ($method === 'GET') {
+            $controller->editUsers();
+        }
+        break;    
     default:
         http_response_code(404);
         require __DIR__ . '/../views/404.php';

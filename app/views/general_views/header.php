@@ -43,7 +43,7 @@
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                             <li><a class="dropdown-item" href="#">Music</a></li>
                             <li><a class="dropdown-item" href="#">Yummy!</a></li>
-                            <li><a class="dropdown-item" href="#">Strolling Through History</a></li>
+                            <li><a class="dropdown-item" href="/history/overview">Strolling Through History</a></li>
                             <li><a class="dropdown-item" href="#">Art in the Open</a></li> <!-- Added fourth item -->
                         </ul>
                     </li>
