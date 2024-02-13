@@ -8,6 +8,7 @@ use controllers\registercontroller;
 use controllers\admincontroller;
 use controllers\accountcontroller;
 use controllers\overview;
+use controllers\Historycontroller;
 
 require_once __DIR__ . '/../controllers/home.php';
 require_once __DIR__ . '/../controllers/registercontroller.php';
@@ -15,7 +16,8 @@ require_once __DIR__ . '/../controllers/logincontroller.php';
 require_once __DIR__ . '/../controllers/logoutcontroller.php';
 require_once __DIR__ . '/../controllers/admincontroller.php';
 require_once __DIR__ . '/../controllers/accountcontroller.php';
-
+require_once __DIR__ . '/../controllers/historycontroller.php';
+require_once __DIR__ . '/../controllers/overview.php';
 
 
 $request = $_SERVER['REQUEST_URI'];
@@ -23,7 +25,6 @@ $method = $_SERVER['REQUEST_METHOD'];
 
 switch ($request) {
     case '/':
-        require_once '../controllers/overview.php';
         $controller = new overview();
         $controller->show();
         break;
@@ -82,8 +83,7 @@ switch ($request) {
         if ($method === 'GET') {
             $controller->show();
         }
-            break;
-       
+        break;
     case '/admin/add-user':
         $controller = new admincontroller();
         if ($method === 'POST') {
@@ -97,9 +97,9 @@ switch ($request) {
         }
         break;
     case '/history/overview':
-        $controller = new admincontroller();
+        $controller = new Historycontroller();
         if ($method === 'GET') {
-            $controller->editUsers();
+            $controller->show();
         }
         break;    
     default:

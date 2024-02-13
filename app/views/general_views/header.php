@@ -31,7 +31,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Homepage</a>
+                        <a class="nav-link" href="/">Homepage</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">My Program</a>
@@ -55,12 +55,12 @@
                         echo ' <button class="btn btn-outline-success ms-2" type="button" onclick="location.href=\'/account\'">Account</button> ';
                         echo ' <button class="btn btn-danger ms-2" type="button" onclick="confirmLogout()">Logout</button> ';
                     } else {
-                        echo ' <button class="btn btn-outline-success ms-2" type="button" onclick="location.href=\'login\'">Login</button> ';
+                        echo ' <button class="btn btn-outline-success ms-2" type="button" onclick="location.href=\'/login\'">Login</button> ';
                         echo ' <button class="btn btn btn-dark ms-2" type="button" onclick="location.href=\'register\'">Register</button> ';
                     }
                 } else {
-                    echo ' <button class="btn btn-outline-success ms-2" type="button" onclick="location.href=\'login\'">Login</button> ';
-                    echo ' <button class="btn btn btn-dark ms-2" type="button" onclick="location.href=\'register\'">Register</button> ';
+                    echo ' <button class="btn btn-outline-success ms-2" type="button" onclick="location.href=\'/login\'">Login</button> ';
+                    echo ' <button class="btn btn btn-dark ms-2" type="button" onclick="location.href=\'/register\'">Register</button> ';
                 }
                 ?>
             </div>

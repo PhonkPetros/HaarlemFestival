@@ -76,5 +76,11 @@
         </form>
     </div>
 </div>
-</body>
-</html>
+<br>
+<br>
+
+
+
+<?php
+include __DIR__ . '/../general_views/footer.php';
+?>
