@@ -34,7 +34,7 @@ include __DIR__ . '/../general_views/header.php';
       <div class="carousel-item active">
         <img src="/img/1.jpg" alt="Church of St. Bavo">
         <div class="carousel-caption d-none d-md-block">
-          <h5>Church of St. Bavo</h5>
+            <a href="/history/churchbravo"><h5>Church of St. Bavo</h5></a>
         </div>
       </div>
       <div class="carousel-item">
@@ -52,7 +52,7 @@ include __DIR__ . '/../general_views/header.php';
       <div class="carousel-item">
         <img src="/img/4.jpg" alt="Proveniershof">
         <div class="carousel-caption d-none d-md-block">
-          <h5>Proveniershof</h5>
+            <a href="/history/proveniershof"><h5>Proveniershof</h5></a>  
         </div>
       </div>
       <div class="carousel-item">
