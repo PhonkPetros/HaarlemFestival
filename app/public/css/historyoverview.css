@@ -1,0 +1,228 @@
+    .tour-header {
+    background: url('/img/bannerimage.jpg') no-repeat center center; 
+    background-size: cover;
+    color: white;
+    padding: 60px;
+    text-align: center;
+  }
+
+  .tour-info {
+    position: relative;
+    padding: 60px;
+    background: url('/img/bannerdescription.jpg') no-repeat center center;
+    background-size: cover;
+    color: white;
+  }
+
+  .tour-info::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5); 
+    z-index: 0;
+  }
+
+  .tour-info > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  .tour-information-text {
+    background: url('/img/routeinformation.png') no-repeat center center;
+    background-size: cover;
+    position: relative;
+    padding: 60px;
+    color: white;
+  }
+
+  .tour-information-text::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5); 
+    z-index: 0;
+  }
+
+  .tour-information-text > * {
+    position: relative;
+    z-index: 1;
+  }
+  .tour-information {
+    background-color: white;
+    color: black;
+    text-align: center;
+    padding: 20px;
+  }
+  .tour-route {
+    text-align: center;
+    color: #fff;
+    background-color: #007bff;
+    padding: 20px;
+  }
+  .tour-locations {
+    text-align: center;
+    padding: 20px;
+    background-color: #343a40; 
+    color: #fff;
+  }
+  .tour-schedule {
+    padding: 60px;
+    background-color: #fff; 
+  }
+  .schedule-table {
+    width: 100%;
+    margin-bottom: 20px; 
+  }
+  .schedule-table th,
+  .schedule-table td {
+    text-align: center;
+    padding: 8px;
+    border: 1px solid #dee2e6;
+  }
+  .schedule-table td {
+    position: relative; 
+    padding-bottom: 60px;
+  }
+  .btn-reserve {
+    background-color: #007bff; 
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    display: inline-block;
+    width: 50%;
+    margin-top: 5px; 
+  }
+  .btn-reserve:hover {
+    background-color: #0056b3;
+  }
+  .tour-schedule h3 {
+    margin-top: 20px;
+  }
+
+  .schedule-table td .btn-reserve {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%); 
+  }
+  @media (max-width: 768px) {
+    .schedule-table th, .schedule-table td {
+      padding: 4px;
+    }
+
+    .schedule-table td {
+      padding-bottom: 50px; 
+    }
+
+    .btn-reserve {
+      width: 100%; 
+      margin-top: 2px; 
+      padding: 5px;
+    }
+
+    .schedule-table td .btn-reserve {
+      bottom: 5px; 
+    }
+}
+.tour-route {
+    background: url('/img/routetourbackground.png') no-repeat center center;
+    background-size: cover;
+    position: relative; 
+    padding: 20px;
+    text-align: center;
+    color: white; 
+  }
+
+  .tour-route::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5); 
+    z-index: 0;
+  }
+
+  .tour-route > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  .tour-schedule {
+    position: relative;
+    padding: 60px;
+    background: url('/img/scheduleimage.jpg') no-repeat center center;
+    background-size: cover;
+    color: white;
+  }
+
+  .tour-schedule::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 0;
+  }
+
+  .tour-schedule > * {
+    position: relative;
+    z-index: 1;
+  }
+  .carousel-item img {
+    width: 500px;  
+    height: 500px; 
+    object-fit: cover; 
+    margin: auto; 
+  }
+  .carousel-item {
+    display: none; 
+  }
+  .carousel-item.active {
+    display: block;
+  }
+
+  .carousel-caption {
+    background: rgba(0, 0, 0, 0.5); 
+    width: 100%;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 1rem;
+    text-align: center;
+  }
+
+  .carousel-control-prev-icon,
+  .carousel-control-next-icon {
+    background-size: 100%, 100%;
+    background-image: none; 
+  }
+
+  .carousel-control-prev,
+  .carousel-control-next {
+    width: 5%; 
+  }
+
+  .carousel-control-prev-icon:after {
+    content: '<'; 
+    font-size: 24px;
+    color: white; 
+  }
+
+  .carousel-control-next-icon:after {
+    content: '>'; 
+    font-size: 24px;
+    color: white; 
+  }
+

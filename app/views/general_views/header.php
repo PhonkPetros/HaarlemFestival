@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="/css/navbar.css">
     <link rel="stylesheet" href="/css/main.css">
     <link rel="stylesheet" href="/css/overview.css">
+    <link rel="stylesheet" href="/css/historyoverview.css">
     <link rel="stylesheet" href="/css/footer.css">
 
 
