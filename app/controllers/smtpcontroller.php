@@ -24,12 +24,12 @@ class SMTPController
             $this->mailer->isSMTP();
             $this->mailer->Host = 'smtp.gmail.com';
             $this->mailer->SMTPAuth = true;
-            $this->mailer->Username = 'protata93@gmail.com'; // Change to your email
+            $this->mailer->Username = 'protata93@gmail.com';
             $this->mailer->Password = 'xhno spiv iump ltna';
             $this->mailer->SMTPSecure = 'ssl';
             $this->mailer->Port = 465;
 
-            $this->mailer->setFrom('harlemitofestival@gmail.com', 'HaarlemFestival');
+            $this->mailer->setFrom('harlemitofestival@gmail.com', 'HaarlemFestival'); 
             $this->mailer->addAddress($toEmail, $toName);
 
             $this->mailer->isHTML(true);

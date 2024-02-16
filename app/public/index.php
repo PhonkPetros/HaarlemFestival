@@ -9,7 +9,7 @@ use controllers\admincontroller;
 use controllers\accountcontroller;
 use controllers\overview;
 
-require_once __DIR__ . '/../controllers/home.php';
+require_once __DIR__ . '/../controllers/overview.php';
 require_once __DIR__ . '/../controllers/registercontroller.php';
 require_once __DIR__ . '/../controllers/logincontroller.php';
 require_once __DIR__ . '/../controllers/logoutcontroller.php';
@@ -23,7 +23,7 @@ $method = $_SERVER['REQUEST_METHOD'];
 
 switch ($request) {
     case '/':
-        $controller = new home();
+        $controller = new overview();
         $controller->show();
         break;
     case '/login':
