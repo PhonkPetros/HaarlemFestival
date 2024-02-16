@@ -78,11 +78,8 @@ switch ($request) {
         break;
     case '/account':
         $controller = new accountcontroller();
-        if ($method === 'GET') {
-            $controller->show();
-
-            break;
-        }
+        $controller->show();
+        break;
     case '/admin/add-user':
         $controller = new admincontroller();
         if ($method === 'POST') {

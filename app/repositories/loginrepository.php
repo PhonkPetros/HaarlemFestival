@@ -11,25 +11,25 @@ use config\dbconfig;
 require_once __DIR__ . '/../config/dbconfig.php';
 require_once __DIR__ . '/../model/user.php';
 
-class Loginrepository extends dbconfig {
+class LoginRepository extends dbconfig {
 
     public function login($username, $password)
     {
         try {
             $stmt = $this->connection->prepare("SELECT * FROM [User] WHERE username = :username");
             $stmt->execute(['username' => $username]);
-            $user = $stmt->fetch(PDO::FETCH_ASSOC);
+            $userData = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            if ($user && password_verify($password, $user['password_hash'])) {
-                $currentUser = new User();
-                $currentUser->userID = $user['user_id'];
-                $currentUser->ticketID = $user['ticket_id'] ?? 0;
-                $currentUser->username = $user['username'];
-                $currentUser->role = $user['role'];
-                $currentUser->email = $user['email'];
-                $currentUser->registrationDate = new DateTime($user['created_at']);
-                return $currentUser; 
-                // return $currentUser->currentUserData(); 
+            if ($userData && password_verify($password, $userData['password_hash'])) {
+                $user = new User();
+                $user->setUserID($userData['user_id']);
+                $user->setTicketID($userData['ticket_id'] ?? 0);
+                $user->setUsername($userData['username']);
+                $user->setUserRole($userData['role']);
+                $user->setUserEmail($userData['email']);
+                $user->setPassword($userData['password_hash']);
+                $user->setRegistrationDate(new DateTime($userData['created_at']));
+                return $user;
             } else {
                 return null;
             }

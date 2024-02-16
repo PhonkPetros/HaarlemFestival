@@ -7,7 +7,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Update Account Details</title>
     <style>
-        /* Custom CSS for centering and styling */
         .container {
             display: flex;
             justify-content: center;
@@ -16,9 +15,9 @@
         .form-container {
             max-width: 600px;
             width: 100%;
-            margin-top: 40px; /* Add some distance from the header */
-            border: 1px solid #ccc; /* Add a border */
-            border-radius: 8px; /* Round the corners */
+            margin-top: 40px; 
+            border: 1px solid #ccc;
+            border-radius: 8px;
             padding: 20px;
         }
         .form-container form {
@@ -29,12 +28,12 @@
         .form-container input[type="password"] {
             margin-bottom: 10px;
             width: calc(100% - 10px);
-            box-sizing: border-box; /* Ensure the padding and border are included in the width */
+            box-sizing: border-box;
         }
         .form-container input[type="submit"] {
             font-size: 1.2em;
             margin-bottom: 15px;
-            width: 100%; /* Make the button the same width as the input fields */
+            width: 100%;
         }
         .form-container h1 {
             width: 100%;
@@ -57,22 +56,22 @@
     <div class="form-container">
         <h1>Update account details</h1>
         <p>Use the form below to update your credentials. You will receive a confirmation email after you click the submit button.</p>
-        <form method="post" id="passwordForm">
+        <form id="updateAccountForm" method="POST" action="/account">
             <div style="margin-bottom: 10px;">
-                <input type="email" class="input-lg form-control" name="email" id="email" placeholder="Email" autocomplete="off">
-                <button class="update-button btn btn-primary">Update Email</button>
+                <input type="email" class="input-lg form-control" name="updateEmail" id="email" placeholder="Email" autocomplete="off">
+                <button class="update-button btn btn-primary" type="submit" name="updateEmailBtn">Update Email</button>
             </div>
             <div style="margin-bottom: 10px;">
-                <input type="text" class="input-lg form-control" name="username" id="username" placeholder="Username" autocomplete="off">
-                <button class="update-button btn btn-primary">Update Username</button>
+                <input type="text" class="input-lg form-control" name="updateUsername" id="username" placeholder="Username" autocomplete="off">
+                <button class="update-button btn btn-primary" type="submit" name="updateUsernameBtn">Update Username</button>
             </div>
             <div style="margin-bottom: 15px;">
-                <input type="password" class="input-lg form-control" name="password1" id="password1" placeholder="New Password" autocomplete="off">
+                <input type="password" class="input-lg form-control" name="oldPassword" id="password1" placeholder="Password" autocomplete="off">
             </div>
             <div style="margin-bottom: 15px;">
-                <input type="password" class="input-lg form-control" name="password2" id="password2" placeholder="Confirm Password" autocomplete="off">
+                <input type="password" class="input-lg form-control" name="newPassword" id="password2" placeholder="New Password" autocomplete="off">
             </div>
-            <input type="submit" class="col-xs-12 btn btn-primary btn-load btn-lg" data-loading-text="Updating Password...." value="Update Password">
+            <button type="submit" class="col-xs-12 btn btn-primary btn-load btn-lg" name="updatePasswordBtn">Update Password</button>
         </form>
     </div>
 </div>
