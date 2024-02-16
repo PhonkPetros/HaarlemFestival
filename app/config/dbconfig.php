@@ -7,7 +7,11 @@ use PDOException;
 class dbconfig {
     protected $connection;
 
-    function __construct() {
+    public function __construct() {
+        $this->connect();
+    }
+
+    private function connect() {
         $server = "tcp:haarlem.database.windows.net";
         $database = "HaarlemFestival";
         $username = "festivalAdmin";
@@ -18,6 +22,11 @@ class dbconfig {
             $this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } catch (PDOException $e) {
             echo "Connection failed: " . $e->getMessage();
+            // Consider handling this exception more gracefully or rethrowing it for the calling code to handle
         }
+    }
+
+    public function getConnection() {
+        return $this->connection;
     }
 }

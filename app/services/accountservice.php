@@ -2,25 +2,30 @@
 
 namespace services;
 
-use repositories\AccountRepository; 
-require_once __DIR__ . '/../repositories/AccountRepository.php'; 
+use repositories\accountrepository;
 
-class AccountService {
-    private $adminRepository;
+require_once __DIR__ . '/../repositories/accountrepository.php'; 
+
+class Accountervice {
+
+    private $accountRepository;
 
     public function __construct() {
-        $this->adminRepository = new AccountRepository(); 
+        $this->accountRepository = new accountrepository(); 
     }
 
-    public function getAllUsers() {
-        return $this->adminRepository->getAllUsers();
+    
+    public function updateEmail(int $userID, string $newEmail): bool {
+        return $this->accountRepository->updateEmail($userID, $newEmail);
     }
 
-    public function filterUsers($username, $role) {
-        return $this->adminRepository->filterUsers($username, $role);
+    
+    public function updateUsername(int $userID, string $newUsername): bool {
+        return $this->accountRepository->updateUsername($userID, $newUsername);
     }
 
-    public function deleteUsers($userID) {
-        return $this->adminRepository->deleteUsers($userID);
+ 
+    public function updatePassword(int $userID, string $newPassword): bool {
+        return $this->accountRepository->updatePassword($userID, $newPassword);
     }
 }

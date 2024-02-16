@@ -36,23 +36,19 @@ class logincontroller
     {
         $user = $this->loginService->login($username, $password);
         if ($user) {
+            $_SESSION['email'] = $user->getUserEmail();
             $_SESSION['user'] = [
-                'userID' => $user->userID,
-                'username' => $user->username,
-                'role' => $user->role,
-                'email' => $user->email,
+                'userID' => $user->getUserId(),
+                'username' => $user->getUsername(),
+                'role' => $user->getUserRole(),
+                'email' => $user->getUserEmail(),
+                'password_hash' => $user->getPassword()
             ];
-            $_SESSION['role'] = $user->role;
-            if($_SESSION['role'] == 'admin'){ 
-                header('Location: /admin/dashboard');
-                exit(); 
-            }else if ($_SESSION['role'] == 'customer'){ 
-                header('Location: /');
-                exit();
-            }
+            $_SESSION['role'] = $user->getUserRole();
+            header('Location: /');
+            exit();
         } else {
             return false;
         }
     }
-    
 }

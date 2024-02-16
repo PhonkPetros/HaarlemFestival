@@ -1,27 +1,98 @@
 <?php
 
 namespace model;
+
 use DateTime;
 
-class user
+class User
 {
-    public int $userID; 
-    public ?int $ticketID; 
-    public string $username;
-    public string $password; 
-    public string $role;
-    public string $email; 
-    public DateTime $registrationDate;
+    private int $userID;
+    private ?int $ticketID;
+    private string $username;
+    private string $password;
+    private string $role;
+    private string $email;
+    private DateTime $registrationDate;
 
-    public function currentUserData(): array
+    public function getUserData(): array
     {
         return [
-            'userID' => $this->userID,
-            'ticketID' => $this->ticketID,
-            'username' => $this->username,
-            'role' => $this->role,
-            'email' => $this->email,
-            'created_at' => $this->registrationDate->format('Y-m-d H:i:s'), 
+            'userID' => $this->getUserID(),
+            'ticketID' => $this->getTicketID(),
+            'username' => $this->getUsername(),
+            'role' => $this->getUserRole(),
+            'email' => $this->getUserEmail(),
+            'created_at' => $this->getRegistrationDate()->format('Y-m-d H:i:s'), 
         ];
+    }
+
+    public function getUserID(): int
+    {
+        return $this->userID;
+    }
+
+    public function setUserID(int $userID): void
+    {
+        $this->userID = $userID;
+    }
+
+    public function getTicketID(): ?int
+    {
+        return $this->ticketID;
+    }
+
+    public function setTicketID(?int $ticketID): void
+    {
+        $this->ticketID = $ticketID;
+    }
+
+    public function getUsername(): string
+    {
+        return $this->username;
+    }
+
+    public function setUsername(string $username): void
+    {
+        $this->username = $username;
+    }
+
+    public function getPassword(): string
+    {
+        return $this->password;
+    }
+
+    public function setPassword(string $password): void
+    {
+        $this->password = $password;
+    }
+
+    public function getUserRole(): string
+    {
+        return $this->role;
+    }
+
+    public function setUserRole(string $role): void
+    {
+        $this->role = $role;
+    }
+
+    public function getUserEmail(): string
+    {
+        return $this->email;
+    }
+
+    public function setUserEmail(string $email): void
+    {
+        $this->email = $email;
+    }
+
+    public function getRegistrationDate(): DateTime
+    {
+        return $this->registrationDate;
+    }
+
+    public function setRegistrationDate(DateTime $registrationDate): void
+    {
+        $this->registrationDate = $registrationDate;
     }
 }
