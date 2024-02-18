@@ -45,8 +45,18 @@ class logincontroller
                 'password_hash' => $user->getPassword()
             ];
             $_SESSION['role'] = $user->getUserRole();
-            header('Location: /');
-            exit();
+            switch ($_SESSION['role']) {
+                case 'customer':
+                    header('Location: /');
+                    exit();
+                case 'admin':
+                    header('Location: /admin/dashboard');
+                    exit();
+                default:
+                    header('Location: /');
+                    exit();
+            }            
+           
         } else {
             return false;
         }

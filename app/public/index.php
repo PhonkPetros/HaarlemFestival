@@ -91,10 +91,6 @@ switch ($request) {
         if ($method === 'POST') {
             $controller->editUsers();
         }
-    case '/festival':
-        require_once '../controllers/overview.php';
-        $controller = new overview();
-        $controller->show();
         break;
     default:
         http_response_code(404);
