@@ -1,11 +1,14 @@
 <?php
 session_start();
 
-use controllers\home;
 use controllers\logincontroller;
 use controllers\Logoutcontroller;
 use controllers\registercontroller;
 use controllers\admincontroller;
+use controllers\Dancecontroller;
+use controllers\Jazzcontroller;
+use controllers\Restaurantcontroller;
+use controllers\Historycontroller;
 use controllers\accountcontroller;
 use controllers\overview;
 
@@ -15,8 +18,10 @@ require_once __DIR__ . '/../controllers/logincontroller.php';
 require_once __DIR__ . '/../controllers/logoutcontroller.php';
 require_once __DIR__ . '/../controllers/admincontroller.php';
 require_once __DIR__ . '/../controllers/accountcontroller.php';
-
-
+require_once __DIR__ . '/../controllers/restaurantcontroller.php';
+require_once __DIR__ . '/../controllers/historycontroller.php';
+require_once __DIR__ . '/../controllers/dancecontroller.php';
+require_once __DIR__ . '/../controllers/jazzcontroller.php';
 
 $request = $_SERVER['REQUEST_URI'];
 $method = $_SERVER['REQUEST_METHOD'];
@@ -108,6 +113,48 @@ switch ($request) {
         $controller = new admincontroller();
         if ($method === 'GET') {
             $controller->manageOrders();
+        }
+        break;
+    case '/manage-event-details/editDetailsDance':
+        $controller = new Dancecontroller();
+        if ($method === 'GET') {
+            $controller->editEventDetails();
+        }
+        break;
+    case '/manage-event-details/editDetailsHistory':
+        $controller = new Historycontroller();
+        if ($method === 'GET') {
+            $controller->editEventDetails();
+        }
+        break;
+    case '/manage-event-details/editDetailsJazz':
+        $controller = new Jazzcontroller();
+        if ($method === 'GET') {
+            $controller->editEventDetails();
+        }
+        break;
+    case '/manage-event-details/editDetailsRestaurant':
+        $controller = new Restaurantcontroller();
+        if ($method === 'GET') {
+            $controller->editEventDetails();
+        }
+        break;
+    case '/history/overview':
+        $controller = new Historycontroller();
+        if ($method === 'GET') {
+            $controller->show();
+        }
+        break;
+    case '/history/proveniershof':
+        $controller = new Historycontroller();
+        if ($method === 'GET') {
+            $controller->showProveniershof();
+        }
+        break;
+    case '/history/churchbravo':
+        $controller = new Historycontroller();
+        if ($method === 'GET') {
+            $controller->showChurch();
         }
         break;
     default:

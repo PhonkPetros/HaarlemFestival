@@ -27,7 +27,7 @@ class AdminRepository extends dbconfig {
             $stmt->execute();
             $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
-            error_log("Error fetching users: " . $e->getMessage());
+            error_log("Err  or fetching users: " . $e->getMessage());
         }
 
         return $users;
@@ -125,6 +125,24 @@ class AdminRepository extends dbconfig {
             return null;
         }
     }
+
+
+    public function getListOfEvents() {
+        $events = [];
+    
+        try {
+            $sql = "SELECT [name] FROM Event";
+    
+            $stmt = $this->connection->prepare($sql);
+            $stmt->execute();
+            $events = $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
+        } catch (PDOException $e) {
+            error_log("Error fetching event types: " . $e->getMessage());
+        }
+    
+        return $events;
+    }
+    
     
     
 }

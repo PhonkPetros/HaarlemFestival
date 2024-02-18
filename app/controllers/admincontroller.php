@@ -26,8 +26,10 @@ class AdminController
     }
 
     public function manageFestivals(){
+        $allEvents = $this->adminservice->getListOfEvents();
         require_once __DIR__ . '/../views/admin/managefestival.php';
     }
+    
 
     public function editFestivals(){
         require_once __DIR__ . '/../views/admin/editfestival.php';

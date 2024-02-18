@@ -47,7 +47,9 @@ class AdminService {
         return $this->adminRepository->getUserById($userid);
     }
 
- 
+    public function getListOfEvents() {
+        return $this->adminRepository->getListOfEvents();
+    }
 
 
 }
