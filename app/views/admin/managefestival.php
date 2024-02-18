@@ -2,7 +2,8 @@
 
  ?>
 
-    <h1>manage festivals</h1>
-
+<div class="content">
+    <h1>Manage</h1>
+</div>
 
 <?php include __DIR__ . '/../general_views/footer.php'; ?>

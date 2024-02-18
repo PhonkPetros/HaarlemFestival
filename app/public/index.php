@@ -94,19 +94,19 @@ switch ($request) {
         break;
     case '/admin/managefestival':
         $controller = new admincontroller();
-        if ($method === 'POST') {
+        if ($method === 'GET') {
             $controller->manageFestivals();
         }
         break;
     case '/admin/editfestival':
         $controller = new admincontroller();
-        if ($method === 'POST') {
+        if ($method === 'GET') {
             $controller->editFestivals();
         }
         break;
     case '/admin/orders':
         $controller = new admincontroller();
-        if ($method === 'POST') {
+        if ($method === 'GET') {
             $controller->manageOrders();
         }
         break;
