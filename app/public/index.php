@@ -19,7 +19,7 @@ require_once __DIR__ . '/../controllers/accountcontroller.php';
 
 
 $request = $_SERVER['REQUEST_URI'];
-$method = $_SERVER['REQUEST_METHOD']; 
+$method = $_SERVER['REQUEST_METHOD'];
 
 switch ($request) {
     case '/':
@@ -90,6 +90,24 @@ switch ($request) {
         $controller = new admincontroller();
         if ($method === 'POST') {
             $controller->editUsers();
+        }
+        break;
+    case '/admin/managefestival':
+        $controller = new admincontroller();
+        if ($method === 'POST') {
+            $controller->manageFestivals();
+        }
+        break;
+    case '/admin/editfestival':
+        $controller = new admincontroller();
+        if ($method === 'POST') {
+            $controller->editFestivals();
+        }
+        break;
+    case '/admin/orders':
+        $controller = new admincontroller();
+        if ($method === 'POST') {
+            $controller->manageOrders();
         }
         break;
     default:

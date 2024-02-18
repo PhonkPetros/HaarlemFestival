@@ -28,15 +28,14 @@
             <a class="nav-link" href="/admin/manage-users">Manage Users</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="#">Manage Festival</a>
+            <a class="nav-link" href="/admin/managefestival">Manage Festival</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="#">Edit Festival</a>
+            <a class="nav-link" href="/admin/editfestival">Edit Festival</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="#">Orders</a>
+            <a class="nav-link" href="/admin/orders">Orders</a>
         </li>
-                    <!-- ... other nav-items ... -->
                 </ul>
                 <form class="d-flex">
                     <button class="btn btn-danger" type="button" onclick="confirmLogout()">Logout</button>
@@ -45,7 +44,6 @@
         </div>
     </nav>
     <div class="container">
-        <!-- Content goes here -->
     </div>
 </main>
 

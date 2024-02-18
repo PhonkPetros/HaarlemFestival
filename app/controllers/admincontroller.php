@@ -25,6 +25,18 @@ class AdminController
         require_once __DIR__ . '/../views/admin/manage-users.php';
     }
 
+    public function manageFestivals(){
+        require_once __DIR__ . '/../views/admin/managefestival.php';
+    }
+
+    public function editFestivals(){
+        require_once __DIR__ . '/../views/admin/editfestival.php';
+    }
+
+    public function manageOrders(){
+        require_once __DIR__ . '/../views/admin/orders.php';
+    }
+
     public function getAllUsers(){
         header('Content-Type: application/json');
         $allUsers = $this->adminservice->getAllUsers();
