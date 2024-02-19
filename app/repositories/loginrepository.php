@@ -18,17 +18,10 @@ class LoginRepository extends dbconfig {
         try {
             $stmt = $this->connection->prepare("SELECT * FROM [User] WHERE username = :username");
             $stmt->execute(['username' => $username]);
-            $userData = $stmt->fetch(PDO::FETCH_ASSOC);
-
-            if ($userData && password_verify($password, $userData['password_hash'])) {
-                $user = new User();
-                $user->setUserID($userData['user_id']);
-                $user->setTicketID($userData['ticket_id'] ?? 0);
-                $user->setUsername($userData['username']);
-                $user->setUserRole($userData['role']);
-                $user->setUserEmail($userData['email']);
-                $user->setPassword($userData['password_hash']);
-                $user->setRegistrationDate(new DateTime($userData['created_at']));
+            $stmt->setFetchMode(PDO::FETCH_CLASS, User::class);
+            $user = $stmt->fetch();
+            
+            if ($user && password_verify($password, $user->getPassword())) {
                 return $user;
             } else {
                 return null;

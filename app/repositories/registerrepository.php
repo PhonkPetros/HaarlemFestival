@@ -7,6 +7,7 @@ use PDO;
 use PDOException;
 use DateTime;
 
+
 require_once __DIR__ . '/../config/dbconfig.php';
 
 class registerrepository extends dbconfig {
@@ -37,9 +38,13 @@ class registerrepository extends dbconfig {
         }
     }
 
-    public function registerUser($username, $password, $email) {
+    public function registerUser($newuser) {
+        $username = $newuser->getUsername();
+        $email = $newuser->getUserEmail();
+        $password = $newuser->getPassword(); 
+        $role = "customer";
+
         if (!$this->usernameExists($username) && !$this->emailExists($email)) {
-            $role = "customer";
             $registration_date = new DateTime();
             $formatted_date = $registration_date->format('Y-m-d H:i:s');
             $hashed_password = password_hash($password, PASSWORD_DEFAULT);
@@ -59,10 +64,9 @@ class registerrepository extends dbconfig {
                 return false;
             }
         } else {
-            echo "Username already exists.";
+            echo "Username or email already exists.";
             return false;
         }
     }
-    
     
 }

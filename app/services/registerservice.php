@@ -13,8 +13,8 @@ class registerservice
         $this->registerrepository = new registerrepository(); 
     }
 
-    public function register($username, $password, $email) {
-        return $this->registerrepository->registerUser($username, $password, $email);
+    public function register($newuser) {
+        return $this->registerrepository->registerUser($newuser);
     }
 
     public function username_exists($username){

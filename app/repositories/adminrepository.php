@@ -7,8 +7,10 @@ use PDO;
 use PDOException;
 use DateTime;
 use repositories\registerrepository;
+use model\User;
 
 require_once __DIR__ . '/../config/dbconfig.php';
+require_once __DIR__ . '/../model/user.php';
 require_once __DIR__ . '/../repositories/registerrepository.php';
 
 class AdminRepository extends dbconfig {
@@ -21,33 +23,40 @@ class AdminRepository extends dbconfig {
     }
     public function getAllUsers() {
         $users = [];
-
+    
         try {
             $stmt = $this->connection->prepare("SELECT * FROM [User]");
             $stmt->execute();
-            $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $stmt->setFetchMode(PDO::FETCH_CLASS, User::class);
+            while ($user = $stmt->fetch()) {
+                $users[] = $user;
+            }
         } catch (PDOException $e) {
-            error_log("Err  or fetching users: " . $e->getMessage());
+            error_log("Error fetching users: " . $e->getMessage());
         }
-
+    
         return $users;
     }
-
+    
     public function filterUsers($username, $role) {
         $users = [];
-
+    
         try {
             $sql = "SELECT * FROM [User] WHERE username LIKE :username AND role = :role";
             $stmt = $this->connection->prepare($sql);
             $stmt->bindParam(':username', $username);
             $stmt->bindParam(':role', $role);
             $stmt->execute();
-            $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $stmt->setFetchMode(PDO::FETCH_CLASS, User::class);
+            while ($user = $stmt->fetch()) {
+                $users[] = $user;
+            }
         } catch (PDOException $e) {
             error_log("Error filtering users: " . $e->getMessage());
         }
         return $users;
     }
+    
 
     public function deleteUsers($userID) {
         try {
@@ -59,7 +68,12 @@ class AdminRepository extends dbconfig {
         }
     }
     
-    public function registerUser($username, $password, $role, $email) {
+    public function registerUser($newUser) {
+        $username = $newUser->getUsername();
+        $email = $newUser->getUserEmail();
+        $role = $newUser->getUserRole();
+        $password = $newUser->getPassword();
+
         if (!$this->registerRepo->usernameExists($username) && !$this->registerRepo->emailExists($email)) {
             $registration_date = new DateTime();
             $formatted_date = $registration_date->format('Y-m-d H:i:s');
@@ -117,15 +131,15 @@ class AdminRepository extends dbconfig {
             $stmt = $this->connection->prepare("SELECT * FROM [User] WHERE user_id = :userid");
             $stmt->bindParam(':userid', $userid, PDO::PARAM_INT);
             $stmt->execute();
-    
-            $user = $stmt->fetch(PDO::FETCH_ASSOC);
+            $stmt->setFetchMode(PDO::FETCH_CLASS, User::class);
+            $user = $stmt->fetch();
             return $user ?: null;
         } catch (PDOException $e) {
             error_log('Error fetching user by ID: ' . $e->getMessage());
             return null;
         }
     }
-
+    
 
     public function getListOfEvents() {
         $events = [];

@@ -2,49 +2,36 @@
 
 namespace model;
 
-use DateTime;
-
-class User
+class User implements \JsonSerializable
 {
-    private int $userID;
-    private ?int $ticketID;
-    private string $username;
-    private string $password;
-    private string $role;
+    private int $user_id;
     private string $email;
-    private DateTime $registrationDate;
+    private string $username;
+    private string $password_hash;
+    private string $role;
+    private string $created_at;
 
-    public function getUserData(): array
-    {
+    public function jsonSerialize() : mixed{
         return [
-            'userID' => $this->getUserID(),
-            'ticketID' => $this->getTicketID(),
+            'user_id' => $this->getUserID(),
+            'email' => $this->getUserEmail(),
             'username' => $this->getUsername(),
             'role' => $this->getUserRole(),
-            'email' => $this->getUserEmail(),
-            'created_at' => $this->getRegistrationDate()->format('Y-m-d H:i:s'), 
+            'created_at' => $this->getRegistrationDate(),
         ];
     }
 
     public function getUserID(): int
     {
-        return $this->userID;
+        return $this->user_id;
     }
 
     public function setUserID(int $userID): void
     {
-        $this->userID = $userID;
+        $this->user_id = $userID;
     }
 
-    public function getTicketID(): ?int
-    {
-        return $this->ticketID;
-    }
 
-    public function setTicketID(?int $ticketID): void
-    {
-        $this->ticketID = $ticketID;
-    }
 
     public function getUsername(): string
     {
@@ -58,12 +45,12 @@ class User
 
     public function getPassword(): string
     {
-        return $this->password;
+        return $this->password_hash;
     }
 
     public function setPassword(string $password): void
     {
-        $this->password = $password;
+        $this->password_hash = $password;
     }
 
     public function getUserRole(): string
@@ -86,13 +73,11 @@ class User
         $this->email = $email;
     }
 
-    public function getRegistrationDate(): DateTime
-    {
-        return $this->registrationDate;
+    public function getRegistrationDate(): string {
+        return $this->created_at;
     }
 
-    public function setRegistrationDate(DateTime $registrationDate): void
-    {
-        $this->registrationDate = $registrationDate;
+    public function setRegistrationDate(string $registrationDate): void {
+        $this->created_at = $registrationDate;
     }
 }

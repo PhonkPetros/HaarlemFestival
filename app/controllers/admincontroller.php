@@ -3,16 +3,20 @@
 namespace controllers;
 
 use services\AdminService;
+use model\User;
 
+require_once __DIR__ . '/../model/user.php';
 require_once __DIR__ . '/../services/AdminService.php';
 
 
 class AdminController
 {
     private $adminservice;
+    private $usermodel;
   
     public function __construct() {
         $this->adminservice = new AdminService();
+        $this->usermodel = new User();
     }
 
     public function show()
@@ -96,6 +100,14 @@ class AdminController
         $password = htmlspecialchars($_POST['password'] ?? '');
         $usernameInUse = $this->adminservice->username_exists($username);
         $emailInUse = $this->adminservice->email_exists($email);
+
+        $newUser = new User();
+        $newUser->setUsername( $username );
+        $newUser->setUserEmail( $email );
+        $newUser->setUserRole( $role );
+        $newUser->setPassword( $password );
+
+
         if($usernameInUse || $emailInUse){
             $message = 'Username and/or email already in use';
             if ($usernameInUse) {
@@ -110,7 +122,7 @@ class AdminController
             echo json_encode(['success'=> false, 'message'=> $message]);
             return; 
         }
-        $result = $this->adminservice->createUsers($username, $password, $role, $email);
+        $result = $this->adminservice->createUsers($newUser);
         if ($result) {
             echo json_encode(['success' => true, 'message' => 'User has been added']);
         } else {

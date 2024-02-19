@@ -3,15 +3,19 @@
 namespace controllers;
 
 use services\registerservice;
+use model\User;
 
 require_once __DIR__ . '/../services/registerservice.php';
+require_once __DIR__ . '/../model/user.php';
 
 class registercontroller
 {
     private $registerService;
+    private $user;
   
     public function __construct() {
         $this->registerService = new registerservice();
+        $this->user = new User();
     }
 
     public function show()
@@ -35,9 +39,15 @@ class registercontroller
             $username = htmlspecialchars($_POST['username']);
             $password = htmlspecialchars($_POST['password']);
             $email = htmlspecialchars($_POST['email']);
+
+            $newuser = new User();
+            $newuser->setUsername($username);
+            $newuser->setPassword($password);
+            $newuser->setUserEmail($email);
+
         
             if (!$this->registerService->username_exists($username) && !$this->registerService->email_exists($email)) {
-                $this->registerService->register($username, $password, $email);
+                $this->registerService->register($newuser);
                 header('Location: /login'); 
                 exit;
             } else {
