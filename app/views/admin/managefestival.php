@@ -9,6 +9,7 @@
     <div class="table-responsive">
         <table class="table">
             <thead>
+                <button class="btn btn-dark" style="margin: 20px; padding: 10px;">Add a new event</button>
                 <tr>
                     <th>Events</th>
                     <th>Actions</th>

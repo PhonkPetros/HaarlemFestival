@@ -22,7 +22,6 @@ class dbconfig {
             $this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } catch (PDOException $e) {
             echo "Connection failed: " . $e->getMessage();
-            // Consider handling this exception more gracefully or rethrowing it for the calling code to handle
         }
     }
 

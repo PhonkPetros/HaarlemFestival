@@ -145,7 +145,7 @@ class AdminRepository extends dbconfig {
         $events = [];
     
         try {
-            $sql = "SELECT [name] FROM Event";
+            $sql = "SELECT DISTINCT [name] FROM Event";
     
             $stmt = $this->connection->prepare($sql);
             $stmt->execute();

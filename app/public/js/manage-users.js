@@ -37,6 +37,8 @@ function updateTable(data) {
         tableBody.innerHTML += row;
     });
 }
+
+
 function filterUsers(username, role) {
     var formData = new FormData();
     formData.append('username', username);

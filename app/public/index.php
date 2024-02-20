@@ -157,6 +157,12 @@ switch ($request) {
             $controller->showChurch();
         }
         break;
+    case '/manage-event-details/editDetailsHistory/addNewTimeSlot':
+        $controller = new Historycontroller();
+        if ($method === 'POST') {
+            $controller->addNewTimeSlot();
+        }
+        break;
     default:
         http_response_code(404);
         require __DIR__ . '/../views/404.php';
