@@ -131,7 +131,7 @@ include __DIR__ . '/../general_views/header.php';
           <td>1 group <button class="btn btn-primary btn-reserve">Reserve</button></td>
         </tr>
         <tr>
-          <td>28-Jul Thursday</td>
+          <td>29-Jul Thursday</td>
           <td>1 group <button class="btn btn-primary btn-reserve">Reserve</button></td>
           <td>1 group <button class="btn btn-primary btn-reserve">Reserve</button></td>
           <td>1 group <button class="btn btn-primary btn-reserve">Reserve</button></td>
@@ -169,7 +169,7 @@ include __DIR__ . '/../general_views/header.php';
           <td>1 group <button class="btn btn-primary btn-reserve">Reserve</button></td>
         </tr>
         <tr>
-          <td>28-Jul Thursday</td>
+          <td>29-Jul Thursday</td>
           <td>1 group <button class="btn btn-primary btn-reserve">Reserve</button></td>
           <td>1 group <button class="btn btn-primary btn-reserve">Reserve</button></td>
           <td>1 group <button class="btn btn-primary btn-reserve">Reserve</button></td>
@@ -207,7 +207,7 @@ include __DIR__ . '/../general_views/header.php';
           <td>1 group <button class="btn btn-primary btn-reserve">Reserve</button></td>
         </tr>
         <tr>
-          <td>28-Jul Thursday</td>
+          <td>29-Jul Thursday</td>
           <td>1 group <button class="btn btn-primary btn-reserve">Reserve</button></td>
           <td>1 group <button class="btn btn-primary btn-reserve">Reserve</button></td>
           <td>1 group <button class="btn btn-primary btn-reserve">Reserve</button></td>
