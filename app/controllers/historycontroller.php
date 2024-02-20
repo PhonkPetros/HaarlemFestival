@@ -35,6 +35,7 @@ class Historycontroller
 
     public function editEventDetails()
     {
+        $eventDetails = $this->historyService->getEventDetails();
         require_once __DIR__ . '/../views/admin/manage-event-details/editDetailsHistory.php';
     }
     

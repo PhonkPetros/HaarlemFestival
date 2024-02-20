@@ -10,8 +10,6 @@ class Event implements \JsonSerializable
     private int $price;
     private string $time;
     private string $picture;
-    private string $language;
-
 
     public function jsonSerialize(): mixed {
         return [
@@ -22,7 +20,6 @@ class Event implements \JsonSerializable
             'price' => $this->getPrice(),
             'time' => $this->getTime(),
             'picture' => $this->getPicture(),
-            'language'=> $this->getLanguage(),
         ];
     }
 
@@ -54,11 +51,6 @@ class Event implements \JsonSerializable
         return $this->picture;
     }
 
-    public function getLanguage(): string {
-        return $this->language;
-    }
-
-
     public function setEventId(int $event_id): void {
         $this->event_id = $event_id;
     }
@@ -85,10 +77,6 @@ class Event implements \JsonSerializable
 
     public function setPicture(string $picture): void {
         $this->picture = $picture;
-    }
-
-    public function setLanguage(string $language): void {
-        $this->language = $language;
     }
 
 }

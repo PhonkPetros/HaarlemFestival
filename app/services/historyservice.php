@@ -16,6 +16,8 @@ class HistoryService
         $this->historyRepo = new Historyrepository();
     }
 
-
+    public function getEventDetails() : mixed {
+        return $this->historyRepo->getEventDetails();
+    }
 
 }
