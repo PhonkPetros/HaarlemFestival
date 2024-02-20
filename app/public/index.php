@@ -157,12 +157,6 @@ switch ($request) {
             $controller->showChurch();
         }
         break;
-    case '/editEventDetails':
-        $controller = new Historycontroller();
-        if ($method === 'POST') {
-            $controller->updateEvent();
-        }
-        break;
     default:
         http_response_code(404);
         require __DIR__ . '/../views/404.php';
