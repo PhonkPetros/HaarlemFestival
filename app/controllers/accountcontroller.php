@@ -19,14 +19,13 @@ class AccountController
     private $user;
     private $smtpController;
 
-
     public function __construct()
     {
+        
         $this->registerService = new registerservice();
         $this->accountService = new accountervice();
         $this->user = new user();
         $this->smtpController = new SMTPController();
-
 
         $this->user->setUserID($_SESSION['user']['userID']);
         $this->user->setPassword($_SESSION['user']['password_hash']);
@@ -35,8 +34,13 @@ class AccountController
     }
 
 
+
     public function show()
     {
+
+
+
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (isset($_POST['updateEmailBtn'])) {
                 $this->updateEmail();
@@ -48,6 +52,11 @@ class AccountController
         }
 
         require_once '../views/user/account.php';
+
+        // if (isset($_SESSION['response'])) {
+        //     unset($_SESSION['response']);
+        // }
+
     }
 
 
@@ -64,93 +73,81 @@ class AccountController
 
     public function updateUsername()
     {
-         if (isset($_POST['updateUsername'])) {
+        if (isset($_POST['updateUsername'])) {
             $newUsername = htmlspecialchars($_POST['updateUsername']);
 
             if ($this->registerService->username_exists($newUsername)) {
-                $response['message'] = 'Username is already taken';
-                echo json_encode($response);
-                exit;
-            }
-            if ($this->accountService->updateUsername($this->user->getUserID(), $newUsername)) {
-                $response['success'] = true;
-                $this->sendEmail('Your username has been updated successfully.');
-                $response['message'] = 'Username updated successfully';
+                $_SESSION['response'] = ['success' => false, 'message' => 'Username is already taken'];
+            } elseif ($this->accountService->updateUsername($this->user->getUserID(), $newUsername)) {
+                $message = 'Your username has been updated successfully.';
+                if ($this->sendEmail($message)) {
+                    $_SESSION['response'] = ['success' => true, 'message' => 'Username updated successfully'];
+                } else {
+                    $_SESSION['response'] = ['success' => false, 'message' => 'Failed to send confirmation email'];
+                }
             } else {
-                $response['message'] = 'Failed to update username';
+                $_SESSION['response'] = ['success' => false, 'message' => 'Failed to update username'];
             }
         } else {
-            $response['message'] = 'Username field is empty';
+            $_SESSION['response'] = ['success' => false, 'message' => 'Username field is empty'];
         }
 
-        echo json_encode($response);
+        header('Location: /account');
         exit;
     }
+
 
     public function updateEmail()
     {
-        $response = ['success' => false, 'message' => ''];
-
         if (isset($_POST['updateEmail'])) {
             $newEmail = htmlspecialchars($_POST['updateEmail']);
-
             if ($this->registerService->email_exists($newEmail)) {
-                $response['message'] = 'Email is already taken';
-                echo json_encode($response);
-                exit;
-            }
-
-            if ($this->accountService->updateEmail($this->user->getUserID(), $newEmail)) {
+                $_SESSION['response'] = ['success' => false, 'message' => 'Email is already taken'];
+            } elseif ($this->accountService->updateEmail($this->user->getUserID(), $newEmail)) {
                 $message = 'Your email address has been updated successfully.';
+                $this->user->setUserEmail($newEmail);
                 if ($this->sendEmail($message)) {
-                    $response['success'] = true;
-                    $response['message'] = 'Email updated successfully';
+                    $_SESSION['response'] = ['success' => true, 'message' => 'Email updated successfully'];
                 } else {
-                    $response['message'] = 'Failed to send confirmation email';
+                    $_SESSION['response'] = ['success' => false, 'message' => 'Failed to send confirmation email'];
                 }
             } else {
-                $response['message'] = 'Failed to update email';
+                $_SESSION['response'] = ['success' => false, 'message' => 'Failed to update email'];
             }
         } else {
-            $response['message'] = 'Email field is empty';
+            $_SESSION['response'] = ['success' => false, 'message' => 'Email field is empty'];
         }
 
-        echo json_encode($response);
+        header('Location: /account');
         exit;
     }
+
 
     public function updatePassword()
     {
-        $response = ['success' => false, 'message' => ''];
-
         if (isset($_POST['oldPassword'], $_POST['newPassword'])) {
             $oldPassword = htmlspecialchars($_POST['oldPassword']);
             $newPassword = htmlspecialchars($_POST['newPassword']);
-
             $currentHashedPassword = $this->user->getPassword();
-
+    
             if (!password_verify($oldPassword, $currentHashedPassword)) {
-                $response['message'] = 'Old password is incorrect';
-                echo json_encode($response);
-                exit;
-            }
-
-            if ($this->accountService->updatePassword($this->user->getUserID(), $newPassword)) {
+                $_SESSION['response'] = ['success' => false, 'message' => 'Old password is incorrect'];
+            } elseif ($this->accountService->updatePassword($this->user->getUserID(), $newPassword)) {
                 $message = 'Your password has been updated successfully.';
                 if ($this->sendEmail($message)) {
-                    $response['success'] = true;
-                    $response['message'] = 'Password updated successfully';
+                    $_SESSION['response'] = ['success' => true, 'message' => 'Password updated successfully'];
                 } else {
-                    $response['message'] = 'Failed to send confirmation email';
+                    $_SESSION['response'] = ['success' => false, 'message' => 'Failed to send confirmation email'];
                 }
             } else {
-                $response['message'] = 'Failed to update password';
+                $_SESSION['response'] = ['success' => false, 'message' => 'Failed to update password'];
             }
         } else {
-            $response['message'] = 'Password fields are empty';
+            $_SESSION['response'] = ['success' => false, 'message' => 'Password fields are empty'];
         }
-
-        echo json_encode($response);
+    
+        header('Location: /account');
         exit;
     }
+    
 }
