@@ -71,22 +71,24 @@ class historyrepository extends dbconfig
 
     public function addNewTimeSlot(Ticket $newTicket)
     {
-        $checkSql = "SELECT COUNT(*) FROM Ticket WHERE event_id = :event_id AND Date = :date AND Time = :time";
+        
+        $checkSql = "SELECT COUNT(*) FROM Ticket WHERE event_id = :event_id AND Date = :date AND Time = :time AND language = :language";
     
         try {
             $checkStmt = $this->getConnection()->prepare($checkSql);
             $checkStmt->bindValue(':event_id', $newTicket->getEventId());
             $checkStmt->bindValue(':date', $newTicket->getTicketDate());
             $checkStmt->bindValue(':time', $newTicket->getTicketTime());
+            $checkStmt->bindValue(':language', $newTicket->getTicketLanguage());
             $checkStmt->execute();
-
+    
             $existingTicketCount = $checkStmt->fetchColumn();
-
+    
             if ($existingTicketCount > 0) {
-                error_log("A ticket with the same date and time already exists.");
+                error_log("A ticket with the same date, time, and language already exists.");
                 return false;
             }
-
+    
             $insertSql = "INSERT INTO Ticket (quantity, ticket_hash, state, event_id, language, Date, Time)
                           VALUES (:quantity, :ticket_hash, :state, :event_id, :language, :date, :time)";
     
@@ -105,6 +107,7 @@ class historyrepository extends dbconfig
             return false;
         }
     }
+    
     
 
 

@@ -21,6 +21,9 @@ class Historycontroller
 
     public function show()
     {
+        $eventDetails = $this->historyService->getEventDetails();
+        $structuredTickets = $this->getStructuredTickets($eventDetails->getEventId());
+        $uniqueTimes = $this->getUniqueTimes($structuredTickets);
         require_once __DIR__ . '/../views/history/overview.php';
     }
 
@@ -41,43 +44,75 @@ class Historycontroller
         $eventTickets = $this->historyService->getTickets($eventId);
         require_once __DIR__ . '/../views/admin/manage-event-details/editDetailsHistory.php';
     }
-    
+
 
     public function addNewTimeSlot()
-{
-    $eventId = htmlspecialchars($_POST['event_id'] ?? null);
-    $date = htmlspecialchars($_POST['date'] ?? null);
-    $quantity = htmlspecialchars($_POST['quantity'] ?? null);
-    $language = htmlspecialchars($_POST['language'] ?? null);
-    $time = htmlspecialchars($_POST['time'] ?? null);
-    $state = "Not Used";
+    {
+        $eventId = htmlspecialchars($_POST['event_id'] ?? null);
+        $date = htmlspecialchars($_POST['date'] ?? null);
+        $quantity = htmlspecialchars($_POST['quantity'] ?? null);
+        $language = htmlspecialchars($_POST['language'] ?? null);
+        $time = htmlspecialchars($_POST['time'] ?? null);
+        $state = "Not Used";
 
-    $newTicket = new Ticket();
-    $newTicket->setEventId($eventId);
-    $newTicket->setTicketDate($date);
-    $newTicket->setQuantity($quantity);
-    $newTicket->setTicketLanguage($language);
-    $newTicket->setTicketTime($time);
-    $newTicket->setState('Not Used');
-    $newTicket->setTicketHash($this->generateTicketHash($eventId, $date, $time));
-    
-   
-    $result = $this->historyService->addNewTimeSlot($newTicket);
-    
-   
-    header('Content-Type: application/json');
-    if ($result) {
-        echo json_encode(['success' => true, 'message' => 'Timeslot added successfully.']);
-    } else {
-        echo json_encode(['success' => false, 'message' => 'Failed to add timeslot.']);
+        $newTicket = new Ticket();
+        $newTicket->setEventId($eventId);
+        $newTicket->setTicketDate($date);
+        $newTicket->setQuantity($quantity);
+        $newTicket->setTicketLanguage($language);
+        $newTicket->setTicketTime($time);
+        $newTicket->setState('Not Used');
+        $newTicket->setTicketHash($this->generateTicketHash($eventId, $date, $time));
+
+
+        $result = $this->historyService->addNewTimeSlot($newTicket);
+
+
+        header('Content-Type: application/json');
+        if ($result) {
+            echo json_encode(['success' => true, 'message' => 'Timeslot added successfully.']);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Failed to add timeslot.']);
+        }
+        exit;
     }
-    exit;
-}
 
-    
-    
-    private function generateTicketHash($eventId, $date, $time) {
+    private function generateTicketHash($eventId, $date, $time)
+    {
         $toHash = $eventId . $date . $time . uniqid('', true);
         return hash('sha256', $toHash);
+    }
+
+    private function getStructuredTickets($eventId)
+    {
+        $tickets = $this->historyService->getTickets($eventId);
+        $structuredTickets = [];
+
+        foreach ($tickets as $ticket) {
+            $language = $ticket->getTicketLanguage();
+            $date = $ticket->getTicketDate();
+            $time = $ticket->getTicketTime();
+            $quantity = $ticket->getQuantity();
+
+            $structuredTickets[$language][$date][$time] = $quantity;
+        }
+
+        return $structuredTickets;
+    }
+
+    private function getUniqueTimes($structuredTickets)
+    {
+        $allTimes = [];
+
+        foreach ($structuredTickets as $dates) {
+            foreach ($dates as $times) {
+                $allTimes = array_merge($allTimes, array_keys($times));
+            }
+        }
+
+        $uniqueTimes = array_unique($allTimes);
+        sort($uniqueTimes);
+
+        return $uniqueTimes;
     }
 }
