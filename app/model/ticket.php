@@ -9,6 +9,7 @@ class Ticket implements \JsonSerializable
     private string $ticket_hash;
     private string $state;
     private int $event_id;
+    private string $language;
 
     public function getTicketId(): int {
         return $this->ticket_id;
@@ -59,6 +60,14 @@ class Ticket implements \JsonSerializable
         $this->event_id = $event_id;
     }
 
+    public function getTicketLanguage(): string {
+        return $this->language;
+    }
+
+    public function setTicketLanguage(string $language): void {
+        $this->language = $language;
+    }
+
     public function jsonSerialize(): mixed {
         return [
             'ticket_id' => $this->ticket_id,
@@ -67,6 +76,7 @@ class Ticket implements \JsonSerializable
             'ticket_hash' => $this->ticket_hash,
             'state' => $this->state,
             'event_id' => $this->event_id,
+            'language' => $this->language,
         ];
     }
 }

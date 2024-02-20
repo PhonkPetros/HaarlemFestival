@@ -36,6 +36,8 @@ class Historycontroller
     public function editEventDetails()
     {
         $eventDetails = $this->historyService->getEventDetails();
+        $eventId = $eventDetails->getEventId();
+        $eventTickets = $this->historyService->getTickets($eventId);
         require_once __DIR__ . '/../views/admin/manage-event-details/editDetailsHistory.php';
     }
     

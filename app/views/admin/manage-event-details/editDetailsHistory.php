@@ -1,12 +1,12 @@
 <?php include __DIR__ . '/../../general_views/adminheader.php'; ?>
+
 <h1 class="mb-4 text-center">Edit History Event Details</h1>
+
 <div class="container mt-5">
     <div class="row">
         <div class="col-lg-6 col-md-6">
-       
-            
             <div class="card mb-3">
-                <div class="card-header text-center" >
+                <div class="card-header text-center">
                     <u>Current Event Details</u>
                 </div>
                 <div class="card-body">
@@ -29,10 +29,25 @@
         <div class="col-lg-6 col-md-6">
             <div class="card mb-3">
                 <div class="card-header text-center">
-                <u>Time Slots</u>
+                    <u>Time Slots</u>
                 </div>
                 <div class="card-body">
-      
+                    <?php if (empty($eventTickets)): ?>
+                        <p>No tickets available.</p>
+                    <?php else: ?>
+                        <?php foreach ($eventTickets as $ticket): ?>
+                            <div class="ticket-row mb-3">
+                                <p><strong>Ticket ID:</strong> <?= htmlspecialchars($ticket->getTicketId()) ?></p>
+                                <p><strong>User ID:</strong> <?= htmlspecialchars($ticket->getUserId()) ?></p>
+                                <p><strong>Quantity:</strong> <?= htmlspecialchars($ticket->getQuantity()) ?></p>
+                                <p><strong>State:</strong> <?= htmlspecialchars($ticket->getState()) ?></p>
+                                <p><strong>Language:</strong> <?= htmlspecialchars($ticket->getTicketLanguage()) ?></p>
+                                <a href="edit-ticket.php?id=<?= htmlspecialchars($ticket->getTicketId()) ?>" class="btn btn-primary">Edit Ticket</a>
+                            </div>
+                        <?php endforeach; ?> 
+                    <?php endif; ?>
+                    <?Php /* Below use a popup modal similar to how I do it in the manage users page. */?>
+                    <a href="add-ticket.php?id=<?= htmlspecialchars($eventDetails->getEventId()) ?>" class="btn btn-primary">Add ticket</a>
                 </div>
             </div>
         </div>

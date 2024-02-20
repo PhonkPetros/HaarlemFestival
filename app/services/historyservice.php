@@ -20,4 +20,8 @@ class HistoryService
         return $this->historyRepo->getEventDetails();
     }
 
+    public function getTickets($eventId) : mixed{
+        return $this->historyRepo->getTicketsForEvent($eventId);
+    }
+
 }
