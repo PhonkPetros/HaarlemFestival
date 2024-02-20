@@ -16,12 +16,16 @@ class HistoryService
         $this->historyRepo = new Historyrepository();
     }
 
-    public function getEventDetails() : mixed {
+    public function getEventDetails() {
         return $this->historyRepo->getEventDetails();
     }
 
-    public function getTickets($eventId) : mixed{
+    public function getTickets($eventId) {
         return $this->historyRepo->getTicketsForEvent($eventId);
+    }
+
+    public function addNewTimeSlot($newTicket){
+        $this->historyRepo->addNewTimeSlot($newTicket);
     }
 
 }

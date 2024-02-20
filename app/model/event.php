@@ -5,20 +5,20 @@ class Event implements \JsonSerializable
 {
     private int $event_id;
     private string $name;
-    private string $date;
+    private string $startDate;
     private string $location;
     private int $price;
-    private string $time;
     private string $picture;
+    private string $endDate;
 
     public function jsonSerialize(): mixed {
         return [
             'event_id' => $this->getEventId(),
             'name' => $this->getName(),
-            'date' => $this->getDate(),
+            'startDate' => $this->getStartDate(),
+            'endDate' => $this->getEndDate(),
             'location' => $this->getLocation(),
             'price' => $this->getPrice(),
-            'time' => $this->getTime(),
             'picture' => $this->getPicture(),
         ];
     }
@@ -31,9 +31,14 @@ class Event implements \JsonSerializable
         return $this->name;
     }
 
-    public function getDate(): string {
-        return $this->date;
+    public function getStartDate(): string {
+        return $this->startDate;
     }
+
+    public function getEndDate(): string {
+        return $this->endDate;
+    }
+
 
     public function getLocation(): string {
         return $this->location;
@@ -41,10 +46,6 @@ class Event implements \JsonSerializable
 
     public function getPrice(): int {
         return $this->price;
-    }
-
-    public function getTime(): string {
-        return $this->time;
     }
 
     public function getPicture(): string {
@@ -59,8 +60,12 @@ class Event implements \JsonSerializable
         $this->name = $name;
     }
 
-    public function setDate(string $date): void {
-        $this->date = $date;
+    public function setStartDate(string $date): void {
+        $this->startDate = $date;
+    }
+
+    public function setEndDate(string $date): void {
+        $this->endDate = $date;
     }
 
     public function setLocation(string $location): void {
@@ -69,10 +74,6 @@ class Event implements \JsonSerializable
 
     public function setPrice(int $price): void {
         $this->price = $price;
-    }
-
-    public function setTime(string $time): void {
-        $this->time = $time;
     }
 
     public function setPicture(string $picture): void {
