@@ -33,6 +33,10 @@
                     <?Php /* Below use a popup modal similar to how I do it in the manage users page. */ ?>
                     <a href="edit-event.php?id=<?= htmlspecialchars($eventDetails->getEventId()) ?>"
                         class="btn btn-primary">Edit Event Details</a>
+                        <button type="button" id="openModal" class="btn btn-primary"
+                            data-event-id="<?= htmlspecialchars($eventDetails->getEventId()) ?>">
+                            Add New Timeslot
+                        </button>
                 </div>
             </div>
         </div>
@@ -42,36 +46,34 @@
                 <div class="card-header text-center">
                     <u>Time Slots</u>
                 </div>
-                <div class="card-body">
-                    <?php if (empty($eventTickets)): ?>
-                        <p>No tickets available.</p>
-                    <?php else: ?>
-                        <?php foreach ($eventTickets as $ticket): ?>
-                            <div class="ticket-row mb-3">
-                                <p><strong>Language:</strong>
-                                    <?= htmlspecialchars($ticket->getTicketLanguage()) ?>
-                                </p>
-                                <p><strong>Date:</strong>
-                                    <?= htmlspecialchars($ticket->getTicketDate()) ?>
-                                </p>
-                                <p><strong>Time:</strong>
-                                    <?= htmlspecialchars($ticket->getTicketTime()) ?>
-                                </p>
-                                <p><strong>Quantity:</strong>
-                                    <?= htmlspecialchars($ticket->getQuantity()) ?>
-                                </p>
+                <div class="overflow-auto" style="max-height: 770px;"> 
+                    <div class="card-body ">
+                        <?php if (empty($eventTickets)): ?>
+                            <p>No tickets available.</p>
+                        <?php else: ?>
+                            <?php foreach ($eventTickets as $ticket): ?>
+                                <div class="ticket-row mb-3">
+                                    <p><strong>Language:</strong>
+                                        <?= htmlspecialchars($ticket->getTicketLanguage()) ?>
+                                    </p>
+                                    <p><strong>Date:</strong>
+                                        <?= htmlspecialchars($ticket->getTicketDate()) ?>
+                                    </p>
+                                    <p><strong>Time:</strong>
+                                        <?= htmlspecialchars($ticket->getTicketTime()) ?>
+                                    </p>
+                                    <p><strong>Quantity:</strong>
+                                        <?= htmlspecialchars($ticket->getQuantity()) ?>
+                                    </p>
 
-                                <a href="edit-ticket.php?id=<?= htmlspecialchars($ticket->getTicketId()) ?>"
-                                    class="btn btn-primary">Edit Timeslot</a>
+                                    <a href="edit-ticket.php?id=<?= htmlspecialchars($ticket->getTicketId()) ?>"
+                                        class="btn btn-primary">Edit Timeslot</a>
                                     <a href="delet-ticket.php?id=<?= htmlspecialchars($ticket->getTicketId()) ?>"
-                                    class="btn btn-danger">Delete Timeslot</a>
-                            </div>
-                        <?php endforeach; ?>
-                    <?php endif; ?>
-                    <button type="button" id="openModal" class="btn btn-primary"
-                        data-event-id="<?= htmlspecialchars($eventDetails->getEventId()) ?>">
-                        Add New Timeslot
-                    </button>
+                                        class="btn btn-danger">Delete Timeslot</a>
+                                </div>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </div>
                 </div>
             </div>
         </div>
