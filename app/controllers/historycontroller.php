@@ -91,6 +91,8 @@ class Historycontroller
             $uploadDirectory = '/img/EventImages/';
             $relativeUploadPath = $this->uploadImage($_FILES['image'] ?? null, $uploadDirectory);
 
+            //TODO First check if the name already exists
+
             $result = $this->historyService->editEventDetails($eventId, $newEventName, $newStartDate, $newEndDate, $newPrice, $newLocation, $relativeUploadPath);
 
             if (!$result) {
@@ -105,7 +107,6 @@ class Historycontroller
         }
         exit;
     }
-
     private function uploadImage($imageFile, $uploadDirectory)
     {
         if (isset($imageFile) && $imageFile['error'] == UPLOAD_ERR_OK) {
