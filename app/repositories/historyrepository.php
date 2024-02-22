@@ -5,9 +5,9 @@ namespace repositories;
 use config\dbconfig;
 use PDO;
 use PDOException;
-use DateTime;
 use model\Event;
 use model\Ticket;
+
 
 require_once __DIR__ . '/../config/dbconfig.php';
 require_once __DIR__ . '/../model/event.php';
@@ -107,7 +107,55 @@ class historyrepository extends dbconfig
             return false;
         }
     }
+
+    public function existEvent($newEventName, $eventId){
+        $sql = "SELECT COUNT(*) FROM [Event] WHERE name = :name AND event_id != :eventId";
+        try {
+            $stmt = $this->getConnection()->prepare($sql);
+            $stmt->bindParam(':name', $newEventName, PDO::PARAM_STR);
+            $stmt->bindParam(':eventId', $eventId, PDO::PARAM_INT);
+            $stmt->execute();
     
+            $count = $stmt->fetchColumn();
+            return $count > 0 ? false : true;
+        } catch (PDOException $e) {
+            error_log(''. $e->getMessage());
+            return false; 
+        }
+    }
+    
+    public function editEventDetails($eventId, $eventName, $startDate, $endDate, $price, $newLocation, $picture){
+        $sql = "UPDATE Event SET 
+                    name = :eventName, 
+                    startDate = :startDate,  
+                    endDate = :endDate, 
+                    location = :location, 
+                    price = :price,
+                    picture = :picture
+                WHERE event_id = :eventId";
+    
+        try {
+            $stmt = $this->getConnection()->prepare($sql);
+            $stmt->bindParam(':eventName', $eventName, PDO::PARAM_STR);
+            $stmt->bindParam(':startDate', $startDate, PDO::PARAM_STR);
+            $stmt->bindParam(':endDate', $endDate, PDO::PARAM_STR);
+            $stmt->bindParam(':price', $price);
+            $stmt->bindParam(':location', $newLocation, PDO::PARAM_STR);
+            $stmt->bindParam(':picture', $picture, PDO::PARAM_STR);
+            $stmt->bindParam(':eventId', $eventId, PDO::PARAM_INT);
+    
+            $stmt->execute();
+            
+            if ($stmt->rowCount() > 0) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (PDOException $e) {
+            error_log("Error updating event details: " . $e->getMessage());
+            return false;
+        }
+    }
     
 
 

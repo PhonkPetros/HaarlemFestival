@@ -27,16 +27,13 @@
                     </p>
                     <div class="mb-3 text-center">
                         <p class="card-text"><strong>Picture:</strong></p>
-                        <img src="/../img/<?= htmlspecialchars($eventDetails->getPicture()) ?>" alt="Event Image"
+                        <img src="<?= htmlspecialchars($eventDetails->getPicture()) ?>" alt="Event Image"
                             class="img-fluid" style="max-width: 100%; height: auto;">
                     </div>
-                    <?Php /* Below use a popup modal similar to how I do it in the manage users page. */ ?>
-                    <a href="edit-event.php?id=<?= htmlspecialchars($eventDetails->getEventId()) ?>"
-                        class="btn btn-primary">Edit Event Details</a>
-                        <button type="button" id="openModal" class="btn btn-primary"
-                            data-event-id="<?= htmlspecialchars($eventDetails->getEventId()) ?>">
-                            Add New Timeslot
-                        </button>
+                    <button type="button" id="editEventDetailsButton" class="btn btn-primary"
+                        data-event-id="<?= htmlspecialchars($eventDetails->getEventId()) ?>">Edit Event Details</button>
+                    <button type="button" id="addTimeslotButton" class="btn btn-primary"
+                        data-event-id="<?= htmlspecialchars($eventDetails->getEventId()) ?>">Add New Timeslot</button>
                 </div>
             </div>
         </div>
@@ -46,7 +43,7 @@
                 <div class="card-header text-center">
                     <u>Time Slots</u>
                 </div>
-                <div class="overflow-auto" style="max-height: 770px;"> 
+                <div class="overflow-auto" style="max-height: 770px;">
                     <div class="card-body ">
                         <?php if (empty($eventTickets)): ?>
                             <p>No tickets available.</p>
@@ -80,22 +77,23 @@
     </div>
 </div>
 
-<div id="ticketModal" class="modal">
+<div id="addTimeslotModal" class="modal">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Add New Timeslot</h5>
-                <button type="button" id="closeModal" class="btn-close"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="addTicketForm">
+                <form id="addTimeslotForm">
                     <div class="mb-3">
                         <label for="newDate" class="form-label">Date</label>
                         <input type="date" class="form-control" id="newDate" name="date" required>
                     </div>
                     <div class="mb-3">
                         <label for="newQuantity" class="form-label">Quantity</label>
-                        <input type="number" class="form-control" id="newQuantity" name="quantity" required>
+                        <input type="number" min="0" max="20" class="form-control" id="newQuantity" name="quantity"
+                            required>
                     </div>
                     <div class="mb-3">
                         <label for="newLanguage" class="form-label">Language</label>
@@ -113,11 +111,55 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="submit" form="addTicketForm" class="btn btn-primary">Add New Timeslot</button>
+                <button type="submit" form="addTimeslotForm" class="btn btn-primary">Add New Timeslot</button>
             </div>
         </div>
     </div>
 </div>
+
+<div id="editEventDetailsModal" class="modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Event Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editEventForm" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="newEventName" class="form-label">Name</label>
+                        <input type="text" class="form-control" id="newEventName" name="name" value="<?= htmlspecialchars($eventDetails->getName()) ?>">
+                    </div>
+                    <div class="mb-3">
+                        <label for="newStartDate" class="form-label">Start Date</label>
+                        <input type="date" class="form-control" id="newStartDate" name="startDate" value="<?= htmlspecialchars($eventDetails->getStartDate()) ?>">
+                    </div>
+                    <div class="mb-3">
+                        <label for="newEndDate" class="form-label">End Date</label>
+                        <input type="date" class="form-control" id="newEndDate" name="endDate" value="<?= htmlspecialchars($eventDetails->getEndDate()) ?>">
+                    </div>
+                    <div class="mb-3">
+                        <label for="newLocation" class="form-label">Location</label>
+                        <input type="text" class="form-control" id="newLocation" name="location" value="<?= htmlspecialchars($eventDetails->getLocation()) ?>">
+                    </div>
+                    <div class="mb-3">
+                        <label for="newPrice" class="form-label">Price</label>
+                        <input type="number" min="0" class="form-control" id="newPrice" name="price" value="<?= htmlspecialchars($eventDetails->getPrice()) ?>">
+                    </div>
+                    <div class="mb-3">
+                        <label for="newImage" class="form-label">Change Image</label>
+                        <input type="file" class="form-control" id="newImage" name="image">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" form="editEventForm" class="btn btn-primary">Submit New Details</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 
 <script src="/js/editDetailsHistory.js"></script>
 <?php include __DIR__ . '/../../general_views/footer.php'; ?>

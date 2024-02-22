@@ -124,7 +124,7 @@ switch ($request) {
     case '/manage-event-details/editDetailsHistory':
         $controller = new Historycontroller();
         if ($method === 'GET') {
-            $controller->editEventDetails();
+            $controller->showeditEventDetails();
         }
         break;
     case '/manage-event-details/editDetailsJazz':
@@ -163,6 +163,12 @@ switch ($request) {
             $controller->addNewTimeSlot();
         }
         break;
+        case '/manage-event-details/editDetailsHistory/editEventDetails':
+            $controller = new Historycontroller();
+            if ($method === 'POST') {
+                $controller->editEventDetails();
+            }
+            break;
     default:
         http_response_code(404);
         require __DIR__ . '/../views/404.php';
