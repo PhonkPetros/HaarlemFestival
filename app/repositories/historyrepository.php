@@ -36,7 +36,7 @@ class historyrepository extends dbconfig
 
     public function getTicketsForEvent($eventId)
     {
-        $sql = 'SELECT * FROM [Ticket] WHERE event_id = :event_id';
+        $sql = 'SELECT * FROM [Ticket] WHERE event_id = :event_id  AND user_id IS NULL;';
 
         try {
             $stmt = $this->getConnection()->prepare($sql);
