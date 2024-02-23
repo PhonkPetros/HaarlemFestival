@@ -113,6 +113,28 @@ class Historycontroller
         exit;
     }
 
+    public function removeTimeslot()
+    {
+        try{
+            $ticketID = htmlspecialchars($_POST['ticket_id'] ?? null);
+
+            $result = $this->historyService->removeTimeslot($ticketID);
+            header('Content-Type: application/json');
+            if ($result) {
+                echo json_encode(['success' => true, 'message' => 'Timeslot removed successfully.']);
+            } else {
+                echo json_encode(['success' => false, 'message' => 'Failed to revmove timeslot.']);
+            }
+            exit;
+
+        }
+        catch (Exception $e) {
+            echo json_encode(['success'=> false,'message'=> $e->getMessage()]);
+        }
+
+    }
+
+
     private function uploadImage($imageFile, $uploadDirectory)
     {
         if (isset($imageFile) && $imageFile['error'] == UPLOAD_ERR_OK) {

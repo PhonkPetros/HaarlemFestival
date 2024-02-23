@@ -38,4 +38,8 @@ class HistoryService
         return $this->historyRepo->editEventDetails($eventId, $eventName, $startDate, $endDate, $price, $newLocation, $picture);
     }
 
+    public function removeTimeslot($ticketID){
+        $this->historyRepo->removeTimeslot($ticketID);
+    }
+
 }

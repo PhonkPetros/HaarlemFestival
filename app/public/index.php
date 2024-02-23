@@ -196,6 +196,11 @@ if (strpos($request, '/manage-event-details/') === 0) {
                 $controller->editEventDetails();
             }
             break;
+        case '/editDetailsHistory/deleteTimeSlot':
+            $controller = new Historycontroller();
+            if ($method === 'POST'){
+                $controller->removeTimeslot();
+            }    
         default:
             http_response_code(404);
             require __DIR__ . '/../views/404.php';

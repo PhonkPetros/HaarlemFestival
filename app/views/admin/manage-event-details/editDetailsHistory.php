@@ -28,7 +28,7 @@
                     <div class="mb-3 text-center">
                         <p class="card-text"><strong>Picture:</strong></p>
                         <img src="<?= htmlspecialchars($eventDetails->getPicture()) ?>" alt="Event Image"
-                            class="img-fluid" style="max-width: 100%; height: auto;">
+                            class="img-fluid" style="max-width: 100%; height: 450px;">
                     </div>
                     <button type="button" id="editEventDetailsButton" class="btn btn-primary"
                         data-event-id="<?= htmlspecialchars($eventDetails->getEventId()) ?>">Edit Event Details</button>
@@ -63,10 +63,12 @@
                                         <?= htmlspecialchars($ticket->getQuantity()) ?>
                                     </p>
 
-                                    <a href="edit-ticket.php?id=<?= htmlspecialchars($ticket->getTicketId()) ?>"
-                                        class="btn btn-primary">Edit Timeslot</a>
-                                    <a href="delet-ticket.php?id=<?= htmlspecialchars($ticket->getTicketId()) ?>"
-                                        class="btn btn-danger">Delete Timeslot</a>
+                                    <button type="button" id="editTimeslotDetailsButton" class="btn btn-primary"
+                                        data-event-id="<?= htmlspecialchars($ticket->getTicketId()) ?>">Edit Timeslot</button>
+                                    <button type="button" class="btn btn-danger deleteTimeslotButton"
+                                        data-ticket-id="<?= htmlspecialchars($ticket->getTicketId()) ?>">Delete
+                                        Timeslot</button>
+
                                 </div>
                             <?php endforeach; ?>
                         <?php endif; ?>
@@ -163,8 +165,6 @@
         </div>
     </div>
 </div>
-
-
 
 <script src="/js/editDetailsHistory.js"></script>
 <?php include __DIR__ . '/../../general_views/footer.php'; ?>

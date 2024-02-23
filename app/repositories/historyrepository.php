@@ -156,6 +156,24 @@ class historyrepository extends dbconfig
             return false;
         }
     }
+    public function removeTimeslot($ticketID){
+        $sql = "DELETE FROM [Ticket] WHERE ticket_id = :ticketid AND user_id IS NULL;";
+        try {
+            $stmt = $this->getConnection()->prepare($sql);
+            $stmt->bindParam(':ticketid', $ticketID, PDO::PARAM_INT);
+            $stmt->execute();
+    
+            if ($stmt->rowCount() > 0) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (PDOException $e) {
+            error_log(''. $e->getMessage());
+            return false; 
+        }
+    }
+    
     
 
 
