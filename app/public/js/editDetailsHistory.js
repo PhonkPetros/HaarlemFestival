@@ -6,7 +6,6 @@ document.addEventListener('DOMContentLoaded', function () {
     var closeAddTimeslotModalBtn = document.querySelector('#addTimeslotModal .btn-close');
     var closeEditEventDetailsModalBtn = document.querySelector('#editEventDetailsModal .btn-close');
 
-    // Show Modals
     editEventDetailsButton.addEventListener('click', function () {
         editEventDetailsModal.style.display = 'block';
     });
@@ -15,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function () {
         addTimeslotModal.style.display = 'block';
     });
 
-    // Close Modals
+
     if (closeAddTimeslotModalBtn) {
         closeAddTimeslotModalBtn.addEventListener('click', function () {
             addTimeslotModal.style.display = 'none';
@@ -28,7 +27,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Close modals on outside click
     window.addEventListener('click', function (event) {
         if (event.target == addTimeslotModal) {
             addTimeslotModal.style.display = 'none';
@@ -38,14 +36,12 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // Get Event ID
     var eventId = editEventDetailsButton.getAttribute('data-event-id');
     
-    // Add Timeslot Form
     var addTimeslotForm = document.getElementById('addTimeslotForm');
     addTimeslotForm.addEventListener('submit', function (event) {
         event.preventDefault();
-        let formData = new FormData(this); // Use 'this' to refer to addTimeslotForm
+        let formData = new FormData(this); 
         formData.append('event_id', eventId);
 
         fetch('/editDetailsHistory/addNewTimeSlot', {
@@ -68,11 +64,10 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // Edit Event Form
     var editEventForm = document.getElementById('editEventForm');
     editEventForm.addEventListener('submit', function (event) {
         event.preventDefault();
-        let formData = new FormData(this); // Use 'this' to refer to editEventForm
+        let formData = new FormData(this); 
         formData.append('event_id', eventId);
 
         fetch('/editDetailsHistory/editEventDetails', {
@@ -95,7 +90,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // Delete Timeslot
     var deleteTimeslotButtons = document.querySelectorAll('.deleteTimeslotButton');
     deleteTimeslotButtons.forEach(function(button) {
         button.addEventListener('click', function() {

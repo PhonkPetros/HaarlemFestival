@@ -62,9 +62,6 @@
                                     <p><strong>Quantity:</strong>
                                         <?= htmlspecialchars($ticket->getQuantity()) ?>
                                     </p>
-
-                                    <button type="button" id="editTimeslotDetailsButton" class="btn btn-primary"
-                                        data-event-id="<?= htmlspecialchars($ticket->getTicketId()) ?>">Edit Timeslot</button>
                                     <button type="button" class="btn btn-danger deleteTimeslotButton"
                                         data-ticket-id="<?= htmlspecialchars($ticket->getTicketId()) ?>">Delete
                                         Timeslot</button>
@@ -165,6 +162,8 @@
         </div>
     </div>
 </div>
+
+
 
 <script src="/js/editDetailsHistory.js"></script>
 <?php include __DIR__ . '/../../general_views/footer.php'; ?>
