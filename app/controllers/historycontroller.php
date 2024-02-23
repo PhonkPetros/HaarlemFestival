@@ -87,11 +87,16 @@ class Historycontroller
             $newEndDate = htmlspecialchars($_POST['endDate'] ?? null);
             $newLocation = htmlspecialchars($_POST['location'] ?? null);
             $newPrice = htmlspecialchars($_POST['price'] ?? null);
-            $relativeUploadPath = null;
+
+            $currentEventDetails = $this->historyService->getEventDetails();
+            $existingPicturePath = $currentEventDetails->getPicture();
+
             $uploadDirectory = '/img/EventImages/';
             $relativeUploadPath = $this->uploadImage($_FILES['image'] ?? null, $uploadDirectory);
 
-            //TODO First check if the name already exists
+            if ($relativeUploadPath === null) {
+                $relativeUploadPath = $existingPicturePath;
+            }
 
             $result = $this->historyService->editEventDetails($eventId, $newEventName, $newStartDate, $newEndDate, $newPrice, $newLocation, $relativeUploadPath);
 
@@ -107,6 +112,7 @@ class Historycontroller
         }
         exit;
     }
+
     private function uploadImage($imageFile, $uploadDirectory)
     {
         if (isset($imageFile) && $imageFile['error'] == UPLOAD_ERR_OK) {
@@ -121,8 +127,6 @@ class Historycontroller
         }
         return null;
     }
-
-
 
     private function generateTicketHash($eventId, $date, $time)
     {

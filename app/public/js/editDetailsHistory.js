@@ -1,3 +1,4 @@
+
 document.addEventListener('DOMContentLoaded', function () {
     var addTimeslotModal = document.getElementById('addTimeslotModal');
     var editEventDetailsModal = document.getElementById('editEventDetailsModal');
@@ -34,35 +35,34 @@ document.addEventListener('DOMContentLoaded', function () {
             editEventDetailsModal.style.display = 'none';
         }
     });
-
+    var eventId = editEventDetailsButton.getAttribute('data-event-id');
+    
     var addTimeslotForm = document.getElementById('addTimeslotForm');
     var editEventForm = document.getElementById('editEventForm');
 
-    var eventId = editEventDetailsButton.getAttribute('data-event-id');
-
     addTimeslotForm.addEventListener('submit', function (event) {
         event.preventDefault();
-        let formData = new FormData(addTimeslotForm);
+        let formData = new FormData(addTicketForm);
         formData.append('event_id', eventId);
 
-        fetch('/manage-event-details/editDetailsHistory/addNewTimeSlot', {
+        fetch('/editDetailsHistory/addNewTimeSlot', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => response.ok ? window.location.reload() : Promise.reject('Failed with status: ' + response.status))
+            .catch(error => console.error('Fetch error:', error));
+    });
+
+    editEventForm.addEventListener('submit', function (event){
+        event.preventDefault();
+        let formData = new FormData(editEventForm);
+        formData.append('event_id', eventId);
+
+        fetch('/editDetailsHistory/editEventDetails', {
             method: 'POST',
             body: formData
         })
         .then(response => response.ok ? window.location.reload() : Promise.reject('Failed with status: ' + response.status))
         .catch(error => console.error('Fetch error:', error));
-    });
-
-    editEventForm.addEventListener('submit', function (event) {
-        event.preventDefault();
-        let formData = new FormData(editEventForm);
-        formData.append('event_id', eventId);
-
-        fetch('/manage-event-details/editDetailsHistory/editEventDetails', {
-            method: 'POST', 
-            body: formData
-        })
-        .then(response => response.ok ? window.location.reload() : Promise.reject('Failed with status: ' + response.status))
-        .catch(error => console.error('Fetch error:', error));
-    });
+    })
 });

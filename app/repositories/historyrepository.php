@@ -15,13 +15,13 @@ require_once __DIR__ . '/../model/ticket.php';
 
 class historyrepository extends dbconfig
 {
-    public function getEventDetails($eventName = "history")
+    public function getEventDetails($eventID = "8")
     {
-        $sql = 'SELECT * FROM [Event] WHERE name = :eventName';
+        $sql = 'SELECT * FROM [Event] WHERE event_id = :eventID';
 
         try {
             $stmt = $this->getConnection()->prepare($sql);
-            $stmt->bindParam(':eventName', $eventName, PDO::PARAM_STR);
+            $stmt->bindParam(':eventID', $eventID, PDO::PARAM_INT);
             $stmt->execute();
 
             $stmt->setFetchMode(PDO::FETCH_CLASS, Event::class);
