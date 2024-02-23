@@ -127,7 +127,7 @@ switch ($request) {
             $controller->editEventDetails();
         }
         break;
-    case '/manage-event-details/editDetailsJazz':
+    case '/jazz':
         $controller = new Jazzcontroller();
         if ($method === 'GET') {
             $controller->editEventDetails();
