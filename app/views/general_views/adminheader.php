@@ -12,8 +12,6 @@
     <link rel="stylesheet" href="/css/footer.css">
     <link rel="stylesheet" href="/css/manage-users.css">
     <link rel="stylesheet" href="/css/editDetailsHistory.css">
- 
-
 
 </head>
 <body>
