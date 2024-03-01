@@ -1,20 +1,6 @@
 <?php
 session_start();
 
-// router needs to be changed sligthly
-// for the edit event pages instead of sending the event name and through that way routiung the route to the controller 
-// it should not be done like that. instead it should be done through utilising the event id
-// this should also should be done for all the pages meaning that changes to the database should be done
-// that way lets say a new page is added, then we can have a case in the switch case where if the page id does not match anything predifened
-// then it sets it to a template controller that has all the base logic to load the page with the correct content as it will do so
-// by utilizing the page id. 
-// The router shouldnt change that much I want it to still be a simple switch case router but now instead of utilizing the names of the events
-// using the event ids or the page ids to define the routes
-// doing so will allow for more dynamic possibilities. 
-//utilising the event id should only be done for the handling of event details
-// page id should be used for modifying content of a page and for all the routes to view event pages that users would view 
-// and again to do this we would have to completely change how the database is currently structured. 
-
 use controllers\logincontroller;
 use controllers\Logoutcontroller;
 use controllers\registercontroller;
@@ -40,6 +26,7 @@ require_once __DIR__ . '/../controllers/jazzcontroller.php';
 $request = $_SERVER['REQUEST_URI'];
 $method = $_SERVER['REQUEST_METHOD'];
 
+//First checking for event id's for the manage event detail pages
 if (strpos($request, '/manage-event-details/') === 0) {
     parse_str(parse_url($request, PHP_URL_QUERY), $queryParams);
     $eventID = htmlspecialchars($queryParams["id"] ?? ''); 
@@ -77,6 +64,9 @@ if (strpos($request, '/manage-event-details/') === 0) {
             break;
     }
 } else {
+    //else if the event ID is not set
+    //This should also be modified so it checks for cases where the page id matches
+    // for other routes that handles actions such as "'/editDetailsHistory/deleteTimeSlot':"
     switch ($request) {
         case '/':
             $controller = new overview();
