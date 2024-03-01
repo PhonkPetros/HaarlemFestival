@@ -1,6 +1,3 @@
-<?php
-include __DIR__ . '/general_views/header.php';
-?>
 
 <h1>Haarlem Festivals</h1>
 

@@ -10,6 +10,7 @@ use controllers\Jazzcontroller;
 use controllers\Restaurantcontroller;
 use controllers\Historycontroller;
 use controllers\accountcontroller;
+use controllers\Navigationcontroller;
 use controllers\overview;
 
 require_once __DIR__ . '/../controllers/overview.php';
@@ -22,6 +23,7 @@ require_once __DIR__ . '/../controllers/restaurantcontroller.php';
 require_once __DIR__ . '/../controllers/historycontroller.php';
 require_once __DIR__ . '/../controllers/dancecontroller.php';
 require_once __DIR__ . '/../controllers/jazzcontroller.php';
+require_once __DIR__ . '/../controllers/navigationcontroller.php';
 
 $request = $_SERVER['REQUEST_URI'];
 $method = $_SERVER['REQUEST_METHOD'];
@@ -193,6 +195,8 @@ if (strpos($request, '/manage-event-details/') === 0) {
             }    
         default:
             http_response_code(404);
+            $navigation = new Navigationcontroller();
+            $navigation->displayHeader();
             require __DIR__ . '/../views/404.php';
             break;
     }

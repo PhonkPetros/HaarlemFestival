@@ -1,8 +1,4 @@
-<?php
-include __DIR__ . '/../general_views/header.php';
-?>
-
-<div >
+<div>
     <div class="intial-header">
         <h2>Proveniershof</h2>
     </div>

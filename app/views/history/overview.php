@@ -1,6 +1,3 @@
-<?php
-include __DIR__ . '/../general_views/header.php';
-?>
 <div>
   <div class="tour-header">
     <h1>A Stroll through History</h1>

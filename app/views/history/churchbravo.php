@@ -1,7 +1,3 @@
-<?php
-include __DIR__ . '/../general_views/header.php';
-?>
-
 <div >
     <div class="intial-header">
         <h2>Church of St.Bavo</h2>
