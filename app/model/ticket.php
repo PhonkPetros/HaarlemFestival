@@ -5,14 +5,14 @@ namespace model;
 class Ticket implements \JsonSerializable
 {
     private int $ticket_id;
-    private ?int $user_id = null; // Allows null and provides a default value
+    private ?int $user_id = null; 
     private int $quantity;
     private string $ticket_hash;
     private string $state;
     private int $event_id;
     private string $language;
-    private ?string $date = null; // Assuming date can be nullable, provide a default value
-    private ?string $time = null; // Assuming time can be nullable, provide a default value
+    private ?string $date = null; 
+    private ?string $time = null; 
 
     public function getTicketId(): int {
         return $this->ticket_id;
@@ -22,11 +22,11 @@ class Ticket implements \JsonSerializable
         $this->ticket_id = $ticket_id;
     }
 
-    public function getUserId(): ?int { // Allows returning null
+    public function getUserId(): ?int { 
         return $this->user_id;
     }
 
-    public function setUserId(?int $user_id): void { // Allows setting null
+    public function setUserId(?int $user_id): void { 
         $this->user_id = $user_id;
     }
 
