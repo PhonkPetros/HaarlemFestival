@@ -9,11 +9,6 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th colspan="2">
-                        <button class="btn btn-dark" style="margin: 20px; padding: 10px;">Add a new event</button>
-                    </th>
-                </tr>
-                <tr>
                     <th>Events</th>
                     <th>Actions</th>
                 </tr>

@@ -87,7 +87,8 @@
                 <form id="addTimeslotForm">
                     <div class="mb-3">
                         <label for="newDate" class="form-label">Date</label>
-                        <input type="date" class="form-control" id="newDate" name="date" required>
+                        <input type="date" class="form-control" id="newDate" name="date" required
+                            min="<?php echo date('Y-m-d'); ?>">
                     </div>
                     <div class="mb-3">
                         <label for="newQuantity" class="form-label">Quantity</label>
