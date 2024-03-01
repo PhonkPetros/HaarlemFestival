@@ -28,6 +28,7 @@ require_once __DIR__ . '/../controllers/navigationcontroller.php';
 $request = $_SERVER['REQUEST_URI'];
 $method = $_SERVER['REQUEST_METHOD'];
 
+//Please do not touch this
 $queryString = parse_url($request, PHP_URL_QUERY);
 $queryParams = [];
 if ($queryString !== null) {
@@ -39,6 +40,7 @@ if (strpos($request, '/manage-event-details/') === 0) {
     $eventID = htmlspecialchars($queryParams["id"] ?? '');
 }
 
+//Please do not touch this
 if ($request === '/') {
     $pageID = '1';
 }
