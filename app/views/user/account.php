@@ -1,5 +1,3 @@
-<?php include __DIR__ . '/../general_views/header.php'; ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
