@@ -1,6 +1,3 @@
-<?php
-include __DIR__ . '/../general_views/header.php';
-?>
 <div>
   <div class="tour-header">
     <h1>A Stroll through History</h1>
@@ -42,7 +39,7 @@ include __DIR__ . '/../general_views/header.php';
         <div class="carousel-item active">
           <img src="/img/1.jpg" alt="Church of St. Bavo">
           <div class="carousel-caption d-none d-md-block">
-            <a href="/history/churchbravo">
+            <a href="/?pageid=7">
               <h5>Church of St. Bavo</h5>
             </a>
           </div>
@@ -62,7 +59,7 @@ include __DIR__ . '/../general_views/header.php';
         <div class="carousel-item">
           <img src="/img/4.jpg" alt="Proveniershof">
           <div class="carousel-caption d-none d-md-block">
-            <a href="/history/proveniershof">
+            <a href="/?pageid=6">
               <h5>Proveniershof</h5>
             </a>
           </div>

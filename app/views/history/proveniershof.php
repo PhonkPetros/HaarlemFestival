@@ -1,8 +1,4 @@
-<?php
-include __DIR__ . '/../general_views/header.php';
-?>
-
-<div >
+<div>
     <div class="intial-header">
         <h2>Proveniershof</h2>
     </div>
@@ -18,7 +14,7 @@ This place is special for Haarlem. It's not just old; it's a calm spot in the mi
     <img src="/img/provenhorfroute.png" alt="Tour Route Map" class="img-fluid">
   </div>
   <div class="intial-header">
-    <a href="/history/overview"><h2>Go back</h2></a>
+    <a href="/?pageid=2"><h2>Go back</h2></a>
     </div>
 </div>
 

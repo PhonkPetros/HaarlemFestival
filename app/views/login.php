@@ -24,7 +24,7 @@
             </div>
             <button type="submit" class="btn btn-light">Login</button>
             <button type="button" class="btn btn-dark" onclick="location.href='register'">Register</button>
-            <button type="button" class="btn btn-primary" onclick="location.href='/'">Home</button>
+            <button type="button" class="btn btn-primary" onclick="location.href='/?pageid=1'">Home</button>
         </form>
         <?php if (isset($loginError)): ?>
             <br>

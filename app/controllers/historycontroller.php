@@ -6,17 +6,21 @@ use model\Ticket;
 use services\historyService;
 use Exception;
 use model\Event;
+use controllers\Navigationcontroller;
 
 require_once __DIR__ . '/../model/event.php';
 require_once __DIR__ . '/../services/historyservice.php';
+require_once __DIR__ . '/../controllers/navigationcontroller.php';
 
 class Historycontroller
 {
     private $historyService;
+    private $navigationController;
     private $event;
     public function __construct()
     {
         $this->historyService = new HistoryService();
+        $this->navigationController = new Navigationcontroller();
         $this->event = new Event();
     }
 
@@ -25,16 +29,19 @@ class Historycontroller
         $eventDetails = $this->historyService->getEventDetails();
         $structuredTickets = $this->getStructuredTickets($eventDetails->getEventId());
         $uniqueTimes = $this->getUniqueTimes($structuredTickets);
+        $navigationController = $this->navigationController->displayHeader();
         require_once __DIR__ . '/../views/history/overview.php';
     }
 
     public function showProveniershof()
     {
+        $navigationController = $this->navigationController->displayHeader();
         require_once __DIR__ . '/../views/history/proveniershof.php';
     }
 
     public function showChurch()
     {
+        $navigationController = $this->navigationController->displayHeader();
         require_once __DIR__ . '/../views/history/churchbravo.php';
     }
 

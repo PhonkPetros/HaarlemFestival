@@ -1,7 +1,3 @@
-<?php
-include __DIR__ . '/../general_views/header.php';
-?>
-
 <div >
     <div class="intial-header">
         <h2>Church of St.Bavo</h2>
@@ -18,7 +14,7 @@ This church has seen a lot. It used to be a Catholic church, then it became Prot
     <img src="/img/bravoroute.png" alt="Tour Route Map" class="img-fluid">
   </div>
   <div class="intial-header">
-    <a href="/history/overview"><h2>Go back</h2></a>
+    <a href="/?pageid=2"><h2>Go back</h2></a>
     </div>
 </div>
 
