@@ -17,7 +17,7 @@ class overview
     public function show()
     {
         $navigationController = $this->navigationController->displayHeader();
-        require_once '../views/overview.php';
+        require_once '../views/general_views/overview.php';
     }
 
 }
