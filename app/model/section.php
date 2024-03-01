@@ -42,10 +42,10 @@ class Section implements \JsonSerializable
 
     public function jsonSerialize(): mixed {
         return [
-            'section_id' => $this->section_id,
-            'editor_id' => $this->editor_id,
-            'image_id' => $this->image_id,
-            'page_id' => $this->page_id,
+            'section_id' => $this->getSectionId(),
+            'editor_id' => $this->getEditorId(),
+            'image_id' => $this->getImageId(),
+            'page_id' => $this->getPageId(),
         ];
     }
 }

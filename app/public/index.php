@@ -210,7 +210,7 @@ switch ($request) {
             $controller->manageFestivals();
         }
         break;
-    case '/admin/editfestival':
+    case '/admin/page-management/editfestival':
         $controller = new admincontroller();
         if ($method === 'GET') {
             $controller->editFestivals();
