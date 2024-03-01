@@ -21,7 +21,7 @@ class Logoutcontroller
         
         session_destroy();
         
-        header('Location: /');
+        header('Location: /?pageid=1');
         exit();
     }
 }

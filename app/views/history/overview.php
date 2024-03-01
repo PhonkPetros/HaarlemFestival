@@ -39,7 +39,7 @@
         <div class="carousel-item active">
           <img src="/img/1.jpg" alt="Church of St. Bavo">
           <div class="carousel-caption d-none d-md-block">
-            <a href="/history/churchbravo">
+            <a href="/?pageid=7">
               <h5>Church of St. Bavo</h5>
             </a>
           </div>
@@ -59,7 +59,7 @@
         <div class="carousel-item">
           <img src="/img/4.jpg" alt="Proveniershof">
           <div class="carousel-caption d-none d-md-block">
-            <a href="/history/proveniershof">
+            <a href="/?pageid=6">
               <h5>Proveniershof</h5>
             </a>
           </div>

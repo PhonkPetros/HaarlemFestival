@@ -8,6 +8,7 @@
     <title>HAARLEM FESTIVALS</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+        
     <link rel="stylesheet" href="/css/navbar.css">
     <link rel="stylesheet" href="/css/main.css">
     <link rel="stylesheet" href="/css/overview.css">
@@ -34,7 +35,7 @@
                             <?php foreach ($allPages as $page): ?>
                                 <?php if ($page->getPageID() == 1): ?>
                                     <li class="nav-item">
-                                        <a class="nav-link" href="/pageid?<?php echo urlencode($page->getPageID()); ?>">
+                                        <a class="nav-link" href="/?pageid=<?php echo urlencode($page->getPageID()); ?>">
                                             <?php echo htmlspecialchars($page->getPageName()); ?>
                                         </a>
                                     </li>
@@ -52,7 +53,7 @@
                                     <?php foreach ($allPages as $page): ?>
                                         <?php if ($page->getPageID() != 1): ?>
                                             <li><a class="dropdown-item"
-                                                    href="/pageid?<?php echo urlencode($page->getPageID()); ?>">
+                                                    href="/?pageid=<?php echo urlencode($page->getPageID()); ?>">
                                                     <?php echo htmlspecialchars($page->getPageName()); ?>
                                                 </a></li>
                                         <?php endif; ?>
@@ -82,7 +83,6 @@
             </nav>
         <?php endif; ?>
         <div class="container">
-            <!-- Content goes here -->
         </div>
     </main>
 
