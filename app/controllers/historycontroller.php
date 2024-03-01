@@ -45,6 +45,11 @@ class Historycontroller
         require_once __DIR__ . '/../views/history/churchbravo.php';
     }
 
+    public function editContent(){
+        require_once __DIR__ ."/../views/admin/page-managment/editHistory.php";
+    }
+
+
     public function showeditEventDetails()
     {
         $eventDetails = $this->historyService->getEventDetails();

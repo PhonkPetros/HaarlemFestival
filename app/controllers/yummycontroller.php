@@ -10,4 +10,8 @@ class yummycontroller
         require_once __DIR__ . '/../views/yummy/overview.php';
     }
 
+    public function editContent(){
+        require_once __DIR__ ."/../views/admin/page-managment/editYummy.php";
+    }
+
 }

@@ -27,7 +27,7 @@
                             <?php echo htmlspecialchars($page->getName()); ?>
                         </td>
                         <td>
-                            <a href="<?php echo htmlspecialchars($page->getId()) ?>">Edit</a>
+                            <a href="/edit-content/?id=<?php echo htmlspecialchars($page->getId()) ?>">Edit</a>
                         </td>
                     </tr>
 

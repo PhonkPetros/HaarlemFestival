@@ -1,4 +1,6 @@
 <?php
+use controllers\yummycontroller;
+
 session_start();
 
 use controllers\logincontroller;
@@ -12,6 +14,7 @@ use controllers\Historycontroller;
 use controllers\accountcontroller;
 use controllers\Navigationcontroller;
 use controllers\overview;
+use controllers\Templatecontroller;
 
 require_once __DIR__ . '/../controllers/overview.php';
 require_once __DIR__ . '/../controllers/registercontroller.php';
@@ -29,6 +32,7 @@ $request = $_SERVER['REQUEST_URI'];
 $method = $_SERVER['REQUEST_METHOD'];
 
 //Please do not touch this
+$editPageID = null;
 $queryString = parse_url($request, PHP_URL_QUERY);
 $queryParams = [];
 if ($queryString !== null) {
@@ -39,13 +43,16 @@ $eventID = null;
 if (strpos($request, '/manage-event-details/') === 0) {
     $eventID = htmlspecialchars($queryParams["id"] ?? '');
 }
+if (strpos($request, '/edit-content/') === 0) {
+    $editPageID = htmlspecialchars($queryParams['id'] ?? '');
+}
 
 //Please do not touch this
 if ($request === '/') {
     $pageID = '1';
 }
 
-if ($pageID || $eventID) {
+if ($pageID || $eventID || $editPageID) {
     //this has to do with the editing of event details
     if ($eventID) {
         switch ($eventID) {
@@ -74,7 +81,7 @@ if ($pageID || $eventID) {
                 }
                 break;
             default:
-                //$controller = new TemplateController();
+                $controller = new TemplateController();
                 if ($method === 'GET') {
                     $controller->editEventDetails();
                 }
@@ -106,12 +113,12 @@ if ($pageID || $eventID) {
                     $controller->show();
                 }
                 break;
-            // case '5':
-            //     $controller = new Jazzcontroller();
-            //     if ($method === 'GET') {
-            //         $controller->show();
-            //     }
-            //     break;
+            case '5':
+                $controller = new yummycontroller();
+                if ($method === 'GET') {
+                    $controller->showYummy();
+                }
+                break;
             case '6':
                 $controller = new Historycontroller();
                 if ($method === 'GET') {
@@ -126,11 +133,64 @@ if ($pageID || $eventID) {
                 break;
             default;
                 //change this to use template controller
-                http_response_code(404);
-                $navigation = new Navigationcontroller();
-                $navigation->displayHeader();
-                require __DIR__ . '/../views/404.php';
-              break;
+                $controller = new TemplateController();
+                if ($method === 'GET') {
+                    $controller->show();
+                }
+                break;
+        }
+        exit;
+    } elseif ($editPageID) {
+        //this has to with editing pages
+        switch ($editPageID) {
+            case "1":
+                $controller = new overview();
+                if ($method === 'GET') {
+                    $controller->editContent();
+                }
+                break;
+            case '2':
+                $controller = new Historycontroller();
+                if ($method === 'GET') {
+                    $controller->editContent();
+                }
+                break;
+            case '3':
+                $controller = new Dancecontroller();
+                if ($method === 'GET') {
+                    $controller->editContent();
+                }
+                break;
+            case '4':
+                $controller = new Jazzcontroller();
+                if ($method === 'GET') {
+                    $controller->editContent();
+                }
+                break;
+            case '5':
+                $controller = new yummycontroller();
+                if ($method === 'GET') {
+                    $controller->editContent();
+                }
+                break;
+            case '6':
+                $controller = new Historycontroller();
+                if ($method === 'GET') {
+                    $controller->editContent();
+                }
+                break;
+            case '7':
+                $controller = new Historycontroller();
+                if ($method === 'GET') {
+                    $controller->editContent();
+                }
+                break;
+            default;
+                $controller = new TemplateController();
+                if ($method === 'GET') {
+                    $controller->editContent();
+                }
+                break;
         }
         exit;
     }

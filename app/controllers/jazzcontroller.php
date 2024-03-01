@@ -20,5 +20,10 @@ class Jazzcontroller
     public function editEventDetails(){
         require_once __DIR__ . '/../views/admin/manage-event-details/editDetailsJazz.php';
     }
+
+    public function editContent(){
+        require_once __DIR__ ."/../views/admin/page-managment/editJazz.php";
+    }
+
   
 }

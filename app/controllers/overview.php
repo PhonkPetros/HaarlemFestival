@@ -20,4 +20,8 @@ class overview
         require_once '../views/general_views/overview.php';
     }
 
+    public function editContent(){
+        require_once __DIR__ ."/../views/admin/page-managment/editHome.php";
+    }
+
 }
