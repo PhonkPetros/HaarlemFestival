@@ -11,6 +11,7 @@ use controllers\Restaurantcontroller;
 use controllers\Historycontroller;
 use controllers\accountcontroller;
 use controllers\overview;
+use controllers\yummycontroller;
 
 require_once __DIR__ . '/../controllers/overview.php';
 require_once __DIR__ . '/../controllers/registercontroller.php';
@@ -22,6 +23,7 @@ require_once __DIR__ . '/../controllers/restaurantcontroller.php';
 require_once __DIR__ . '/../controllers/historycontroller.php';
 require_once __DIR__ . '/../controllers/dancecontroller.php';
 require_once __DIR__ . '/../controllers/jazzcontroller.php';
+require_once __DIR__ . '/../controllers/yummycontroller.php';
 
 $request = $_SERVER['REQUEST_URI'];
 $method = $_SERVER['REQUEST_METHOD'];
@@ -163,6 +165,12 @@ switch ($request) {
             $controller->addNewTimeSlot();
         }
         break;
+    case '/yummy/overview':
+        $controller = new yummycontroller();
+        if ($method === 'GET') {
+            $controller->showYummy();
+        }
+    break;
     default:
         http_response_code(404);
         require __DIR__ . '/../views/404.php';
