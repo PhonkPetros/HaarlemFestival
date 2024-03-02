@@ -17,5 +17,13 @@ class navigationservice
         return $this->navigationrepo->getPages();
         
     }
+
+    public function addPages ($page) {
+        $this->navigationrepo->addPages($page);
+    }
+
+    public function removePages ($page) {
+        $this->navigationrepo->removePages($page);
+    }
    
 }

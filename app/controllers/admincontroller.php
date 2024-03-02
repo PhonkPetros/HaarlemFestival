@@ -40,7 +40,7 @@ class AdminController
 
     public function editFestivals(){
         $allPages = $this->pageservice->getPages();
-        require_once __DIR__ . '/../views/admin/page-managment/editfestival.php';
+        require_once __DIR__ . '/../views/admin/editfestival.php';
     }
 
     public function manageOrders(){
