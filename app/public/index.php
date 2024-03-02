@@ -1,5 +1,5 @@
 <?php
-use controllers\yummycontroller;
+
 
 session_start();
 
@@ -15,6 +15,7 @@ use controllers\accountcontroller;
 use controllers\Navigationcontroller;
 use controllers\overview;
 use controllers\Templatecontroller;
+use controllers\yummycontroller;
 
 require_once __DIR__ . '/../controllers/overview.php';
 require_once __DIR__ . '/../controllers/registercontroller.php';
