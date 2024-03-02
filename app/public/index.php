@@ -300,6 +300,18 @@ switch ($request) {
             $controller->removeTimeslot();
         }
         break;
+    case '/modify-navigation/edit-navigation':
+        $controller = new Navigationcontroller();
+        if ($method === 'GET') {
+            $controller->modifyNavigationPage();
+        }
+        break;
+    case '/edit-navigation/modified':
+        $controller = new Navigationcontroller();
+        if ($method === 'POST') {
+            $controller->updateNavigation();
+        }
+        break;
     default:
         http_response_code(404);
         $navigation = new Navigationcontroller();

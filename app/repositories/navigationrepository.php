@@ -32,4 +32,38 @@ class NavigationRepository extends dbconfig {
 
         return $pages;
     }
+
+    public function addPages($pageIds) {
+        try {
+            $this->connection->beginTransaction();
+            $stmt = $this->connection->prepare('INSERT INTO navigation (page_id) VALUES (:page_id)');
+
+            foreach ($pageIds as $pageId) {
+                $stmt->bindParam(':page_id', $pageId);
+                $stmt->execute();
+            }
+
+            $this->connection->commit();
+        } catch (PDOException $e) {
+            $this->connection->rollBack();
+            error_log('Failed to add pages: ' . $e->getMessage());
+        }
+    }
+
+    public function removePages($pageIds) {
+        try {
+            $this->connection->beginTransaction();
+            $stmt = $this->connection->prepare('DELETE FROM navigation WHERE page_id = :page_id');
+
+            foreach ($pageIds as $pageId) {
+                $stmt->bindParam(':page_id', $pageId);
+                $stmt->execute();
+            }
+
+            $this->connection->commit();
+        } catch (PDOException $e) {
+            $this->connection->rollBack();
+            error_log('Failed to remove pages: ' . $e->getMessage());
+        }
+    }
 }
