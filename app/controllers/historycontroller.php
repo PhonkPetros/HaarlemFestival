@@ -46,6 +46,7 @@ class Historycontroller
     }
 
     public function editContent(){
+        
         require_once __DIR__ ."/../views/admin/page-managment/editHistory.php";
     }
 

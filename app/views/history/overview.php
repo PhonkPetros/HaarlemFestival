@@ -1,10 +1,12 @@
 <div>
   <div>
+    //section 1
     <div class="text-white text-center py-5"
       style="background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('/img/bannerimage.jpg') no-repeat center center; background-size: cover;">
       <h1>A Stroll through History</h1>
     </div>
 
+    //section 2
     <div class="text-white p-5"
       style="background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('/img/bannerdescription.jpg') no-repeat center center; background-size: cover;">
 
@@ -15,45 +17,48 @@
 
     </div>
 
+    //section 3
     <div class="bg-light text-dark text-center p-3">
       <h2>Tour Information</h2>
     </div>
 
 
+    //section 4 
     <div class="text-center text-white p-3"
       style="background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('/img/routetourbackground.png') no-repeat center center; background-size: cover;">
       <img src="/img/route.png" alt="Tour Route Map" class="img-fluid">
     </div>
 
-
+    //section 5
     <div class="bg-light text-dark text-center p-3">
       <h2>Tour Information</h2>
     </div>
 
+    //section 6
     <div class="bg-dark text-white p-3">
       <div id="locationsCarousel" class="carousel slide" data-ride="carousel">
 
         <div class="carousel-inner" role="listbox">
           <div class="carousel-item active">
-            <img src="/img/1.jpg" alt="Church of St. Bavo" class="d-block w-100">
+            <img src="/img/1.jpg" alt="Church of St. Bavo" style="width: 70%; height: 600px; object-fit: cover; display: block; margin: auto;">
             <div class="carousel-caption d-none d-md-block">
               <h5>Church of St. Bavo</h5>
             </div>
           </div>
           <div class="carousel-item">
-            <img src="/img/2.jpg" alt="Grote Markt" class="d-block w-100">
+            <img src="/img/2.jpg" alt="Grote Markt" style="width: 70%; height: 600px; object-fit: cover; display: block; margin: auto;">
             <div class="carousel-caption d-none d-md-block">
               <h5>Grote Markt</h5>
             </div>
           </div>
           <div class="carousel-item">
-            <img src="/img/3.jpg" alt="De Hallen" class="d-block w-100">
+            <img src="/img/3.jpg" alt="De Hallen" style="width: 70%; height: 600px; object-fit: cover; display: block; margin: auto;">
             <div class="carousel-caption d-none d-md-block">
               <h5>De Hallen</h5>
             </div>
           </div>
           <div class="carousel-item">
-            <img src="/img/4.jpg" alt="Proveniershof" class="d-block w-100">
+            <img src="/img/4.jpg" alt="Proveniershof" style="width: 70%; height: 600px; object-fit: cover; display: block; margin: auto;">
             <div class="carousel-caption d-none d-md-block">
               <a href="/?pageid=6">
                 <h5>Proveniershof</h5>
@@ -61,31 +66,31 @@
             </div>
           </div>
           <div class="carousel-item">
-            <img src="/img/5.jpg" alt="Jopenkerk" class="d-block w-100">
+            <img src="/img/5.jpg" alt="Jopenkerk" style="width: 70%; height: 600px; object-fit: cover; display: block; margin: auto;">
             <div class="carousel-caption d-none d-md-block">
               <h5>Jopenkerk</h5>
             </div>
           </div>
           <div class="carousel-item">
-            <img src="/img/6.jpg" alt="Waalse Kerk Haarlem" class="d-block w-100">
+            <img src="/img/6.jpg" alt="Waalse Kerk Haarlem" style="width: 70%; height: 600px; object-fit: cover; display: block; margin: auto;">
             <div class="carousel-caption d-none d-md-block">
               <h5>Waalse Kerk Haarlem</h5>
             </div>
           </div>
           <div class="carousel-item">
-            <img src="/img/7.jpg" alt="Molen deAdriaan" class="d-block w-100">
+            <img src="/img/7.jpg" alt="Molen deAdriaan" style="width: 70%; height: 600px; object-fit: cover; display: block; margin: auto;">
             <div class="carousel-caption d-none d-md-block">
               <h5>Molen deAdriaan</h5>
             </div>
           </div>
           <div class="carousel-item">
-            <img src="/img/8.jpg" alt="Amsterdamse Poort" class="d-block w-100">
+            <img src="/img/8.jpg" alt="Amsterdamse Poort" style="width: 70%; height: 600px; object-fit: cover; display: block; margin: auto;">
             <div class="carousel-caption d-none d-md-block">
               <h5>Amsterdamse Poort</h5>
             </div>
           </div>
           <div class="carousel-item">
-            <img src="/img/9.jpg" alt="Hof van Bakenes" class="d-block w-100">
+            <img src="/img/9.jpg" alt="Hof van Bakenes" style="width: 70%; height: 600px; object-fit: cover; display: block; margin: auto;">
             <div class="carousel-caption d-none d-md-block">
               <h5>Hof van Bakenes</h5>
             </div>
@@ -98,7 +103,7 @@
       </a>
       <a class="carousel-control-next" href="#locationsCarousel" role="button" data-slide="next">
         <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="sr-only">Next</span>
+        <span class="sr-only" >Next</span>
       </a>
       </div>
     </div>
@@ -107,8 +112,9 @@
       <h2>Schedule</h2>
     </div>
 
+    //do not insert the code
     <div class="p-5"
-      style="background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('/img/scheduleimage.jpg') no-repeat center center; background-size: cover;">
+      style="background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('/img/scheduleimage.jpg') no-repeat center center; background-size: cover; ">
       <?php foreach ($structuredTickets as $language => $dates): ?>
         <h3 class="text-uppercase text-white">
           <?php echo htmlspecialchars($language); ?>
