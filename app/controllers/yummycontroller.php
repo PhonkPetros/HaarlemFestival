@@ -16,7 +16,7 @@ class yummycontroller
 
     private $navigationController;
 
-    public function showYummy()
+    public function showYummyOverview()
     {
         $navigationController = $this->navigationController->displayHeader();
         require_once __DIR__ . '/../views/yummy/overview.php';
@@ -25,7 +25,4 @@ class yummycontroller
     public function editContent(){
         require_once __DIR__ ."/../views/admin/page-managment/editYummy.php";
     }
-
-    
-
 }

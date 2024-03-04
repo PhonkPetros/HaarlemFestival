@@ -1,5 +1,4 @@
 <?php
-use controllers\yummycontroller;
 
 session_start();
 
@@ -15,6 +14,8 @@ use controllers\accountcontroller;
 use controllers\Navigationcontroller;
 use controllers\overview;
 use controllers\Templatecontroller;
+use controllers\yummycontroller;
+
 
 require_once __DIR__ . '/../controllers/overview.php';
 require_once __DIR__ . '/../controllers/registercontroller.php';
@@ -117,7 +118,7 @@ if ($pageID || $eventID || $editPageID) {
             case '5':
                 $controller = new yummycontroller();
                 if ($method === 'GET') {
-                    $controller->showYummy();
+                    $controller->showYummyOverview();
                 }
                 break;
             case '6':
@@ -130,6 +131,12 @@ if ($pageID || $eventID || $editPageID) {
                 $controller = new Historycontroller();
                 if ($method === 'GET') {
                     $controller->showChurch();
+                }
+                break;
+            case '8':
+                $controller = new RestaurantController();
+                if ($method === 'GET') {
+                    $controller->showChosenResturant();
                 }
                 break;
             default;

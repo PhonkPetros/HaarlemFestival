@@ -1,5 +1,3 @@
-<?php include __DIR__ . '/../general_views/header.php'; ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -53,7 +51,7 @@
       <div class="card">
         <img src="/img/dvb-roemer-2.jpg" class="card-img-top" alt="Cafe de Roemer">
         <div class="card-body">
-          <h5 class="card-title">Café de Roemer</h5>
+          <h5 class="card-title"><a href="/resturant"></a>Café de Roemer</h5>
           <p class="card-text">Dutch, fish and seafood, European</p>
           <ul class="list-group list-group-flush">
             <li class="list-group-item">Price: €</li>
