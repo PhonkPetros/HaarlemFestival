@@ -147,9 +147,100 @@ body{
     }
   }
 
+  .wrapper-pictures img.my-image {
+    width: 50%;
+    height: auto;
+    float: left;
+}
 
-  .image-right{
-    width: %;
+.wrapper-pictures img.my-image-right {
+    width: 50%;
+    height: auto;
+    float: right;
+}
+
+/* Clearfix for the floated images */
+.wrapper-pictures::after {
+    content: "";
+    clear: both;
+    display: table;
+}
+
+/* Ensure the text is visible over the images */
+.wrapper-pictures h2, 
+.wrapper-pictures .paragraph-inside-image {
     position: absolute;
-  }
+    color: white;
+    z-index: 10;
+}
+
+.wrapper-pictures h2 {
+    top: 33%;
+    left: 4%;
+    width: 40%;
+}
+
+.wrapper-pictures .paragraph-inside-image {
+    top: 50%;
+    left: 5%;
+    width: 40%;
+}
+.participants-box{
+  display: flex;
+  padding: 30px;
+  margin: 17px;
+
+}
+
+.restaurant-overview{
+  background-color: white;
+  border-radius: 25px;
+  padding: 10px;
+}
+
+.participants-subtitle{
+  color:#fff;
+  padding: 10px;
+  font-size: 50px;
+}
+
+.participants-description{
+  color:#fff;
+  font-size: 32px;
+  padding: 10px;
+}
+
+.participants-title{
+  display: flex;
+  padding: 10px;
+  font-size: 75px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .wrapper-pictures img.my-image,
+    .wrapper-pictures img.my-image-right {
+        width: 100%;
+        float: none;
+        display: block;
+        margin: 0 auto;
+    }
+
+    .wrapper-pictures h2, 
+    .wrapper-pictures .paragraph-inside-image {
+        position: relative;
+        left: 0;
+        width: 90%;
+        text-align: center;
+    }
+
+    .wrapper-pictures h2 {
+        top: 0;
+    }
+
+    .wrapper-pictures .paragraph-inside-image {
+        top: 60%;
+    }
+}
+
   

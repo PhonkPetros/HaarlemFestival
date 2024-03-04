@@ -1,21 +1,31 @@
 <?php
 
+
 namespace controllers;
+
+require_once __DIR__ . '/../controllers/navigationcontroller.php';
+use controllers\Navigationcontroller;
+
 
 class yummycontroller
 {
 
-    public function show()
+    public function __construct() {
+        $this->navigationController = new Navigationcontroller();
+    }
+
+    private $navigationController;
+
+    public function showYummy()
     {
+        $navigationController = $this->navigationController->displayHeader();
         require_once __DIR__ . '/../views/yummy/overview.php';
     }
 
-<<<<<<< Updated upstream
     public function editContent(){
         require_once __DIR__ ."/../views/admin/page-managment/editYummy.php";
     }
-=======
 
->>>>>>> Stashed changes
+    
 
 }

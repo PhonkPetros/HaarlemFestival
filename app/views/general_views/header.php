@@ -15,13 +15,6 @@
     <link rel="stylesheet" href="/css/historyoverview.css">
     <link rel="stylesheet" href="/css/historydetails.css">
     <link rel="stylesheet" href="/css/footer.css">
-<<<<<<< Updated upstream
-=======
-    <link rel="stylesheet" href="/css/yummy/yummy-overview.css">
-
-
-
->>>>>>> Stashed changes
 </head>
 
 <body>
