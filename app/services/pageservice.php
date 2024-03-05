@@ -17,5 +17,13 @@ class Pageservice
         return $this->pagerepo->getPages();
         
     }
+    
+    public function getAllSections($page){
+        return $this->pagerepo->getAllSections($page);
+    }
+
+    public function getPageDetails($page){
+        return $this->pagerepo->getPageDetails($page);
+    }
    
 }

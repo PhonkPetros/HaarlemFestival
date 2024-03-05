@@ -7,20 +7,24 @@ use services\historyService;
 use Exception;
 use model\Event;
 use controllers\Navigationcontroller;
+use controllers\Pagecontroller;
 
 require_once __DIR__ . '/../model/event.php';
 require_once __DIR__ . '/../services/historyservice.php';
 require_once __DIR__ . '/../controllers/navigationcontroller.php';
+require_once __DIR__ . '/../controllers/pagecontroller.php';
 
 class Historycontroller
 {
     private $historyService;
     private $navigationController;
+    private $pagecontroller;
     private $event;
     public function __construct()
     {
         $this->historyService = new HistoryService();
         $this->navigationController = new Navigationcontroller();
+        $this->pagecontroller = new Pagecontroller();
         $this->event = new Event();
     }
 
@@ -46,7 +50,8 @@ class Historycontroller
     }
 
     public function editContent(){
-        
+        $allSections = $this->pagecontroller->getSectionsFromPageID();
+        $pageDetails = $this->pagecontroller->getPageDetails();
         require_once __DIR__ ."/../views/admin/page-managment/editHistory.php";
     }
 

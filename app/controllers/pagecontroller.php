@@ -12,8 +12,24 @@ class Pagecontroller
   
     public function __construct() {
         $this->pageService = new Pageservice();
-     
     }
+
+    public function editContent(){
+        $allSections = $this->getSectionsFromPageID();
+        $pageDetails = $this->getPageDetails();
+        require_once __DIR__ ."/../views/admin/page-managment/editPageOverview.php";
+    }
+    public function getSectionsFromPageID(){
+       $page = htmlspecialchars($_GET['id']);
+       $allSections = $this->pageService->getAllSections($page);
+       return $allSections;
+    }
+
+    public function getPageDetails(){
+        $page = htmlspecialchars($_GET['id']);
+        $pageDetails = $this->pageService->getPageDetails($page);
+        return $pageDetails;
+     }
 
 
 }

@@ -1,6 +1,7 @@
 <?php
 
 
+
 session_start();
 
 use controllers\logincontroller;
@@ -16,6 +17,7 @@ use controllers\Navigationcontroller;
 use controllers\overview;
 use controllers\Templatecontroller;
 use controllers\yummycontroller;
+use controllers\Pagecontroller;
 
 require_once __DIR__ . '/../controllers/overview.php';
 require_once __DIR__ . '/../controllers/registercontroller.php';
@@ -28,6 +30,7 @@ require_once __DIR__ . '/../controllers/historycontroller.php';
 require_once __DIR__ . '/../controllers/dancecontroller.php';
 require_once __DIR__ . '/../controllers/jazzcontroller.php';
 require_once __DIR__ . '/../controllers/navigationcontroller.php';
+require_once __DIR__ . '/../controllers/pagecontroller.php';
 
 $request = $_SERVER['REQUEST_URI'];
 $method = $_SERVER['REQUEST_METHOD'];
@@ -144,50 +147,8 @@ if ($pageID || $eventID || $editPageID) {
     } elseif ($editPageID) {
         //this has to with editing pages
         switch ($editPageID) {
-            case "1":
-                $controller = new overview();
-                if ($method === 'GET') {
-                    $controller->editContent();
-                }
-                break;
-            case '2':
-                $controller = new Historycontroller();
-                if ($method === 'GET') {
-                    $controller->editContent();
-                }
-                break;
-            case '3':
-                $controller = new Dancecontroller();
-                if ($method === 'GET') {
-                    $controller->editContent();
-                }
-                break;
-            case '4':
-                $controller = new Jazzcontroller();
-                if ($method === 'GET') {
-                    $controller->editContent();
-                }
-                break;
-            case '5':
-                $controller = new yummycontroller();
-                if ($method === 'GET') {
-                    $controller->editContent();
-                }
-                break;
-            case '6':
-                $controller = new Historycontroller();
-                if ($method === 'GET') {
-                    $controller->editContent();
-                }
-                break;
-            case '7':
-                $controller = new Historycontroller();
-                if ($method === 'GET') {
-                    $controller->editContent();
-                }
-                break;
             default;
-                $controller = new TemplateController();
+                $controller = new Pagecontroller;
                 if ($method === 'GET') {
                     $controller->editContent();
                 }
