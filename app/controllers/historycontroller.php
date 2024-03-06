@@ -34,25 +34,15 @@ class Historycontroller
         $structuredTickets = $this->getStructuredTickets($eventDetails->getEventId());
         $uniqueTimes = $this->getUniqueTimes($structuredTickets);
         $navigationController = $this->navigationController->displayHeader();
+        $contentData = $this->pagecontroller->getContentAndImagesByPage();
         require_once __DIR__ . '/../views/history/overview.php';
     }
 
-    public function showProveniershof()
+    public function editContent()
     {
-        $navigationController = $this->navigationController->displayHeader();
-        require_once __DIR__ . '/../views/history/proveniershof.php';
-    }
-
-    public function showChurch()
-    {
-        $navigationController = $this->navigationController->displayHeader();
-        require_once __DIR__ . '/../views/history/churchbravo.php';
-    }
-
-    public function editContent(){
         $allSections = $this->pagecontroller->getSectionsFromPageID();
         $pageDetails = $this->pagecontroller->getPageDetails();
-        require_once __DIR__ ."/../views/admin/page-managment/editHistory.php";
+        require_once __DIR__ . "/../views/admin/page-managment/editHistory.php";
     }
 
 
@@ -133,7 +123,7 @@ class Historycontroller
 
     public function removeTimeslot()
     {
-        try{
+        try {
             $ticketID = htmlspecialchars($_POST['ticket_id'] ?? null);
 
             $result = $this->historyService->removeTimeslot($ticketID);
@@ -145,9 +135,8 @@ class Historycontroller
             }
             exit;
 
-        }
-        catch (Exception $e) {
-            echo json_encode(['success'=> false,'message'=> $e->getMessage()]);
+        } catch (Exception $e) {
+            echo json_encode(['success' => false, 'message' => $e->getMessage()]);
         }
 
     }

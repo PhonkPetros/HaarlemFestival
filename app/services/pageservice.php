@@ -25,5 +25,9 @@ class Pageservice
     public function getPageDetails($page){
         return $this->pagerepo->getPageDetails($page);
     }
+
+    public function getSectionContentImages($page){
+        return $this->pagerepo->getSectionContentImages($page);
+    }
    
 }

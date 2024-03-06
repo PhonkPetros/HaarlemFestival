@@ -44,7 +44,7 @@ class Pagerepository extends dbconfig
         $sections = [];
 
         try {
-            $stmt = $this->connection->prepare('SELECT * FROM section WHERE page_id = :page_id');
+            $stmt = $this->connection->prepare('SELECT * FROM section WHERE page_id = :page_id ORDER BY section_id ASC' );
             $stmt->bindParam(':page_id', $page, PDO::PARAM_INT);
             $stmt->execute();
             $sections = $stmt->fetchAll(PDO::FETCH_CLASS, Section::class);
@@ -68,5 +68,27 @@ class Pagerepository extends dbconfig
         }
         return $page;
     }
+
+    public function getSectionContentImages($pageId) {
+        $sections = [];
+        try {
+            $stmt = $this->connection->prepare("
+                SELECT s.*, e.content as editor_content, i.file_path as image_file_path
+                FROM section s
+                LEFT JOIN editor e ON s.editor_id = e.id
+                LEFT JOIN image i ON s.image_id = i.image_id
+                WHERE s.page_id = :page_id
+                ORDER BY s.section_id ASC
+            ");
+            $stmt->bindParam(':page_id', $pageId, PDO::PARAM_INT);
+            $stmt->execute();
+            $sections = $stmt->fetchAll(PDO::FETCH_ASSOC); 
+        } catch (PDOException $e) {
+            error_log('Failed to fetch sections with content and images: ' . $e->getMessage());
+        }
+    
+        return $sections;
+    }
+    
 
 }

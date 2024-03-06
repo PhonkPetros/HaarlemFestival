@@ -4,7 +4,7 @@ namespace model;
 class Section implements \JsonSerializable
 {
     private int $section_id;
-    private int $editor_id;
+    private ?int $editor_id;
     private ?int $image_id;
     private int $page_id;
     private string $title;
@@ -17,7 +17,7 @@ class Section implements \JsonSerializable
         $this->section_id = $section_id;
     }
 
-    public function getEditorId(): int {
+    public function getEditorId(): ?int {
         return $this->editor_id;
     }
 
@@ -28,7 +28,7 @@ class Section implements \JsonSerializable
     public function setTitle(string $title): void{
         $this->title = $title;
     }
-    public function setEditorId(int $editor_id): void {
+    public function setEditorId(?int $editor_id): void {
         $this->editor_id = $editor_id;
     }
 

@@ -123,18 +123,6 @@ if ($pageID || $eventID || $editPageID) {
                     $controller->showYummy();
                 }
                 break;
-            case '6':
-                $controller = new Historycontroller();
-                if ($method === 'GET') {
-                    $controller->showProveniershof();
-                }
-                break;
-            case '7':
-                $controller = new Historycontroller();
-                if ($method === 'GET') {
-                    $controller->showChurch();
-                }
-                break;
             default;
                 //change this to use template controller
                 $controller = new TemplateController();

@@ -7,12 +7,6 @@ class Carousel implements \JsonSerializable
     private int $section_id;
     private int $image_id;
 
-    public function __construct(int $carousel_id = 0, int $section_id = 0, int $image_id = 0) {
-        $this->carousel_id = $carousel_id;
-        $this->section_id = $section_id;
-        $this->image_id = $image_id;
-    }
-
     public function getCarouselId(): int {
         return $this->carousel_id;
     }
