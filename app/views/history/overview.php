@@ -30,11 +30,11 @@
         echo "<div class='bg-light text-dark text-center p-3'>{$sectionData['content']}</div>";
       } else {
         $carouselItemsHtml = '';
-        foreach ($sectionData['carouselItems'] as $carouselIndex => $carouselItem) {
+        foreach ($carouselItems['carouselItems'] as $carouselIndex => $carouselItem) {
           $activeClass = $carouselIndex === 0 ? 'active' : '';
           $carouselItemsHtml .= "<div class='carousel-item {$activeClass}'><img src='/img/{$carouselItem}' alt='' style='width: 70%; height: 600px; object-fit: cover; display: block; margin: auto;'></div>";
         }
-        $controlsHtml = count($sectionData['carouselItems']) > 1 ? '<a class="carousel-control-prev" href="#locationsCarousel" role="button" data-slide="prev"><span class="carousel-control-prev-icon" aria-hidden="true"></span><span class="sr-only">Previous</span></a><a class="carousel-control-next" href="#locationsCarousel" role="button" data-slide="next"><span class="carousel-control-next-icon" aria-hidden="true"></span><span class="sr-only">Next</span></a>' : '';
+        $controlsHtml = count($carouselItems['carouselItems']) > 1 ? '<a class="carousel-control-prev" href="#locationsCarousel" role="button" data-slide="prev"><span class="carousel-control-prev-icon" aria-hidden="true"></span><span class="sr-only">Previous</span></a><a class="carousel-control-next" href="#locationsCarousel" role="button" data-slide="next"><span class="carousel-control-next-icon" aria-hidden="true"></span><span class="sr-only">Next</span></a>' : '';
 
         echo "<div class='bg-dark text-white p-3'><div id='locationsCarousel' class='carousel slide' data-ride='carousel'><div class='carousel-inner' role='listbox'>{$carouselItemsHtml}</div>{$controlsHtml}</div></div>";
       }

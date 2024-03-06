@@ -57,29 +57,30 @@ class Pagecontroller
     {
         $pageId = htmlspecialchars($_GET['pageid']);
         $sections = $this->pageService->getSectionContentImages($pageId);
-        $carouselItems = $this->contentService->getCarouselItemsBySectionId(14);
         $contentData = [];
-
         foreach ($sections as $section) {
             $sectionData = [
                 'title' => $section['title'],
                 'content' => $section['editor_content'] ?? null,
                 'image' => $section['image_file_path'] ?? null,
-                'carouselItems' => []
             ];
-
-           
-            foreach ($carouselItems as $item) {
-                $imageData = $this->contentService->getImageById($item->getImageId());
-                if ($imageData) {
-                    $sectionData['carouselItems'][] = $imageData->getFilePath();
-                }
-            }
-
             $contentData[] = $sectionData;
         }
-
         return $contentData;
+    }
+
+    public function getCarouselImagesForHistory(){
+        $carouselItems = $this->contentService->getCarouselItemsBySectionId(14);
+        $all = [];
+            
+        foreach ($carouselItems as $item) {
+            $imageData = $this->contentService->getImageById($item->getImageId());
+            if ($imageData) {
+                $all['carouselItems'][] = $imageData->getFilePath();
+            }
+        }
+
+        return $all;
     }
 
 }

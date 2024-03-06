@@ -35,6 +35,7 @@ class Historycontroller
         $uniqueTimes = $this->getUniqueTimes($structuredTickets);
         $navigationController = $this->navigationController->displayHeader();
         $contentData = $this->pagecontroller->getContentAndImagesByPage();
+        $carouselItems = $this->pagecontroller->getCarouselImagesForHistory();
         require_once __DIR__ . '/../views/history/overview.php';
     }
 
