@@ -7,6 +7,8 @@ use model\Carousel;
 use model\Editor;
 use model\Section;
 use model\Image;
+use PDOException;
+use Exception;
 use services\ContentService;
 
 require_once __DIR__ . "/../services/pageservice.php";
@@ -39,6 +41,65 @@ class Pagecontroller
         $pageDetails = $this->getPageDetails();
         require_once __DIR__ . "/../views/admin/page-managment/editPageOverview.php";
     }
+
+
+    public function editSectionContent()
+    {
+        $sectionID = htmlspecialchars($_GET["section_id"] ?? '');
+        $sectionTitle = $this->pageService->getSectionTitle($sectionID);
+        $sectionData = $this->pageService->getSectionContentImagesCarousel($sectionID)[0] ?? null;
+
+        $editorContent = null;
+        $imageFilePath = null;
+        $carouselItems = null;
+
+        if ($sectionData) {
+            $editorContent = $sectionData['editor_content'] ?? null;
+            $imageFilePath = $sectionData['image_file_path'] ?? null;
+
+            if (isset($sectionData['carousel_id'])) {
+                $carouselItems = [];
+            }
+        }
+
+        require_once __DIR__ . "/../views/admin/page-managment/editSection.php";
+    }
+    public function updateContent(){
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['section_id'], $_POST['content'])) {
+            $sectionID = $_POST['section_id'];
+            $content = $_POST['content'];
+
+            $sanitizedSectionID = filter_var($sectionID, FILTER_SANITIZE_NUMBER_INT);
+    
+            try {
+                $this->pageService->updateSectionContent($sanitizedSectionID, $content);
+                $pageID = $this->pageService->getSectionPageId($sanitizedSectionID); 
+    
+                if ($pageID !== null) {
+                    header('Location: /edit-content/?id=' . $pageID);
+                    exit();
+                } else {
+                    throw new Exception("Page ID not found for section ID: " . $sanitizedSectionID);
+                }
+            } catch (PDOException $e) {
+                error_log('Failed to update section content: ' . $e->getMessage());
+            } catch (Exception $e) {
+                error_log($e->getMessage());
+            }
+        }
+    }
+    
+    private function imageUpload()
+    {
+    
+    }
+
+    public function deleteSection()
+    {
+        $sectionID = htmlspecialchars($_GET["section_id"]);
+    }
+
+
     public function getSectionsFromPageID()
     {
         $page = htmlspecialchars($_GET['id']);
@@ -69,10 +130,11 @@ class Pagecontroller
         return $contentData;
     }
 
-    public function getCarouselImagesForHistory(){
+    public function getCarouselImagesForHistory()
+    {
         $carouselItems = $this->contentService->getCarouselItemsBySectionId(14);
         $all = [];
-            
+
         foreach ($carouselItems as $item) {
             $imageData = $this->contentService->getImageById($item->getImageId());
             if ($imageData) {

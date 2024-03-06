@@ -19,7 +19,7 @@
     <?php
     foreach ($contentData as $index => $sectionData) {
       if ($index === 0) {
-        echo "<div class='text-white text-center py-5 header-background2'>{$sectionData['content']}</div>";
+        echo "<div class='text-white text-center py-5 header-background1'>{$sectionData['content']}</div>";
       } elseif ($index === 1) {
         echo "<div class='text-white p-5 header-background2'>{$sectionData['content']}</div>";
       } elseif ($index === 2) {

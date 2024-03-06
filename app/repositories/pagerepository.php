@@ -6,6 +6,7 @@ use config\dbconfig;
 use PDO;
 use PDOException;
 use model\Page;
+use Exception;
 use model\Section;
 
 require_once __DIR__ . '/../config/dbconfig.php';
@@ -90,5 +91,84 @@ class Pagerepository extends dbconfig
         return $sections;
     }
     
+    public function getSectionContentImagesCarousel($sectionId) {
+        $data = [];
+        try {
+            $stmt = $this->connection->prepare("
+                SELECT
+                    s.section_id,
+                    e.content AS editor_content,
+                    i.file_path AS image_file_path,
+                    c.carousel_id,
+                    ci.file_path AS carousel_image_file_path
+                FROM
+                    section s
+                    LEFT JOIN editor e ON s.editor_id = e.id
+                    LEFT JOIN image i ON s.image_id = i.image_id
+                    LEFT JOIN carousel c ON s.section_id = c.section_id
+                    LEFT JOIN image ci ON c.image_id = ci.image_id
+                WHERE
+                    s.section_id = :section_id
+            ");
+            $stmt->bindParam(':section_id', $sectionId, PDO::PARAM_INT);
+            $stmt->execute();
+            $data = $stmt->fetchAll(PDO::FETCH_ASSOC); 
+        } catch (PDOException $e) {
+            error_log('Failed to fetch section content, images, and carousel: ' . $e->getMessage());
+        }
+    
+        return $data;
+    }
 
+    public function getSectionTitle($sectionID){
+        $title = null;
+        try {
+            $stmt = $this->connection->prepare('SELECT title FROM section WHERE section_id = :section_id');
+            $stmt->bindParam(':section_id', $sectionID, PDO::PARAM_INT);
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+            if ($result) {
+                $title = $result['title'];
+            }
+            
+        } catch (PDOException $e) {
+            error_log('Failed to fetch section title: ' . $e->getMessage());
+        }
+
+        return $title;
+    }
+
+    public function getSectionPageId($sectionID){
+        try {
+            $stmt = $this->connection->prepare('SELECT page_id FROM section WHERE section_id = :section_id');
+            $stmt->bindParam(':section_id', $sectionID, PDO::PARAM_INT);
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+            return $result ? $result['page_id'] : null;
+            
+        } catch (PDOException $e) {
+            error_log('Failed to fetch page id: ' . $e->getMessage());
+            return null;
+        }
+    }
+    
+    public function updateSectionContent($sectionID, $content)
+    {
+        $stmt = $this->connection->prepare("SELECT editor_id FROM section WHERE section_id = :section_id");
+        $stmt->bindParam(':section_id', $sectionID, PDO::PARAM_INT);
+        $stmt->execute();
+        $editorID = $stmt->fetchColumn();
+    
+        if ($editorID !== false) {
+            $stmt = $this->connection->prepare("UPDATE editor SET content = :content WHERE id = :editor_id");
+            $stmt->bindParam(':content', $content, PDO::PARAM_STR);
+            $stmt->bindParam(':editor_id', $editorID, PDO::PARAM_INT);
+            $stmt->execute();
+        } else {
+            throw new Exception("No editor found for section ID: " . $sectionID);
+        }
+    }
+    
 }
