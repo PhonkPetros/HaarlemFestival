@@ -124,7 +124,6 @@ if ($pageID || $eventID || $editPageID) {
                 }
                 break;
             default;
-                //change this to use template controller
                 $controller = new TemplateController();
                 if ($method === 'GET') {
                     $controller->show();
