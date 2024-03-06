@@ -2,6 +2,7 @@
 
 namespace services;
 use repositories\Pagerepository;
+use PDOException;
 
 require_once __DIR__ . '/../repositories/pagerepository.php';
 
@@ -29,5 +30,25 @@ class Pageservice
     public function getSectionContentImages($page){
         return $this->pagerepo->getSectionContentImages($page);
     }
+
+    public function getSectionContentImagesCarousel($sectionId){
+        return $this->pagerepo->getSectionContentImagesCarousel($sectionId);
+    }
+
+    public function getSectionTitle($sectionID){
+        return $this->pagerepo->getSectionTitle($sectionID);
+    }
    
+    public function updateSectionContent($sectionID, $content)
+    {
+        try {
+            $this->pagerepo->updateSectionContent($sectionID, $content);
+        } catch (PDOException $e) {
+            throw $e;
+        }
+    }
+
+    public function getSectionPageId($sectionID){
+        return $this->pagerepo->getSectionPageId($sectionID);
+    }
 }

@@ -37,6 +37,8 @@ $method = $_SERVER['REQUEST_METHOD'];
 
 //Please do not touch this
 $editPageID = null;
+$sectionEdit = null;
+$sectionDelete = null;
 $queryString = parse_url($request, PHP_URL_QUERY);
 $queryParams = [];
 if ($queryString !== null) {
@@ -50,13 +52,19 @@ if (strpos($request, '/manage-event-details/') === 0) {
 if (strpos($request, '/edit-content/') === 0) {
     $editPageID = htmlspecialchars($queryParams['id'] ?? '');
 }
+if (strpos($request, '/sectionEdit/') === 0){
+    $sectionEdit = htmlspecialchars($queryParams['section_id'] ??'');
+}
+if (strpos($request, '/sectionDelete/') === 0){
+    $sectionDelete = htmlspecialchars($queryParams['section_id'] ??'');
+}
 
 //Please do not touch this
 if ($request === '/') {
     $pageID = '1';
 }
 
-if ($pageID || $eventID || $editPageID) {
+if ($pageID || $eventID || $editPageID || $sectionEdit || $sectionDelete) {
     //this has to do with the editing of event details
     if ($eventID) {
         switch ($eventID) {
@@ -133,12 +141,37 @@ if ($pageID || $eventID || $editPageID) {
         }
         exit;
     } elseif ($editPageID) {
-        //this has to with editing pages
+        //this has to with editing pages overview
         switch ($editPageID) {
             default;
                 $controller = new Pagecontroller;
                 if ($method === 'GET') {
                     $controller->editContent();
+                } 
+                break;
+        }
+        exit;
+    } elseif ($sectionEdit) {
+        //this has to with editing section content
+        switch ($sectionEdit) {
+            default;
+                $controller = new Pagecontroller;
+                if ($method === 'GET') {
+                    $controller->editSectionContent();
+                }
+                else if ($method === 'POST') {
+                    $controller->updateContent(); 
+                }
+                break;
+        }
+        exit;
+    }  elseif ($sectionDelete) {
+        //this has to with deleting sections
+        switch ($sectionDelete) {
+            default;
+                $controller = new Pagecontroller;
+                if ($method === 'GET') {
+                    $controller->deleteSection();
                 }
                 break;
         }
@@ -262,6 +295,18 @@ switch ($request) {
             $controller->updateNavigation();
         }
         break;
+    case '/sectionEdit':
+        $controller = new Pagecontroller();
+        if ($method === 'GET'){
+            $controller->editSectionContent();
+        }    
+        break;
+    case '/sectionDelete':
+        $controller = new Pagecontroller();
+        if ($method === 'GET'){
+            $controller->deleteSection();
+        }    
+        break;    
     default:
         http_response_code(404);
         $navigation = new Navigationcontroller();
