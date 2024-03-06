@@ -28,4 +28,18 @@ class HistoryService
         $this->historyRepo->addNewTimeSlot($newTicket);
     }
 
+
+    public function existEvent($newEventName, $eventId){
+        return $this->historyRepo->existEvent($newEventName, $eventId);
+    }
+
+    
+    public function editEventDetails($eventId, $eventName, $startDate, $endDate, $price, $newLocation, $picture){
+        return $this->historyRepo->editEventDetails($eventId, $eventName, $startDate, $endDate, $price, $newLocation, $picture);
+    }
+
+    public function removeTimeslot($ticketID){
+        $this->historyRepo->removeTimeslot($ticketID);
+    }
+
 }

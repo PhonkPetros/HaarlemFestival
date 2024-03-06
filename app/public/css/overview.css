@@ -63,9 +63,9 @@ h1 {
 
 .individual-event img {
     width: 100px;
-flex-shrink: 0;
-border-radius: 100px;
-margin-top: 24px;
-margin-bottom:14px;
-
+    height: 100px;
+    flex-shrink: 0;
+    border-radius: 100px;
+    margin-top: 24px;
+    margin-bottom:14px;
 }

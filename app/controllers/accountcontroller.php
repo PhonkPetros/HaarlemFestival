@@ -5,11 +5,14 @@ namespace controllers;
 use services\registerservice;
 use model\user;
 use services\accountervice;
+use controllers\Navigationcontroller;
+
 
 require_once __DIR__ . '/../services/accountservice.php';
 require_once __DIR__ . '/../services/registerservice.php';
 require_once __DIR__ . '/../model/user.php';
 require_once __DIR__ . '/../controllers/smtpcontroller.php';
+require_once __DIR__ . '/../controllers/navigationcontroller.php';
 
 
 class AccountController
@@ -18,10 +21,12 @@ class AccountController
     private $accountService;
     private $user;
     private $smtpController;
+    private $navigationController;
+    
 
     public function __construct()
     {
-        
+        $this->navigationController = new Navigationcontroller();
         $this->registerService = new registerservice();
         $this->accountService = new accountervice();
         $this->user = new user();
@@ -39,7 +44,7 @@ class AccountController
     {
 
 
-
+        $navigationController = $this->navigationController->displayHeader();
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (isset($_POST['updateEmailBtn'])) {

@@ -20,5 +20,10 @@ class Dancecontroller
     public function editEventDetails(){
         require_once __DIR__ . '/../views/admin/manage-event-details/editDetailsDance.php';
     }
+
+    public function editContent(){
+        require_once __DIR__ ."/../views/admin/page-managment/editDance.php";
+    }
+
   
 }

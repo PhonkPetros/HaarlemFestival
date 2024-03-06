@@ -3,18 +3,21 @@
 namespace controllers;
 
 use services\AdminService;
+use services\Pageservice;
 use model\User;
 
 require_once __DIR__ . '/../model/user.php';
 require_once __DIR__ . '/../services/AdminService.php';
-
+require_once __DIR__ . '/../services/pageservice.php';
 
 class AdminController
 {
     private $adminservice;
     private $usermodel;
+    private $pageservice;
   
     public function __construct() {
+        $this->pageservice = new Pageservice();
         $this->adminservice = new AdminService();
         $this->usermodel = new User();
     }
@@ -36,6 +39,7 @@ class AdminController
     
 
     public function editFestivals(){
+        $allPages = $this->pageservice->getPages();
         require_once __DIR__ . '/../views/admin/editfestival.php';
     }
 

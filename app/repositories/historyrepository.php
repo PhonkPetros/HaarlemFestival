@@ -5,9 +5,9 @@ namespace repositories;
 use config\dbconfig;
 use PDO;
 use PDOException;
-use DateTime;
 use model\Event;
 use model\Ticket;
+
 
 require_once __DIR__ . '/../config/dbconfig.php';
 require_once __DIR__ . '/../model/event.php';
@@ -15,13 +15,13 @@ require_once __DIR__ . '/../model/ticket.php';
 
 class historyrepository extends dbconfig
 {
-    public function getEventDetails($eventName = "history")
+    public function getEventDetails($eventID = "8")
     {
-        $sql = 'SELECT * FROM [Event] WHERE name = :eventName';
+        $sql = 'SELECT * FROM [Event] WHERE event_id = :eventID';
 
         try {
             $stmt = $this->getConnection()->prepare($sql);
-            $stmt->bindParam(':eventName', $eventName, PDO::PARAM_STR);
+            $stmt->bindParam(':eventID', $eventID, PDO::PARAM_INT);
             $stmt->execute();
 
             $stmt->setFetchMode(PDO::FETCH_CLASS, Event::class);
@@ -36,7 +36,7 @@ class historyrepository extends dbconfig
 
     public function getTicketsForEvent($eventId)
     {
-        $sql = 'SELECT * FROM [Ticket] WHERE event_id = :event_id';
+        $sql = 'SELECT * FROM [Ticket] WHERE event_id = :event_id  AND user_id IS NULL;';
 
         try {
             $stmt = $this->getConnection()->prepare($sql);
@@ -105,6 +105,72 @@ class historyrepository extends dbconfig
         } catch (PDOException $e) {
             error_log("Error: " . $e->getMessage());
             return false;
+        }
+    }
+
+    public function existEvent($newEventName, $eventId){
+        $sql = "SELECT COUNT(*) FROM [Event] WHERE name = :name AND event_id != :eventId";
+        try {
+            $stmt = $this->getConnection()->prepare($sql);
+            $stmt->bindParam(':name', $newEventName, PDO::PARAM_STR);
+            $stmt->bindParam(':eventId', $eventId, PDO::PARAM_INT);
+            $stmt->execute();
+    
+            $count = $stmt->fetchColumn();
+            return $count > 0 ? false : true;
+        } catch (PDOException $e) {
+            error_log(''. $e->getMessage());
+            return false; 
+        }
+    }
+    
+    public function editEventDetails($eventId, $eventName, $startDate, $endDate, $price, $newLocation, $picture){
+        $sql = "UPDATE Event SET 
+                    name = :eventName, 
+                    startDate = :startDate,  
+                    endDate = :endDate, 
+                    location = :location, 
+                    price = :price,
+                    picture = :picture
+                WHERE event_id = :eventId";
+    
+        try {
+            $stmt = $this->getConnection()->prepare($sql);
+            $stmt->bindParam(':eventName', $eventName, PDO::PARAM_STR);
+            $stmt->bindParam(':startDate', $startDate, PDO::PARAM_STR);
+            $stmt->bindParam(':endDate', $endDate, PDO::PARAM_STR);
+            $stmt->bindParam(':price', $price);
+            $stmt->bindParam(':location', $newLocation, PDO::PARAM_STR);
+            $stmt->bindParam(':picture', $picture, PDO::PARAM_STR);
+            $stmt->bindParam(':eventId', $eventId, PDO::PARAM_INT);
+    
+            $stmt->execute();
+            
+            if ($stmt->rowCount() > 0) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (PDOException $e) {
+            error_log("Error updating event details: " . $e->getMessage());
+            return false;
+        }
+    }
+    public function removeTimeslot($ticketID){
+        $sql = "DELETE FROM [Ticket] WHERE ticket_id = :ticketid AND user_id IS NULL;";
+        try {
+            $stmt = $this->getConnection()->prepare($sql);
+            $stmt->bindParam(':ticketid', $ticketID, PDO::PARAM_INT);
+            $stmt->execute();
+    
+            if ($stmt->rowCount() > 0) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (PDOException $e) {
+            error_log(''. $e->getMessage());
+            return false; 
         }
     }
     

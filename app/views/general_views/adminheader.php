@@ -12,8 +12,6 @@
     <link rel="stylesheet" href="/css/footer.css">
     <link rel="stylesheet" href="/css/manage-users.css">
     <link rel="stylesheet" href="/css/editDetailsHistory.css">
- 
-
 
 </head>
 <body>
@@ -30,10 +28,10 @@
             <a class="nav-link" href="/admin/manage-users">Manage Users</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="/admin/managefestival">Manage Festival</a>
+            <a class="nav-link" href="/admin/managefestival">Manage Festival Details</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="/admin/editfestival">Edit Festival</a>
+            <a class="nav-link" href="/admin/page-management/editfestival">Page Management</a>
         </li>
         <li class="nav-item">
             <a class="nav-link" href="/admin/orders">Orders</a>

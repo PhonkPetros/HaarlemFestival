@@ -1,4 +1,7 @@
 <?php
+
+
+
 session_start();
 
 use controllers\logincontroller;
@@ -10,7 +13,11 @@ use controllers\Jazzcontroller;
 use controllers\Restaurantcontroller;
 use controllers\Historycontroller;
 use controllers\accountcontroller;
+use controllers\Navigationcontroller;
 use controllers\overview;
+use controllers\Templatecontroller;
+use controllers\yummycontroller;
+use controllers\Pagecontroller;
 
 require_once __DIR__ . '/../controllers/overview.php';
 require_once __DIR__ . '/../controllers/registercontroller.php';
@@ -22,15 +29,125 @@ require_once __DIR__ . '/../controllers/restaurantcontroller.php';
 require_once __DIR__ . '/../controllers/historycontroller.php';
 require_once __DIR__ . '/../controllers/dancecontroller.php';
 require_once __DIR__ . '/../controllers/jazzcontroller.php';
+require_once __DIR__ . '/../controllers/navigationcontroller.php';
+require_once __DIR__ . '/../controllers/pagecontroller.php';
 
 $request = $_SERVER['REQUEST_URI'];
 $method = $_SERVER['REQUEST_METHOD'];
 
+//Please do not touch this
+$editPageID = null;
+$queryString = parse_url($request, PHP_URL_QUERY);
+$queryParams = [];
+if ($queryString !== null) {
+    parse_str($queryString, $queryParams);
+}
+$pageID = htmlspecialchars($queryParams["pageid"] ?? '');
+$eventID = null;
+if (strpos($request, '/manage-event-details/') === 0) {
+    $eventID = htmlspecialchars($queryParams["id"] ?? '');
+}
+if (strpos($request, '/edit-content/') === 0) {
+    $editPageID = htmlspecialchars($queryParams['id'] ?? '');
+}
+
+//Please do not touch this
+if ($request === '/') {
+    $pageID = '1';
+}
+
+if ($pageID || $eventID || $editPageID) {
+    //this has to do with the editing of event details
+    if ($eventID) {
+        switch ($eventID) {
+            case "5":
+                $controller = new Dancecontroller();
+                if ($method === 'GET') {
+                    $controller->editEventDetails();
+                }
+                break;
+            case '6':
+                $controller = new Jazzcontroller();
+                if ($method === 'GET') {
+                    $controller->editEventDetails();
+                }
+                break;
+            case '7':
+                $controller = new Restaurantcontroller();
+                if ($method === 'GET') {
+                    $controller->editEventDetails();
+                }
+                break;
+            case '8':
+                $controller = new Historycontroller();
+                if ($method === 'GET') {
+                    $controller->showeditEventDetails();
+                }
+                break;
+            default:
+                $controller = new TemplateController();
+                if ($method === 'GET') {
+                    $controller->editEventDetails();
+                }
+                break;
+        }
+        exit;
+    } elseif ($pageID) {
+        //this has to with our own pages
+        switch ($pageID) {
+            case "1":
+                $controller = new overview();
+                $controller->show();
+                break;
+            case '2':
+                $controller = new Historycontroller();
+                if ($method === 'GET') {
+                    $controller->show();
+                }
+                break;
+            case '3':
+                $controller = new Dancecontroller();
+                if ($method === 'GET') {
+                    $controller->show();
+                }
+                break;
+            case '4':
+                $controller = new Jazzcontroller();
+                if ($method === 'GET') {
+                    $controller->show();
+                }
+                break;
+            case '5':
+                $controller = new yummycontroller();
+                if ($method === 'GET') {
+                    $controller->showYummy();
+                }
+                break;
+            default;
+                //change this to use template controller
+                $controller = new TemplateController();
+                if ($method === 'GET') {
+                    $controller->show();
+                }
+                break;
+        }
+        exit;
+    } elseif ($editPageID) {
+        //this has to with editing pages
+        switch ($editPageID) {
+            default;
+                $controller = new Pagecontroller;
+                if ($method === 'GET') {
+                    $controller->editContent();
+                }
+                break;
+        }
+        exit;
+    }
+}
+
+//Add routes for actions or admin routes that do not have to do with displaying detail pages or overview pages for your individual events
 switch ($request) {
-    case '/':
-        $controller = new overview();
-        $controller->show();
-        break;
     case '/login':
         $controller = new logincontroller();
         if ($method === 'GET') {
@@ -103,7 +220,7 @@ switch ($request) {
             $controller->manageFestivals();
         }
         break;
-    case '/admin/editfestival':
+    case '/admin/page-management/editfestival':
         $controller = new admincontroller();
         if ($method === 'GET') {
             $controller->editFestivals();
@@ -115,57 +232,44 @@ switch ($request) {
             $controller->manageOrders();
         }
         break;
-    case '/manage-event-details/editDetailsDance':
-        $controller = new Dancecontroller();
-        if ($method === 'GET') {
-            $controller->editEventDetails();
-        }
-        break;
-    case '/manage-event-details/editDetailsHistory':
-        $controller = new Historycontroller();
-        if ($method === 'GET') {
-            $controller->editEventDetails();
-        }
-        break;
-    case '/manage-event-details/editDetailsJazz':
-        $controller = new Jazzcontroller();
-        if ($method === 'GET') {
-            $controller->editEventDetails();
-        }
-        break;
-    case '/manage-event-details/editDetailsRestaurant':
-        $controller = new Restaurantcontroller();
-        if ($method === 'GET') {
-            $controller->editEventDetails();
-        }
-        break;
-    case '/history/overview':
-        $controller = new Historycontroller();
-        if ($method === 'GET') {
-            $controller->show();
-        }
-        break;
-    case '/history/proveniershof':
-        $controller = new Historycontroller();
-        if ($method === 'GET') {
-            $controller->showProveniershof();
-        }
-        break;
-    case '/history/churchbravo':
-        $controller = new Historycontroller();
-        if ($method === 'GET') {
-            $controller->showChurch();
-        }
-        break;
-    case '/manage-event-details/editDetailsHistory/addNewTimeSlot':
+    case '/editDetailsHistory/addNewTimeSlot':
         $controller = new Historycontroller();
         if ($method === 'POST') {
             $controller->addNewTimeSlot();
         }
         break;
+    case '/editDetailsHistory/editEventDetails':
+        $controller = new Historycontroller();
+        if ($method === 'POST') {
+            $controller->editEventDetails();
+        }
+        break;
+    case '/editDetailsHistory/deleteTimeSlot':
+        $controller = new Historycontroller();
+        if ($method === 'POST') {
+            $controller->removeTimeslot();
+        }
+        break;
+    case '/modify-navigation/edit-navigation':
+        $controller = new Navigationcontroller();
+        if ($method === 'GET') {
+            $controller->modifyNavigationPage();
+        }
+        break;
+    case '/edit-navigation/modified':
+        $controller = new Navigationcontroller();
+        if ($method === 'POST') {
+            $controller->updateNavigation();
+        }
+        break;
         
     default:
         http_response_code(404);
+        $navigation = new Navigationcontroller();
+        $navigation->displayHeader();
         require __DIR__ . '/../views/404.php';
         break;
 }
+
+
+

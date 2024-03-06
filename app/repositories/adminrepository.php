@@ -139,24 +139,17 @@ class AdminRepository extends dbconfig {
             return null;
         }
     }
-    
-
     public function getListOfEvents() {
         $events = [];
-    
         try {
-            $sql = "SELECT DISTINCT [name] FROM Event";
-    
+            $sql = "SELECT event_id, name FROM Event";
             $stmt = $this->connection->prepare($sql);
             $stmt->execute();
-            $events = $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
+            $events = $stmt->fetchAll(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
             error_log("Error fetching event types: " . $e->getMessage());
         }
-    
         return $events;
     }
-    
-    
     
 }
