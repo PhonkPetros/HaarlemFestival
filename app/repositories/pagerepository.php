@@ -170,5 +170,41 @@ class Pagerepository extends dbconfig
             throw new Exception("No editor found for section ID: " . $sectionID);
         }
     }
+
+    public function deleteSection($sectionID){
+        try {
+
+            $this->connection->beginTransaction();
+    
+            $stmt = $this->connection->prepare("DELETE FROM carousel WHERE section_id = :section_id");
+            $stmt->bindParam(':section_id', $sectionID, PDO::PARAM_INT);
+            $stmt->execute();
+    
+            $stmt = $this->connection->prepare("SELECT editor_id, image_id FROM section WHERE section_id = :section_id");
+            $stmt->bindParam(':section_id', $sectionID, PDO::PARAM_INT);
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+            if ($result) {
+                $stmt = $this->connection->prepare("DELETE FROM editor WHERE id = :editor_id");
+                $stmt->bindParam(':editor_id', $result['editor_id'], PDO::PARAM_INT);
+                $stmt->execute();
+
+                $stmt = $this->connection->prepare("DELETE FROM image WHERE image_id = :image_id");
+                $stmt->bindParam(':image_id', $result['image_id'], PDO::PARAM_INT);
+                $stmt->execute();
+            }
+
+            $stmt = $this->connection->prepare("DELETE FROM section WHERE section_id = :section_id");
+            $stmt->bindParam(':section_id', $sectionID, PDO::PARAM_INT);
+            $stmt->execute();
+
+            $this->connection->commit();
+        } catch (PDOException $e) {
+            $this->connection->rollback();
+            error_log('Failed to delete section: ' . $e->getMessage());
+            throw $e;
+        }
+    }
     
 }

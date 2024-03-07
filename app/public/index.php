@@ -148,6 +148,9 @@ if ($pageID || $eventID || $editPageID || $sectionEdit || $sectionDelete) {
                 if ($method === 'GET') {
                     $controller->editContent();
                 } 
+                else if ($method === 'POST') {
+                    $controller->deleteSection(); 
+                }
                 break;
         }
         exit;
@@ -294,19 +297,7 @@ switch ($request) {
         if ($method === 'POST') {
             $controller->updateNavigation();
         }
-        break;
-    case '/sectionEdit':
-        $controller = new Pagecontroller();
-        if ($method === 'GET'){
-            $controller->editSectionContent();
-        }    
-        break;
-    case '/sectionDelete':
-        $controller = new Pagecontroller();
-        if ($method === 'GET'){
-            $controller->deleteSection();
-        }    
-        break;    
+        break; 
     default:
         http_response_code(404);
         $navigation = new Navigationcontroller();
