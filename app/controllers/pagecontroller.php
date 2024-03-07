@@ -64,7 +64,7 @@ class Pagecontroller
 
         require_once __DIR__ . "/../views/admin/page-managment/editSection.php";
     }
-    
+
     public function updateContent()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['section_id'], $_POST['content'])) {
@@ -111,8 +111,8 @@ class Pagecontroller
 
         try {
             $this->pageService->deleteSection($sanitizedSectionID);
-            header('Location: /edit-content/?id=' . $pageID);
             echo '<script>alert("Section deleted.");</script>';
+            header('Location: /edit-content/?id=' . $pageID);
         } catch (PDOException $e) {
             error_log('Failed to delete section: ' . $e->getMessage());
 
@@ -122,8 +122,29 @@ class Pagecontroller
         }
     }
 
+    public function deletePage(){
+        $pageID = htmlspecialchars($_GET['id'] ??'');
+        
 
+        if (!$pageID) {
+            error_log('Page ID is missing.');
+            return;
+        }
 
+        $sanitizedPageID = filter_var($pageID, FILTER_SANITIZE_NUMBER_INT);
+
+        try {
+            $this->pageService->deletePage($sanitizedPageID);
+            echo '<script>alert("Page deleted.");</script>';
+            header('Location: /admin/page-management/editfestival');
+        } catch (PDOException $e) {
+            error_log('Failed to delete section: ' . $e->getMessage());
+
+        } catch (Exception $e) {
+            error_log($e->getMessage());
+
+        }
+    }
 
     public function getSectionsFromPageID()
     {

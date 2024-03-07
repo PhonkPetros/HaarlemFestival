@@ -206,5 +206,26 @@ class Pagerepository extends dbconfig
             throw $e;
         }
     }
+
+    public function deletePage($pageID){
+        try {
+            $this->connection->beginTransaction();
+            $sections = $this->getAllSections($pageID);
+            foreach ($sections as $section) {
+                $this->deleteSection($section->section_id);
+            }
+
+            $stmt = $this->connection->prepare("DELETE FROM page WHERE id = :page_id");
+            $stmt->bindParam(':page_id', $pageID, PDO::PARAM_INT);
+            $stmt->execute();
+
+            $this->connection->commit();
+        } catch (PDOException $e) {
+            $this->connection->rollback();
+            error_log('Failed to delete page and its sections: ' . $e->getMessage());
+            throw $e;
+        }
+    }
+    
     
 }

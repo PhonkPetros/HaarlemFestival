@@ -27,7 +27,8 @@
                             <?php echo htmlspecialchars($page->getName()); ?>
                         </td>
                         <td>
-                            <a href="/edit-content/?id=<?php echo htmlspecialchars($page->getId()) ?>">Edit</a>
+                            <a href="/edit-content/?id=<?php echo htmlspecialchars($page->getId()) ?>" class="btn btn-primary btn-sm">Edit</a>
+                            <a href="/delete-page/?id=<?php echo htmlspecialchars($page->getId()) ?>" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this Page?');">Delete</a>
                         </td>
                     </tr>
 

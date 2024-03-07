@@ -39,6 +39,7 @@ $method = $_SERVER['REQUEST_METHOD'];
 $editPageID = null;
 $sectionEdit = null;
 $sectionDelete = null;
+$deletePageID =  null;
 $queryString = parse_url($request, PHP_URL_QUERY);
 $queryParams = [];
 if ($queryString !== null) {
@@ -58,13 +59,16 @@ if (strpos($request, '/sectionEdit/') === 0){
 if (strpos($request, '/sectionDelete/') === 0){
     $sectionDelete = htmlspecialchars($queryParams['section_id'] ??'');
 }
+if (strpos($request, '/delete-page/') === 0){
+    $deletePageID = htmlspecialchars($queryParams['id'] ?? '');
+}
 
 //Please do not touch this
 if ($request === '/') {
     $pageID = '1';
 }
 
-if ($pageID || $eventID || $editPageID || $sectionEdit || $sectionDelete) {
+if ($pageID || $eventID || $editPageID || $sectionEdit || $sectionDelete || $deletePageID) {
     //this has to do with the editing of event details
     if ($eventID) {
         switch ($eventID) {
@@ -175,6 +179,18 @@ if ($pageID || $eventID || $editPageID || $sectionEdit || $sectionDelete) {
                 $controller = new Pagecontroller;
                 if ($method === 'GET') {
                     $controller->deleteSection();
+                }
+                break;
+        }
+        exit;
+    }
+    elseif ($deletePageID) {
+        //this has to with deleting pages
+        switch ($deletePageID) {
+            default;
+                $controller = new Pagecontroller;
+                if ($method === 'GET') {
+                    $controller->deletePage();
                 }
                 break;
         }
