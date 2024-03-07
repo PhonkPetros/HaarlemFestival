@@ -88,7 +88,7 @@
                     <div class="mb-3">
                         <label for="newDate" class="form-label">Date</label>
                         <input type="date" class="form-control" id="newDate" name="date" required
-                            min="<?php echo date('Y-m-d'); ?>">
+                            min="<?php echo $eventDetails->getStartDate() ?>" max="<?php echo $eventDetails->getEndDate() ?>">
                     </div>
                     <div class="mb-3">
                         <label for="newQuantity" class="form-label">Quantity</label>
