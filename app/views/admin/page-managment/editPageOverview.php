@@ -26,6 +26,8 @@
                     <?php endforeach; ?>
                 </tbody>
             </table>
+            <button type="button" class="btn btn-danger" style="margin-bottom: 20px"
+            onclick="window.history.back();">Go Back</button>
         </div>
     <?php else: ?>
         <p>No sections found for this page.</p>
