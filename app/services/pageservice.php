@@ -51,4 +51,12 @@ class Pageservice
     public function getSectionPageId($sectionID){
         return $this->pagerepo->getSectionPageId($sectionID);
     }
+
+    public function deleteSection($sectionID){
+        return $this->pagerepo->deleteSection($sectionID);
+    }
+
+    public function deletePage($pageID){
+        return $this->pagerepo->deletePage($pageID);
+    }
 }

@@ -64,17 +64,19 @@ class Pagecontroller
 
         require_once __DIR__ . "/../views/admin/page-managment/editSection.php";
     }
-    public function updateContent(){
+
+    public function updateContent()
+    {
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['section_id'], $_POST['content'])) {
             $sectionID = $_POST['section_id'];
             $content = $_POST['content'];
 
             $sanitizedSectionID = filter_var($sectionID, FILTER_SANITIZE_NUMBER_INT);
-    
+
             try {
                 $this->pageService->updateSectionContent($sanitizedSectionID, $content);
-                $pageID = $this->pageService->getSectionPageId($sanitizedSectionID); 
-    
+                $pageID = $this->pageService->getSectionPageId($sanitizedSectionID);
+
                 if ($pageID !== null) {
                     header('Location: /edit-content/?id=' . $pageID);
                     exit();
@@ -88,17 +90,61 @@ class Pagecontroller
             }
         }
     }
-    
+
     private function imageUpload()
     {
-    
+
     }
 
     public function deleteSection()
     {
-        $sectionID = htmlspecialchars($_GET["section_id"]);
+        $sectionID = htmlspecialchars($_GET["section_id"] ?? '');
+
+
+        if (!$sectionID) {
+            error_log('Section ID is missing.');
+            return;
+        }
+
+        $sanitizedSectionID = filter_var($sectionID, FILTER_SANITIZE_NUMBER_INT);
+        $pageID = $this->pageService->getSectionPageId($sanitizedSectionID);
+
+        try {
+            $this->pageService->deleteSection($sanitizedSectionID);
+            echo '<script>alert("Section deleted.");</script>';
+            header('Location: /edit-content/?id=' . $pageID);
+        } catch (PDOException $e) {
+            error_log('Failed to delete section: ' . $e->getMessage());
+
+        } catch (Exception $e) {
+            error_log($e->getMessage());
+
+        }
     }
 
+    public function deletePage(){
+        $pageID = htmlspecialchars($_GET['id'] ??'');
+        
+
+        if (!$pageID) {
+            error_log('Page ID is missing.');
+            return;
+        }
+
+        $sanitizedPageID = filter_var($pageID, FILTER_SANITIZE_NUMBER_INT);
+
+        try {
+            $this->pageService->deletePage($sanitizedPageID);
+            echo '<script>alert("Page deleted.");</script>';
+            header('Location: /admin/page-management/editfestival');
+        } catch (PDOException $e) {
+            error_log('Failed to delete section: ' . $e->getMessage());
+
+        } catch (Exception $e) {
+            error_log($e->getMessage());
+
+        }
+    }
 
     public function getSectionsFromPageID()
     {
