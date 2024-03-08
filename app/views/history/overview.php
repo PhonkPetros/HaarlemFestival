@@ -31,7 +31,7 @@
         </div>
       <?php elseif ($index === 3): ?>
         <div class='text-center text-white p-3 header-background3'><img
-            src='/img/<?= htmlspecialchars($sectionData['image']) ?>' alt='Tour Route Map' class='img-fluid'></div>
+            src='/img/uploads/<?= htmlspecialchars($sectionData['image']) ?>' alt='Tour Route Map' class='img-fluid'></div>
       <?php elseif ($index === 4): ?>
         <div class='bg-light text-dark text-center p-3'>
           <?= ($sectionData['content']) ?>
