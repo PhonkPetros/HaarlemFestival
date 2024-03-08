@@ -262,6 +262,21 @@ switch ($request) {
             $controller->updateNavigation();
         }
         break;
+       
+     case '/editjazz':
+        $controller = new Jazzcontroller();
+        if ($method === 'GET') {
+                    $controller->editEventDetails();
+                } elseif ($method === 'POST') {
+                    $controller->show();
+                }
+                break;
+                case '/jazz':
+                    $controller = new Jazzcontroller();
+                    if ($method === 'GET') {
+                                $controller->show();
+                            } 
+                            break;
         
     default:
         http_response_code(404);
