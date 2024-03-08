@@ -51,30 +51,27 @@ class Pagecontroller
 
         $editorContent = null;
         $imageFilePath = null;
-        $carouselItems = null;
+        $carouselItems = $this->getCarouselImagesForHistory();
 
         if ($sectionData) {
             $editorContent = $sectionData['editor_content'] ?? null;
             $imageFilePath = $sectionData['image_file_path'] ?? null;
-
-            if (isset($sectionData['carousel_id'])) {
-                $carouselItems = [];
-            }
         }
 
         require_once __DIR__ . "/../views/admin/page-managment/editSection.php";
     }
 
+
     public function updateContent()
-    {  
+    {
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['section_id'])) {
-            
+
             $sectionID = $_POST['section_id'];
-            $content = empty($_POST['content']) ? null: $_POST['content'];
+            $content = empty($_POST['content']) ? null : $_POST['content'];
             $title = $_POST['sectionTitle'];
 
-            $newImage = $_FILES['newImage' ] ?? null;
-            
+            $newImage = $_FILES['newImage'] ?? null;
+
             $path = '/img/uploads/';
 
             if ($newImage && $newImage['error'] == UPLOAD_ERR_OK) {
@@ -98,16 +95,16 @@ class Pagecontroller
                     throw new Exception("Page ID not found for section ID: " . $sanitizedSectionID);
                 }
             } catch (Exception $e) {
-                var_dump("". $e->getMessage());
+                var_dump("" . $e->getMessage());
                 error_log($e->getMessage());
-            
+
             }
         }
     }
 
     private function uploadImage($imageFile, $uploadDirectory)
     {
-        
+
         if (isset($imageFile) && $imageFile['error'] == UPLOAD_ERR_OK) {
             $imageFileName = basename($imageFile['name']);
             $absoluteUploadPath = $_SERVER['DOCUMENT_ROOT'] . $uploadDirectory . $imageFileName;
