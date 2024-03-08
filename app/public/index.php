@@ -37,6 +37,9 @@ $method = $_SERVER['REQUEST_METHOD'];
 
 //Please do not touch this
 $editPageID = null;
+$sectionEdit = null;
+$sectionDelete = null;
+$deletePageID =  null;
 $queryString = parse_url($request, PHP_URL_QUERY);
 $queryParams = [];
 if ($queryString !== null) {
@@ -50,13 +53,22 @@ if (strpos($request, '/manage-event-details/') === 0) {
 if (strpos($request, '/edit-content/') === 0) {
     $editPageID = htmlspecialchars($queryParams['id'] ?? '');
 }
+if (strpos($request, '/sectionEdit/') === 0){
+    $sectionEdit = htmlspecialchars($queryParams['section_id'] ??'');
+}
+if (strpos($request, '/sectionDelete/') === 0){
+    $sectionDelete = htmlspecialchars($queryParams['section_id'] ??'');
+}
+if (strpos($request, '/delete-page/') === 0){
+    $deletePageID = htmlspecialchars($queryParams['id'] ?? '');
+}
 
 //Please do not touch this
 if ($request === '/') {
     $pageID = '1';
 }
 
-if ($pageID || $eventID || $editPageID) {
+if ($pageID || $eventID || $editPageID || $sectionEdit || $sectionDelete || $deletePageID) {
     //this has to do with the editing of event details
     if ($eventID) {
         switch ($eventID) {
@@ -124,7 +136,6 @@ if ($pageID || $eventID || $editPageID) {
                 }
                 break;
             default;
-                //change this to use template controller
                 $controller = new TemplateController();
                 if ($method === 'GET') {
                     $controller->show();
@@ -133,12 +144,52 @@ if ($pageID || $eventID || $editPageID) {
         }
         exit;
     } elseif ($editPageID) {
-        //this has to with editing pages
+        //this has to with editing pages overview
         switch ($editPageID) {
             default;
                 $controller = new Pagecontroller;
                 if ($method === 'GET') {
                     $controller->editContent();
+                } 
+                else if ($method === 'POST') {
+                    $controller->deleteSection(); 
+                }
+                break;
+        }
+        exit;
+    } elseif ($sectionEdit) {
+        //this has to with editing section content
+        switch ($sectionEdit) {
+            default;
+                $controller = new Pagecontroller;
+                if ($method === 'GET') {
+                    $controller->editSectionContent();
+                }
+                else if ($method === 'POST') {
+                    $controller->updateContent(); 
+                }
+                break;
+        }
+        exit;
+    }  elseif ($sectionDelete) {
+        //this has to with deleting sections
+        switch ($sectionDelete) {
+            default;
+                $controller = new Pagecontroller;
+                if ($method === 'GET') {
+                    $controller->deleteSection();
+                }
+                break;
+        }
+        exit;
+    }
+    elseif ($deletePageID) {
+        //this has to with deleting pages
+        switch ($deletePageID) {
+            default;
+                $controller = new Pagecontroller;
+                if ($method === 'GET') {
+                    $controller->deletePage();
                 }
                 break;
         }
@@ -156,6 +207,16 @@ switch ($request) {
             $controller->loginAction();
         }
         break;
+
+    case '/reset-password':
+        $controller = new resetpasswordcontroller();
+            if ($method === 'GET') {
+                $controller->show();
+            } elseif ($method === 'POST') {
+                $controller->loginAction();
+            }
+            break;
+
     case '/register':
         $controller = new registercontroller();
         if ($method === 'GET') {
@@ -164,6 +225,7 @@ switch ($request) {
             $controller->registerAction();
         }
         break;
+        
     case '/logout':
         $logoutController = new Logoutcontroller();
         $logoutController->logout();
@@ -262,22 +324,6 @@ switch ($request) {
             $controller->updateNavigation();
         }
         break;
-       
-     case '/editjazz':
-        $controller = new Jazzcontroller();
-        if ($method === 'GET') {
-                    $controller->editEventDetails();
-                } elseif ($method === 'POST') {
-                    $controller->show();
-                }
-                break;
-                case '/jazz':
-                    $controller = new Jazzcontroller();
-                    if ($method === 'GET') {
-                                $controller->show();
-                            } 
-                            break;
-        
     default:
         http_response_code(404);
         $navigation = new Navigationcontroller();
