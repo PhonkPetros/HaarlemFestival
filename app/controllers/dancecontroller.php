@@ -2,21 +2,19 @@
 
 namespace controllers;
 
-use controllers\NavigationController;
+
 
 class Dancecontroller
 {
 
-    private $navcpntroller;
+  
     public function __construct() {
-        $this->navcpntroller = new NavigationController();
         
     }
 
     public function show()
     {
-        $navigation = $this->navcpntroller->displayHeader();    
-        require_once __DIR__ ."/../views/dance/overview.php";
+        
     }
 
     public function editEventDetails(){
