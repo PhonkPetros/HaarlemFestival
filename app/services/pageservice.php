@@ -39,10 +39,10 @@ class Pageservice
         return $this->pagerepo->getSectionTitle($sectionID);
     }
    
-    public function updateSectionContent($sectionID, $content)
+    public function updateSectionContent($sectionID, $content, $image)
     {
         try {
-            $this->pagerepo->updateSectionContent($sectionID, $content);
+            $this->pagerepo->updateSectionContent($sectionID, $content, $image);
         } catch (PDOException $e) {
             throw $e;
         }
@@ -58,5 +58,9 @@ class Pageservice
 
     public function deletePage($pageID){
         return $this->pagerepo->deletePage($pageID);
+    }
+
+    public function updateSectionTitle($sectionID, $title){
+        return $this->pagerepo->updateSectionTitle($sectionID, $title);
     }
 }

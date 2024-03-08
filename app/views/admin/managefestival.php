@@ -3,7 +3,7 @@
 <div class="content">
     <h1>Manage Festival Events</h1>
     <p style="font-size: 20px">Click on the event you want to manage to modify or add event details, prices, available slots, etc.</p>
-    <p style="font-size: 20px; padding-bottom: 20px;">To edit the content of a page, please go to the edit festival page.</p>
+    <p style="font-size: 20px; padding-bottom: 20px;">To edit the content of a page, please go to the page management page</p>
 
     <div class="table-responsive">
         <table class="table">

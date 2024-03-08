@@ -1,21 +1,25 @@
 <?php include __DIR__ . '/../../general_views/adminheader.php'; ?>
 
-<div class="container mt-5">
-    <h1 class="mb-4">
-        <?php echo htmlspecialchars($sectionTitle); ?>
-    </h1>
-    <form method="POST" action="/sectionEdit/?section_id=<?php echo urlencode($sectionID) ?>"
-        enctype="multipart/form-data">
+<div class="container my-5">
+
+    <form method="POST" action="/sectionEdit/?section_id=<?php echo urlencode($sectionID); ?>" enctype="multipart/form-data">
         <input type="hidden" name="section_id" value="<?php echo $sectionID; ?>">
+
+        <div class="mb-3">
+            <label for="sectionTitle" class="form-label">Section Title</label>
+            <input type="text" class="form-control" id="sectionTitle" name="sectionTitle" value="<?php echo htmlspecialchars($sectionTitle); ?>" required>
+        </div>
 
         <?php if ($editorContent !== null): ?>
             <div class="mb-3">
-                <textarea id="editor" name="content"
-                    class="form-control"><?php echo htmlspecialchars($editorContent); ?> <?php echo "<img src='/img/{$imageFilePath}'/>" ?></textarea>
+                <label for="editor" class="form-label">Content</label>
+                <textarea id="editor" name="content" class="form-control"><?php echo htmlspecialchars($editorContent); ?></textarea>
                 <script>
                     tinymce.init({
                         selector: '#editor',
-                        height: 500,
+                        height: 300,
+                        plugins: 'link image code',
+                        toolbar: 'undo redo | styleselect | bold italic | alignleft aligncenter alignright | code'
                     });
                 </script>
             </div>
@@ -25,10 +29,20 @@
             </div>
         <?php endif; ?>
 
+        <?php if ($imageFilePath !== null): ?>
+        <div class="mb-3">
+            <label for="formFile" class="form-label">Current Image</label>
+            <div class="mb-3">
+                <img src="/img/uploads/<?php echo htmlspecialchars($imageFilePath); ?>" class="img-fluid img-thumbnail" alt="Current Image">
+            </div>
+            <input class="form-control" type="file" id="formFile" name="newImage">
+        </div>
+    <?php endif; ?>
+
         <?php if ($carouselItems !== null): ?>
             <div class="mb-3">
                 <label class="form-label">Carousel Items</label>
-                <div class="overflow-auto mb-3" style="max-height: 200px;">
+                <div class="carousel-edit-container">
                     <?php foreach ($carouselItems as $carouselItem): ?>
                         <div class="card mb-2">
                             <img src="/img/<?php echo htmlspecialchars($carouselItem); ?>" class="card-img-top" alt="...">
@@ -38,9 +52,10 @@
             </div>
         <?php endif; ?>
 
-        <button type="submit" class="btn btn-primary" style="margin-bottom: 20px">Save Changes</button>
-        <button type="button" class="btn btn-danger" style="margin-bottom: 20px"
-            onclick="window.history.back();">Cancel</button>
+        <div class="mb-3">
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+            <button type="button" class="btn btn-secondary" onclick="window.history.back();">Cancel</button>
+        </div>
     </form>
 </div>
 

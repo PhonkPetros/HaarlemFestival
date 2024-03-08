@@ -66,15 +66,29 @@ class Pagecontroller
     }
 
     public function updateContent()
-    {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['section_id'], $_POST['content'])) {
+    {  
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['section_id'])) {
+            
             $sectionID = $_POST['section_id'];
-            $content = $_POST['content'];
+            $content = empty($_POST['content']) ? null: $_POST['content'];
+            $title = $_POST['sectionTitle'];
+
+            $newImage = $_FILES['newImage' ] ?? null;
+            
+            $path = '/img/uploads/';
+
+            if ($newImage && $newImage['error'] == UPLOAD_ERR_OK) {
+                $image = $this->uploadImage($newImage, $path);
+            } else {
+                $image = null;
+            }
 
             $sanitizedSectionID = filter_var($sectionID, FILTER_SANITIZE_NUMBER_INT);
 
             try {
-                $this->pageService->updateSectionContent($sanitizedSectionID, $content);
+
+                $this->pageService->updateSectionContent($sanitizedSectionID, $content, $newImage);
+                $this->pageService->updateSectionTitle($sectionID, $title);
                 $pageID = $this->pageService->getSectionPageId($sanitizedSectionID);
 
                 if ($pageID !== null) {
@@ -83,17 +97,28 @@ class Pagecontroller
                 } else {
                     throw new Exception("Page ID not found for section ID: " . $sanitizedSectionID);
                 }
-            } catch (PDOException $e) {
-                error_log('Failed to update section content: ' . $e->getMessage());
             } catch (Exception $e) {
+                var_dump("". $e->getMessage());
                 error_log($e->getMessage());
+            
             }
         }
     }
 
-    private function imageUpload()
+    private function uploadImage($imageFile, $uploadDirectory)
     {
+        
+        if (isset($imageFile) && $imageFile['error'] == UPLOAD_ERR_OK) {
+            $imageFileName = basename($imageFile['name']);
+            $absoluteUploadPath = $_SERVER['DOCUMENT_ROOT'] . $uploadDirectory . $imageFileName;
 
+            if (move_uploaded_file($imageFile['tmp_name'], $absoluteUploadPath)) {
+                return $uploadDirectory . $imageFileName;
+            } else {
+                throw new Exception('Failed to upload image.');
+            }
+        }
+        return null;
     }
 
     public function deleteSection()
@@ -122,9 +147,10 @@ class Pagecontroller
         }
     }
 
-    public function deletePage(){
-        $pageID = htmlspecialchars($_GET['id'] ??'');
-        
+    public function deletePage()
+    {
+        $pageID = htmlspecialchars($_GET['id'] ?? '');
+
 
         if (!$pageID) {
             error_log('Page ID is missing.');
