@@ -19,15 +19,13 @@
                             <td><?php echo htmlspecialchars($section->getSectionId()); ?></td>
                             <td><?php echo htmlspecialchars($section->getTitle()); ?></td>
                             <td>
-                                <a href="/sectionEdit/?section_id=<?php echo urlencode($section->getSectionId()); ?>" class="btn btn-primary btn-sm">Edit</a>
-                                <a href="/sectionDelete/?section_id=<?php echo urlencode($section->getSectionId()); ?>" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this section?');">Delete</a>
+                                <a href="/path-to-edit-section/?section_id=<?php echo urlencode($section->getSectionId()); ?>" class="btn btn-primary btn-sm">Edit</a>
+                                <a href="/path-to-delete-section/?section_id=<?php echo urlencode($section->getSectionId()); ?>" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this section?');">Delete</a>
                             </td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
             </table>
-            <button type="button" class="btn btn-danger" style="margin-bottom: 20px"
-            onclick="window.history.back();">Go Back</button>
         </div>
     <?php else: ?>
         <p>No sections found for this page.</p>

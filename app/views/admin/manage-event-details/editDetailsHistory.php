@@ -74,8 +74,6 @@
             </div>
         </div>
     </div>
-    <button type="button" class="btn btn-danger" style="margin-bottom: 20px"
-            onclick="window.history.back();">Go Back</button>
 </div>
 
 <div id="addTimeslotModal" class="modal">
@@ -90,8 +88,7 @@
                     <div class="mb-3">
                         <label for="newDate" class="form-label">Date</label>
                         <input type="date" class="form-control" id="newDate" name="date" required
-                            min="<?php echo $eventDetails->getStartDate() ?>"
-                            max="<?php echo $eventDetails->getEndDate() ?>">
+                            min="<?php echo date('Y-m-d'); ?>">
                     </div>
                     <div class="mb-3">
                         <label for="newQuantity" class="form-label">Quantity</label>
@@ -165,7 +162,6 @@
             </div>
         </div>
     </div>
-
 </div>
 
 

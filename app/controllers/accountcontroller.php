@@ -153,6 +153,6 @@ class AccountController
     
         header('Location: /account');
         exit;
-    } 
+    }
     
 }
