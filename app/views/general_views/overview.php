@@ -1,7 +1,6 @@
-
-?><?php
+<?php
 include __DIR__ . '/header.php';
-
+?>
 <h1>Haarlem Festivals</h1>
 
 <img src="/img/promotion.png" alt="" >
