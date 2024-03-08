@@ -3,12 +3,15 @@ include __DIR__ . '/header.php';
 ?>
 <h1>Haarlem Festivals</h1>
 
-<img src="/img/promotion.png" alt="">
+<img src="/img/promotion.png" alt="" >
+
 
 <div class="festival-banner">
-    <div class="festival-promotion-header" style='background-image: url(/img/historyPromotion.png);'>
+<a href="/?pageid=2">
+<div class="festival-promotion-header" style='background-image: url(/img/historyPromotion.png);'>
         <h2>Stroll Through History</h2>
-    </div>
+</div>
+</a>
     
     <div class = "banner-content">
         <!-- for every event / artist make this-->
@@ -60,9 +63,11 @@ include __DIR__ . '/header.php';
 </div>
 
 <div class="festival-banner">
+<a href="/?pageid=3">
     <div class="festival-promotion-header" style="background-image: url(/img/dancePromotion.png);">
         <h2>Dance! the night away</h2>
     </div>
+    </a>
     
     <div class = "banner-content">
         <!-- for every event / artist make this-->
@@ -99,10 +104,11 @@ include __DIR__ . '/header.php';
 </div>
 
 <div class="festival-banner">
-    <div class="festival-promotion-header" style="background-image: url(/img/jazzPromotion.jpg);">
+<a href="/?pageid=4">
+<div class="festival-promotion-header" style="background-image: url(/img/jazzPromotion.jpg);">
         <h2>Jazz! and chill</h2>
     </div>
-    
+</a>
     <div class = "banner-content">
         <!-- for every event / artist make this-->
         <div class="individual-event">
@@ -198,10 +204,11 @@ include __DIR__ . '/header.php';
 </div>
 
 <div class="festival-banner">
-    <div class="festival-promotion-header" style="background-image: url(/img/yummyPromotion.png);">
+<a href="/?pageid=5">
+<div class="festival-promotion-header" style="background-image: url(/img/yummyPromotion.png);">
         <h2>Yummy! Foodies </h2>
     </div>
-    
+</a>
     <div class = "banner-content">
         <!-- for every event / artist make this-->
         <div class="individual-event">

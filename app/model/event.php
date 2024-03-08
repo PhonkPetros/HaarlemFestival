@@ -10,6 +10,9 @@ class Event implements \JsonSerializable
     private int $price;
     private string $picture;
     private string $endDate;
+    private ?string $artist;
+    private ?int $dayPass;
+    private ?int $allDayPass;
 
     public function jsonSerialize(): mixed {
         return [
@@ -20,6 +23,9 @@ class Event implements \JsonSerializable
             'location' => $this->getLocation(),
             'price' => $this->getPrice(),
             'picture' => $this->getPicture(),
+            'artist'=> $this->getArtist(),
+            'dayPass'=> $this->getDayPass(),
+            'allDayPass'=> $this->getAllDayPass(),
         ];
     }
 
@@ -30,6 +36,26 @@ class Event implements \JsonSerializable
     public function getName(): string {
         return $this->name;
     }
+
+    public function getArtist(): ?string {
+        return $this->artist;
+    }
+    public function getDayPass(): ?int {
+        return $this->dayPass;
+    }
+    public function setDayPass(?int $dayPass) {
+        return $this->dayPass = $dayPass;
+    }
+    public function getAllDayPass(): ?int {
+        return $this->allDayPass;
+    }
+    public function setAllDayPass(?int $allDayPass) {
+        return $this->allDayPass = $allDayPass;
+    }
+    public function setArtist(?string $artist) {
+        return $this->artist = $artist;
+    }
+
 
     public function getStartDate(): string {
         return $this->startDate;

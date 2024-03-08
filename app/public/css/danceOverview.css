@@ -1,0 +1,62 @@
+body {
+    background: url('../img/danceOverviewBackground.jpeg') no-repeat center center fixed;
+    background-size: cover;
+}
+
+.eventProperties {
+    padding-top: 70px;
+    padding-bottom: 70px;
+}
+
+.danceTitle {
+    color: white;
+    font-size: 3.5rem ;
+}
+
+.danceDate {
+    color: white;
+    font-size: 2rem;
+    font-weight: 700;
+    -webkit-text-stroke-width: 1px;
+    -webkit-text-stroke-color: #000;
+    text-align: center;
+}
+
+.danceSlogan {
+    color: white;
+    font-size: 1 rem;
+    font-weight: 700;
+    -webkit-text-stroke-width: 1px;
+    -webkit-text-stroke-color: #000;
+    text-align: center;
+}
+
+.highlightContainer {
+    display: flex;
+    flex-wrap: wrap;
+    max-width: 900px;
+    justify-content: center;
+    justify-content: space-around;
+    margin: 0 auto;
+}
+
+.highlightContainer img {
+    margin-bottom: 60px;
+}
+
+.danceContent {
+    color: white;
+    font-family: Figtree;
+    font-size: 25px;
+    font-weight: 500;
+    line-height: 50px;
+    letter-spacing: 0em;
+    text-align: left;
+    padding-left: 60px;
+    padding-right: 60px;   
+}
+
+.jazzAdvertisement {
+    padding-top: 40px;
+    padding-bottom: 40px;
+}
