@@ -75,8 +75,8 @@ class Pagecontroller
 
             $carouselImages = $_FILES['carouselImage'] ?? null;
            
-            $carouselLabels = $_POST['carouselLabel'] ?? [];
-            $carouselIds = $_POST['carouselId'] ?? [];
+            $carouselLabels = $_POST['carouselLabel'] ?? null;
+            $carouselIds = $_POST['carouselId'] ?? null;
         
             foreach ($carouselIds as $index => $carouselId) {
                 $newImagePath = null;
