@@ -76,13 +76,13 @@ class Pagecontroller
             $carouselImages = $_FILES['carouselImage'] ?? [];
             $carouselLabels = $_POST['carouselLabel'] ?? [];
             $carouselIds = $_POST['carouselId'] ?? [];
-
+        
             foreach ($carouselIds as $index => $carouselId) {
                 $newCarouselImage = $carouselImages[$index] ?? null;
                 $newCarouselLabel = $carouselLabels[$index] ?? '';
-
+            
                 if ($newCarouselImage && $newCarouselImage['error'] == UPLOAD_ERR_OK) {
-                    $carouselImagePath = $this->uploadImage($newCarouselImage, $path);
+                    $newImagePath = $this->uploadImage($newCarouselImage, $path);
                     $this->contentService->updateCarouselItem($carouselId, $carouselImages, $newCarouselLabel);
                 } else {
                     $this->contentService->updateCarouselLabel($carouselId, $newCarouselLabel);
@@ -224,7 +224,8 @@ class Pagecontroller
             if ($imageData) {
                 $all['carouselItems'][] = [
                     'image' => $imageData->getFilePath(),
-                    'label' => $item->getLabel()
+                    'label' => $item->getLabel(),
+                    'carousel_id' => $item->getCarouselId(),
                 ];
             }
         }
