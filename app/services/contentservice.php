@@ -39,11 +39,8 @@ class ContentService
     }
 
     public function updateCarouselItem($carouselId, $carouselImagePath, $newCarouselLabel){
-        $this->carouselRepo->updateCarouselItem($carouselId, $carouselImagePath, $newCarouselLabel);
+        $this->carouselRepo->updateCarouselItemAndLabel($carouselId, $carouselImagePath, $newCarouselLabel);
     }
 
-    public function updateCarouselLabel($carouselId, $newCarouselLabel){
-        $this->carouselRepo->updateCarouselLabel($carouselId, $newCarouselLabel);
-    }
 }
 

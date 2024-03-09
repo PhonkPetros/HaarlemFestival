@@ -79,7 +79,10 @@ class Pagecontroller
             $carouselIds = $_POST['carouselId'] ?? [];
         
             foreach ($carouselIds as $index => $carouselId) {
-                if ($carouselImages['error'][$index] == UPLOAD_ERR_OK) {
+                $newImagePath = null;
+        
+                if (isset($carouselImages['name'][$index]) && $carouselImages['error'][$index] == UPLOAD_ERR_OK) {
+
                     $newImagePath = $this->uploadImage([
                         'name' => $carouselImages['name'][$index],
                         'type' => $carouselImages['type'][$index],
@@ -87,17 +90,13 @@ class Pagecontroller
                         'error' => $carouselImages['error'][$index],
                         'size' => $carouselImages['size'][$index],
                     ], $path);
-            
-                    if ($newImagePath) {
-
-                        $this->contentService->updateCarouselItem($carouselId, $newImagePath, $carouselLabels[$index]);
-                    }
-                } else if (!empty($carouselLabels[$index])) {
-    
-                    $this->contentService->updateCarouselLabel($carouselId, $carouselLabels[$index]);
+                }
+        
+                if ($newImagePath !== null || !empty($carouselLabels[$index])) {
+                    $this->contentService->updateCarouselItem($carouselId, $newImagePath, $carouselLabels[$index]);
                 }
             }
-
+            
             if ($newImage && $newImage['error'] == UPLOAD_ERR_OK) {
                 $image = $this->uploadImage($newImage, $path);
             } else {
