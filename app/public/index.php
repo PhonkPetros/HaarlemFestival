@@ -31,6 +31,7 @@ require_once __DIR__ . '/../controllers/dancecontroller.php';
 require_once __DIR__ . '/../controllers/jazzcontroller.php';
 require_once __DIR__ . '/../controllers/navigationcontroller.php';
 require_once __DIR__ . '/../controllers/pagecontroller.php';
+require_once __DIR__ . '/../controllers/templatecontroller.php';
 
 $request = $_SERVER['REQUEST_URI'];
 $method = $_SERVER['REQUEST_METHOD'];
@@ -90,10 +91,6 @@ if ($pageID || $eventID || $editPageID || $sectionEdit) {
                 }
                 break;
             default:
-                $controller = new TemplateController();
-                if ($method === 'GET') {
-                    $controller->editEventDetails();
-                }
                 break;
         }
         exit;

@@ -11,8 +11,10 @@ use PDOException;
 use Exception;
 use services\ContentService;
 
+
 require_once __DIR__ . "/../services/pageservice.php";
 require_once __DIR__ . "/../services/contentservice.php";
+
 require_once __DIR__ . "/../model/carousel.php";
 require_once __DIR__ . "/../model/editor.php";
 require_once __DIR__ . "/../model/image.php";
@@ -33,6 +35,7 @@ class Pagecontroller
     {
         $this->pageService = new Pageservice();
         $this->contentService = new ContentService();
+
     }
 
     public function editContent()
@@ -47,7 +50,7 @@ class Pagecontroller
     {
         $sectionID = htmlspecialchars($_GET["section_id"] ?? '');
         $sectionTitle = $this->pageService->getSectionTitle($sectionID);
-      
+
         $sectionData = $this->pageService->getSectionContentImagesCarousel($sectionID)[0] ?? null;
 
         $editorContent = null;
@@ -74,29 +77,31 @@ class Pagecontroller
             $path = '/img/uploads/';
 
             $carouselImages = $_FILES['carouselImage'] ?? null;
-           
+
             $carouselLabels = $_POST['carouselLabel'] ?? null;
             $carouselIds = $_POST['carouselId'] ?? null;
-        
-            foreach ($carouselIds as $index => $carouselId) {
-                $newImagePath = null;
-        
-                if (isset($carouselImages['name'][$index]) && $carouselImages['error'][$index] == UPLOAD_ERR_OK) {
 
-                    $newImagePath = $this->uploadImage([
-                        'name' => $carouselImages['name'][$index],
-                        'type' => $carouselImages['type'][$index],
-                        'tmp_name' => $carouselImages['tmp_name'][$index],
-                        'error' => $carouselImages['error'][$index],
-                        'size' => $carouselImages['size'][$index],
-                    ], $path);
-                }
-        
-                if ($newImagePath !== null || !empty($carouselLabels[$index])) {
-                    $this->contentService->updateCarouselItem($carouselId, $newImagePath, $carouselLabels[$index]);
+            if (is_array($carouselIds)) {
+                foreach ($carouselIds as $index => $carouselId) {
+                    $newImagePath = null;
+
+                    if (isset($carouselImages['name'][$index]) && $carouselImages['error'][$index] == UPLOAD_ERR_OK) {
+
+                        $newImagePath = $this->uploadImage([
+                            'name' => $carouselImages['name'][$index],
+                            'type' => $carouselImages['type'][$index],
+                            'tmp_name' => $carouselImages['tmp_name'][$index],
+                            'error' => $carouselImages['error'][$index],
+                            'size' => $carouselImages['size'][$index],
+                        ], $path);
+                    }
+
+                    if ($newImagePath !== null || !empty($carouselLabels[$index])) {
+                        $this->contentService->updateCarouselItem($carouselId, $newImagePath, $carouselLabels[$index]);
+                    }
                 }
             }
-            
+
             if ($newImage && $newImage['error'] == UPLOAD_ERR_OK) {
                 $image = $this->uploadImage($newImage, $path);
             } else {
@@ -118,7 +123,7 @@ class Pagecontroller
                     throw new Exception("Page ID not found for section ID: " . $sanitizedSectionID);
                 }
             } catch (Exception $e) {
-               
+
                 error_log($e->getMessage());
 
             }
@@ -130,16 +135,16 @@ class Pagecontroller
         if (isset($imageFile) && $imageFile['error'] == UPLOAD_ERR_OK) {
             $imageFileName = basename($imageFile['name']);
             $absoluteUploadPath = $_SERVER['DOCUMENT_ROOT'] . $uploadDirectory . $imageFileName;
-    
+
             if (move_uploaded_file($imageFile['tmp_name'], $absoluteUploadPath)) {
-                return $imageFileName; 
+                return $imageFileName;
             } else {
                 throw new Exception('Failed to upload image.');
             }
         }
         return null;
     }
-    
+
 
     public function deleteSection()
     {
@@ -166,9 +171,10 @@ class Pagecontroller
         }
     }
 
-    public function deletePage(){
-        $pageID = htmlspecialchars($_POST['id'] ??'');
+    public function deletePage()
+    {
 
+        $pageID = htmlspecialchars($_POST['id'] ?? '');
         if (!$pageID) {
             error_log('Page ID is missing.');
             return;
@@ -181,6 +187,7 @@ class Pagecontroller
             foreach ($allSections as $section) {
                 $this->pageService->deleteSection($section->getSectionId());
             }
+
             $this->pageService->deletePage($sanitizedPageID);
             header('Location: /admin/page-management/editfestival');
         } catch (PDOException $e) {
@@ -192,7 +199,7 @@ class Pagecontroller
         }
     }
 
-    
+
 
 
     public function getSectionsFromPageID()
@@ -244,13 +251,14 @@ class Pagecontroller
         return $all;
     }
 
-    public function addNewPage(){
+    public function addNewPage()
+    {
         $newPageName = htmlspecialchars($_POST['pageTitle']);
         $amountOfSections = htmlspecialchars($_POST['sectionAmount']);
-    
+
         $pageNameExists = $this->pageService->getPageNameExists($newPageName);
-    
-        if($pageNameExists){
+
+        if ($pageNameExists) {
             $_SESSION['error_message'] = 'Page name already exists';
             header('Location: /admin/page-management/editfestival');
             exit;
@@ -260,5 +268,5 @@ class Pagecontroller
             header('Location: /admin/page-management/editfestival');
         }
     }
-    
+
 }

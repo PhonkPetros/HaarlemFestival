@@ -27,7 +27,6 @@
                             <td>
                                 <a href="/sectionEdit/?section_id=<?php echo urlencode($section->getSectionId()); ?>"
                                     class="btn btn-primary btn-sm">Edit</a>
-                                <!-- Change to a form for delete -->
                                 <form action="/sectionDelete" method="post"
                                     onsubmit="return confirm('Are you sure you want to delete this section?');">
                                     <input type="hidden" name="section_id"

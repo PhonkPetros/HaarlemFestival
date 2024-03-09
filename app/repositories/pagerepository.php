@@ -238,10 +238,13 @@ class Pagerepository extends dbconfig
         }
     }
 
-
     public function deletePage($pageID)
     {
         try {
+            $stmt = $this->connection->prepare('DELETE FROM navigation WHERE page_id = :page_id');
+            $stmt->bindParam(':page_id', $pageID, PDO::PARAM_INT);
+            $stmt->execute();
+            
             $stmt = $this->connection->prepare("DELETE FROM page WHERE id = :page_id");
             $stmt->bindParam(':page_id', $pageID, PDO::PARAM_INT);
             $stmt->execute();
