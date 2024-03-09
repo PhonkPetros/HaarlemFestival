@@ -32,13 +32,15 @@
                         <td>
                             <a href="/edit-content/?id=<?php echo htmlspecialchars($page->getId()) ?>"
                                 class="btn btn-primary btn-sm">Edit</a>
-                            <a href="/delete-page/?id=<?php echo htmlspecialchars($page->getId()) ?>"
-                                class="btn btn-danger btn-sm"
-                                onclick="return confirm('Are you sure you want to delete this Page?');">Delete</a>
+                            <form action="/delete-page" method="POST"
+                                onsubmit="return confirm('Are you sure you want to delete this Page?');">
+                                <input type="hidden" name="id" value="<?php echo htmlspecialchars($page->getId()); ?>">
+                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                            </form>
                         </td>
                     </tr>
-
                 <?php endforeach; ?>
+
             </tbody>
         </table>
     </div>
@@ -78,12 +80,12 @@
 
 <? if (isset($_SESSION['error_message'])) {
     echo "<script>alert('" . $_SESSION['error_message'] . "') </script>";
-    unset($_SESSION['error_message']); 
+    unset($_SESSION['error_message']);
 }
 
 if (isset($_SESSION['success_message'])) {
     echo "<script>alert('" . $_SESSION['success_message'] . "') </script>";
-    unset($_SESSION['success_message']); 
+    unset($_SESSION['success_message']);
 } ?>
 
 <script>

@@ -118,7 +118,7 @@ class Pagecontroller
                     throw new Exception("Page ID not found for section ID: " . $sanitizedSectionID);
                 }
             } catch (Exception $e) {
-                var_dump("" . $e->getMessage());
+               
                 error_log($e->getMessage());
 
             }
@@ -143,7 +143,7 @@ class Pagecontroller
 
     public function deleteSection()
     {
-        $sectionID = htmlspecialchars($_GET["section_id"] ?? '');
+        $sectionID = htmlspecialchars($_POST["section_id"] ?? '');
 
 
         if (!$sectionID) {
@@ -153,7 +153,6 @@ class Pagecontroller
 
         $sanitizedSectionID = filter_var($sectionID, FILTER_SANITIZE_NUMBER_INT);
         $pageID = $this->pageService->getSectionPageId($sanitizedSectionID);
-        var_dump(''. $pageID);
 
         try {
             $this->pageService->deleteSection($sanitizedSectionID);
@@ -167,9 +166,9 @@ class Pagecontroller
         }
     }
 
-    public function deletePage()
-    {
-        $pageID = htmlspecialchars($_GET['id'] ?? '');
+    public function deletePage(){
+        $pageID = htmlspecialchars($_POST['id'] ??'');
+
         if (!$pageID) {
             error_log('Page ID is missing.');
             return;
@@ -178,6 +177,10 @@ class Pagecontroller
         $sanitizedPageID = filter_var($pageID, FILTER_SANITIZE_NUMBER_INT);
 
         try {
+            $allSections = $this->pageService->getAllSections($sanitizedPageID);
+            foreach ($allSections as $section) {
+                $this->pageService->deleteSection($section->getSectionId());
+            }
             $this->pageService->deletePage($sanitizedPageID);
             header('Location: /admin/page-management/editfestival');
         } catch (PDOException $e) {
@@ -188,6 +191,9 @@ class Pagecontroller
 
         }
     }
+
+    
+
 
     public function getSectionsFromPageID()
     {
