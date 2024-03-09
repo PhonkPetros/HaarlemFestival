@@ -26,17 +26,19 @@ class Carouselrepository extends dbconfig
     public function updateCarouselItem($carouselId, $newFilePath, $newCarouselLabel){
         try {
             $this->connection->beginTransaction();
-
-            $stmt = $this->connection->prepare("INSERT INTO image (file_path) VALUES (:file_path)");
-            $stmt->bindParam(':file_path', $newFilePath['name'], PDO::PARAM_STR);
-            $stmt->execute();
-            $newImageId = $this->connection->lastInsertId();
     
-            $stmt = $this->connection->prepare("UPDATE carousel SET image_id = :image_id, label = :label WHERE carousel_id = :carousel_id");
-            $stmt->bindParam(':image_id', $newImageId, PDO::PARAM_INT);
-            $stmt->bindParam(':label', $newCarouselLabel, PDO::PARAM_STR);
+            $stmt = $this->connection->prepare("SELECT image_id FROM carousel WHERE carousel_id = :carousel_id");
             $stmt->bindParam(':carousel_id', $carouselId, PDO::PARAM_INT);
             $stmt->execute();
+            $existingImageId = $stmt->fetchColumn();
+    
+            if ($existingImageId) {
+                $stmt = $this->connection->prepare("UPDATE image SET file_path = :file_path WHERE image_id = :image_id");
+                $stmt->bindParam(':file_path', $newFilePath, PDO::PARAM_STR); 
+                $stmt->bindParam(':image_id', $existingImageId, PDO::PARAM_INT);
+                $stmt->execute();
+            }
+    
             $this->connection->commit();
         } catch (PDOException $e) {
             $this->connection->rollback();
@@ -44,6 +46,7 @@ class Carouselrepository extends dbconfig
             throw $e;
         }
     }
+    
     
 
     public function updateCarouselLabel($carouselId, $newCarouselLabel){

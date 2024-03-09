@@ -73,19 +73,28 @@ class Pagecontroller
             $newImage = $_FILES['newImage'] ?? null;
             $path = '/img/uploads/';
 
-            $carouselImages = $_FILES['carouselImage'] ?? [];
+            $carouselImages = $_FILES['carouselImage'] ?? null;
+           
             $carouselLabels = $_POST['carouselLabel'] ?? [];
             $carouselIds = $_POST['carouselId'] ?? [];
         
             foreach ($carouselIds as $index => $carouselId) {
-                $newCarouselImage = $carouselImages[$index] ?? null;
-                $newCarouselLabel = $carouselLabels[$index] ?? '';
+                if ($carouselImages['error'][$index] == UPLOAD_ERR_OK) {
+                    $newImagePath = $this->uploadImage([
+                        'name' => $carouselImages['name'][$index],
+                        'type' => $carouselImages['type'][$index],
+                        'tmp_name' => $carouselImages['tmp_name'][$index],
+                        'error' => $carouselImages['error'][$index],
+                        'size' => $carouselImages['size'][$index],
+                    ], $path);
             
-                if ($newCarouselImage && $newCarouselImage['error'] == UPLOAD_ERR_OK) {
-                    $newImagePath = $this->uploadImage($newCarouselImage, $path);
-                    $this->contentService->updateCarouselItem($carouselId, $carouselImages, $newCarouselLabel);
-                } else {
-                    $this->contentService->updateCarouselLabel($carouselId, $newCarouselLabel);
+                    if ($newImagePath) {
+
+                        $this->contentService->updateCarouselItem($carouselId, $newImagePath, $carouselLabels[$index]);
+                    }
+                } else if (!empty($carouselLabels[$index])) {
+    
+                    $this->contentService->updateCarouselLabel($carouselId, $carouselLabels[$index]);
                 }
             }
 
@@ -119,19 +128,19 @@ class Pagecontroller
 
     private function uploadImage($imageFile, $uploadDirectory)
     {
-
         if (isset($imageFile) && $imageFile['error'] == UPLOAD_ERR_OK) {
             $imageFileName = basename($imageFile['name']);
             $absoluteUploadPath = $_SERVER['DOCUMENT_ROOT'] . $uploadDirectory . $imageFileName;
-
+    
             if (move_uploaded_file($imageFile['tmp_name'], $absoluteUploadPath)) {
-                return $uploadDirectory . $imageFileName;
+                return $imageFileName; 
             } else {
                 throw new Exception('Failed to upload image.');
             }
         }
         return null;
     }
+    
 
     public function deleteSection()
     {
