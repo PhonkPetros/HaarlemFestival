@@ -207,6 +207,16 @@ switch ($request) {
             $controller->loginAction();
         }
         break;
+
+    case '/reset-password':
+        $controller = new resetpasswordcontroller();
+            if ($method === 'GET') {
+                $controller->show();
+            } elseif ($method === 'POST') {
+                $controller->loginAction();
+            }
+            break;
+
     case '/register':
         $controller = new registercontroller();
         if ($method === 'GET') {
@@ -215,6 +225,7 @@ switch ($request) {
             $controller->registerAction();
         }
         break;
+        
     case '/logout':
         $logoutController = new Logoutcontroller();
         $logoutController->logout();
