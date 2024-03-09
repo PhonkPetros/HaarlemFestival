@@ -45,6 +45,7 @@
             </div>
         </div>
     </nav>
+
 </div>
 
 <div class="container my-3 p-4 bg-light rounded">
@@ -61,6 +62,12 @@
         <?php endforeach; ?>
         <button type="submit" class="btn btn-primary">Update Navigation</button>
     </form>
+
 </div>
+<div class="container">
+    <a href="/admin/page-management/editfestival" class="btn btn-danger" style="margin-bottom: 20px">Go Back</a>
+</div>
+
+
 
 <?php include __DIR__ . '/../../general_views/footer.php'; ?>

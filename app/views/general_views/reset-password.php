@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Login</title>
+    <title>Forgot your password?</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 </head>
@@ -11,8 +11,8 @@
 <body class="bg-danger p-5 text-white">
 <div class="container">
     <div class="d-flex flex-column justify-content-center align-items-center" style="min-height: 100vh;">
-        <h1>Welcome Back!</h1>
-        <h2>Please Login</h2>
+        <h1>Forgot your password?</h1>
+        <h2>reset password</h2>
         <form method="POST" action="/login">
             <div class="mb-3">
                 <label for="username" class="form-label">Username</label>
@@ -24,7 +24,7 @@
             </div>
             <button type="submit" class="btn btn-light">Login</button>
             <button type="button" class="btn btn-dark" onclick="location.href='register'">Register</button>
-            <button type="button" class="btn btn-primary" onclick="location.href=''">Forgot Password</button>
+            <button type="button" class="btn btn-primary" onclick="location.href='/?pageid=1'">Home</button>
         </form>
         <?php if (isset($loginError)): ?>
             <br>
@@ -40,3 +40,4 @@
         crossorigin="anonymous"></script>
 </body>
 </html>
+

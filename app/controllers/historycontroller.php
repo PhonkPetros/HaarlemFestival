@@ -7,20 +7,24 @@ use services\historyService;
 use Exception;
 use model\Event;
 use controllers\Navigationcontroller;
+use controllers\Pagecontroller;
 
 require_once __DIR__ . '/../model/event.php';
 require_once __DIR__ . '/../services/historyservice.php';
 require_once __DIR__ . '/../controllers/navigationcontroller.php';
+require_once __DIR__ . '/../controllers/pagecontroller.php';
 
 class Historycontroller
 {
     private $historyService;
     private $navigationController;
+    private $pagecontroller;
     private $event;
     public function __construct()
     {
         $this->historyService = new HistoryService();
         $this->navigationController = new Navigationcontroller();
+        $this->pagecontroller = new Pagecontroller();
         $this->event = new Event();
     }
 
@@ -30,23 +34,17 @@ class Historycontroller
         $structuredTickets = $this->getStructuredTickets($eventDetails->getEventId());
         $uniqueTimes = $this->getUniqueTimes($structuredTickets);
         $navigationController = $this->navigationController->displayHeader();
+        
+        $contentData = $this->pagecontroller->getContentAndImagesByPage();
+        $carouselItems = $this->pagecontroller->getCarouselImagesForHistory(14);
         require_once __DIR__ . '/../views/history/overview.php';
     }
 
-    public function showProveniershof()
+    public function editContent()
     {
-        $navigationController = $this->navigationController->displayHeader();
-        require_once __DIR__ . '/../views/history/proveniershof.php';
-    }
-
-    public function showChurch()
-    {
-        $navigationController = $this->navigationController->displayHeader();
-        require_once __DIR__ . '/../views/history/churchbravo.php';
-    }
-
-    public function editContent(){
-        require_once __DIR__ ."/../views/admin/page-managment/editHistory.php";
+        $allSections = $this->pagecontroller->getSectionsFromPageID();
+        $pageDetails = $this->pagecontroller->getPageDetails();
+        require_once __DIR__ . "/../views/admin/page-managment/editHistory.php";
     }
 
 
@@ -127,7 +125,7 @@ class Historycontroller
 
     public function removeTimeslot()
     {
-        try{
+        try {
             $ticketID = htmlspecialchars($_POST['ticket_id'] ?? null);
 
             $result = $this->historyService->removeTimeslot($ticketID);
@@ -139,9 +137,8 @@ class Historycontroller
             }
             exit;
 
-        }
-        catch (Exception $e) {
-            echo json_encode(['success'=> false,'message'=> $e->getMessage()]);
+        } catch (Exception $e) {
+            echo json_encode(['success' => false, 'message' => $e->getMessage()]);
         }
 
     }
