@@ -207,11 +207,13 @@ class Pagecontroller
         foreach ($carouselItems as $item) {
             $imageData = $this->contentService->getImageById($item->getImageId());
             if ($imageData) {
-                $all['carouselItems'][] = $imageData->getFilePath();
+                $all['carouselItems'][] = [
+                    'image' => $imageData->getFilePath(),
+                    'label' => $item->getLabel()
+                ];
             }
         }
 
         return $all;
     }
-
 }

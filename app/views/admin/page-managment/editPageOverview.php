@@ -26,8 +26,7 @@
                     <?php endforeach; ?>
                 </tbody>
             </table>
-            <button type="button" class="btn btn-danger" style="margin-bottom: 20px"
-            onclick="window.history.back();">Go Back</button>
+            <a href="/admin/page-management/editfestival" class="btn btn-danger" style="margin-bottom: 20px">Go Back</a>
         </div>
     <?php else: ?>
         <p>No sections found for this page.</p>

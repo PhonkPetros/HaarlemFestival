@@ -97,21 +97,22 @@ class Pagerepository extends dbconfig
         $data = [];
         try {
             $stmt = $this->connection->prepare("
-                SELECT
-                    s.section_id,
-                    e.content AS editor_content,
-                    i.file_path AS image_file_path,
-                    c.carousel_id,
-                    ci.file_path AS carousel_image_file_path
-                FROM
-                    section s
-                    LEFT JOIN editor e ON s.editor_id = e.id
-                    LEFT JOIN image i ON s.image_id = i.image_id
-                    LEFT JOIN carousel c ON s.section_id = c.section_id
-                    LEFT JOIN image ci ON c.image_id = ci.image_id
-                WHERE
-                    s.section_id = :section_id
-            ");
+            SELECT
+                s.section_id,
+                e.content AS editor_content,
+                i.file_path AS image_file_path,
+                c.carousel_id,
+                c.label AS carousel_label, 
+                ci.file_path AS carousel_image_file_path
+            FROM
+                section s
+                LEFT JOIN editor e ON s.editor_id = e.id
+                LEFT JOIN image i ON s.image_id = i.image_id
+                LEFT JOIN carousel c ON s.section_id = c.section_id
+                LEFT JOIN image ci ON c.image_id = ci.image_id
+            WHERE
+                s.section_id = :section_id
+        ");
             $stmt->bindParam(':section_id', $sectionId, PDO::PARAM_INT);
             $stmt->execute();
             $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -172,8 +173,8 @@ class Pagerepository extends dbconfig
                 $stmt->bindParam(':content', $content, PDO::PARAM_STR);
                 $stmt->bindParam(':editor_id', $section['editor_id'], PDO::PARAM_INT);
                 $stmt->execute();
-            } 
-            
+            }
+
             if (!empty($image['name']) && !empty($section['image_id'])) {
                 $stmt = $this->connection->prepare("UPDATE image SET file_path = :image WHERE image_id = :image_id");
                 $stmt->bindParam(':image', $image['name'], PDO::PARAM_STR);
@@ -188,7 +189,7 @@ class Pagerepository extends dbconfig
 
     public function updateSectionTitle($sectionID, $title)
     {
-        if(empty($sectionID)){
+        if (empty($sectionID)) {
             throw new Exception('No section id');
         }
 

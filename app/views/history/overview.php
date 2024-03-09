@@ -22,7 +22,7 @@
           <?= ($sectionData['content']) ?>
         </div>
       <?php elseif ($index === 1): ?>
-        <div class='text-white p-5 header-background2'>
+        <div class='text-white text-center p-5 header-background2'>
           <?= ($sectionData['content']) ?>
         </div>
       <?php elseif ($index === 2): ?>
@@ -30,8 +30,19 @@
           <?= ($sectionData['content']) ?>
         </div>
       <?php elseif ($index === 3): ?>
-        <div class='text-center text-white p-3 header-background3'><img
-            src='/img/uploads/<?= htmlspecialchars($sectionData['image']) ?>' alt='Tour Route Map' class='img-fluid'></div>
+        <div class='text-center text-white header-background3'>
+          <div class='container p-3'>
+            <div class='row'>
+              <div class='col-md-6 d-flex align-items-center'>
+                <?= ($sectionData['content']) ?>
+              </div>
+              <div class='col-md-6'>
+                <img src='/img/uploads/<?= htmlspecialchars($sectionData['image']) ?>' alt='Tour Route Map'
+                  class='img-fluid'>
+              </div>
+            </div>
+          </div>
+        </div>
       <?php elseif ($index === 4): ?>
         <div class='bg-light text-dark text-center p-3'>
           <?= ($sectionData['content']) ?>
@@ -41,19 +52,25 @@
         $carouselItemsHtml = '';
         foreach ($carouselItems['carouselItems'] as $carouselIndex => $carouselItem) {
           $activeClass = $carouselIndex === 0 ? 'active' : '';
-          $carouselItemsHtml .= "<div class='carousel-item {$activeClass}'><img src='/img/{$carouselItem}' alt='' style='width: 70%; height: 600px; object-fit: cover; display: block; margin: auto;'></div>";
+          $imageSrc = htmlspecialchars($carouselItem['image']);
+          $altText = htmlspecialchars($carouselItem['label']);
+          $carouselItemsHtml .= "<div class='carousel-item {$activeClass}'>";
+          $carouselItemsHtml .= "<img src='/img/uploads/{$imageSrc}' alt='{$altText}' class='d-block' style='width: 70%; height: 600px; object-fit: cover; display: block; margin: auto;'>";
+          $carouselItemsHtml .= "<div class='carousel-caption d-none d-md-block' style='position: absolute; bottom: 0; left: 0; right: 0; background-color: rgba(0, 0, 0, 0.5); padding: 10px;'><h5>{$altText}</h5></div>";
+          $carouselItemsHtml .= "</div>";
         }
-        $controlsHtml = count($carouselItems['carouselItems']) > 1 ? '<a class="carousel-control-prev" href="#locationsCarousel" role="button" data-slide="prev"><span class="carousel-control-prev-icon" aria-hidden="true"></span><span class="sr-only">Previous</span></a><a class="carousel-control-next" href="#locationsCarousel" role="button" data-slide="next"><span class="carousel-control-next-icon" aria-hidden="true"></span><span class="sr-only">Next</span></a>' : '';
+        $controlsHtml = count($carouselItems['carouselItems']) > 1 ? "<a class='carousel-control-prev' href='#locationsCarousel' role='button' data-slide='prev'><span class='carousel-control-prev-icon' aria-hidden='true'></span><span class='sr-only'>Previous</span></a><a class='carousel-control-next' href='#locationsCarousel' role='button' data-slide='next'><span class='carousel-control-next-icon' aria-hidden='true'></span><span class='sr-only'>Next</span></a>" : '';
         ?>
         <div class='bg-dark text-white p-3'>
           <div id='locationsCarousel' class='carousel slide' data-ride='carousel'>
-            <div class='carousel-inner' role='listbox'>
+            <div class='carousel-inner'>
               <?= $carouselItemsHtml ?>
             </div>
             <?= $controlsHtml ?>
           </div>
         </div>
       <?php endif; ?>
+
     <?php endforeach; ?>
 
     <div class="text-center p-3 bg-light">

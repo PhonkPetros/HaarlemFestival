@@ -6,6 +6,7 @@ class Carousel implements \JsonSerializable
     private int $carousel_id;
     private int $section_id;
     private int $image_id;
+    private ?string $label; 
 
     public function getCarouselId(): int {
         return $this->carousel_id;
@@ -15,6 +16,13 @@ class Carousel implements \JsonSerializable
         $this->carousel_id = $carousel_id;
     }
 
+    public function getLabel(): ?string {
+        return $this->label;
+    }
+
+    public function setLabel(?string $lable): void {
+        $this->label = $lable;  
+    }
     public function getSectionId(): int {
         return $this->section_id;
     }
@@ -36,6 +44,7 @@ class Carousel implements \JsonSerializable
             'carousel_id' => $this->getCarouselId(),
             'section_id' => $this->getSectionId(),
             'image_id' => $this->getImageId(),
+            'label'=> $this->getLabel(),
         ];
     }
 }
