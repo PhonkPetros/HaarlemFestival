@@ -1,15 +1,19 @@
 <?php
 
 namespace controllers;
+require_once __DIR__ . '/../services/restaurantservice.php';
 
+use services\RestaurantService;
 
 
 class Restaurantcontroller
 {
-
   
+    public $restaurantService;
+
     public function __construct() {
         $this->navigationController = new Navigationcontroller();
+        $this->restaurantService = new RestaurantService();
     }
 
     private $navigationController;
@@ -21,6 +25,9 @@ class Restaurantcontroller
     }
 
     public function editEventDetails(){
+        
+        $restaurantService = $this->restaurantService->getAllRestaurants();
+        
         require_once __DIR__ . '/../views/admin/manage-event-details/editDetailsRestaurant.php';
     }
   

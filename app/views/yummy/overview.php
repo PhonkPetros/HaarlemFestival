@@ -42,9 +42,6 @@
     <h2 class="participants-subtitle">Why do these restaurants participate in the event?</h2>
     <p class="participants-description">Due to the summer heat, these restaurants participate, recognizing potential for increased foot traffic and tourism, thus making greater profit margins during our festival.</p>
   </div>
-  <img src="/img/restaurantPicture.png" alt="Restaurant" class="restaurant-overview">
-</section>
-
 <div class="container mt-5">
   <div class="row">
     <div class="col-md-4 mb-4">
@@ -65,6 +62,9 @@
       </div>
     </div>
     
+  <img src="/img/restaurantPicture.png" alt="Restaurant" class="restaurant-overview">
+</section>
+
     <div class="col-md-4 mb-4">
       <div class="card">
         <img src="/img/eea34486-aca0-4724-b624-9c66818248ce.jpg" class="card-img-top" alt="Ratatouille">
@@ -102,6 +102,7 @@
     </div>
   </div>
 </div>
+
 
 
 
