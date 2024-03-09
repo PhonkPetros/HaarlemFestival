@@ -243,7 +243,7 @@ class Pagerepository extends dbconfig
             $this->connection->beginTransaction();
             $sections = $this->getAllSections($pageID);
             foreach ($sections as $section) {
-                $this->deleteSection($section->section_id);
+                $this->deleteSection($section->getSectionId());
             }
 
             $stmt = $this->connection->prepare("DELETE FROM page WHERE id = :page_id");
@@ -258,5 +258,60 @@ class Pagerepository extends dbconfig
         }
     }
 
+    public function getPageNameExists($newPageName){
+        try {
+            $stmt = $this->connection->prepare('SELECT COUNT(*) FROM page WHERE name = :name');
+            $stmt->bindParam(':name', $newPageName, PDO::PARAM_STR);
+            $stmt->execute();
+            $exists = $stmt->fetchColumn();
+            return $exists > 0;
+        } catch (PDOException $e) {
+            error_log('Failed to check if page name exists: ' . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function createPage($newPageName, $amountOfSections){
+        try {
+            $this->connection->beginTransaction();
+            
+            $stmt = $this->connection->prepare('INSERT INTO page (name) VALUES (:name)');
+            $stmt->bindParam(':name', $newPageName, PDO::PARAM_STR);
+            $stmt->execute();
+            $pageId = $this->connection->lastInsertId();
+    
+            $currentDateTime = date('Y-m-d H:i:s'); 
+    
+            for ($i = 1; $i <= $amountOfSections; $i++) {
+                $stmt = $this->connection->prepare('INSERT INTO editor (content, created) VALUES (:content, :created)');
+                $defaultContent = '<p>add content</p>';
+                $stmt->bindParam(':content', $defaultContent, PDO::PARAM_STR);
+                $stmt->bindParam(':created', $currentDateTime, PDO::PARAM_STR);
+                $stmt->execute();
+                $editorId = $this->connection->lastInsertId();
+    
+                $stmt = $this->connection->prepare('INSERT INTO image (file_path) VALUES (:file_path)');
+                $defaultImagePath = 'default.png';
+                $stmt->bindParam(':file_path', $defaultImagePath, PDO::PARAM_STR);
+                $stmt->execute();
+                $imageId = $this->connection->lastInsertId();
+    
+                $stmt = $this->connection->prepare('INSERT INTO section (page_id, editor_id, image_id, title) VALUES (:page_id, :editor_id, :image_id, :title)');
+                $defaultTitle = "New Section " . $i;
+                $stmt->bindParam(':page_id', $pageId, PDO::PARAM_INT);
+                $stmt->bindParam(':editor_id', $editorId, PDO::PARAM_INT);
+                $stmt->bindParam(':image_id', $imageId, PDO::PARAM_INT);
+                $stmt->bindParam(':title', $defaultTitle, PDO::PARAM_STR);
+                $stmt->execute();
+            }
+    
+            $this->connection->commit();
+        } catch (PDOException $e) {
+            $this->connection->rollback();
+            error_log('Failed to create page and its sections: ' . $e->getMessage());
+            throw $e;
+        }
+    }
+    
 
 }

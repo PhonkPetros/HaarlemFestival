@@ -63,4 +63,12 @@ class Pageservice
     public function updateSectionTitle($sectionID, $title){
         return $this->pagerepo->updateSectionTitle($sectionID, $title);
     }
+
+    public function getPageNameExists($newPageName){
+        return $this->pagerepo->getPageNameExists($newPageName);
+    }
+
+    public function createPage($newPageName, $amountOfSections){
+        return $this->pagerepo->createPage($newPageName, $amountOfSections);
+    }
 }

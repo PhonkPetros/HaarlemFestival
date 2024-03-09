@@ -324,6 +324,12 @@ switch ($request) {
             $controller->updateNavigation();
         }
         break; 
+    case '/add-page':
+        $controller = new Pagecontroller();
+        if ($method === 'POST') {
+            $controller->addNewPage();
+        }
+        break;      
     default:
         http_response_code(404);
         $navigation = new Navigationcontroller();

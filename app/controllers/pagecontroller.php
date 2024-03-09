@@ -153,10 +153,10 @@ class Pagecontroller
 
         $sanitizedSectionID = filter_var($sectionID, FILTER_SANITIZE_NUMBER_INT);
         $pageID = $this->pageService->getSectionPageId($sanitizedSectionID);
+        var_dump(''. $pageID);
 
         try {
             $this->pageService->deleteSection($sanitizedSectionID);
-            echo '<script>alert("Section deleted.");</script>';
             header('Location: /edit-content/?id=' . $pageID);
         } catch (PDOException $e) {
             error_log('Failed to delete section: ' . $e->getMessage());
@@ -170,8 +170,6 @@ class Pagecontroller
     public function deletePage()
     {
         $pageID = htmlspecialchars($_GET['id'] ?? '');
-
-
         if (!$pageID) {
             error_log('Page ID is missing.');
             return;
@@ -181,7 +179,6 @@ class Pagecontroller
 
         try {
             $this->pageService->deletePage($sanitizedPageID);
-            echo '<script>alert("Page deleted.");</script>';
             header('Location: /admin/page-management/editfestival');
         } catch (PDOException $e) {
             error_log('Failed to delete section: ' . $e->getMessage());
@@ -240,4 +237,22 @@ class Pagecontroller
 
         return $all;
     }
+
+    public function addNewPage(){
+        $newPageName = htmlspecialchars($_POST['pageTitle']);
+        $amountOfSections = htmlspecialchars($_POST['sectionAmount']);
+    
+        $pageNameExists = $this->pageService->getPageNameExists($newPageName);
+    
+        if($pageNameExists){
+            $_SESSION['error_message'] = 'Page name already exists';
+            header('Location: /admin/page-management/editfestival');
+            exit;
+        } else {
+            $this->pageService->createPage($newPageName, $amountOfSections);
+            $_SESSION['success_message'] = 'Page successfully created';
+            header('Location: /admin/page-management/editfestival');
+        }
+    }
+    
 }
