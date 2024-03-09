@@ -36,7 +36,7 @@ class Historycontroller
         $navigationController = $this->navigationController->displayHeader();
         
         $contentData = $this->pagecontroller->getContentAndImagesByPage();
-        $carouselItems = $this->pagecontroller->getCarouselImagesForHistory();
+        $carouselItems = $this->pagecontroller->getCarouselImagesForHistory(14);
         require_once __DIR__ . '/../views/history/overview.php';
     }
 

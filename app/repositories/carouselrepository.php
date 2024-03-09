@@ -23,6 +23,13 @@ class Carouselrepository extends dbconfig
         return $stmt->fetchAll(PDO::FETCH_CLASS, Carousel::class);
     }
 
+    public function updateCarouselItem($carouselId, $carouselImagePath, $newCarouselLabel){
+
+    }
+
+    public function updateCarouselLabel($carouselId, $newCarouselLabel){
+        
+    }
 
 
 }

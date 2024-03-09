@@ -47,12 +47,12 @@ class Pagecontroller
     {
         $sectionID = htmlspecialchars($_GET["section_id"] ?? '');
         $sectionTitle = $this->pageService->getSectionTitle($sectionID);
+      
         $sectionData = $this->pageService->getSectionContentImagesCarousel($sectionID)[0] ?? null;
 
         $editorContent = null;
         $imageFilePath = null;
-        $carouselItems = $this->getCarouselImagesForHistory();
-
+        $carouselItems = $this->getCarouselImagesForHistory($sectionID);
         if ($sectionData) {
             $editorContent = $sectionData['editor_content'] ?? null;
             $imageFilePath = $sectionData['image_file_path'] ?? null;
@@ -71,8 +71,23 @@ class Pagecontroller
             $title = $_POST['sectionTitle'];
 
             $newImage = $_FILES['newImage'] ?? null;
-
             $path = '/img/uploads/';
+
+            $carouselImages = $_FILES['carouselImage'] ?? [];
+            $carouselLabels = $_POST['carouselLabel'] ?? [];
+            $carouselIds = $_POST['carouselId'] ?? [];
+
+            foreach ($carouselIds as $index => $carouselId) {
+                $newCarouselImage = $carouselImages[$index] ?? null;
+                $newCarouselLabel = $carouselLabels[$index] ?? '';
+
+                if ($newCarouselImage && $newCarouselImage['error'] == UPLOAD_ERR_OK) {
+                    $carouselImagePath = $this->uploadImage($newCarouselImage, $path);
+                    $this->contentService->updateCarouselItem($carouselId, $carouselImages, $newCarouselLabel);
+                } else {
+                    $this->contentService->updateCarouselLabel($carouselId, $newCarouselLabel);
+                }
+            }
 
             if ($newImage && $newImage['error'] == UPLOAD_ERR_OK) {
                 $image = $this->uploadImage($newImage, $path);
@@ -199,9 +214,9 @@ class Pagecontroller
         return $contentData;
     }
 
-    public function getCarouselImagesForHistory()
+    public function getCarouselImagesForHistory($sectionID)
     {
-        $carouselItems = $this->contentService->getCarouselItemsBySectionId(14);
+        $carouselItems = $this->contentService->getCarouselItemsBySectionId($sectionID);
         $all = [];
 
         foreach ($carouselItems as $item) {

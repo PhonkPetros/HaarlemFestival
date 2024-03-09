@@ -42,7 +42,6 @@
                 <input class="form-control" type="file" id="formFile" name="newImage">
             </div>
         <?php endif; ?>
-
         <?php if (!empty($carouselItems['carouselItems'])): ?>
             <div class="mb-3">
                 <label class="form-label">Carousel Items</label>
@@ -50,18 +49,22 @@
                     <?php foreach ($carouselItems['carouselItems'] as $index => $carouselItem): ?>
                         <div class="col-sm-6 col-md-4 col-lg-3">
                             <div class="card h-100">
-                                <img src="/img/<?php echo htmlspecialchars($carouselItem); ?>" class="card-img-top" alt="Carousel Image" style="height: 200px; object-fit: cover;">
+                                <img src="/img/uploads/<?php echo htmlspecialchars($carouselItem['image']); ?>"
+                                    class="card-img-top" alt="<?php echo htmlspecialchars($carouselItem['label']); ?>"
+                                    style="height: 200px; object-fit: cover;">
                                 <div class="card-body">
+                                <input type="hidden" name="carouselId[<?php echo $index; ?>]" value="<?php echo isset($carouselItem['carousel_id']) ? htmlspecialchars($carouselItem['carousel_id']) : ''; ?>">
                                     <input type="file" name="carouselImage[<?php echo $index; ?>]" class="form-control mb-2">
-                                    <button type="button" class="btn btn-danger w-100" onclick="removeCarouselItem(<?php echo $index; ?>);">Remove</button>
+                                    <input type="text" name="carouselLabel[<?php echo $index; ?>]" class="form-control mb-2"
+                                        value="<?php echo htmlspecialchars($carouselItem['label']); ?>">
                                 </div>
                             </div>
                         </div>
                     <?php endforeach; ?>
                 </div>
-                <input type="hidden" id="deletedCarouselItems" name="deletedCarouselItems" value="">
             </div>
         <?php endif; ?>
+
 
         <div class="mb-3">
             <button type="submit" class="btn btn-primary">Save Changes</button>
