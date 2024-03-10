@@ -11,55 +11,45 @@
                 <th>Seats</th>
                 <th>Start Date</th>
                 <th>End Date</th>
-                <th>Edit Resturant Details</th>
-                <th>Delete Resturant</th>
+                <th>Edit Restaurant Details</th>
+                <th>Delete Restaurant</th>
             </tr>
         </thead>
         <tbody>
-    <?php if (isset($restaurants) && is_array($restaurants)): ?>
-        <?php foreach ($restaurants as $restaurant): ?>
-            <tr>
-                <td><img src="/img/<?= htmlspecialchars($restaurant->getPicture()) ?>" alt="No Image" style="width:100px; height:auto;"></td>
-                <td><?= htmlspecialchars($restaurant->getLocation()) ?></td>
-                <td><?= htmlspecialchars($restaurant->getPrice()) ?></td>
-                <td><?= htmlspecialchars($restaurant->getSeats()) ?></td>
-                <td><?= htmlspecialchars($restaurant->getStartDate()) ?></td>
-                <td><?= htmlspecialchars($restaurant->getEndDate()) ?></td>
-                <td>
-                    <button type="button" class="btn btn-primary edit-btn" 
-                        data-id="<?= htmlspecialchars($restaurant->getId()) ?>"
-                        data-name="<?= htmlspecialchars($restaurant->getLocation()) ?>"
-                        data-price="<?= htmlspecialchars($restaurant->getPrice()) ?>"
-                        data-seats="<?= htmlspecialchars($restaurant->getSeats()) ?>"
-                        data-start-date="<?= htmlspecialchars($restaurant->getStartDate()) ?>"
-                        data-end-date="<?= htmlspecialchars($restaurant->getEndDate()) ?>">
-                        Edit
-                    </button>
-                    <button type="button" class="btn btn-primary update-btn" 
-                        data-id="<?= htmlspecialchars($restaurant->getId()) ?>"
-                        data-name="<?= htmlspecialchars($restaurant->getLocation()) ?>"
-                        data-price="<?= htmlspecialchars($restaurant->getPrice()) ?>"
-                        data-seats="<?= htmlspecialchars($restaurant->getSeats()) ?>"
-                        data-start-date="<?= htmlspecialchars($restaurant->getStartDate()) ?>"
-                        data-end-date="<?= htmlspecialchars($restaurant->getEndDate()) ?>">
-                        Timeslots
-                </td>
-                <td>
-                    <button type="button" class="btn btn-danger delete-btn" 
-                        data-id="<?= htmlspecialchars($restaurant->getId()) ?>">
-                        Delete
-                    </button>
-                </td>
-            </tr>
-        <?php endforeach; ?>
-
-    <?php else: ?>
-        <tr>
-            <td colspan="8">No restaurants found.</td>
-        </tr>
-    <?php endif; ?>
-</tbody>
-
+            <?php if (isset($restaurants) && is_array($restaurants)): ?>
+                <?php foreach ($restaurants as $restaurant): ?>
+                    <tr id="restaurant-row-<?= htmlspecialchars($restaurant->getId()) ?>">
+                        <td class="restaurant-picture"><img src="/img/<?= htmlspecialchars($restaurant->getPicture()) ?>" alt="No Image" style="width:100px; height:auto;"></td>
+                        <td class="restaurant-name"><?= htmlspecialchars($restaurant->getLocation()) ?></td>
+                        <td class="restaurant-price"><?= htmlspecialchars($restaurant->getPrice()) ?></td>
+                        <td class="restaurant-seats"><?= htmlspecialchars($restaurant->getSeats()) ?></td>
+                        <td class="restaurant-start-date"><?= htmlspecialchars($restaurant->getStartDate()) ?></td>
+                        <td class="restaurant-end-date"><?= htmlspecialchars($restaurant->getEndDate()) ?></td>
+                        <td>
+                            <button type="button" class="btn btn-primary edit-btn"
+                                    data-id="<?= htmlspecialchars($restaurant->getId()) ?>"
+                                    data-name="<?= htmlspecialchars($restaurant->getLocation()) ?>"
+                                    data-price="<?= htmlspecialchars($restaurant->getPrice()) ?>"
+                                    data-seats="<?= htmlspecialchars($restaurant->getSeats()) ?>"
+                                    data-start-date="<?= htmlspecialchars($restaurant->getStartDate()) ?>"
+                                    data-end-date="<?= htmlspecialchars($restaurant->getEndDate()) ?>">
+                                Edit
+                            </button>
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-danger delete-btn"
+                                    data-id="<?= htmlspecialchars($restaurant->getId()) ?>">
+                                Delete
+                            </button>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <tr>
+                    <td colspan="8">No restaurants found.</td>
+                </tr>
+            <?php endif; ?>
+        </tbody>
     </table>
 </div>
 

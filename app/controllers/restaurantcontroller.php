@@ -46,7 +46,7 @@ class Restaurantcontroller
             $response = ['success' => false, 'message' => 'An error occurred'];
     
             if (isset($_FILES['picture']) && $_FILES['picture']['error'] === UPLOAD_ERR_OK) {
-                $targetDirectory = __DIR__ . '/../../img/'; // Adjust the path as necessary
+                $targetDirectory = __DIR__ . '/../public/img/';
                 $fileName = basename($_FILES['picture']['name']);
                 $targetFilePath = $targetDirectory . $fileName;
                 $fileType = strtolower(pathinfo($targetFilePath, PATHINFO_EXTENSION));
@@ -55,7 +55,7 @@ class Restaurantcontroller
                 if (in_array($fileType, $allowedTypes)) {
                     if (!file_exists($targetFilePath)) {
                         if (move_uploaded_file($_FILES['picture']['tmp_name'], $targetFilePath)) {
-                            $picturePath = 'uploads/' . $fileName; // Adjust the relative path as needed
+                            $picturePath = '' . $fileName; 
                         } else {
                             $response['message'] = 'Sorry, there was an error uploading your file.';
                             echo json_encode($response);
@@ -77,7 +77,6 @@ class Restaurantcontroller
             if ($result) {
                 $response = ['success' => true, 'message' => 'Restaurant details updated successfully.'];
             } else {
-                // If the update operation failed, adjust the message accordingly
                 $response['message'] = 'Failed to update restaurant details.';
             }
     
