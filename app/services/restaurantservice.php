@@ -17,7 +17,7 @@ class RestaurantService
     }
 
     public function getAllRestaurants() {
-        return $this->restaurantRepo->getAllResturants();
+        return $this->restaurantRepo->getAllRestaurants();
     }
 
     

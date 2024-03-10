@@ -1,9 +1,6 @@
 <?php
-<<<<<<< HEAD
-=======
 
 
->>>>>>> Development
 
 session_start();
 
@@ -20,11 +17,7 @@ use controllers\Navigationcontroller;
 use controllers\overview;
 use controllers\Templatecontroller;
 use controllers\yummycontroller;
-<<<<<<< HEAD
-
-=======
 use controllers\Pagecontroller;
->>>>>>> Development
 
 require_once __DIR__ . '/../controllers/overview.php';
 require_once __DIR__ . '/../controllers/registercontroller.php';
@@ -37,11 +30,7 @@ require_once __DIR__ . '/../controllers/historycontroller.php';
 require_once __DIR__ . '/../controllers/dancecontroller.php';
 require_once __DIR__ . '/../controllers/jazzcontroller.php';
 require_once __DIR__ . '/../controllers/navigationcontroller.php';
-<<<<<<< HEAD
-require_once __DIR__ . '/../controllers/yummycontroller.php';
-=======
 require_once __DIR__ . '/../controllers/pagecontroller.php';
->>>>>>> Development
 
 $request = $_SERVER['REQUEST_URI'];
 $method = $_SERVER['REQUEST_METHOD'];
@@ -146,27 +135,6 @@ if ($pageID || $eventID || $editPageID || $sectionEdit || $sectionDelete || $del
                     $controller->showYummyOverview();
                 }
                 break;
-<<<<<<< HEAD
-            case '6':
-                $controller = new Historycontroller();
-                if ($method === 'GET') {
-                    $controller->showProveniershof();
-                }
-                break;
-            case '7':
-                $controller = new Historycontroller();
-                if ($method === 'GET') {
-                    $controller->showChurch();
-                }
-                break;
-            case '8':
-                $controller = new RestaurantController();
-                if ($method === 'GET') {
-                    $controller->showChosenResturant();
-                }
-                break;
-=======
->>>>>>> Development
             default;
                 $controller = new TemplateController();
                 if ($method === 'GET') {

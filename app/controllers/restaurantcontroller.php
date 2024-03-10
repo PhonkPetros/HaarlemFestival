@@ -24,11 +24,11 @@ class Restaurantcontroller
         require_once __DIR__ . '/../views/yummy/resturant.php';
     }
 
-    public function editEventDetails(){
+    public function editEventDetails() {
         
-        $restaurantService = $this->restaurantService->getAllRestaurants();
-        
+        $restaurants = $this->restaurantService->getAllRestaurants(); // Fetch all restaurants
         require_once __DIR__ . '/../views/admin/manage-event-details/editDetailsRestaurant.php';
     }
+    
   
 }
