@@ -20,5 +20,13 @@ class RestaurantService
         return $this->restaurantRepo->getAllRestaurants();
     }
 
+    public function getRestaurantByName($location) {
+        return $this->restaurantRepo->getRestaurantByName($location);
+    }
+
+    public function updateRestaurantDetails($id, $name, $price, $seats, $startDate, $endDate, $picturePath) {
+        return $this->restaurantRepo->updateRestaurantDetails($id, $name, $price, $seats, $startDate, $endDate, $picturePath);
+    }
+
     
 }

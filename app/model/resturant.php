@@ -12,6 +12,7 @@ class Restaurant implements \JsonSerializable{
     private ?int $seats;
     private string $startDate;
     private string $endDate;
+    private ?string $picture;
 
     public function getId(): int {
         return $this->id;
@@ -19,6 +20,14 @@ class Restaurant implements \JsonSerializable{
 
     public function setId(int $id): void {
         $this->id = $id;
+    }
+
+    public function getPicture(): ?string {
+        return $this->picture;
+    }
+    
+    public function setPicture(?string $picture): void {
+        $this->picture = $picture;
     }
 
     public function getName(): string {
@@ -79,6 +88,7 @@ class Restaurant implements \JsonSerializable{
             'seats' => $this->getSeats(),
             'startDate' => $this->getStartDate(),
             'endDate' => $this->getEndDate(),
+            'picture' => $this->getPicture()
         ];
     }
 }

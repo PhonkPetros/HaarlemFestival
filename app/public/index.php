@@ -31,6 +31,7 @@ require_once __DIR__ . '/../controllers/dancecontroller.php';
 require_once __DIR__ . '/../controllers/jazzcontroller.php';
 require_once __DIR__ . '/../controllers/navigationcontroller.php';
 require_once __DIR__ . '/../controllers/pagecontroller.php';
+require_once __DIR__ . '/../controllers/yummycontroller.php';
 
 $request = $_SERVER['REQUEST_URI'];
 $method = $_SERVER['REQUEST_METHOD'];
@@ -62,6 +63,9 @@ if (strpos($request, '/sectionDelete/') === 0){
 if (strpos($request, '/delete-page/') === 0){
     $deletePageID = htmlspecialchars($queryParams['id'] ?? '');
 }
+
+
+
 
 //Please do not touch this
 if ($request === '/') {
@@ -324,6 +328,12 @@ switch ($request) {
             $controller->updateNavigation();
         }
         break; 
+    case "/editResturantDetails/updateRestaurantDetails":
+        $controller = new Restaurantcontroller();
+        if ($method === 'POST') {
+            $controller->updateRestaurantDetails();
+        }
+        break;
     default:
         http_response_code(404);
         $navigation = new Navigationcontroller();
