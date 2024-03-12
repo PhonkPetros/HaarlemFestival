@@ -334,6 +334,12 @@ switch ($request) {
             $controller->updateRestaurantDetails();
         }
         break;
+    case "/editResturantDetails/addTimeSlot":
+        $controller = new Restaurantcontroller();
+        if ($method === 'POST') {
+            $controller->addTimeSlot();
+        }
+        break;
     default:
         http_response_code(404);
         $navigation = new Navigationcontroller();

@@ -20,12 +20,16 @@ class RestaurantService
         return $this->restaurantRepo->getAllRestaurants();
     }
 
-    public function getRestaurantByName($location) {
-        return $this->restaurantRepo->getRestaurantByName($location);
-    }
-
     public function updateRestaurantDetails($id, $name, $price, $seats, $startDate, $endDate, $picturePath) {
         return $this->restaurantRepo->updateRestaurantDetails($id, $name, $price, $seats, $startDate, $endDate, $picturePath);
+    }
+
+    public function addTimeslot($restaurantId, $ticket_hash ,$date, $time, $quantity) {
+        return $this->restaurantRepo->addTimeslot($restaurantId, $ticket_hash, $date, $time, $quantity);
+    }
+
+    public function getTicketTimeslotsForRestaurant() {
+        return $this->restaurantRepo->getTicketTimeslotsForRestaurant();
     }
 
     

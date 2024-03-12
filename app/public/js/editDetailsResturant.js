@@ -29,6 +29,10 @@ function closeModal() {
     document.querySelector('#editModal').style.display = 'none';
 }
 
+function closeModalTimeSlot() {
+    document.querySelector('#addTimeslotModal').style.display = 'none';
+}
+
 
 function saveChanges() {
     const id = document.querySelector('#editFormId').value;
@@ -73,7 +77,7 @@ function updateRestaurantRow(id, name, price, seats, startDate, endDate, picture
     const row = document.getElementById(`restaurant-row-${id}`);
     if(row) {
         if (picturePath) {
-            row.querySelector('.restaurant-picture img').src = picturePath; // Update with new image path
+            row.querySelector('.restaurant-picture img').src = picturePath;
         }
         row.querySelector('.restaurant-name').textContent = name;
         row.querySelector('.restaurant-price').textContent = price;
@@ -90,10 +94,73 @@ function updateRestaurantRow(id, name, price, seats, startDate, endDate, picture
         editBtn.dataset.startDate = startDate;
         editBtn.dataset.endDate = endDate;
         if (picturePath) {
-            editBtn.dataset.picture = picturePath; // Assuming you have a data attribute for picture
+            editBtn.dataset.picture = picturePath;
         }
     }
 }
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    const addTimeslotButtons = document.querySelectorAll('.add-timeslot-btn');
+    addTimeslotButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            document.querySelector('#addTimeslotModal').style.display = 'block';
+
+            const restaurantId = this.getAttribute('data-id');
+            const row = document.getElementById(`restaurant-row-${restaurantId}`);
+            if (row) {
+                const startDate = row.querySelector('.restaurant-start-date').textContent;
+                const endDate = row.querySelector('.restaurant-end-date').textContent;
+
+                let dateInput = document.querySelector('#timeslotDate');
+                if (dateInput) {
+                    dateInput.setAttribute('min', startDate);
+                    dateInput.setAttribute('max', endDate);
+                }
+            }
+
+            document.querySelector('#addTimeslotFormId').value = restaurantId;
+        });
+    });
+});
+
+function addTimeSlot() {
+    // Prevent the default form submission
+    event.preventDefault();
+
+    const restaurantId = document.querySelector('#addTimeslotFormId').value;
+    const date = document.querySelector('#timeslotDate').value;
+    const time = document.querySelector('#timeslotTime').value;
+    const quantity = document.querySelector('#timeslotQuantity').value;
+
+    const formData = new FormData();
+    formData.append('restaurantId', restaurantId);
+    formData.append('date', date);
+    formData.append('time', time);
+    formData.append('quantity', quantity);
+
+    fetch('/editResturantDetails/addTimeSlot', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Timeslot added successfully');
+            closeModalTimeslot();
+        } else {
+            alert('Failed to add timeslot: ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred');
+    });
+}
+
+
+
+
 
 
 

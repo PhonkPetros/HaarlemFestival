@@ -18,21 +18,16 @@ class Restaurantcontroller
 
     private $navigationController;
 
-    public function showChosenRestaurant($location)
-    {
-        $restaurant = $this->restaurantService->getRestaurantByName($location);
-        require_once __DIR__ . '/../views/admin/manage-event-details/editResturantIndividual.php';
-    }
-
 
     public function editEventDetails() {
         
-        $restaurants = $this->restaurantService->getAllRestaurants(); 
+        $restaurants = $this->restaurantService->getAllRestaurants();
+        $timeSlots = $this->restaurantService->getTicketTimeslotsForRestaurant();
         require_once __DIR__ . '/../views/admin/manage-event-details/editDetailsRestaurant.php';
     }
     
     public function updateRestaurantDetails() {
-        header('Content-Type: application/json'); // Ensure the response is treated as JSON
+        header('Content-Type: application/json');
     
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $id = $_POST['id'] ?? null;
@@ -86,8 +81,39 @@ class Restaurantcontroller
     }
     
 
-    public function addTimeSlot(){
-
+    public function addTimeSlot() {
+        header('Content-Type: application/json');
+    
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $restaurantId = $_POST['restaurantId'] ?? '';
+            $date = $_POST['date'] ?? '';
+            $time = $_POST['time'] ?? '';
+            $quantity = $_POST['quantity'] ?? 0;
+    
+            $response = ['success' => false, 'message' => 'An error occurred'];
+    
+    
+            if ($restaurantId && $date && $time && $quantity) {
+                $result = $this->restaurantService->addTimeSlot($restaurantId, $ticketHash = $this->generateTicketHash($restaurantId, $date, $time) ,$date, $time, $quantity);
+                if ($result) {
+                    $response = ['success' => true, 'message' => 'Timeslot added successfully.'];
+                } else {
+                    $response['message'] = 'Failed to add timeslot.';
+                }
+            } else {
+                $response['message'] = 'Invalid input data.';
+            }
+    
+            echo json_encode($response);
+            exit;
+        }
     }
+
+    private function generateTicketHash($eventId, $date, $time)
+    {
+        $toHash = $eventId . $date . $time . uniqid('', true);
+        return hash('sha256', $toHash);
+    }
+    
   
 }

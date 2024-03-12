@@ -39,31 +39,6 @@ class resturantrepository extends dbconfig {
         return $restaurants;
     }
     
-
-    public function getRestaurantByName($location) {
-        try {
-            $stmt = $this->connection->prepare("SELECT * FROM [Event] WHERE NAME = :location");
-            $stmt->bindValue(':location', $location);
-            $stmt->execute();
-            $result = $stmt->fetch(PDO::FETCH_ASSOC);
-            
-            if ($result) {
-                $restaurant = new \model\Restaurant();
-                $restaurant->setId($result['id']);
-                $restaurant->setLocation($result['location']);
-                $restaurant->setPrice($result['price']);
-                $restaurant->setSeats($result['seats']);
-                $restaurant->setStartDate($result['startDate']);
-                $restaurant->setEndDate($result['endDate']);
-                return $restaurant;
-            }
-            return null;
-        } catch (PDOException $e) {
-            echo "Error: " . $e->getMessage();
-            return null;
-        }
-    }
-
     public function updateRestaurantDetails($id, $name, $price, $seats, $startDate, $endDate, $picturePath) {
         try {
             $sql = "UPDATE [Event] SET location = :location, price = :price, seats = :seats, startDate = :startDate, endDate = :endDate";
@@ -95,6 +70,63 @@ class resturantrepository extends dbconfig {
             return false;
         }
     }
+
+    public function getTicketTimeslotsForResturant($id) {
+        $times = [];
+        try {
+            $stmt = $this->connection->prepare("SELECT [Time] FROM [Ticket] WHERE event_id = :id");
+            $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+            $stmt->execute();
+            $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+            foreach ($results as $result) {
+                $times[] = $result['time'];
+            }
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+            return [];
+        }
+        return $times;
+    }
+    
+    public function addTimeSlot($restaurantId, $ticket_hash, $date, $time, $quantity) {
+        try {
+            $stmt = $this->connection->prepare("INSERT INTO [Ticket] (event_id, ticket_hash, date, time, quantity, state) VALUES (:restaurantId, :ticket_hash, :date, :time, :quantity, :state)");
+    
+            $stmt->bindValue(':restaurantId', $restaurantId, PDO::PARAM_INT);
+            $stmt->bindValue(':ticket_hash', $ticket_hash);
+            $stmt->bindValue(':date', $date);
+            $stmt->bindValue(':time', $time);
+            $stmt->bindValue(':quantity', $quantity, PDO::PARAM_INT);
+            $stmt->bindValue(':state', 'Not Used');
+    
+            $stmt->execute();
+            
+            return $stmt->rowCount() > 0;
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+            return false;
+        }
+    }
+
+    public function getTicketTimeslotsForRestaurant() {
+        $timeslots = [];
+        
+        try {
+            $stmt = $this->connection->prepare("SELECT [Event].event_id, [Event].[location], Ticket.[Date], Ticket.[Time] FROM [Event] JOIN Ticket ON [Event].event_id = Ticket.event_id WHERE [Event].[name] = :eventName");
+            
+            $stmt->bindValue(':eventName', 'Restaurant');
+            
+            $stmt->execute();
+    
+            $timeslots = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+        }
+        
+        return $timeslots;
+    }
+    
     
     
 }
