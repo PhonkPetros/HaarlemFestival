@@ -22,7 +22,7 @@ class Restaurantcontroller
     public function editEventDetails() {
         
         $restaurants = $this->restaurantService->getAllRestaurants();
-        $timeSlots = $this->restaurantService->getTicketTimeslotsForRestaurant();
+        $tickets = $this->restaurantService->getTicketTimeslotsForRestaurant();
         require_once __DIR__ . '/../views/admin/manage-event-details/editDetailsRestaurant.php';
     }
     

@@ -66,19 +66,24 @@
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($timeSlots as $timeslot): ?>
-                <tr>
-                    <td><?= htmlspecialchars($timeslot['event_id']) ?></td>
-                    <td><?= htmlspecialchars($timeslot['location']) ?></td>
-                    <td><?= htmlspecialchars($timeslot['Date']) ?></td>
-                    <td><?= htmlspecialchars($timeslot['Time']) ?></td>
-                    <td><button></button></td>
-                </tr>
-            <?php endforeach; ?>
-            <?php if (empty($timeSlots)): ?>
-                <tr>
-                    <td colspan="3">No timeslots found.</td>
-                </tr>
+            <?php if (isset($tickets) && is_array($tickets)): ?>
+                <?php foreach ($tickets as $ticket): ?>
+                    <tr>
+                        <td><?= htmlspecialchars($ticket->getEventId()) ?></td>
+                        <td><?= htmlspecialchars($ticket->getQuantity()) ?></td>
+                        <td><?= htmlspecialchars($ticket->getTicketDate()) ?></td>
+                        <td><?= htmlspecialchars($ticket->getTicketTime()) ?></td>
+                        <td>
+                            <button type="button" class="btn btn-danger delete-timeslot-btn" data-event-id="<?= htmlspecialchars($ticket->getEventId()) ?>">Delete</button> 
+                           <!-- I should get the ticket Hash code the querry to delete since we are talking for individual diffrent tickets -->
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+                <?php if (empty($tickets)): ?>
+                    <tr>
+                        <td colspan="3">No timeslots found.</td>
+                    </tr>
+                <?php endif; ?>
             <?php endif; ?>
         </tbody>
     </table>

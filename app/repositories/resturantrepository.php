@@ -7,9 +7,11 @@ use PDO;
 use PDOException;
 use DateTime;
 use model\Resturant;
+use model\Ticket;
 
 require_once __DIR__ . '/../config/dbconfig.php';
 require_once __DIR__ . '/../model/resturant.php';
+require_once __DIR__ . '/../model/ticket.php';
 
 
 class resturantrepository extends dbconfig {
@@ -111,21 +113,33 @@ class resturantrepository extends dbconfig {
 
     public function getTicketTimeslotsForRestaurant() {
         $timeslots = [];
-        
+    
         try {
-            $stmt = $this->connection->prepare("SELECT [Event].event_id, [Event].[location], Ticket.[Date], Ticket.[Time] FROM [Event] JOIN Ticket ON [Event].event_id = Ticket.event_id WHERE [Event].[name] = :eventName");
-            
+            $stmt = $this->connection->prepare("SELECT [Event].event_id, [Event].[location], Ticket.[Date], Ticket.[Time], Ticket.quantity FROM [Event] JOIN Ticket ON [Event].event_id = Ticket.event_id WHERE [Event].[name] = :eventName");
+    
             $stmt->bindValue(':eventName', 'Restaurant');
-            
+    
             $stmt->execute();
     
-            $timeslots = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $ticketResults = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+            foreach ($ticketResults as $ticketResult) {
+                $ticket = new \model\Ticket();
+                $ticket->setEventId($ticketResult['event_id']);
+                $ticket->setQuantity($ticketResult['quantity']);
+                $ticket->setTicketDate($ticketResult['Date']);
+                $ticket->setTicketTime($ticketResult['Time']);
+    
+                $timeslots[] = $ticket;
+            }
         } catch (PDOException $e) {
             echo "Error: " . $e->getMessage();
         }
-        
+    
         return $timeslots;
     }
+    
+
     
     
     
