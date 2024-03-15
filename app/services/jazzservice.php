@@ -15,11 +15,18 @@ class Jazzservice{
     {
         return $this->jazzrepo->getEventdetails();
     }
+    public function getTickets($eventId) {
+        return $this->jazzrepo->getTicketsForEvent($eventId);
+    }
+
     public function addNewTimeSlot($newTicket){
         $this->jazzrepo->addNewTimeSlot($newTicket);
     }
-    public function editEventDetails($eventId, $eventName, $startDate, $price, $newLocation){
-        return $this->jazzrepo->editEventDetails($eventId, $eventName, $startDate, $price, $newLocation);
+    public function editEventDetails($eventId, $eventName, $startDate,$endDate, $price, $newLocation,$picture){
+        return $this->jazzrepo->editEventDetails($eventId, $eventName, $startDate,$endDate, $price, $newLocation, $picture);
+    }
+    public function existEvent($newEventName, $eventId){
+        return $this->jazzrepo->existEvent($newEventName, $eventId);
     }
     public function removeTimeslot($ticketID){
         $this->jazzrepo->removeTimeslot($ticketID);
