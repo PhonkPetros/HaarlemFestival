@@ -30,9 +30,6 @@
 </section>
 
 <div class="container mt-5">
-
-
-  <!-- Menu Items -->
   <div class="row">
     <div class="col-md-3 mb-4">
       <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/e6b9d2fa0bd8720d689b407eb7393c75ec19d1f5ac77d8eed0b7883c2b222a7e?apiKey=3023167e7a8a4e649532aa6db2acfe06" alt="Caviar dish" class="img-fluid">
@@ -61,7 +58,11 @@
 </div>
 
 <div class="akm-49">
-    <div class="info">
+  <div class="info">
+    <div class="picture">
+      <img src="/img/uploadshaarlem.jpg" alt="Restaurant Picture" class="img-fluid">
+    </div>
+    <div class="content">
       <h1>Traditional French cuisine</h1>
       <div class="rating">
         <span class="star">&#9733;</span>
@@ -78,17 +79,67 @@
       </div>
       <button class="book-table">BOOK A TABLE</button>
     </div>
+  </div>
 </div>
 
 
-<?php if ($restaurantDetails): ?>
-    <h2><?= htmlspecialchars($restaurantDetails->getLocation()) ?></h2>
-    <img src="/img/<?= htmlspecialchars($restaurantDetails->getPicture()) ?>" alt="Restaurant Picture" style="max-width: 300px;">
-    <p>Price: <?= htmlspecialchars($restaurantDetails->getPrice()) ?></p>
-    <p>Seats: <?= htmlspecialchars($restaurantDetails->getSeats()) ?></p>
-    <p>Available from <?= htmlspecialchars($restaurantDetails->getStartDate()) ?> to <?= htmlspecialchars($restaurantDetails->getEndDate()) ?></p>
-<?php else: ?>
-    <p>Restaurant details not found.</p>
-<?php endif; ?>
+<div class="container-table mt-5">
+  <div class="table-wrapper">
+    <table class="table table-dark">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">First</th>
+          <th scope="col">Last</th>
+          <th scope="col">Handle</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row">1</th>
+          <td>Mark</td>
+          <td>Otto</td>
+          <td>@mdo</td>
+        </tr>
+        <tr>
+          <th scope="row">2</th>
+          <td>Jacob</td>
+          <td>Thornton</td>
+          <td>@fat</td>
+        </tr>
+        <tr>
+          <th scope="row">3</th>
+          <td>Larry</td>
+          <td>the Bird</td>
+          <td>@twitter</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<h2 class="gallery">Gallery</h2>
+<div class="container mt-5">
+  <div class="row">
+    <div class="col-md-4 mb-4">
+      <img src="/img/uploadshaarlem.jpg" alt="Image 1" class="img-fluid">
+    </div>
+    <div class="col-md-4 mb-4">
+      <img src="/img/uploadshaarlem.jpg" alt="Image 2" class="img-fluid">
+    </div>
+    <div class="col-md-4 mb-4">
+      <img src="/img/uploadshaarlem.jpg" alt="Image 3" class="img-fluid">
+    </div>
+  </div>
+</div>
+
+<h2 class="location-google-maps">Location</h2>
+
+<div class="picture-location">
+  <img src="/img/uploadshaarlem.jpg" alt="Location Picture" class="img-location">
+</div>
+
+<?php include __DIR__ . '/../general_views/footer.php';?>
+
 </body>
 </html>
