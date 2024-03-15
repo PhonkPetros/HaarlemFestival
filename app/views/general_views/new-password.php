@@ -11,12 +11,13 @@
 <div class="container">
     <div class="d-flex flex-column justify-content-center align-items-center" style="min-height: 100vh;">
         <h1> Write down your new password</h1>
-        <form method="POST" action="/login">
+        <form method="POST" action="/new-password">
+            <input type="text" style="display: none;" name="token" value="<?php echo htmlspecialchars($_GET['token']) ?>" required>
             <div class="mb-3">
                 <label for="newPassword" class="form-label">New Password</label>
                 <input type="text" class="form-control" name="newPassword" id="newPassword" required>
             </div>
-            <button type="button" class="btn btn-dark" onclick="location.href='register'">Set Password</button>
+            <button type="submit" class="btn btn-dark">Set Password</button>
         </form>
     </div>
 </div>

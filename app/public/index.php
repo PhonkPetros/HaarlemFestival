@@ -35,7 +35,8 @@ require_once __DIR__ . '/../controllers/templatecontroller.php';
 require_once __DIR__ . '/../controllers/yummycontroller.php';
 require_once __DIR__ . '/../controllers/resetpasswordcontroller.php';
 
-$request = $_SERVER['REQUEST_URI'];
+$url = $_SERVER['REQUEST_URI'];
+$request = parse_url($url)['path'];
 $method = $_SERVER['REQUEST_METHOD'];
 
 
@@ -199,7 +200,14 @@ switch ($request) {
         if ($method === 'GET') {
             $controller->showNewPasswordForm();
         } elseif ($method === 'POST') {
-            $controller->resetPasswordAction();
+            $controller->updatePasswordAction();
+        }
+        break;
+
+    case '/success-reset-password':
+        $controller = new resetpasswordcontroller();
+        if ($method === 'GET') {
+            $controller->successfulNewPassword();
         }
         break;
 

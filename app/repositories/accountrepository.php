@@ -54,7 +54,37 @@ class AccountRepository {
     }
 
     public function saveResetPasswordToken ($token, $email) {
-        $stmt = $this->db->prepare('INSERT INTO password_reset_temp (email, key) VALUES (?, ?)');
-        $stmt->execute([$token, $email]);
+        $sql = "SELECT email FROM [User] WHERE email = :email";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':email', $email);
+        $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($row) {
+            $stmt = $this->db->prepare('INSERT INTO password_reset_temp (email, "key") VALUES (?, ?)');
+            $stmt->execute([$email, $token]);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function renewPassword($token, $newPassword) {
+        $sql = "SELECT email FROM password_reset_temp WHERE [key] = :token";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':token', $token);
+        $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if ($row) {
+            $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
+            $sql = "UPDATE [User] SET password_hash = ? WHERE email = ?";
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute([$hashedPassword, $row['email']]);
+            
+            return $stmt->rowCount() > 0;
+        } else {
+            return false;
+        }
     }
 }
