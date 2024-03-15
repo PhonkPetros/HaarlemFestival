@@ -9,6 +9,11 @@ use controllers\Navigationcontroller;
 use controllers\Pagecontroller;
 use services\Jazzservice;
 
+require_once __DIR__ . '/../model/event.php';
+require_once __DIR__ . '/../model/ticket.php';
+require_once __DIR__ . '/../services/jazzservice.php';
+require_once __DIR__ . '/../controllers/navigationcontroller.php';
+require_once __DIR__ . '/../controllers/pagecontroller.php';
 
 class Jazzcontroller
 {
