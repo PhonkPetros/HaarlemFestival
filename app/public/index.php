@@ -1,7 +1,4 @@
 <?php
-
-
-
 session_start();
 
 use controllers\logincontroller;
@@ -56,9 +53,6 @@ if (strpos($request, '/edit-content/') === 0) {
 if (strpos($request, '/sectionEdit/') === 0) {
     $sectionEdit = htmlspecialchars($queryParams['section_id'] ?? '');
 }
-
-
-
 
 //Please do not touch this
 if ($request === '/') {
@@ -164,7 +158,6 @@ if ($pageID || $eventID || $editPageID || $sectionEdit) {
         exit;
     }
 }
-
 
 if (preg_match("/^\/restaurant\/details\/(\d+)$/", $request, $matches)) {
     $restaurantId = $matches[1]; // This captures the numeric ID from the URL.
