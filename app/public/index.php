@@ -58,8 +58,6 @@ if (strpos($request, '/sectionEdit/') === 0) {
 }
 
 
-
-
 //Please do not touch this
 if ($request === '/') {
     $pageID = '1';
@@ -125,7 +123,7 @@ if ($pageID || $eventID || $editPageID || $sectionEdit) {
             case '5':
                 $controller = new yummycontroller();
                 if ($method === 'GET') {
-                    $controller->showYummyOverview();
+                    $controller->showYummy();
                 }
                 break;
             default;
@@ -165,16 +163,7 @@ if ($pageID || $eventID || $editPageID || $sectionEdit) {
     }
 }
 
-
-if (preg_match("/^\/restaurant\/details\/(\d+)$/", $request, $matches)) {
-    $restaurantId = $matches[1]; // This captures the numeric ID from the URL.
-    $controller = new yummycontroller();
-    if ($method === 'GET') {
-        $controller->showChoseResturant($restaurantId);
-    }
-    exit;
-}
-
+//Add routes for actions or admin routes that do not have to do with displaying detail pages or overview pages for your individual events
 switch ($request) {
     case '/login':
         $controller = new logincontroller();
@@ -190,7 +179,25 @@ switch ($request) {
         if ($method === 'GET') {
             $controller->show();
         } elseif ($method === 'POST') {
-            $controller->loginAction();
+            $controller->resetpasswordAction();
+        }
+        break;
+
+    case '/reset-password':
+        $controller = new resetpasswordcontroller();
+        if ($method === 'GET') {
+            $controller->showResetPasswordForm();
+        } elseif ($method === 'POST') {
+            $controller->resetpasswordAction();
+        }
+        break;
+
+    case '/new-password':
+        $controller = new resetpasswordcontroller();
+        if ($method === 'GET') {
+            $controller->showNewPasswordForm();
+        } elseif ($method === 'POST') {
+            $controller->resetPasswordAction();
         }
         break;
 
@@ -313,24 +320,13 @@ switch ($request) {
             $controller->deleteSection();
         }
         break;
-    case '/delete-page':
-        $controller = new Pagecontroller();
-        if ($method === 'POST') {
-            $controller->deletePage();
-        }
-        break;
-    case "/editResturantDetails/updateRestaurantDetails":
-        $controller = new Restaurantcontroller();
-        if ($method === 'POST') {
-            $controller->updateRestaurantDetails();
-        }
-        break;
-    case "/editResturantDetails/addTimeSlot":
-        $controller = new Restaurantcontroller();
-        if ($method === 'POST') {
-            $controller->addTimeSlot();
-        }
-        break;
+        case '/delete-page':
+            $controller = new Pagecontroller();
+            if ($method === 'POST') {
+                $controller->deletePage();
+            }
+            break;
+        
     default:
         http_response_code(404);
         $navigation = new Navigationcontroller();

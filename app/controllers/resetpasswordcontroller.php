@@ -13,21 +13,27 @@ class resetpasswordcontroller
         $this->resetpasswordService = new resetpasswordService();
     }
 
-    public function show()
+    public function showResetPasswordForm()
     {
         require_once '../views/reset-password.php';
+    }
+
+    public function showNewPasswordForm()
+    {
+        require_once '../views/new-password.php';
     }
 
     public function resetpasswordAction()
     {
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $email = htmlspecialchars($_POST["email"]);
-            $newPassword = htmlspecialchars($_POST["newPassword"]);
-
-            if (!$authenticated) {
-                $loginError = "Invalid username or password.";
-                require_once '../views/login.php'; 
-            }
         }
+    }
+
+    public function checkToken() {
+        if ($_SERVER["REQUEST_METHOD"] == "GET") {
+            $email = htmlspecialchars($_GET["token"]);
+        }
+        
     }
 }

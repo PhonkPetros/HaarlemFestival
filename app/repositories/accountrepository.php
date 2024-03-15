@@ -52,4 +52,9 @@ class AccountRepository {
             throw $e;
         }
     }
+
+    public function saveResetPasswordToken ($token, $email) {
+        $stmt = $this->db->prepare('INSERT INTO password_reset_temp (email, key) VALUES (?, ?)');
+        $stmt->execute([$token, $email]);
+    }
 }
