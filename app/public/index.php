@@ -17,7 +17,9 @@ use controllers\yummycontroller;
 use controllers\Pagecontroller;
 use controllers\resetpasswordcontroller;
 
+
 require_once __DIR__ . '/../controllers/overview.php';
+require_once __DIR__ . '/../config/constant-paths.php';
 require_once __DIR__ . '/../controllers/registercontroller.php';
 require_once __DIR__ . '/../controllers/logincontroller.php';
 require_once __DIR__ . '/../controllers/logoutcontroller.php';
@@ -35,6 +37,8 @@ require_once __DIR__ . '/../controllers/resetpasswordcontroller.php';
 
 $request = $_SERVER['REQUEST_URI'];
 $method = $_SERVER['REQUEST_METHOD'];
+
+
 
 //Please do not touch this
 $editPageID = null;
@@ -65,25 +69,25 @@ if ($pageID || $eventID || $editPageID || $sectionEdit) {
     //this has to do with the editing of event details
     if ($eventID) {
         switch ($eventID) {
-            case "5":
+            case EVENT_ID_DANCE:
                 $controller = new Dancecontroller();
                 if ($method === 'GET') {
                     $controller->editEventDetails();
                 }
                 break;
-            case '6':
+            case EVENT_ID_JAZZ:
                 $controller = new Jazzcontroller();
                 if ($method === 'GET') {
                     $controller->showEventDetails();
                 }
                 break;
-            case '7':
+            case EVENT_ID_RESTAURANT:
                 $controller = new Restaurantcontroller();
                 if ($method === 'GET') {
                     $controller->editEventDetails();
                 }
                 break;
-            case '8':
+            case EVENT_ID_HISTORY:
                 $controller = new Historycontroller();
                 if ($method === 'GET') {
                     $controller->showeditEventDetails();
@@ -94,31 +98,33 @@ if ($pageID || $eventID || $editPageID || $sectionEdit) {
         }
         exit;
     } elseif ($pageID) {
+       
+
         //this has to with our own pages
         switch ($pageID) {
-            case "1":
+            case PAGE_ID_HOME:
                 $controller = new overview();
                 $controller->show();
                 break;
-            case '2':
+            case PAGE_ID_HISTORY:
                 $controller = new Historycontroller();
                 if ($method === 'GET') {
                     $controller->show();
                 }
                 break;
-            case '3':
+            case PAGE_ID_DANCE:
                 $controller = new Dancecontroller();
                 if ($method === 'GET') {
                     $controller->show();
                 }
                 break;
-            case '4':
+            case PAGE_ID_JAZZ:
                 $controller = new Jazzcontroller();
                 if ($method === 'GET') {
                     $controller->show();
                 }
                 break;
-            case '5':
+            case PAGE_ID_YUMMY:
                 $controller = new yummycontroller();
                 if ($method === 'GET') {
                     $controller->showYummyOverview();
@@ -175,7 +181,7 @@ switch ($request) {
         $controller = new logincontroller();
         if ($method === 'GET') {
             $controller->show();
-        } elseif ($method === 'POST') {
+        } elseif ($method === 'POST') { 
             $controller->loginAction();
         }
         break;

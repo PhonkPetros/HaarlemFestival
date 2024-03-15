@@ -30,7 +30,7 @@
                     <div class="collapse navbar-collapse" id="navbarNavDropdown">
                         <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                             <?php foreach ($allPages as $page): ?>
-                                <?php if ($page->getPageID() == 1): ?>
+                                <?php if ($page->getPageName() == "Home") : ?>
                                     <li class="nav-item">
                                         <a class="nav-link" href="/?pageid=<?php echo urlencode($page->getPageID()); ?>">
                                             <?php echo htmlspecialchars($page->getPageName()); ?>
@@ -48,7 +48,7 @@
                                 </a>
                                 <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                                     <?php foreach ($allPages as $page): ?>
-                                        <?php if ($page->getPageID() != 1): ?>
+                                        <?php if ($page->getPageName() != "Home"): ?>
                                             <li><a class="dropdown-item"
                                                     href="/?pageid=<?php echo urlencode($page->getPageID()); ?>">
                                                     <?php echo htmlspecialchars($page->getPageName()); ?>

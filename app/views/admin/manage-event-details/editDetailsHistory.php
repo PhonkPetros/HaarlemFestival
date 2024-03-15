@@ -95,7 +95,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="newQuantity" class="form-label">Quantity</label>
-                        <input type="number" min="0" max="20" class="form-control" id="newQuantity" name="quantity"
+                        <input type="number" min="12" max="12" class="form-control" id="newQuantity" name="quantity"
                             required>
                     </div>
                     <div class="mb-3">
