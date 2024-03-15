@@ -13,12 +13,12 @@
     <div class="d-flex flex-column justify-content-center align-items-center" style="min-height: 100vh;">
         <h1>Forgot your password?</h1>
         <h2>reset password</h2>
-        <form method="POST" action="/login">
+        <form method="POST" action="/reset-password">
             <div class="mb-3">
                 <label for="username" class="form-label">Enter your email</label>
                 <input type="text" class="form-control" name="email" id="email" required>
             </div>
-            <button type="button" class="btn btn-primary" onclick="location.href='/reset-password'">Send me email</button>
+            <button type="submit" class="btn btn-primary">Send me email</button>
             <button type="button" class="btn btn-primary" onclick="location.href='/?pageid=1'">Home</button>
         </form>
         <?php if (isset($loginError)): ?>

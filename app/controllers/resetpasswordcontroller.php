@@ -30,21 +30,43 @@ class resetpasswordcontroller
 
     public function showLinkSuccessfullySent()
     {
-        require_once'../views/general_views/reset-link-sent';
+        require_once'../views/general_views/reset-link-sent.php';
 
+    }
+
+    public function showInvalidEmail()
+    {
+        require_once'../views/general_views/invalid-email.php';
     }
 
     public function resetpasswordAction()
     {
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $email = htmlspecialchars($_POST["email"]);
+            $result = $this->resetpasswordService->resetPassword($email);
+
+            if ($result) {
+                $this->showLinkSuccessfullySent();
+            } else {
+                $this->showInvalidEmail();
+            }
         }
     }
 
-    public function checkToken() {
-        if ($_SERVER["REQUEST_METHOD"] == "GET") {
-            $email = htmlspecialchars($_GET["token"]);
+    public function updatePasswordAction()
+    {
+        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+            $token = htmlspecialchars($_POST["token"]);
+            $newPassword = htmlspecialchars($_POST["newPassword"]);
+
+            $result = $this->resetpasswordService->renewPassword($token, $newPassword);
+
+            if ($result) {
+                $this->successfulNewPassword();
+            } else {
+                echo 'Reset password failed';
+
+            }
         }
-        
     }
 }
