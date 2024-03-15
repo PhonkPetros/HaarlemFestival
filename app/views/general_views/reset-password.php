@@ -15,15 +15,10 @@
         <h2>reset password</h2>
         <form method="POST" action="/login">
             <div class="mb-3">
-                <label for="username" class="form-label">Username</label>
-                <input type="text" class="form-control" name="username" id="username" required>
+                <label for="username" class="form-label">Enter your email</label>
+                <input type="text" class="form-control" name="email" id="email" required>
             </div>
-            <div class="mb-3">
-                <label for="password" class="form-label">Password</label>
-                <input type="password" class="form-control" name="password" id="password" required>
-            </div>
-            <button type="submit" class="btn btn-light">Login</button>
-            <button type="button" class="btn btn-dark" onclick="location.href='register'">Register</button>
+            <button type="submit" class="btn btn-light">Back to login</button>
             <button type="button" class="btn btn-primary" onclick="location.href='/?pageid=1'">Home</button>
         </form>
         <?php if (isset($loginError)): ?>
