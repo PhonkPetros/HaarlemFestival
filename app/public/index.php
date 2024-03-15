@@ -111,7 +111,7 @@ if ($pageID || $eventID || $editPageID || $sectionEdit) {
                 }
                 break;
             case '3':
-                $controller = new Dancecontroller(); 
+                $controller = new Dancecontroller();
                 if ($method === 'GET') {
                     $controller->show();
                 }
@@ -228,7 +228,7 @@ switch ($request) {
         break;
     case '/admin/delete-user':
         $controller = new admincontroller();
-        if ($method === 'POST' && isset($_POST['user_id'])) {
+        if ($method === 'POST' && isset ($_POST['user_id'])) {
             $controller->deleteUsers();
         }
         break;
@@ -320,13 +320,25 @@ switch ($request) {
             $controller->deleteSection();
         }
         break;
-        case '/delete-page':
-            $controller = new Pagecontroller();
-            if ($method === 'POST') {
-                $controller->deletePage();
-            }
-            break;
-        
+    case '/delete-page':
+        $controller = new Pagecontroller();
+        if ($method === 'POST') {
+            $controller->deletePage();
+        }
+        break;
+    case "/editResturantDetails/updateRestaurantDetails":
+        $controller = new Restaurantcontroller();
+        if ($method === 'POST') {
+            $controller->updateRestaurantDetails();
+        }
+        break;
+    case "/editResturantDetails/addTimeSlot":
+        $controller = new Restaurantcontroller();
+        if ($method === 'POST') {
+            $controller->addTimeSlot();
+        }
+        break;
+
     default:
         http_response_code(404);
         $navigation = new Navigationcontroller();
