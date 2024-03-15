@@ -23,6 +23,17 @@ class resetpasswordcontroller
         require_once '../views/general_views/new-password.php';
     }
 
+    public function successfulNewPassword ()
+    {
+        require_once'../views/general_views/password-updated.php';
+    }
+
+    public function showLinkSuccessfullySent()
+    {
+        require_once'../views/general_views/reset-link-sent';
+
+    }
+
     public function resetpasswordAction()
     {
         if ($_SERVER["REQUEST_METHOD"] == "POST") {

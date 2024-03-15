@@ -18,7 +18,7 @@
                 <label for="username" class="form-label">Enter your email</label>
                 <input type="text" class="form-control" name="email" id="email" required>
             </div>
-            <button type="submit" class="btn btn-light">Back to login</button>
+            <button type="button" class="btn btn-primary" onclick="location.href='/reset-password'">Send me email</button>
             <button type="button" class="btn btn-primary" onclick="location.href='/?pageid=1'">Home</button>
         </form>
         <?php if (isset($loginError)): ?>

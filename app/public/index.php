@@ -193,6 +193,13 @@ switch ($request) {
         }
         break;
 
+    case '/success-reset-password':
+        $controller = new resetpasswordcontroller();
+        if ($method === 'GET') {
+            $controller->successfulNewPassword();
+        }
+        break;
+
     case '/register':
         $controller = new registercontroller();
         if ($method === 'GET') {
