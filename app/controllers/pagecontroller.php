@@ -14,7 +14,7 @@ use services\ContentService;
 
 require_once __DIR__ . "/../services/pageservice.php";
 require_once __DIR__ . "/../services/contentservice.php";
-
+require_once __DIR__ . '/../config/constant-paths.php';
 require_once __DIR__ . "/../model/carousel.php";
 require_once __DIR__ . "/../model/editor.php";
 require_once __DIR__ . "/../model/image.php";
@@ -31,11 +31,11 @@ class Pagecontroller
     private $imageModel;
     private $contentService;
 
+
     public function __construct()
     {
         $this->pageService = new Pageservice();
         $this->contentService = new ContentService();
-
     }
 
     public function editContent()
@@ -50,19 +50,22 @@ class Pagecontroller
     {
         $sectionID = htmlspecialchars($_GET["section_id"] ?? '');
         $sectionTitle = $this->pageService->getSectionTitle($sectionID);
-
+      
         $sectionData = $this->pageService->getSectionContentImagesCarousel($sectionID)[0] ?? null;
-
+        $sectionType = $this->pageService->getType($sectionID);
+    
         $editorContent = null;
         $imageFilePath = null;
+        $pageIDFromSection = $sectionData['page_id'] ?? '';
         $carouselItems = $this->getCarouselImagesForHistory($sectionID);
         if ($sectionData) {
             $editorContent = $sectionData['editor_content'] ?? null;
             $imageFilePath = $sectionData['image_file_path'] ?? null;
         }
-
+    
         require_once __DIR__ . "/../views/admin/page-managment/editSection.php";
     }
+    
 
 
     public function updateContent()
@@ -72,6 +75,7 @@ class Pagecontroller
             $sectionID = $_POST['section_id'];
             $content = empty($_POST['content']) ? null : $_POST['content'];
             $title = $_POST['sectionTitle'];
+            $type = htmlspecialchars($_POST['newType']);
 
             $newImage = $_FILES['newImage'] ?? null;
             $path = '/img/uploads/';
@@ -114,6 +118,7 @@ class Pagecontroller
 
                 $this->pageService->updateSectionContent($sanitizedSectionID, $content, $newImage);
                 $this->pageService->updateSectionTitle($sectionID, $title);
+                $this->pageService->updateType($sectionID, $type);
                 $pageID = $this->pageService->getSectionPageId($sanitizedSectionID);
 
                 if ($pageID !== null) {

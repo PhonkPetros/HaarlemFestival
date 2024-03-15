@@ -71,4 +71,12 @@ class Pageservice
     public function createPage($newPageName, $amountOfSections){
         return $this->pagerepo->createPage($newPageName, $amountOfSections);
     }
+
+    public function updateType($sectionID, $type){
+        return $this->pagerepo->updateSectionType($sectionID, $type);
+    }
+
+    public function getType($sectionID){
+        return $this->pagerepo->getType($sectionID);
+    }
 }

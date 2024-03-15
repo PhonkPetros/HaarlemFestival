@@ -1,6 +1,14 @@
 <?php
 namespace model;
 
+enum Type {
+    case Banner;
+    case Body;
+    case Title;
+    case Image;
+    case Carousel; 
+}
+
 class Section implements \JsonSerializable
 {
     private int $section_id;
@@ -8,6 +16,7 @@ class Section implements \JsonSerializable
     private ?int $image_id;
     private int $page_id;
     private string $title;
+    private string $type;
 
     public function getSectionId(): int {
         return $this->section_id;
@@ -28,8 +37,17 @@ class Section implements \JsonSerializable
     public function setTitle(string $title): void{
         $this->title = $title;
     }
+
     public function setEditorId(?int $editor_id): void {
         $this->editor_id = $editor_id;
+    }
+
+    public function getType(): string {
+        return $this->type; 
+    }
+
+    public function setType(string $type): void{ 
+        $this->type = $type;
     }
 
     public function getImageId(): ?int { 
@@ -55,6 +73,8 @@ class Section implements \JsonSerializable
             'image_id' => $this->getImageId(),
             'page_id' => $this->getPageId(),
             'title'=> $this->getTitle(),
+            'type'=> $this->getType() 
         ];
     }
 }
+?>

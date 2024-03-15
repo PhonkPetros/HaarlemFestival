@@ -10,19 +10,24 @@
             <table class="table table-bordered table-hover">
                 <thead>
                     <tr>
-                        <th>Section ID</th>
+                        <th>Section Nr</th>
                         <th>Title</th>
+                        <th>Section Type</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
+                    <?php $sectionCount = 1; ?>
                     <?php foreach ($allSections as $section): ?>
                         <tr>
                             <td>
-                                <?php echo htmlspecialchars($section->getSectionId()); ?>
+                                <?php echo htmlspecialchars($sectionCount); ?>
                             </td>
                             <td>
                                 <?php echo htmlspecialchars($section->getTitle()); ?>
+                            </td>
+                            <td>
+                                <?php echo htmlspecialchars($section->getType()); ?>
                             </td>
                             <td>
                                 <a href="/sectionEdit/?section_id=<?php echo urlencode($section->getSectionId()); ?>"
@@ -35,11 +40,12 @@
                                 </form>
                             </td>
                         </tr>
+                        <?php $sectionCount++; ?>
                     <?php endforeach; ?>
-
                 </tbody>
             </table>
-            <a href="/admin/page-management/editfestival" class="btn btn-danger" style="margin-bottom: 20px">Go Back</a>
+            <a href="/admin/page-management/editfestival" class="btn btn-danger"
+                style="margin-bottom: 20px">Go Back</a>
         </div>
     <?php else: ?>
         <p>No sections found for this page.</p>

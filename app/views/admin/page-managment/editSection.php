@@ -1,5 +1,6 @@
 <?php include __DIR__ . '/../../general_views/adminheader.php'; ?>
 
+
 <div class="container my-5">
 
     <form method="POST" action="/sectionEdit/?section_id=<?php echo urlencode($sectionID); ?>"
@@ -9,8 +10,21 @@
         <div class="mb-3">
             <label for="sectionTitle" class="form-label">Section Title</label>
             <input type="text" class="form-control" id="sectionTitle" name="sectionTitle"
-                value="<?php echo htmlspecialchars($sectionTitle); ?>" required>
+                value="<?php echo htmlspecialchars($sectionType); ?>" required>
         </div>
+
+        <div class="mb-3">
+            <label for="sectionType" class="form-label">Section Type</label>
+            <select name="newType" id="sectionType" class="form-select" <?php echo in_array($pageIDFromSection, [PAGE_ID_HOME, PAGE_ID_HISTORY, PAGE_ID_DANCE, PAGE_ID_JAZZ, PAGE_ID_YUMMY]) ? 'disabled' : ''; ?>>
+                <option value="Banner" <?php echo ($sectionType === 'Banner') ? 'selected' : ''; ?>>Banner</option>
+                <option value="Body" <?php echo ($sectionType === 'Body') ? 'selected' : ''; ?>>Body</option>
+                <option value="Title" <?php echo ($sectionType === 'Title') ? 'selected' : ''; ?>>Title</option>
+                <option value="Image" <?php echo ($sectionType === 'Image') ? 'selected' : ''; ?>>Image</option>
+                <option value="Carousel" <?php echo ($sectionType === 'Carousel') ? 'selected' : ''; ?>>Carousel</option>
+            </select>
+        </div>
+
+
 
         <?php if ($editorContent !== null): ?>
             <div class="mb-3">
@@ -39,11 +53,11 @@
                     <img src="/img/uploads/<?php echo htmlspecialchars($imageFilePath); ?>" class="img-fluid img-thumbnail"
                         alt="Current Image">
                 </div>
-           
+
                 <input class="form-control" type="file" id="formFile" name="newImage">
             </div>
         <?php endif; ?>
-        <?php if (!empty($carouselItems['carouselItems'])): ?>
+        <?php if (!empty ($carouselItems['carouselItems'])): ?>
             <div class="mb-3">
                 <label class="form-label">Carousel Items</label>
                 <div class="row g-3">
@@ -56,7 +70,7 @@
                                 <div class="card-body">
                                     <div class="mb-2">
                                         <input type="hidden" name="carouselId[<?php echo $index; ?>]"
-                                            value="<?php echo isset($carouselItem['carousel_id']) ? htmlspecialchars($carouselItem['carousel_id']) : 'ID not set'; ?>"
+                                            value="<?php echo isset ($carouselItem['carousel_id']) ? htmlspecialchars($carouselItem['carousel_id']) : 'ID not set'; ?>"
                                             readonly>
                                     </div>
                                     <input type="file" name="carouselImage[<?php echo $index; ?>]" class="form-control mb-2">
