@@ -10,7 +10,6 @@ class Dancecontroller
     private $navcpntroller;
     public function __construct() {
         $this->navcpntroller = new NavigationController();
-        
     }
 
     public function show()

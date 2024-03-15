@@ -2,32 +2,38 @@
 
 namespace controllers;
 
-use services\resetpasswordService;
-require_once __DIR__ . '/../services/resetpassword.php';
+use services\ResetPasswordService;
+require_once __DIR__ . '/../services/resetpasswordservice.php';
 
 class resetpasswordcontroller
 {
     private $resetpasswordService;
   
     public function __construct() {
-        $this->resetpasswordService = new resetpasswordService();
+        $this->resetpasswordService = new ResetPasswordService();
     }
 
-    public function show()
+    public function showResetPasswordForm()
     {
-        require_once '../views/reset-password.php';
+        require_once '../views/general_views/reset-password.php';
+    }
+
+    public function showNewPasswordForm()
+    {
+        require_once '../views/general_views/new-password.php';
     }
 
     public function resetpasswordAction()
     {
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $email = htmlspecialchars($_POST["email"]);
-            $newPassword = htmlspecialchars($_POST["newPassword"]);
-
-            if (!$authenticated) {
-                $loginError = "Invalid username or password.";
-                require_once '../views/login.php'; 
-            }
         }
+    }
+
+    public function checkToken() {
+        if ($_SERVER["REQUEST_METHOD"] == "GET") {
+            $email = htmlspecialchars($_GET["token"]);
+        }
+        
     }
 }

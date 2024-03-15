@@ -58,7 +58,8 @@ class Historycontroller
 
 
     public function addNewTimeSlot()
-    {
+    {   
+        //is this if statement necessary? and shouldnt this be in our service instead?
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $eventId = htmlspecialchars($_POST['event_id'] ?? null);
             $date = htmlspecialchars($_POST['date'] ?? null);

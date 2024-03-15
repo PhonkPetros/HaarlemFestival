@@ -15,6 +15,7 @@ use controllers\overview;
 use controllers\Templatecontroller;
 use controllers\yummycontroller;
 use controllers\Pagecontroller;
+use controllers\resetpasswordcontroller;
 
 require_once __DIR__ . '/../controllers/overview.php';
 require_once __DIR__ . '/../controllers/registercontroller.php';
@@ -30,6 +31,7 @@ require_once __DIR__ . '/../controllers/navigationcontroller.php';
 require_once __DIR__ . '/../controllers/pagecontroller.php';
 require_once __DIR__ . '/../controllers/templatecontroller.php';
 require_once __DIR__ . '/../controllers/yummycontroller.php';
+require_once __DIR__ . '/../controllers/resetpasswordcontroller.php';
 
 $request = $_SERVER['REQUEST_URI'];
 $method = $_SERVER['REQUEST_METHOD'];
@@ -72,7 +74,7 @@ if ($pageID || $eventID || $editPageID || $sectionEdit) {
             case '6':
                 $controller = new Jazzcontroller();
                 if ($method === 'GET') {
-                    $controller->editEventDetails();
+                    $controller->showEventDetails();
                 }
                 break;
             case '7':
@@ -158,7 +160,6 @@ if ($pageID || $eventID || $editPageID || $sectionEdit) {
         exit;
     }
 }
-
 if (preg_match("/^\/restaurant\/details\/(\d+)$/", $request, $matches)) {
     $restaurantId = $matches[1]; // This captures the numeric ID from the URL.
     $controller = new yummycontroller();
@@ -168,6 +169,7 @@ if (preg_match("/^\/restaurant\/details\/(\d+)$/", $request, $matches)) {
     exit;
 }
 
+//Add routes for actions or admin routes that do not have to do with displaying detail pages or overview pages for your individual events
 switch ($request) {
     case '/login':
         $controller = new logincontroller();
@@ -177,13 +179,21 @@ switch ($request) {
             $controller->loginAction();
         }
         break;
-
     case '/reset-password':
         $controller = new resetpasswordcontroller();
         if ($method === 'GET') {
-            $controller->show();
+            $controller->showResetPasswordForm();
         } elseif ($method === 'POST') {
-            $controller->loginAction();
+            $controller->resetpasswordAction();
+        }
+        break;
+
+    case '/new-password':
+        $controller = new resetpasswordcontroller();
+        if ($method === 'GET') {
+            $controller->showNewPasswordForm();
+        } elseif ($method === 'POST') {
+            $controller->resetPasswordAction();
         }
         break;
 
@@ -214,7 +224,7 @@ switch ($request) {
         break;
     case '/admin/delete-user':
         $controller = new admincontroller();
-        if ($method === 'POST' && isset($_POST['user_id'])) {
+        if ($method === 'POST' && isset ($_POST['user_id'])) {
             $controller->deleteUsers();
         }
         break;
@@ -324,6 +334,7 @@ switch ($request) {
             $controller->addTimeSlot();
         }
         break;
+
     default:
         http_response_code(404);
         $navigation = new Navigationcontroller();
