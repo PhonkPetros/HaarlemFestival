@@ -125,7 +125,7 @@ body, html {
   width: 100%;
   padding: 20px;
   background-color: #fff;
-  height: 100vh;
+  height: 55vh;
   box-sizing: border-box;
 }
 
@@ -169,3 +169,71 @@ h1 {
   }
 }
 
+/* Custom CSS for the Timeslots table and centering */
+.table-wrapper {
+  padding: 20px; /* Adjust padding as needed */
+  text-align: center; /* Center the table */
+}
+
+.table-dark {
+  /* Optional: Additional styling for the dark table */
+  background-color: #343a40;
+  color: #fff;
+}
+
+.table-dark th,
+.table-dark td {
+  border-color: #454d55;
+}
+
+.table-dark thead th {
+  background-color: #212529;
+  border-color: #454d55;
+}
+
+.table-dark th,
+.table-dark td {
+  padding: 0.75rem;
+}
+
+.table-dark th {
+  font-weight: bold;
+}
+
+
+.akm-49 {
+  display: flex; /* Use flexbox for layout */
+}
+
+.info {
+  display: flex; /* Nested flexbox for picture and content */
+  flex: 1; /* Allow content to take remaining space */
+}
+
+.picture {
+  flex: 0 0 30%; /* Set width of picture column */
+  margin-right: 20px; /* Add some spacing between picture and content */
+}
+
+.picture img {
+  max-width: 100%; /* Ensure picture doesn't exceed column width */
+  height: auto; /* Maintain aspect ratio */
+}
+
+.content {
+  flex: 1; /* Allow content to take remaining space */
+}
+
+.gallery{
+  display: flex;
+  justify-content: center;
+}
+
+.location-google-maps{
+  display: flex;
+  justify-content: center;
+}
+
+.img-location{
+  width: 100%;
+}
