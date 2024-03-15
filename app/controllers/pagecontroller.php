@@ -221,8 +221,7 @@ class Pagecontroller
         return $pageDetails;
     }
 
-    public function getContentAndImagesByPage()
-    {
+    public function getContentAndImagesByPage() {
         $pageId = htmlspecialchars($_GET['pageid']);
         $sections = $this->pageService->getSectionContentImages($pageId);
         $contentData = [];
@@ -231,12 +230,13 @@ class Pagecontroller
                 'title' => $section['title'],
                 'content' => $section['editor_content'] ?? null,
                 'image' => $section['image_file_path'] ?? null,
+                'type' => $section['type'] ?? null, // Ensure 'type' is included here.
             ];
             $contentData[] = $sectionData;
         }
         return $contentData;
     }
-
+    
     public function getCarouselImagesForHistory($sectionID)
     {
         $carouselItems = $this->contentService->getCarouselItemsBySectionId($sectionID);

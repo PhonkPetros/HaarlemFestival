@@ -10,7 +10,7 @@
         <div class="mb-3">
             <label for="sectionTitle" class="form-label">Section Title</label>
             <input type="text" class="form-control" id="sectionTitle" name="sectionTitle"
-                value="<?php echo htmlspecialchars($sectionType); ?>" required>
+                value="<?php echo htmlspecialchars($sectionTitle); ?>" required>
         </div>
 
         <div class="mb-3">
@@ -20,11 +20,9 @@
                 <option value="Body" <?php echo ($sectionType === 'Body') ? 'selected' : ''; ?>>Body</option>
                 <option value="Title" <?php echo ($sectionType === 'Title') ? 'selected' : ''; ?>>Title</option>
                 <option value="Image" <?php echo ($sectionType === 'Image') ? 'selected' : ''; ?>>Image</option>
-                <option value="Carousel" <?php echo ($sectionType === 'Carousel') ? 'selected' : ''; ?>>Carousel</option>
+                <option value="ImageText" <?php echo ($sectionType === 'ImageText') ? 'selected' : ''; ?>>Image & Text</option>
             </select>
         </div>
-
-
 
         <?php if ($editorContent !== null): ?>
             <div class="mb-3">

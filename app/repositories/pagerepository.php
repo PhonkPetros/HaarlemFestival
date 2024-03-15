@@ -75,7 +75,7 @@ class Pagerepository extends dbconfig
         $sections = [];
         try {
             $stmt = $this->connection->prepare("
-                SELECT s.*, e.content as editor_content, i.file_path as image_file_path
+                SELECT s.*, e.content as editor_content, i.file_path as image_file_path, s.type
                 FROM section s
                 LEFT JOIN editor e ON s.editor_id = e.id
                 LEFT JOIN image i ON s.image_id = i.image_id
@@ -88,9 +88,10 @@ class Pagerepository extends dbconfig
         } catch (PDOException $e) {
             error_log('Failed to fetch sections with content and images: ' . $e->getMessage());
         }
-
+    
         return $sections;
     }
+    
 
     public function getSectionContentImagesCarousel($sectionId)
     {
