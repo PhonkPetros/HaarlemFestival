@@ -73,6 +73,7 @@ class resturantrepository extends dbconfig {
         }
     }
 
+
     public function getTicketTimeslotsForResturant($id) {
         $times = [];
         try {
@@ -138,6 +139,58 @@ class resturantrepository extends dbconfig {
     
         return $timeslots;
     }
+
+
+    public function getRestaurantByIdWithTimeslots($restaurantId) {
+        $restaurantDetails = null;
+        try {
+            $stmt = $this->connection->prepare(
+                "SELECT [Event].*, Ticket.ticket_hash, Ticket.date AS ticket_date, Ticket.time AS ticket_time, Ticket.quantity 
+                FROM [Event] 
+                LEFT JOIN Ticket ON [Event].event_id = Ticket.event_id 
+                WHERE [Event].event_id = :restaurantId AND [Event].name = 'Restaurant'"
+            );
+    
+            $stmt->bindValue(':restaurantId', $restaurantId, PDO::PARAM_INT);
+            $stmt->execute();
+    
+            $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $timeslots = [];
+            
+            if ($results) {
+                foreach ($results as $result) {
+                    if (!$restaurantDetails) {
+                        $restaurantDetails = new \model\Restaurant();
+                        $restaurantDetails->setId($result['event_id']);
+                        $restaurantDetails->setLocation($result['location']);
+                        $restaurantDetails->setPrice($result['price']);
+                        $restaurantDetails->setSeats(isset($result['seats']) ? (int)$result['seats'] : null);
+                        $restaurantDetails->setStartDate($result['startDate']);
+                        $restaurantDetails->setEndDate($result['endDate']);
+                        $restaurantDetails->setPicture($result['picture']);
+                    }
+                    
+                    if ($result['ticket_hash']) { // Check if there is a ticket associated with this event
+                        $ticket = new \model\Ticket();
+                        $ticket->setEventId($result['event_id']);
+                        $ticket->setTicketHash($result['ticket_hash']);
+                        $ticket->setTicketDate($result['ticket_date']);
+                        $ticket->setTicketTime($result['ticket_time']);
+                        $ticket->setQuantity($result['quantity']);
+                        $timeslots[] = $ticket;
+                    }
+                }
+    
+                
+            }
+    
+            return $restaurantDetails;
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+            return null;
+        }
+    }
+    
     
 
     

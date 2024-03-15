@@ -32,5 +32,9 @@ class RestaurantService
         return $this->restaurantRepo->getTicketTimeslotsForRestaurant();
     }
 
+    public function getRestaurantByIdWithTimeslots($id) {
+        return $this->restaurantRepo->getRestaurantByIdWithTimeslots($id);
+    }
+
     
 }
