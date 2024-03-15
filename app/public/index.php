@@ -76,7 +76,7 @@ if ($pageID || $eventID || $editPageID || $sectionEdit) {
             case '6':
                 $controller = new Jazzcontroller();
                 if ($method === 'GET') {
-                    $controller->editEventDetails();
+                    $controller->showEventDetails();
                 }
                 break;
             case '7':

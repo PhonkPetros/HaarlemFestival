@@ -3,6 +3,11 @@ namespace model;
 
 class Event implements \JsonSerializable
 {
+    private $artist;
+    private $dayPass;
+    private $allDayPass;
+    private $seats;
+    
     private int $event_id;
     private string $name;
     private string $startDate;
