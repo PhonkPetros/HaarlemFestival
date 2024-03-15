@@ -1,0 +1,246 @@
+.container-50-off{
+    display: flex;
+    flex-direction: column;
+    font-weight: bold;
+    padding-bottom: 30px;
+    flex-wrap: wrap;
+    align-content: center;
+    font-size: 50px;
+
+}
+
+body{
+    background: url('../img/25192f4eda302e18aece7516878ae9e5.jpg') no-repeat center center fixed;
+    background-size: cover;
+}
+
+.resturant-description{
+    text-align: center;
+    font-size: 25px;
+}
+
+.how-does-it-work{
+    text-align: center;
+    padding-bottom: 25px;
+    font-size: 50px;
+}
+
+.participants-section {
+    padding: 20px; /* Add padding to match the design */
+  }
+  
+  .participants-section h2 {
+    font-size: 24px; /* Adjust the font size as needed */
+    margin-bottom: 10px; /* Add some space below the heading */
+  }
+  
+  .participants-section p {
+    font-size: 18px; /* Adjust the font size as needed */
+    margin-bottom: 10px; /* Space between the paragraph and other elements */
+  }
+  
+  .reason {
+    background-color: #fff; /* White background for the text block */
+    padding: 10px; /* Padding inside the text block */
+    border-radius: 5px; /* Rounded corners for the text block */
+  }
+  
+  .restaurant-icon {
+    float: right; /* Align the icon to the right */
+    margin-left: 20px; /* Space between the icon and the text */
+  }
+  
+  .restaurant-icon img {
+    width: 100px; /* Adjust width as necessary */
+    height: auto; /* Keep the aspect ratio of the image */
+  }
+
+  .white-background{
+    background-color: white;
+  }
+  
+
+  .wrapper-pictures {
+    position: relative;
+    text-align: left;
+}
+
+.wrapper-pictures img {
+    width:85%;
+    height: auto;
+}
+
+.wrapper-pictures h2 {
+    position: absolute;
+    top: 50%;
+    left: 9.5%;
+    transform: translateY(-50%);
+    color: white; /* Adjust the color to improve visibility */
+    z-index: 2;
+    font-size: 50px;
+}
+
+.paragraph-inside-image {
+    position: absolute;
+    top: 65%;
+    right: 50%;
+    transform: translateY(-50%);
+    color: white; /* Adjust the color to improve visibility */
+    width: 40%; /* Adjust based on your needs */
+    z-index: 2;
+}
+
+
+.paragraph-with-image-container {
+    position: relative; /* Establishes a positioning context for absolute positioning */
+    display: flex; /* Utilizes flexbox for layout */
+    align-items: center; /* Centers items vertically */
+    justify-content: space-between; /* Spaces out the paragraph and image */
+    padding: 20px; /* Adds some padding around the content */
+  }
+  
+  .paragraph-with-image-container p {
+    width: 60%; /* Adjusts the paragraph width to leave space for the image */
+    margin: 0; /* Removes default margin */
+  }
+  
+  .paragraph-with-image-container img {
+    position: absolute; /* Positions the image absolutely within the container */
+    right: 0; /* Aligns the image to the right edge of the container */
+    top: 50%; /* Centers the image vertically */
+    transform: translateY(-50%); /* Ensures the image is centered with respect to its height */
+    width: 35%; /* Adjusts the image width, ensuring it does not occupy the full container width */
+    height: auto; /* Maintains the aspect ratio of the image */
+  }
+  
+
+
+/* Tablet devices (768px) */
+@media (max-width: 768px) {
+    .wrapper-pictures img {
+      width: 100%; /* Adjust image width to take full container width */
+    }
+    
+    .wrapper-pictures h2, .paragraph-inside-image {
+      font-size: 30px; /* Adjust font size for readability */
+      left: 5%; /* Adjust positioning */
+      right: 5%; /* Adjust positioning for paragraph */
+      width: 90%; /* Make the paragraph wider to fit the screen */
+    }
+  
+    .paragraph-inside-image {
+      top: 70%; /* Adjust the paragraph position to not overlap with the heading */
+    }
+  }
+  
+  /* Mobile devices (480px and below) */
+  @media (max-width: 480px) {
+    .wrapper-pictures h2, .paragraph-inside-image {
+      font-size: 20px; /* Further reduce font size for small screens */
+      left: 5%; /* Adjust positioning */
+      right: 5%; /* Adjust positioning for paragraph */
+      width: 90%; /* Adjust paragraph width to fit smaller screens */
+    }
+  
+    .paragraph-inside-image {
+      top: 80%; /* Further adjust the paragraph position for better visibility */
+    }
+  }
+
+  .wrapper-pictures img.my-image {
+    width: 50%;
+    height: auto;
+    float: left;
+}
+
+.wrapper-pictures img.my-image-right {
+    width: 50%;
+    height: auto;
+    float: right;
+}
+
+/* Clearfix for the floated images */
+.wrapper-pictures::after {
+    content: "";
+    clear: both;
+    display: table;
+}
+
+/* Ensure the text is visible over the images */
+.wrapper-pictures h2, 
+.wrapper-pictures .paragraph-inside-image {
+    position: absolute;
+    color: white;
+    z-index: 10;
+}
+
+.wrapper-pictures h2 {
+    top: 33%;
+    left: 4%;
+    width: 40%;
+}
+
+.wrapper-pictures .paragraph-inside-image {
+    top: 50%;
+    left: 5%;
+    width: 40%;
+}
+.participants-box{
+  display: flex;
+  padding: 30px;
+  margin: 17px;
+
+}
+
+.restaurant-overview{
+  background-color: white;
+  border-radius: 25px;
+  padding: 10px;
+}
+
+.participants-subtitle{
+  color:#fff;
+  padding: 10px;
+  font-size: 50px;
+}
+
+.participants-description{
+  color:#fff;
+  font-size: 32px;
+  padding: 10px;
+}
+
+.participants-title{
+  display: flex;
+  padding: 10px;
+  font-size: 75px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .wrapper-pictures img.my-image,
+    .wrapper-pictures img.my-image-right {
+        width: 100%;
+        float: none;
+        display: block;
+        margin: 0 auto;
+    }
+
+    .wrapper-pictures h2, 
+    .wrapper-pictures .paragraph-inside-image {
+        position: relative;
+        left: 0;
+        width: 90%;
+        text-align: center;
+    }
+
+    .wrapper-pictures h2 {
+        top: 0;
+    }
+
+    .wrapper-pictures .paragraph-inside-image {
+        top: 60%;
+    }
+}
+
+  

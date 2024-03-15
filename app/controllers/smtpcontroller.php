@@ -4,30 +4,37 @@ namespace controllers;
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
+use smtpconfig\smtpconfig;
+
 
 require_once __DIR__ . '/../PHPMailer-master/src/PHPMailer.php';
 require_once __DIR__ . '/../PHPMailer-master/src/Exception.php';
 require_once __DIR__ . '/../PHPMailer-master/src/SMTP.php';
+require_once __DIR__ . '/../config/smtpconfig.php';
 
 class SMTPController
 {
     private $mailer;
+    private $config;
+
 
     public function __construct()
     {
         $this->mailer = new PHPMailer(true);
+        $configClass = new smtpconfig(); 
+        $this->config = $configClass->getConfiguration();
     }
 
     public function sendEmail($toEmail, $toName, $subject, $message)
     {
-        try {
+        try { 
             $this->mailer->isSMTP();
-            $this->mailer->Host = 'smtp.gmail.com';
-            $this->mailer->SMTPAuth = true;
-            $this->mailer->Username = 'protata93@gmail.com';
-            $this->mailer->Password = 'xhno spiv iump ltna';
-            $this->mailer->SMTPSecure = 'ssl';
-            $this->mailer->Port = 465;
+            $this->mailer->Host = $this->config['smtp']['host'];
+            $this->mailer->SMTPAuth = $this->config['smtp']['auth'];
+            $this->mailer->Username = $this->config['smtp']['username'];
+            $this->mailer->Password = $this->config['smtp']['password'];
+            $this->mailer->SMTPSecure = $this->config['smtp']['secure'];
+            $this->mailer->Port = $this->config['smtp']['port'];
 
             $this->mailer->setFrom('harlemitofestival@gmail.com', 'HaarlemFestival'); 
             $this->mailer->addAddress($toEmail, $toName);

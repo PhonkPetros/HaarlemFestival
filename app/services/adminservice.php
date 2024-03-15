@@ -7,6 +7,7 @@ use repositories\registerrepository;
 require_once __DIR__ . '/../repositories/AdminRepository.php'; 
 require_once __DIR__ . '/../repositories/registerrepository.php'; 
 
+
 class AdminService {
     private $adminRepository;
     private $registerRepository;

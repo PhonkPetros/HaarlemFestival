@@ -32,6 +32,7 @@ require_once __DIR__ . '/../controllers/jazzcontroller.php';
 require_once __DIR__ . '/../controllers/navigationcontroller.php';
 require_once __DIR__ . '/../controllers/pagecontroller.php';
 require_once __DIR__ . '/../controllers/templatecontroller.php';
+require_once __DIR__ . '/../controllers/yummycontroller.php';
 
 $request = $_SERVER['REQUEST_URI'];
 $method = $_SERVER['REQUEST_METHOD'];
@@ -55,6 +56,8 @@ if (strpos($request, '/edit-content/') === 0) {
 if (strpos($request, '/sectionEdit/') === 0) {
     $sectionEdit = htmlspecialchars($queryParams['section_id'] ?? '');
 }
+
+
 
 
 //Please do not touch this
@@ -122,7 +125,7 @@ if ($pageID || $eventID || $editPageID || $sectionEdit) {
             case '5':
                 $controller = new yummycontroller();
                 if ($method === 'GET') {
-                    $controller->showYummy();
+                    $controller->showYummyOverview();
                 }
                 break;
             default;
@@ -301,13 +304,24 @@ switch ($request) {
             $controller->deleteSection();
         }
         break;
-        case '/delete-page':
-            $controller = new Pagecontroller();
-            if ($method === 'POST') {
-                $controller->deletePage();
-            }
-            break;
-        
+    case '/delete-page':
+        $controller = new Pagecontroller();
+        if ($method === 'POST') {
+            $controller->deletePage();
+        }
+        break;
+    case "/editResturantDetails/updateRestaurantDetails":
+        $controller = new Restaurantcontroller();
+        if ($method === 'POST') {
+            $controller->updateRestaurantDetails();
+        }
+        break;
+    case "/editResturantDetails/addTimeSlot":
+        $controller = new Restaurantcontroller();
+        if ($method === 'POST') {
+            $controller->addTimeSlot();
+        }
+        break;
     default:
         http_response_code(404);
         $navigation = new Navigationcontroller();

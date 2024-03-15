@@ -63,4 +63,5 @@ class NavigationController
     private function addPages($pageIds) {
         return $this->navigationService->addPages($pageIds);
     }
+    
 }
