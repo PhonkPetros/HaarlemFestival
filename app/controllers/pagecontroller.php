@@ -68,10 +68,8 @@ class Pagecontroller
     
 
 
-    public function updateContent()
-    {
+    public function updateContent() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['section_id'])) {
-
             $sectionID = $_POST['section_id'];
             $content = empty($_POST['content']) ? null : $_POST['content'];
             $title = $_POST['sectionTitle'];
@@ -79,62 +77,37 @@ class Pagecontroller
 
             $newImage = $_FILES['newImage'] ?? null;
             $path = '/img/uploads/';
+            $imageAction = null;
 
-            $carouselImages = $_FILES['carouselImage'] ?? null;
-
-            $carouselLabels = $_POST['carouselLabel'] ?? null;
-            $carouselIds = $_POST['carouselId'] ?? null;
-
-            if (is_array($carouselIds)) {
-                foreach ($carouselIds as $index => $carouselId) {
-                    $newImagePath = null;
-
-                    if (isset($carouselImages['name'][$index]) && $carouselImages['error'][$index] == UPLOAD_ERR_OK) {
-
-                        $newImagePath = $this->uploadImage([
-                            'name' => $carouselImages['name'][$index],
-                            'type' => $carouselImages['type'][$index],
-                            'tmp_name' => $carouselImages['tmp_name'][$index],
-                            'error' => $carouselImages['error'][$index],
-                            'size' => $carouselImages['size'][$index],
-                        ], $path);
-                    }
-
-                    if ($newImagePath !== null || !empty($carouselLabels[$index])) {
-                        $this->contentService->updateCarouselItem($carouselId, $newImagePath, $carouselLabels[$index]);
-                    }
+            $resetImage = isset($_POST['resetImage']) && $_POST['resetImage'] == 1;
+            if ($resetImage) {
+                $imageAction = ['name' => 'default.png']; 
+            } elseif ($newImage && $newImage['error'] == UPLOAD_ERR_OK) {
+                $uploadedImageName = $this->uploadImage($newImage, $path);
+                if ($uploadedImageName) {
+                    $imageAction = ['name' => $uploadedImageName];
                 }
             }
 
-            if ($newImage && $newImage['error'] == UPLOAD_ERR_OK) {
-                $image = $this->uploadImage($newImage, $path);
-            } else {
-                $image = null;
-            }
-
-            $sanitizedSectionID = filter_var($sectionID, FILTER_SANITIZE_NUMBER_INT);
 
             try {
-
-                $this->pageService->updateSectionContent($sanitizedSectionID, $content, $newImage);
+                $this->pageService->updateSectionContent($sectionID, $content, $imageAction ?? []);
                 $this->pageService->updateSectionTitle($sectionID, $title);
                 $this->pageService->updateType($sectionID, $type);
-                $pageID = $this->pageService->getSectionPageId($sanitizedSectionID);
 
+
+                $pageID = $this->pageService->getSectionPageId($sectionID);
                 if ($pageID !== null) {
                     header('Location: /edit-content/?id=' . $pageID);
                     exit();
                 } else {
-                    throw new Exception("Page ID not found for section ID: " . $sanitizedSectionID);
+                    throw new Exception("Page ID not found for section ID: " . $sectionID);
                 }
             } catch (Exception $e) {
-
                 error_log($e->getMessage());
-
             }
         }
     }
-
     private function uploadImage($imageFile, $uploadDirectory)
     {
         if (isset($imageFile) && $imageFile['error'] == UPLOAD_ERR_OK) {
