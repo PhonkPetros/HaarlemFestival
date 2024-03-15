@@ -1,0 +1,171 @@
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+th, td {
+    padding: 10px;
+    text-align: left;
+}
+
+.div {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  align-self: stretch;
+  position: relative;
+  min-height: 1174px;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  padding: 80px 60px;
+}
+@media (max-width: 991px) {
+  .div {
+    max-width: 100%;
+    padding: 0 20px;
+  }
+}
+.img {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+.div-2 {
+  position: relative;
+  display: flex;
+  width: 1000px;
+  max-width: 100%;
+  flex-direction: column;
+  margin: 257px 0 204px;
+}
+@media (max-width: 991px) {
+  .div-2 {
+    margin: 40px 0;
+  }
+}
+.div-3 {
+  font: 400 200px Figtree, sans-serif;
+}
+@media (max-width: 991px) {
+  .div-3 {
+    max-width: 100%;
+    font-size: 40px;
+  }
+}
+.div-4 {
+  margin-top: 60px;
+  font: 600 50px Figtree, sans-serif;
+}
+@media (max-width: 991px) {
+  .div-4 {
+    max-width: 100%;
+    margin-top: 40px;
+    font-size: 40px;
+  }
+}
+
+.cuisine-container {
+  position: relative;
+  overflow: hidden;
+  border-bottom: 4px solid rgba(0, 0, 0, 1);
+  min-height: 227px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  padding: 67px 60px;
+  font: 400 110px Damion, sans-serif;
+}
+.cuisine-image {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+.cuisine-text {
+  position: relative;
+}
+@media (max-width: 991px) {
+  .cuisine-container {
+    max-width: 100%;
+    font-size: 40px;
+    padding: 0 20px;
+  }
+}
+
+body, html {
+  margin: 0;
+  padding: 0;
+  font-family: 'Arial', sans-serif;
+}
+
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chef-image {
+  /* You should replace `path-to-your-chefs-image.jpg` with the actual path to the chef's image */
+  background-image: url('path-to-your-chefs-image.jpg');
+  background-size: cover;
+  width: 50%;
+  height: 100vh;
+}
+
+.info {
+  width: 100%;
+  padding: 20px;
+  background-color: #fff;
+  height: 100vh;
+  box-sizing: border-box;
+}
+
+h1 {
+  color: #003366;
+  font-size: 2.5em;
+}
+
+.rating {
+  color: #FFD700;
+  font-size: 1.5em;
+}
+
+.contact p {
+  font-size: 1.2em;
+  margin: 5px 0;
+}
+
+.book-table {
+  background-color: #003366;
+  color: white;
+  padding: 10px 20px;
+  font-size: 1em;
+  border: none;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+.star {
+  color: #ffd700;
+  font-size: 1.5em;
+}
+
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+  }
+  .chef-image, .info {
+    width: 100%;
+    height: auto;
+  }
+}
+

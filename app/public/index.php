@@ -201,7 +201,16 @@ if ($pageID || $eventID || $editPageID || $sectionEdit || $sectionDelete || $del
     }
 }
 
-//Add routes for actions or admin routes that do not have to do with displaying detail pages or overview pages for your individual events
+
+if (preg_match("/^\/restaurant\/details\/(\d+)$/", $request, $matches)) {
+    $restaurantId = $matches[1]; // This captures the numeric ID from the URL.
+    $controller = new yummycontroller();
+    if ($method === 'GET') {
+        $controller->showChoseResturant($restaurantId);
+    }
+    exit;
+}
+
 switch ($request) {
     case '/login':
         $controller = new logincontroller();
