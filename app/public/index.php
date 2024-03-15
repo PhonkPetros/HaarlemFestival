@@ -109,7 +109,7 @@ if ($pageID || $eventID || $editPageID || $sectionEdit) {
                 }
                 break;
             case '3':
-                $controller = new Dancecontroller();
+                $controller = new Dancecontroller(); 
                 if ($method === 'GET') {
                     $controller->show();
                 }
