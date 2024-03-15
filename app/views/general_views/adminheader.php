@@ -7,6 +7,8 @@
     <title>HAARLEM FESTIVALS</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <script src="https://cdn.tiny.cloud/1/dm3hxv1faylcg1xh3z1honx4wnt69zfinvo8edzoid1nltym/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+
+
     <link rel="stylesheet" href="/css/navbar.css">
     <link rel="stylesheet" href="/css/main.css">
     <link rel="stylesheet" href="/css/overview.css">

@@ -5,7 +5,7 @@ use repositories\navigationrepository;
 
 require_once __DIR__ . '/../repositories/navigationrepository.php';
 
-class navigationservice 
+class Navigationservice
 {
     private $navigationrepo;
     

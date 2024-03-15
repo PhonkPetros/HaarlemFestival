@@ -21,7 +21,7 @@
                     tinymce.init({
                         selector: '#editor',
                         height: 300,
-                        plugins: 'link image code',
+                        plugins: 'link code',
                         toolbar: 'undo redo | styleselect | bold italic | alignleft aligncenter alignright | code'
                     });
                 </script>
@@ -39,6 +39,7 @@
                     <img src="/img/uploads/<?php echo htmlspecialchars($imageFilePath); ?>" class="img-fluid img-thumbnail"
                         alt="Current Image">
                 </div>
+           
                 <input class="form-control" type="file" id="formFile" name="newImage">
             </div>
         <?php endif; ?>

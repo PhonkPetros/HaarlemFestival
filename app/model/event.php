@@ -13,6 +13,7 @@ class Event implements \JsonSerializable
     private ?string $artist;
     private ?int $dayPass;
     private ?int $allDayPass;
+    private ?int $seats;
 
     public function jsonSerialize(): mixed {
         return [
@@ -26,6 +27,7 @@ class Event implements \JsonSerializable
             'artist'=> $this->getArtist(),
             'dayPass'=> $this->getDayPass(),
             'allDayPass'=> $this->getAllDayPass(),
+            'seats'=> $this->getSeats(),
         ];
     }
 
@@ -51,6 +53,13 @@ class Event implements \JsonSerializable
     }
     public function setAllDayPass(?int $allDayPass) {
         return $this->allDayPass = $allDayPass;
+    }
+
+    public function getSeats(): ?int {
+        return $this->seats;
+    }
+    public function setSeats(?int $seats) {
+        return $this->$seats = $seats;
     }
     public function setArtist(?string $artist) {
         return $this->artist = $artist;

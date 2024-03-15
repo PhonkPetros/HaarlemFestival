@@ -203,7 +203,6 @@ class Pagerepository extends dbconfig
     public function deleteSection($sectionID)
     {
         try {
-
             $this->connection->beginTransaction();
 
             $stmt = $this->connection->prepare("DELETE FROM carousel WHERE section_id = :section_id");
@@ -215,19 +214,21 @@ class Pagerepository extends dbconfig
             $stmt->execute();
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            if ($result) {
+            $stmt = $this->connection->prepare("DELETE FROM section WHERE section_id = :section_id");
+            $stmt->bindParam(':section_id', $sectionID, PDO::PARAM_INT);
+            $stmt->execute();
+
+            if ($result && $result['editor_id']) {
                 $stmt = $this->connection->prepare("DELETE FROM editor WHERE id = :editor_id");
                 $stmt->bindParam(':editor_id', $result['editor_id'], PDO::PARAM_INT);
                 $stmt->execute();
+            }
 
+            if ($result && $result['image_id']) {
                 $stmt = $this->connection->prepare("DELETE FROM image WHERE image_id = :image_id");
                 $stmt->bindParam(':image_id', $result['image_id'], PDO::PARAM_INT);
                 $stmt->execute();
             }
-
-            $stmt = $this->connection->prepare("DELETE FROM section WHERE section_id = :section_id");
-            $stmt->bindParam(':section_id', $sectionID, PDO::PARAM_INT);
-            $stmt->execute();
 
             $this->connection->commit();
         } catch (PDOException $e) {
@@ -240,20 +241,76 @@ class Pagerepository extends dbconfig
     public function deletePage($pageID)
     {
         try {
-            $this->connection->beginTransaction();
-            $sections = $this->getAllSections($pageID);
-            foreach ($sections as $section) {
-                $this->deleteSection($section->section_id);
-            }
-
+            $stmt = $this->connection->prepare('DELETE FROM navigation WHERE page_id = :page_id');
+            $stmt->bindParam(':page_id', $pageID, PDO::PARAM_INT);
+            $stmt->execute();
+            
             $stmt = $this->connection->prepare("DELETE FROM page WHERE id = :page_id");
             $stmt->bindParam(':page_id', $pageID, PDO::PARAM_INT);
             $stmt->execute();
 
+        } catch (PDOException $e) {
+
+        }
+    }
+
+
+
+
+
+    public function getPageNameExists($newPageName)
+    {
+        try {
+            $stmt = $this->connection->prepare('SELECT COUNT(*) FROM page WHERE name = :name');
+            $stmt->bindParam(':name', $newPageName, PDO::PARAM_STR);
+            $stmt->execute();
+            $exists = $stmt->fetchColumn();
+            return $exists > 0;
+        } catch (PDOException $e) {
+            error_log('Failed to check if page name exists: ' . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function createPage($newPageName, $amountOfSections)
+    {
+        try {
+            $this->connection->beginTransaction();
+
+            $stmt = $this->connection->prepare('INSERT INTO page (name) VALUES (:name)');
+            $stmt->bindParam(':name', $newPageName, PDO::PARAM_STR);
+            $stmt->execute();
+            $pageId = $this->connection->lastInsertId();
+
+            $currentDateTime = date('Y-m-d H:i:s');
+
+            for ($i = 1; $i <= $amountOfSections; $i++) {
+                $stmt = $this->connection->prepare('INSERT INTO editor (content, created) VALUES (:content, :created)');
+                $defaultContent = '<p>add content</p>';
+                $stmt->bindParam(':content', $defaultContent, PDO::PARAM_STR);
+                $stmt->bindParam(':created', $currentDateTime, PDO::PARAM_STR);
+                $stmt->execute();
+                $editorId = $this->connection->lastInsertId();
+
+                $stmt = $this->connection->prepare('INSERT INTO image (file_path) VALUES (:file_path)');
+                $defaultImagePath = 'default.png';
+                $stmt->bindParam(':file_path', $defaultImagePath, PDO::PARAM_STR);
+                $stmt->execute();
+                $imageId = $this->connection->lastInsertId();
+
+                $stmt = $this->connection->prepare('INSERT INTO section (page_id, editor_id, image_id, title) VALUES (:page_id, :editor_id, :image_id, :title)');
+                $defaultTitle = "New Section " . $i;
+                $stmt->bindParam(':page_id', $pageId, PDO::PARAM_INT);
+                $stmt->bindParam(':editor_id', $editorId, PDO::PARAM_INT);
+                $stmt->bindParam(':image_id', $imageId, PDO::PARAM_INT);
+                $stmt->bindParam(':title', $defaultTitle, PDO::PARAM_STR);
+                $stmt->execute();
+            }
+
             $this->connection->commit();
         } catch (PDOException $e) {
             $this->connection->rollback();
-            error_log('Failed to delete page and its sections: ' . $e->getMessage());
+            error_log('Failed to create page and its sections: ' . $e->getMessage());
             throw $e;
         }
     }

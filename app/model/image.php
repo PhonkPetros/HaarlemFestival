@@ -4,7 +4,7 @@ namespace model;
 class Image implements \JsonSerializable
 {
     private int $image_id;
-    private string $file_path;
+    private ?string $file_path; 
 
 
     public function getImageId(): int {
@@ -15,11 +15,11 @@ class Image implements \JsonSerializable
         $this->image_id = $image_id;
     }
 
-    public function getFilePath(): string {
+    public function getFilePath(): ?string {
         return $this->file_path;
     }
 
-    public function setFilePath(string $file_path): void {
+    public function setFilePath(?string $file_path): void {
         $this->file_path = $file_path;
     }
 
@@ -30,4 +30,3 @@ class Image implements \JsonSerializable
         ];
     }
 }
-
