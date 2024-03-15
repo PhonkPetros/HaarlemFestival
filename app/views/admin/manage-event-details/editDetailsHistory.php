@@ -45,7 +45,7 @@
                 </div>
                 <div class="overflow-auto" style="max-height: 770px;">
                     <div class="card-body ">
-                        <?php if (empty($eventTickets)): ?>
+                        <?php if (empty ($eventTickets)): ?>
                             <p>No tickets available.</p>
                         <?php else: ?>
                             <?php foreach ($eventTickets as $ticket): ?>
@@ -74,8 +74,8 @@
             </div>
         </div>
     </div>
-    <button type="button" class="btn btn-danger" style="margin-bottom: 20px"
-            onclick="window.history.back();">Go Back</button>
+    <button type="button" class="btn btn-danger" style="margin-bottom: 20px" onclick="window.history.back();">Go
+        Back</button>
 </div>
 
 <div id="addTimeslotModal" class="modal">
@@ -151,9 +151,10 @@
                     </div>
                     <div class="mb-3">
                         <label for="newPrice" class="form-label">Price</label>
-                        <input type="number" min="0" class="form-control" id="newPrice" name="price"
+                        <input type="number" step="any" min="0" class="form-control" id="newPrice" name="price"
                             value="<?= htmlspecialchars($eventDetails->getPrice()) ?>">
                     </div>
+
                     <div class="mb-3">
                         <label for="newImage" class="form-label">Change Image</label>
                         <input type="file" class="form-control" id="newImage" name="image" accept=".jpg, .jpeg, .png">

@@ -8,7 +8,7 @@ class Event implements \JsonSerializable
     private string $name;
     private string $startDate;
     private string $location;
-    private int $price;
+    private float $price;
     private string $picture;
     private string $endDate;
     private ?string $artist;
@@ -80,7 +80,7 @@ class Event implements \JsonSerializable
         return $this->location;
     }
 
-    public function getPrice(): int {
+    public function getPrice(): float {
         return $this->price;
     }
 
@@ -108,7 +108,7 @@ class Event implements \JsonSerializable
         $this->location = $location;
     }
 
-    public function setPrice(int $price): void {
+    public function setPrice(float $price): void {
         $this->price = $price;
     }
 

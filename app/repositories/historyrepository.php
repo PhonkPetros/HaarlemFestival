@@ -139,7 +139,11 @@ class historyrepository extends dbconfig
             $stmt->bindParam(':eventName', $eventName, PDO::PARAM_STR);
             $stmt->bindParam(':startDate', $startDate, PDO::PARAM_STR);
             $stmt->bindParam(':endDate', $endDate, PDO::PARAM_STR);
-            $stmt->bindParam(':price', $price);
+    
+            // Ensure $price is a string
+            $price = trim($price);
+            $stmt->bindParam(':price', $price, PDO::PARAM_STR);
+    
             $stmt->bindParam(':location', $newLocation, PDO::PARAM_STR);
             $stmt->bindParam(':picture', $picture, PDO::PARAM_STR);
             $stmt->bindParam(':eventId', $eventId, PDO::PARAM_INT);
@@ -156,6 +160,8 @@ class historyrepository extends dbconfig
             return false;
         }
     }
+    
+    
     public function removeTimeslot($ticketID){
         $sql = "DELETE FROM [Ticket] WHERE ticket_id = :ticketid AND user_id IS NULL;";
         try {
