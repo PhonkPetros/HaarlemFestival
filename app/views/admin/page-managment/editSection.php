@@ -24,6 +24,8 @@
                     <option value="ImageText" <?php echo ($sectionType === 'ImageText') ? 'selected' : ''; ?>>Image & Text
                     </option>
                 </select>
+                <input type="hidden" name="newType" value="<?php echo htmlspecialchars($sectionType); ?>">
+
             </div>
         </div>
 

@@ -71,12 +71,14 @@ class Pagecontroller
             $sectionID = $_POST['section_id'];
             $content = empty($_POST['content']) ? null : $_POST['content'];
             $title = $_POST['sectionTitle'];
-            $type = htmlspecialchars($_POST['newType']);
-
+            
+            // Check if $_POST['newType'] exists before accessing it
+            $type = isset($_POST['newType']) ? htmlspecialchars($_POST['newType']) : null;
+    
             $newImage = $_FILES['newImage'] ?? null;
             $path = '/img/uploads/';
             $imageAction = null;
-
+    
             $resetImage = isset($_POST['resetImage']) && $_POST['resetImage'] == 1;
             if ($resetImage) {
                 $imageAction = ['name' => 'default.png']; 
@@ -86,14 +88,15 @@ class Pagecontroller
                     $imageAction = ['name' => $uploadedImageName];
                 }
             }
-
-
+    
             try {
                 $this->pageService->updateSectionContent($sectionID, $content, $imageAction ?? []);
                 $this->pageService->updateSectionTitle($sectionID, $title);
-                $this->pageService->updateType($sectionID, $type);
 
-
+                if ($type !== null) {
+                    $this->pageService->updateType($sectionID, $type);
+                }
+    
                 $pageID = $this->pageService->getSectionPageId($sectionID);
                 if ($pageID !== null) {
                     header('Location: /edit-content/?id=' . $pageID);
@@ -106,6 +109,7 @@ class Pagecontroller
             }
         }
     }
+    
     private function uploadImage($imageFile, $uploadDirectory)
     {
         if (isset($imageFile) && $imageFile['error'] == UPLOAD_ERR_OK) {
