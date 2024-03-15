@@ -98,7 +98,7 @@ if ($pageID || $eventID || $editPageID || $sectionEdit) {
         }
         exit;
     } elseif ($pageID) {
-       
+
 
         //this has to with our own pages
         switch ($pageID) {
@@ -181,7 +181,7 @@ switch ($request) {
         $controller = new logincontroller();
         if ($method === 'GET') {
             $controller->show();
-        } elseif ($method === 'POST') { 
+        } elseif ($method === 'POST') {
             $controller->loginAction();
         }
         break;
@@ -340,7 +340,12 @@ switch ($request) {
             $controller->addTimeSlot();
         }
         break;
-
+    case '/admin/add-section':
+        $controller = new Pagecontroller();
+        if ($method === 'POST') {
+            $controller->addNewSection();
+        }
+        break;
     default:
         http_response_code(404);
         $navigation = new Navigationcontroller();

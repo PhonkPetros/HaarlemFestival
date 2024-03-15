@@ -347,5 +347,41 @@ class Pagerepository extends dbconfig
         }
     }
 
+    public function addNewSection($pageId, $defaultTitle = 'New Section', $defaultType = 'undefined') {
+        try {
+            $this->connection->beginTransaction();
+    
+            $currentDateTime = date('Y-m-d H:i:s');
+            $defaultContent = '<p>Add content</p>';
+            $defaultImagePath = 'default.png';
+
+            $stmt = $this->connection->prepare('INSERT INTO editor (content, created) VALUES (:content, :created)');
+            $stmt->bindParam(':content', $defaultContent, PDO::PARAM_STR);
+            $stmt->bindParam(':created', $currentDateTime, PDO::PARAM_STR);
+            $stmt->execute();
+            $editorId = $this->connection->lastInsertId();
+
+            $stmt = $this->connection->prepare('INSERT INTO image (file_path) VALUES (:file_path)');
+            $stmt->bindParam(':file_path', $defaultImagePath, PDO::PARAM_STR);
+            $stmt->execute();
+            $imageId = $this->connection->lastInsertId();
+
+            $stmt = $this->connection->prepare('INSERT INTO section (page_id, editor_id, image_id, title, type) VALUES (:page_id, :editor_id, :image_id, :title, :type)');
+            $stmt->bindParam(':page_id', $pageId, PDO::PARAM_INT);
+            $stmt->bindParam(':editor_id', $editorId, PDO::PARAM_INT);
+            $stmt->bindParam(':image_id', $imageId, PDO::PARAM_INT);
+            $stmt->bindParam(':title', $defaultTitle, PDO::PARAM_STR);
+            $stmt->bindParam(':type', $defaultType, PDO::PARAM_STR);
+            $stmt->execute();
+    
+            $this->connection->commit();
+        } catch (PDOException $e) {
+            $this->connection->rollback();
+            error_log('Failed to add new section: ' . $e->getMessage());
+            throw $e;
+        }
+    }
+    
+
 
 }

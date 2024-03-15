@@ -3,10 +3,7 @@
 namespace controllers;
 
 use services\pageservice;
-use model\Carousel;
-use model\Editor;
-use model\Section;
-use model\Image;
+
 use PDOException;
 use Exception;
 use services\ContentService;
@@ -15,20 +12,11 @@ use services\ContentService;
 require_once __DIR__ . "/../services/pageservice.php";
 require_once __DIR__ . "/../services/contentservice.php";
 require_once __DIR__ . '/../config/constant-paths.php';
-require_once __DIR__ . "/../model/carousel.php";
-require_once __DIR__ . "/../model/editor.php";
-require_once __DIR__ . "/../model/image.php";
-require_once __DIR__ . "/../model/section.php";
-
 
 
 class Pagecontroller
 {
     private $pageService;
-    private $carouselModel;
-    private $editorModel;
-    private $sectionModel;
-    private $imageModel;
     private $contentService;
 
 
@@ -66,7 +54,17 @@ class Pagecontroller
         require_once __DIR__ . "/../views/admin/page-managment/editSection.php";
     }
     
-
+    public function addNewSection(){
+        try {
+            $data = json_decode(file_get_contents('php://input'), true);
+            $pageId = $data['pageId'] ?? null;
+            $this->pageService->addNewSection($pageId);
+    
+            echo json_encode(['success' => true]);
+        } catch (Exception $e) {
+            echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+        }
+    }
 
     public function updateContent() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['section_id'])) {
