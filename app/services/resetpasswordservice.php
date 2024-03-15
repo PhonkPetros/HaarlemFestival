@@ -3,7 +3,7 @@
 namespace services;
 use repositories\accountrepository;
 
-class ResetPassword {
+class ResetPasswordService {
     private $repository;
 
     public function __construct() {

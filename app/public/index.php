@@ -18,6 +18,7 @@ use controllers\overview;
 use controllers\Templatecontroller;
 use controllers\yummycontroller;
 use controllers\Pagecontroller;
+use controllers\resetpasswordcontroller;
 
 require_once __DIR__ . '/../controllers/overview.php';
 require_once __DIR__ . '/../controllers/registercontroller.php';
@@ -33,6 +34,7 @@ require_once __DIR__ . '/../controllers/navigationcontroller.php';
 require_once __DIR__ . '/../controllers/pagecontroller.php';
 require_once __DIR__ . '/../controllers/templatecontroller.php';
 require_once __DIR__ . '/../controllers/yummycontroller.php';
+require_once __DIR__ . '/../controllers/resetpasswordcontroller.php';
 
 $request = $_SERVER['REQUEST_URI'];
 $method = $_SERVER['REQUEST_METHOD'];
@@ -177,7 +179,7 @@ switch ($request) {
     case '/reset-password':
         $controller = new resetpasswordcontroller();
         if ($method === 'GET') {
-            $controller->show();
+            $controller->showResetPasswordForm();
         } elseif ($method === 'POST') {
             $controller->resetpasswordAction();
         }

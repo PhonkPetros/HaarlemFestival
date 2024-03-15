@@ -2,25 +2,25 @@
 
 namespace controllers;
 
-use services\resetpasswordService;
-require_once __DIR__ . '/../services/resetpassword.php';
+use services\ResetPasswordService;
+require_once __DIR__ . '/../services/resetpasswordservice.php';
 
 class resetpasswordcontroller
 {
     private $resetpasswordService;
   
     public function __construct() {
-        $this->resetpasswordService = new resetpasswordService();
+        $this->resetpasswordService = new ResetPasswordService();
     }
 
     public function showResetPasswordForm()
     {
-        require_once '../views/reset-password.php';
+        require_once '../views/general_views/reset-password.php';
     }
 
     public function showNewPasswordForm()
     {
-        require_once '../views/new-password.php';
+        require_once '../views/general_views/new-password.php';
     }
 
     public function resetpasswordAction()
