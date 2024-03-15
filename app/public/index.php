@@ -78,7 +78,7 @@ if ($pageID || $eventID || $editPageID || $sectionEdit) {
             case '6':
                 $controller = new Jazzcontroller();
                 if ($method === 'GET') {
-                    $controller->editEventDetails();
+                    $controller->showEventDetails();
                 }
                 break;
             case '7':
@@ -175,16 +175,6 @@ switch ($request) {
             $controller->loginAction();
         }
         break;
-
-    case '/reset-password':
-        $controller = new resetpasswordcontroller();
-        if ($method === 'GET') {
-            $controller->showResetPasswordForm();
-        } elseif ($method === 'POST') {
-            $controller->resetpasswordAction();
-        }
-        break;
-
     case '/reset-password':
         $controller = new resetpasswordcontroller();
         if ($method === 'GET') {
