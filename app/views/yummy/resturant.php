@@ -9,11 +9,7 @@
 </head>
 <body>
 <div class="div">
-  <img
-    loading="lazy"
-    srcset="https://cdn.builder.io/api/v1/image/assets/TEMP/5a4cdc053984ac6d2ea3db31b6ddaabeaad90d451d7547e5fcf6985e133cb0c1?apiKey=3023167e7a8a4e649532aa6db2acfe06&width=100 100w, https://cdn.builder.io/api/v1/image/assets/TEMP/5a4cdc053984ac6d2ea3db31b6ddaabeaad90d451d7547e5fcf6985e133cb0c1?apiKey=3023167e7a8a4e649532aa6db2acfe06&width=200 200w, https://cdn.builder.io/api/v1/image/assets/TEMP/5a4cdc053984ac6d2ea3db31b6ddaabeaad90d451d7547e5fcf6985e133cb0c1?apiKey=3023167e7a8a4e649532aa6db2acfe06&width=400 400w, https://cdn.builder.io/api/v1/image/assets/TEMP/5a4cdc053984ac6d2ea3db31b6ddaabeaad90d451d7547e5fcf6985e133cb0c1?apiKey=3023167e7a8a4e649532aa6db2acfe06&width=800 800w, https://cdn.builder.io/api/v1/image/assets/TEMP/5a4cdc053984ac6d2ea3db31b6ddaabeaad90d451d7547e5fcf6985e133cb0c1?apiKey=3023167e7a8a4e649532aa6db2acfe06&width=1200 1200w, https://cdn.builder.io/api/v1/image/assets/TEMP/5a4cdc053984ac6d2ea3db31b6ddaabeaad90d451d7547e5fcf6985e133cb0c1?apiKey=3023167e7a8a4e649532aa6db2acfe06&width=1600 1600w, https://cdn.builder.io/api/v1/image/assets/TEMP/5a4cdc053984ac6d2ea3db31b6ddaabeaad90d451d7547e5fcf6985e133cb0c1?apiKey=3023167e7a8a4e649532aa6db2acfe06&width=2000 2000w, https://cdn.builder.io/api/v1/image/assets/TEMP/5a4cdc053984ac6d2ea3db31b6ddaabeaad90d451d7547e5fcf6985e133cb0c1?apiKey=3023167e7a8a4e649532aa6db2acfe06&"
-    class="img"
-  />
+  <img src="/img/<?= htmlspecialchars($restaurantDetails->getPicture()) ?>"class="img"/>
   <div class="div-2">
     <div class="div-3">Ratatouille</div>
     <div class="div-4">
@@ -73,9 +69,9 @@
       </div>
       <p>Made with tremendous amount of love and skill, the meals made by Chef Jfouza are renown in Haarlem for their unique taste from simple spaghetti meatballs to the famous world renown ratatouille.</p>
       <div class="contact">
-        <p>📞 555-867-5309</p>
-        <p>📞 +31 70 0667 167</p>
-        <p>📍 Spaarne 96, 2011 CL, Haarlem</p>
+        <p> 💯<?= htmlspecialchars($restaurantDetails->getStartDate())?></p>
+        <p> ⏱<?= htmlspecialchars($restaurantDetails->getEndDate())?></p>
+        <p>📍 <?= htmlspecialchars($restaurantDetails->getLocation())?></p>
       </div>
       <button class="book-table">BOOK A TABLE</button>
     </div>
@@ -139,7 +135,7 @@
   <img src="/img/uploadshaarlem.jpg" alt="Location Picture" class="img-location">
 </div>
 
-<?php include __DIR__ . '/../general_views/footer.php';?>
+<?php include __DIR__ . '/../general_views/footer.php'; ?>
 
 </body>
 </html>
