@@ -173,16 +173,6 @@ switch ($request) {
             $controller->loginAction();
         }
         break;
-
-    case '/reset-password':
-        $controller = new resetpasswordcontroller();
-        if ($method === 'GET') {
-            $controller->show();
-        } elseif ($method === 'POST') {
-            $controller->resetpasswordAction();
-        }
-        break;
-
     case '/reset-password':
         $controller = new resetpasswordcontroller();
         if ($method === 'GET') {
