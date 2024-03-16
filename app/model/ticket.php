@@ -13,7 +13,6 @@ class Ticket implements \JsonSerializable
     private string $language;
     private ?string $date = null; 
     private ?string $time = null; 
-    private ?int $shopping_cart_id;
     
 
     public function getTicketId(): int {
@@ -24,13 +23,6 @@ class Ticket implements \JsonSerializable
         $this->ticket_id = $ticket_id;
     }
 
-    public function getShoppingCartId(): ?int { 
-        return $this->shopping_cart_id;
-    }
-
-    public function setShoppingCartId(?int $shopping_cart_id): void { 
-        $this->shopping_cart_id = $shopping_cart_id;
-    }
 
 
     public function getUserId(): ?int { 
@@ -108,7 +100,6 @@ class Ticket implements \JsonSerializable
             'language' => $this->getTicketLanguage(),
             'date' => $this->getTicketDate(),
             'time'=> $this->getTicketTime(),
-            'shopping_cart_id' => $this->getShoppingCartId(),
         ];
     }
 }

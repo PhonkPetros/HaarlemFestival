@@ -191,8 +191,6 @@ if (preg_match("/^\/restaurant\/details\/(\d+)$/", $request, $matches)) {
     exit;
 }
 
-
-
 //Add routes for actions or admin routes that do not have to do with displaying detail pages or overview pages for your individual events
 switch ($request) {
     case '/login':
