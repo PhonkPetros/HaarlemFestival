@@ -67,9 +67,12 @@ class Myprogramcontroller
             case EVENT_ID_DANCE:
             case EVENT_ID_JAZZ:
                 $ticketInfo['artistName'] = $input['artistName'] ?? '';
+                $ticketInfo['allAccessPass'] = $input['allAccesPass'] ?? '';
+                $ticketInfo['dayPass'] = $inputJSON['dayPass'] ?? ''; 
                 break;
             case EVENT_ID_RESTAURANT:
                 $ticketInfo['restaurantName'] = $input['restaurantName'] ?? '';
+                $ticketInfo['specialRemarks'] = $input['specialRemarks'] ?? '';
                 break;
             case EVENT_ID_HISTORY:
                 $ticketInfo['ticketLanguage'] = $input['ticketLanguage'] ?? '';
