@@ -35,8 +35,8 @@ require_once __DIR__ . '/../controllers/templatecontroller.php';
 require_once __DIR__ . '/../controllers/yummycontroller.php';
 require_once __DIR__ . '/../controllers/resetpasswordcontroller.php';
 
-$url = $_SERVER['REQUEST_URI'];
-$request = parse_url($url)['path'];
+
+$request = $_SERVER['REQUEST_URI'];
 $method = $_SERVER['REQUEST_METHOD'];
 
 
