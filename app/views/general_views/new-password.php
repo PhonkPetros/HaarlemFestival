@@ -11,7 +11,7 @@
 <div class="container">
     <div class="d-flex flex-column justify-content-center align-items-center" style="min-height: 100vh;">
         <h1> Write down your new password</h1>
-        <form method="POST" action="/new-password">
+        <form method="POST" action="/new-passwords">
             <input type="text" style="display: none;" name="token" value="<?php echo htmlspecialchars($_GET['token']) ?>" required>
             <div class="mb-3">
                 <label for="newPassword" class="form-label">New Password</label>

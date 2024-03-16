@@ -44,12 +44,14 @@ $method = $_SERVER['REQUEST_METHOD'];
 //Please do not touch this
 $editPageID = null;
 $sectionEdit = null;
+$token = null;
 $queryString = parse_url($request, PHP_URL_QUERY);
 $queryParams = [];
 if ($queryString !== null) {
     parse_str($queryString, $queryParams);
 }
 $pageID = htmlspecialchars($queryParams["pageid"] ?? '');
+
 $eventID = null;
 if (strpos($request, '/manage-event-details/') === 0) {
     $eventID = htmlspecialchars($queryParams["id"] ?? '');
@@ -60,13 +62,16 @@ if (strpos($request, '/edit-content/') === 0) {
 if (strpos($request, '/sectionEdit/') === 0) {
     $sectionEdit = htmlspecialchars($queryParams['section_id'] ?? '');
 }
+if (strpos($request, '/new-password/') === 0) {
+    $token = htmlspecialchars($queryParams["token"] ?? '');
+}
 
 //Please do not touch this
 if ($request === '/') {
     $pageID = '1';
 }
 
-if ($pageID || $eventID || $editPageID || $sectionEdit) {
+if ($pageID || $eventID || $editPageID || $sectionEdit || $token) {
     //this has to do with the editing of event details
     if ($eventID) {
         switch ($eventID) {
@@ -165,6 +170,16 @@ if ($pageID || $eventID || $editPageID || $sectionEdit) {
                 break;
         }
         exit;
+    } elseif ($token) {
+        switch ($token) {
+            default;
+                $controller = new resetpasswordcontroller();
+                if ($method === 'GET' && $token !== null) {
+                    $controller->showNewPasswordForm();
+                }
+               break;
+
+        }
     }
 }
 if (preg_match("/^\/restaurant\/details\/(\d+)$/", $request, $matches)) {
@@ -175,6 +190,8 @@ if (preg_match("/^\/restaurant\/details\/(\d+)$/", $request, $matches)) {
     }
     exit;
 }
+
+
 
 //Add routes for actions or admin routes that do not have to do with displaying detail pages or overview pages for your individual events
 switch ($request) {
@@ -195,14 +212,12 @@ switch ($request) {
         }
         break;
 
-    case '/new-password':
-        $controller = new resetpasswordcontroller();
-        if ($method === 'GET') {
-            $controller->showNewPasswordForm();
-        } elseif ($method === 'POST') {
-            $controller->updatePasswordAction();
-        }
-        break;
+    case '/new-passwords':
+         $controller = new resetpasswordcontroller();
+         if ($method === 'POST') {
+             $controller->updatePasswordAction();
+         }
+         break;
 
     case '/success-reset-password':
         $controller = new resetpasswordcontroller();
