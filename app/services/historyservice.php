@@ -3,17 +3,20 @@
 namespace services;
 
 use repositories\historyrepository;
+use repositories\TicketRepo;
 
 require_once __DIR__ . '/../repositories/historyrepository.php';
-
+require_once __DIR__ . '/../repositories/ticketRepo.php';
 
 class HistoryService
 {
     private $historyRepo;
+    private $ticketRepo;
 
     public function __construct()
     {
         $this->historyRepo = new Historyrepository();
+        $this->ticketRepo = new TicketRepo();
     }
 
     public function getEventDetails() {
@@ -21,7 +24,11 @@ class HistoryService
     }
 
     public function getTickets($eventId) {
-        return $this->historyRepo->getTicketsForEvent($eventId);
+        return $this->ticketRepo->getTicketsForEvent($eventId);
+    }
+
+    public function getTicketPrice($eventId) {
+        return $this->ticketRepo->getTicketPrice($eventId);
     }
 
     public function addNewTimeSlot($newTicket){

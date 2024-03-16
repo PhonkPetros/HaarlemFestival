@@ -16,9 +16,10 @@ use controllers\Templatecontroller;
 use controllers\yummycontroller;
 use controllers\Pagecontroller;
 use controllers\resetpasswordcontroller;
-
+use controllers\Myprogramcontroller;
 
 require_once __DIR__ . '/../controllers/overview.php';
+require_once __DIR__ . '/../controllers/myprogramcontroller.php';
 require_once __DIR__ . '/../config/constant-paths.php';
 require_once __DIR__ . '/../controllers/registercontroller.php';
 require_once __DIR__ . '/../controllers/logincontroller.php';
@@ -177,7 +178,7 @@ if ($pageID || $eventID || $editPageID || $sectionEdit || $token) {
                 if ($method === 'GET' && $token !== null) {
                     $controller->showNewPasswordForm();
                 }
-               break;
+                break;
 
         }
     }
@@ -211,11 +212,11 @@ switch ($request) {
         break;
 
     case '/new-passwords':
-         $controller = new resetpasswordcontroller();
-         if ($method === 'POST') {
-             $controller->updatePasswordAction();
-         }
-         break;
+        $controller = new resetpasswordcontroller();
+        if ($method === 'POST') {
+            $controller->updatePasswordAction();
+        }
+        break;
 
     case '/success-reset-password':
         $controller = new resetpasswordcontroller();
@@ -367,6 +368,13 @@ switch ($request) {
             $controller->addNewSection();
         }
         break;
+    case '/submit-reservation':
+        $controller = new Myprogramcontroller();
+        if ($method === 'POST') {
+            $controller->createReservation();
+        }
+        break;
+
     default:
         http_response_code(404);
         $navigation = new Navigationcontroller();

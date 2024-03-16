@@ -3,13 +3,15 @@
 namespace controllers;
 
 use services\loginService;
+
 require_once __DIR__ . '/../services/loginservice.php';
 
 class logincontroller
 {
     private $loginService;
-  
-    public function __construct() {
+
+    public function __construct()
+    {
         $this->loginService = new LoginService();
     }
 
@@ -27,7 +29,7 @@ class logincontroller
 
             if (!$authenticated) {
                 $loginError = "Invalid username or password.";
-                require_once '../views/login.php'; 
+                require_once '../views/login.php';
             }
         }
     }
@@ -36,15 +38,23 @@ class logincontroller
     {
         $user = $this->loginService->login($username, $password);
         if ($user) {
-            $_SESSION['email'] = $user->getUserEmail();
+
             $_SESSION['user'] = [
                 'userID' => $user->getUserId(),
                 'username' => $user->getUsername(),
                 'role' => $user->getUserRole(),
                 'email' => $user->getUserEmail(),
-                'password_hash' => $user->getPassword()
+                'password_hash' => $user->getPassword(),
+                'firstName' => $user->getFirstname(), 
+                'lastName' => $user->getLastname(), 
+                'phoneNumber' => $user->getPhoneNumber(),
+                'address' => $user->getAddress()
             ];
+            
+
             $_SESSION['role'] = $user->getUserRole();
+
+
             switch ($_SESSION['role']) {
                 case 'customer':
                     header('Location: /');
@@ -55,10 +65,11 @@ class logincontroller
                 default:
                     header('Location: /');
                     exit();
-            }            
-           
+            }
+
         } else {
             return false;
         }
     }
+
 }

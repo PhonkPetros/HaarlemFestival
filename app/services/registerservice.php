@@ -24,4 +24,8 @@ class registerservice
     public function email_exists($email){
         return $this->registerrepository->emailExists($email);
     }
+
+    public function updateUser($userInfo){
+        return $this->registerrepository->updateUser($userInfo);
+    }
 }

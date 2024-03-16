@@ -68,5 +68,30 @@ class registerrepository extends dbconfig {
             return false;
         }
     }
-    
+
+    public function updateUser($userInfo)
+    {
+        $email = $userInfo['email'];
+        $firstName = $userInfo['firstName'];
+        $lastName = $userInfo['lastName'];
+        $address = $userInfo['address'];
+        $phoneNumber = $userInfo['phoneNumber'];
+
+        try {
+            $stmt = $this->connection->prepare("UPDATE [User] SET firstname = :firstName, lastname = :lastName, address = :address, phone_number = :phoneNumber WHERE email = :email");
+            $stmt->bindParam(':firstName', $firstName, PDO::PARAM_STR);
+            $stmt->bindParam(':lastName', $lastName, PDO::PARAM_STR);
+            $stmt->bindParam(':address', $address, PDO::PARAM_STR);
+            $stmt->bindParam(':phoneNumber', $phoneNumber, PDO::PARAM_STR);
+            $stmt->bindParam(':email', $email, PDO::PARAM_STR);
+            $stmt->execute();
+
+            return true;
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+            return false;
+        }
+    }
+
+
 }

@@ -169,17 +169,31 @@ class Historycontroller
     private function getStructuredTickets($eventId)
     {
         $tickets = $this->historyService->getTickets($eventId);
+        $ticketPrice = $this->historyService->getTicketPrice($eventId);
+    
+        $price = $ticketPrice ? $ticketPrice->getPrice() : null;
+    
         $structuredTickets = [];
-
+    
         foreach ($tickets as $ticket) {
+            $ticketId = $ticket->getTicketId();
+            $eventId = $ticket->getEventId();
             $language = $ticket->getTicketLanguage();
             $date = $ticket->getTicketDate();
             $time = $ticket->getTicketTime();
             $quantity = $ticket->getQuantity();
-
-            $structuredTickets[$language][$date][$time] = $quantity;
+    
+            $structuredTickets[$language][$date][$time] = [
+                'ticket_id' => $ticketId, 
+                'event_id' => $eventId,
+                'language' => $language,
+                'date' => $date,
+                'time' => $time,
+                'quantity' => $quantity,
+                'price' => $price
+            ];
         }
-
+    
         return $structuredTickets;
     }
 

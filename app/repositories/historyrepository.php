@@ -34,40 +34,6 @@ class historyrepository extends dbconfig
         }
     }
 
-    public function getTicketsForEvent($eventId)
-    {
-        $sql = 'SELECT * FROM [Ticket] WHERE event_id = :event_id  AND user_id IS NULL;';
-
-        try {
-            $stmt = $this->getConnection()->prepare($sql);
-            $stmt->bindParam(':event_id', $eventId, PDO::PARAM_INT);
-            $stmt->execute();
-
-
-            $ticketsData = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-            $tickets = [];
-            foreach ($ticketsData as $ticketData) {
-                $ticket = new Ticket();
-                $ticket->setTicketId($ticketData['ticket_id']);
-                $ticket->setUserId($ticketData['user_id'] ?? null);
-                $ticket->setQuantity($ticketData['quantity']);
-                $ticket->setTicketHash($ticketData['ticket_hash']);
-                $ticket->setState($ticketData['state']);
-                $ticket->setEventId($ticketData['event_id']);
-                $ticket->setTicketLanguage($ticketData['language']);
-                $ticket->setTicketDate($ticketData['Date']);
-                $ticket->setTicketTime($ticketData['Time']);
-
-                $tickets[] = $ticket;
-            }
-
-            return $tickets;
-        } catch (PDOException $e) {
-            echo "Error: " . $e->getMessage();
-            return null;
-        }
-    }
 
     public function addNewTimeSlot(Ticket $newTicket)
     {
