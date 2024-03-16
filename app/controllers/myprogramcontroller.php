@@ -4,7 +4,6 @@ namespace controllers;
 
 use services\Myprogramservice;
 use services\registerservice;
-//call the user service to check update user data 
 
 require_once __DIR__ . '/../services/myprogramservice.php';
 require_once __DIR__ . '/../services/registerservice.php';
