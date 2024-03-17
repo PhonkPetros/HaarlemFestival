@@ -37,10 +37,16 @@ class Myprogramcontroller
     function show()
     {
         $this->navigationController->displayHeader();
-        $structuredTickets = $this->structureTicketsWithImages();
-        $uniqueTimes = $this->getUniqueTimes($structuredTickets);
+        $structuredTickets = [];
+        $uniqueTimes = [];
+
+        if (isset($_SESSION['shopping_cart']) && !empty($_SESSION['shopping_cart'])) {
+            $structuredTickets = $this->structureTicketsWithImages();
+            $uniqueTimes = $this->getUniqueTimes($structuredTickets);
+        }
         require_once __DIR__ . '/../views/my-program/list-view.php';
     }
+    
 
     function createReservation()
     {

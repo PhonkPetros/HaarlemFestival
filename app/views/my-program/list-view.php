@@ -1,5 +1,10 @@
 <div class="container mt-4">
     <div class="ticket-row">
+    <?php if (empty($structuredTickets)): ?>
+        <div style="justify-content: center; text-align: center; color: black;">
+            <h2>No Tickets Currently In Basket</h2>
+        </div>
+    <?php endif; ?>
         <?php foreach ($structuredTickets as $eventId => $eventData): ?>
             <?php foreach ($eventData['tickets'] as $ticket): ?>
                 <div class="ticket-container" style="background-image: url('<?php echo $eventData['image']; ?>');">
