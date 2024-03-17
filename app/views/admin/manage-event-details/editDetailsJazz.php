@@ -1,7 +1,7 @@
 <?php include __DIR__ . '/../../general_views/adminheader.php'; ?>
 
 <h1 class="mb-4 text-center">Edit Jazz Event Details</h1>
-
+<!-- Current event details -->
 <div class="container mt-5">
     <div class="row">
         <div class="col-lg-6 col-md-6">
@@ -27,32 +27,29 @@
                     </p>
                     <div class="mb-3 text-center">
                         <p class="card-text"><strong>Picture:</strong></p>
-                        <img src="<?= htmlspecialchars($eventDetails->getPicture()) ?>" alt="Event Image"
-                            class="img-fluid" style="max-width: 100%; height: 450px;">
+                        <img src="<?= htmlspecialchars($eventDetails->getPicture()) ?>" alt="Event Image" class="img-fluid" style="max-width: 100%; height: 450px;">
                     </div>
-                    <button type="button" id="editEventDetailsButton" class="btn btn-primary"
-                        data-event-id="<?= htmlspecialchars($eventDetails->getEventId()) ?>">Edit Event Details</button>
-                    <button type="button" id="addTimeslotButton" class="btn btn-primary"
-                        data-event-id="<?= htmlspecialchars($eventDetails->getEventId()) ?>">Add New Timeslot</button>
+                    <button type="button" id="editEventDetailsButton" class="btn btn-primary" data-event-id="<?= htmlspecialchars($eventDetails->getEventId()) ?>">Edit Event Details</button>
+                    <button type="button" id="addTimeslotButton" class="btn btn-primary" data-event-id="<?= htmlspecialchars($eventDetails->getEventId()) ?>">Add New Timeslot</button>
                 </div>
             </div>
         </div>
-           
-
-       
 
 
-        <div class="col-lg-6 col-md-6">
+<!-- TImeslot boday -->
+
+
+<div class="col-lg-6 col-md-6">
             <div class="card mb-3">
                 <div class="card-header text-center">
                     <u>Time Slots</u>
                 </div>
                 <div class="overflow-auto" style="max-height: 770px;">
                     <div class="card-body ">
-                        <?php if (empty($eventTickets)): ?>
+                        <?php if (empty($eventTickets)) : ?>
                             <p>No tickets available.</p>
-                        <?php else: ?>
-                            <?php foreach ($eventTickets as $ticket): ?>
+                        <?php else : ?>
+                            <?php foreach ($eventTickets as $ticket) : ?>
                                 <div class="ticket-row mb-3">
                                     <p><strong>Language:</strong>
                                         <?= htmlspecialchars($ticket->getTicketLanguage()) ?>
@@ -66,8 +63,7 @@
                                     <p><strong>Quantity:</strong>
                                         <?= htmlspecialchars($ticket->getQuantity()) ?>
                                     </p>
-                                    <button type="button" class="btn btn-danger deleteTimeslotButton"
-                                        data-ticket-id="<?= htmlspecialchars($ticket->getTicketId()) ?>">Delete
+                                    <button type="button" class="btn btn-danger deleteTimeslotButton" data-ticket-id="<?= htmlspecialchars($ticket->getTicketId()) ?>">Delete
                                         Timeslot</button>
 
                                 </div>
@@ -80,6 +76,8 @@
     </div>
 </div>
 
+<!-- Time slot button -->
+
 <div id="addTimeslotModal" class="modal">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -91,22 +89,11 @@
                 <form id="addTimeslotForm">
                     <div class="mb-3">
                         <label for="newDate" class="form-label">Date</label>
-                        <input type="date" class="form-control" id="newDate" name="date" required
-                            min="<?php echo date('Y-m-d'); ?>">
+                        <input type="date" class="form-control" id="newDate" name="date" required min="<?php echo date('Y-m-d'); ?>">
                     </div>
                     <div class="mb-3">
-                        <label for="newQuantity" class="form-label">Quantity</label>
-                        <input type="number" min="0" max="20" class="form-control" id="newQuantity" name="quantity"
-                            required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="newLanguage" class="form-label">Language</label>
-                        <select class="form-select" id="newLanguage" name="language" required>
-                            <option value="">Select Language</option>
-                            <option value="english">English</option>
-                            <option value="chinese">Chinese</option>
-                            <option value="dutch">Dutch</option>
-                        </select>
+                        <label for="newArtistName" class="form-label">Artist Name</label>
+                        <input type="text" class="form-control" id="newArtistName" name="artistName" required>
                     </div>
                     <div class="mb-3">
                         <label for="addnewtime" class="form-label">Time</label>
@@ -123,7 +110,7 @@
 
 
 
-
+<!-- Unknown -->
 
 <div id="editEventDetailsModal" class="modal">
     <div class="modal-dialog">
@@ -136,28 +123,23 @@
                 <form id="editEventForm" enctype="multipart/form-data">
                     <div class="mb-3">
                         <label for="newEventName" class="form-label">Name</label>
-                        <input type="text" class="form-control" id="newEventName" name="name"
-                            value="<?= htmlspecialchars($eventDetails->getName()) ?>">
+                        <input type="text" class="form-control" id="newEventName" name="name" value="<?= htmlspecialchars($eventDetails->getName()) ?>">
                     </div>
                     <div class="mb-3">
                         <label for="newStartDate" class="form-label">Start Date</label>
-                        <input type="date" class="form-control" id="newStartDate" name="startDate"
-                            value="<?= htmlspecialchars($eventDetails->getStartDate()) ?>">
+                        <input type="date" class="form-control" id="newStartDate" name="startDate" value="<?= htmlspecialchars($eventDetails->getStartDate()) ?>">
                     </div>
                     <div class="mb-3">
                         <label for="newEndDate" class="form-label">End Date</label>
-                        <input type="date" class="form-control" id="newEndDate" name="endDate"
-                            value="<?= htmlspecialchars($eventDetails->getEndDate()) ?>">
+                        <input type="date" class="form-control" id="newEndDate" name="endDate" value="<?= htmlspecialchars($eventDetails->getEndDate()) ?>">
                     </div>
                     <div class="mb-3">
                         <label for="newLocation" class="form-label">Location</label>
-                        <input type="text" class="form-control" id="newLocation" name="location"
-                            value="<?= htmlspecialchars($eventDetails->getLocation()) ?>">
+                        <input type="text" class="form-control" id="newLocation" name="location" value="<?= htmlspecialchars($eventDetails->getLocation()) ?>">
                     </div>
                     <div class="mb-3">
                         <label for="newPrice" class="form-label">Price</label>
-                        <input type="number" min="0" class="form-control" id="newPrice" name="price"
-                            value="<?= htmlspecialchars($eventDetails->getPrice()) ?>">
+                        <input type="number" min="0" class="form-control" id="newPrice" name="price" value="<?= htmlspecialchars($eventDetails->getPrice()) ?>">
                     </div>
                     <div class="mb-3">
                         <label for="newImage" class="form-label">Change Image</label>
@@ -174,6 +156,6 @@
 
 
 
-<script src="/js/editDetailsHistory.js"></script>
+<script src="/js/jazz.js"></script>
 
 <?php include __DIR__ . '/../../general_views/footer.php'; ?>
