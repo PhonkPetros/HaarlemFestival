@@ -55,10 +55,6 @@ class Myprogramcontroller
             echo "Invalid or expired share link.";
             return;
         }
-
-        // Extract user information from the shared cart
-        $userInfo = $sharedCart['user'] ?? ['firstName' => '', 'lastName' => ''];
-
         $structuredTickets = $this->structureSharedCart($sharedCart);
         require_once __DIR__ . '/../views/my-program/share-basket-view.php';
     }
