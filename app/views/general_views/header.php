@@ -13,6 +13,8 @@
     <link rel="stylesheet" href="/css/overview.css">
     <link rel="stylesheet" href="/css/template.css">
     <link rel="stylesheet" href="/css/footer.css">
+    <link rel="stylesheet" href="/css/list-view-tickets.css">
+  
 </head>
 
 <body>
@@ -40,7 +42,7 @@
                                 <?php endif; ?>
                             <?php endforeach; ?>
                             <li class="nav-item">
-                                        <a class="nav-link" href="#">My Program</a>
+                                        <a class="nav-link" href="/my-program">My Program</a>
                                     </li>
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"

@@ -4,26 +4,42 @@ namespace controllers;
 
 use services\Myprogramservice;
 use services\registerservice;
+use services\ticketservice;
+use controllers\NavigationController;
 //call the user service to check update user data 
 
 require_once __DIR__ . '/../services/myprogramservice.php';
 require_once __DIR__ . '/../services/registerservice.php';
 require_once __DIR__ . '/../config/constant-paths.php';
+require_once __DIR__ . '/../controllers/navigationcontroller.php';
+require_once __DIR__ . '/../services/ticketservice.php';
 
 
 class Myprogramcontroller
 {
-
+    private $navigationController;
+    private $ticketservice;
     private $myProgramService;
     private $userService;
 
     public function __construct()
     {
         $this->myProgramService = new Myprogramservice();
+        $this->ticketservice = new ticketservice();
+        $this->navigationController = new NavigationController();
         $this->userService = new registerservice();
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }
+    }
+
+
+    function show()
+    {
+        $this->navigationController->displayHeader();
+        $structuredTickets = $this->structureTicketsWithImages();
+        $uniqueTimes = $this->getUniqueTimes($structuredTickets);
+        require_once __DIR__ . '/../views/my-program/list-view.php';
     }
 
     function createReservation()
@@ -129,5 +145,88 @@ class Myprogramcontroller
             $_SESSION['shopping_cart'] = array();
         }
     }
+
+
+    function addToItemQuantity($ticketId, $eventId, $amountToAdd)
+    {
+        foreach ($_SESSION['shopping_cart'] as &$item) {
+            if ($item['ticketId'] == $ticketId && $item['eventId'] == $eventId) {
+                $item['quantity'] += $amountToAdd;
+                break;
+            }
+        }
+        unset($item);
+    }
+
+    function subtractFromItemQuantity($ticketId, $eventId, $amountToSubtract)
+    {
+        foreach ($_SESSION['shopping_cart'] as &$item) {
+            if ($item['ticketId'] == $ticketId && $item['eventId'] == $eventId) {
+                $item['quantity'] -= $amountToSubtract;
+                if ($item['quantity'] < 1) {
+                    $item['quantity'] = 1;
+                }
+                break;
+            }
+        }
+        unset($item);
+    }
+
+    function deleteItemFromCart($ticketId, $eventId)
+    {
+        foreach ($_SESSION['shopping_cart'] as $key => $item) {
+            if ($item['ticketId'] == $ticketId && $item['eventId'] == $eventId) {
+                unset($_SESSION['shopping_cart'][$key]);
+                $_SESSION['shopping_cart'] = array_values($_SESSION['shopping_cart']);
+                break;
+            }
+        }
+    }
+
+
+
+    private function structureTicketsWithImages()
+    {
+        $structuredTickets = [];
+        foreach ($_SESSION['shopping_cart'] as $ticket) {
+            $eventId = $ticket['eventId'];
+            if (!array_key_exists($eventId, $structuredTickets)) {
+                $eventDetails = $this->ticketservice->getEventDetails($eventId);
+                $structuredTickets[$eventId] = [
+                    'tickets' => [],
+                    'image' => $eventDetails['picture'] ?? null,
+                    'event_name' => $eventDetails['name'] ?? null,
+                    'location' => $eventDetails['location'] ?? null,
+                    'totalPrice' => 0 
+                ];
+            }
+            $ticketTotalPrice = $ticket['quantity'] * $ticket['ticketPrice'];
+            $structuredTickets[$eventId]['totalPrice'] += $ticketTotalPrice;
+            $ticket['totalPrice'] = $ticketTotalPrice;
+            $structuredTickets[$eventId]['tickets'][] = $ticket;
+        }
+        return $structuredTickets;
+    }
+    
+
+
+    private function getUniqueTimes($structuredTickets)
+    {
+        $allTimes = [];
+    
+        foreach ($structuredTickets as $event) {
+            foreach ($event['tickets'] as $ticket) {
+                if (isset($ticket['ticketTime']) && is_string($ticket['ticketTime'])) {
+                    $allTimes[] = $ticket['ticketTime'];
+                }
+            }
+        }
+    
+        $uniqueTimes = array_unique($allTimes);
+        sort($uniqueTimes);
+    
+        return $uniqueTimes;
+    }
+    
 
 }

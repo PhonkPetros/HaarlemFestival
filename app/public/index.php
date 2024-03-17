@@ -374,7 +374,12 @@ switch ($request) {
             $controller->createReservation();
         }
         break;
-
+    case '/my-program':
+        $controller = new Myprogramcontroller();
+        if ($method === 'GET'){
+            $controller->show();
+        }
+        break;
     default:
         http_response_code(404);
         $navigation = new Navigationcontroller();

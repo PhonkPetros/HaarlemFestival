@@ -50,6 +50,50 @@ class TicketRepo extends dbconfig
             return null;
         }
     }
+    public function getTicketImage($eventId)
+    {
+        $sql = 'SELECT picture FROM [Event] WHERE event_id = :event_id;';
+        try {
+            $stmt = $this->getConnection()->prepare($sql);
+            $stmt->bindParam(':event_id', $eventId, PDO::PARAM_INT);
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $result ? $result['picture'] : null;
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+            return null;
+        }
+    }
+    public function getEventName($eventId)
+    {
+        $sql = 'SELECT name FROM [Event] WHERE event_id = :event_id;';
+        try {
+            $stmt = $this->getConnection()->prepare($sql);
+            $stmt->bindParam(':event_id', $eventId, PDO::PARAM_INT);
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $result ? $result['name'] : null;
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+            return null;
+        }
+    }
+
+    public function getEventDetails($eventId)
+    {
+        $sql = 'SELECT name, picture, location FROM [Event] WHERE event_id = :event_id;';
+        try {
+            $stmt = $this->getConnection()->prepare($sql);
+            $stmt->bindParam(':event_id', $eventId, PDO::PARAM_INT);
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $result ? $result : null;
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+            return null;
+        }
+    }
+
 
     public function getTicketPrice($eventID)
     {

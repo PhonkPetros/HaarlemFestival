@@ -84,7 +84,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (obj.status === 200 && obj.body.status === 'success') {
                     console.log('Success:', obj.body.message);
                     showSuccessPopup(obj.body.message);
-                    closeModal(); // Close reservation modal
+                    closeModal(); 
                 } else {
                     console.error('Server-side error:', obj.body.message);
                     alert(obj.body.message);
