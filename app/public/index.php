@@ -46,7 +46,6 @@ $method = $_SERVER['REQUEST_METHOD'];
 $editPageID = null;
 $sectionEdit = null;
 $token = null;
-$shareCartID = null;
 $queryString = parse_url($request, PHP_URL_QUERY);
 $queryParams = [];
 if ($queryString !== null) {
@@ -67,16 +66,14 @@ if (strpos($request, '/sectionEdit/') === 0) {
 if (strpos($request, '/new-password/') === 0) {
     $token = htmlspecialchars($queryParams["token"] ?? '');
 }
-if (strpos($request, '/share-cart/') === 0) {
-    $shareCartID = htmlspecialchars($queryParams["cart"] ?? '');
-}
+
 
 //Please do not touch this
 if ($request === '/') {
     $pageID = '1';
 }
 
-if ($pageID || $eventID || $editPageID || $sectionEdit || $token || $shareCartID) {
+if ($pageID || $eventID || $editPageID || $sectionEdit || $token) {
     //this has to do with the editing of event details
     if ($eventID) {
         switch ($eventID) {
@@ -181,19 +178,20 @@ if ($pageID || $eventID || $editPageID || $sectionEdit || $token || $shareCartID
                     $controller->showNewPasswordForm();
                 }
                 break;
-
         }
-    } elseif ($shareCartID) {
-        switch ($token) {
-            default;
-                $controller = new resetpasswordcontroller();
-                if ($method === 'GET' && $token !== null) {
-                    $controller->showNewPasswordForm();
-                }
-                break;
-
-        }
+        exit;
     }
+}
+
+if (strpos($request, '/share-cart/') === 0) {
+    $encodedCart = htmlspecialchars($queryParams["cart"] ?? '');
+    $hash = htmlspecialchars($queryParams["hash"] ?? '');
+
+    $controller = new Myprogramcontroller();
+    if ($method === 'GET' && $encodedCart !== null && $hash !== null) {
+        $controller->showSharedCart($encodedCart, $hash);
+    }
+    exit;
 }
 
 
@@ -408,10 +406,16 @@ switch ($request) {
         break;
     case '/getTotalCartPrice':
         $controller = new Myprogramcontroller();
-        if ($method === 'GET'){
+        if ($method === 'GET') {
             $controller->updateTotalCartPrice();
         }
-        break;    
+        break;
+    case '/get-share-link':
+        $controller = new Myprogramcontroller();
+        if ($method === 'GET') {
+            $controller->generateShareableLink();
+        }
+        break;
     default:
         http_response_code(404);
         $navigation = new Navigationcontroller();

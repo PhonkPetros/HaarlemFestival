@@ -1,4 +1,5 @@
 <div class="container mt-4">
+<button onclick="generateAndShareLink()">Share Cart</button>
     <div class="ticket-row">
         <?php if (empty ($structuredTickets)): ?>
             <div style="justify-content: center; text-align: center; color: black;">

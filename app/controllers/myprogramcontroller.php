@@ -47,6 +47,19 @@ class Myprogramcontroller
         }
         require_once __DIR__ . '/../views/my-program/list-view.php';
     }
+    
+    function showSharedCart($encodedCart, $hash) {
+        $sharedCart = $this->retrieveSharedCart($encodedCart, $hash);
+        if ($sharedCart === null) {
+            echo "Invalid or expired share link.";
+            return;
+        }
+    
+        $structuredTickets = $this->structureTicketsWithImages($sharedCart);
+        require_once __DIR__ . '/../views/my-program/list-view.php';
+    }
+    
+    
 
 
     function createReservation()
@@ -261,18 +274,22 @@ class Myprogramcontroller
     }
 
     function generateShareableLink() {
-        if (!isset($_SESSION['shopping_cart'])) {
-            return null;
+        if (!isset($_SESSION['shopping_cart']) || empty($_SESSION['shopping_cart'])) {
+            echo json_encode(['status' => 'error', 'message' => 'Cart is empty']);
+            exit;
         }
     
         $encodedCart = base64_encode(serialize($_SESSION['shopping_cart']));
-        $hash = hash_hmac('sha256', $encodedCart, 'your-secret-key'); 
+        $hash = hash_hmac('sha256', $encodedCart, $_ENV['SECRET_KEY'] ?? 'default-secret'); 
     
-        return "http://localhost.com/share-cart/?cart=" . urlencode($encodedCart) . "&hash=" . $hash;
+        $link = "http://localhost.com/share-cart/?cart=" . urlencode($encodedCart) . "&hash=" . $hash;
+        echo json_encode(['status' => 'success', 'link' => $link]);
+        exit;
     }
+    
 
     function retrieveSharedCart($encodedCart, $hash) {
-        $isValid = hash_equals(hash_hmac('sha256', $encodedCart, 'your-secret-key'), $hash); 
+        $isValid = hash_equals(hash_hmac('sha256', $encodedCart, $_ENV['SECRET_KEY'] ?? 'default-secret'), $hash);
     
         if ($isValid) {
             return unserialize(base64_decode($encodedCart));
@@ -280,6 +297,7 @@ class Myprogramcontroller
     
         return null;
     }
+    
 
 
 

@@ -52,3 +52,24 @@ function updateTotalCartPrice() {
         })
         .catch(error => console.error('Error:', error));
 }
+
+function generateAndShareLink() {
+    fetch('/get-share-link', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            const shareableLink = data.link;
+            navigator.clipboard.writeText(shareableLink).then(function() {
+                alert('Shareable link copied to clipboard!');
+            }, function(err) {
+                console.error('Could not copy text: ', err);
+            });
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}

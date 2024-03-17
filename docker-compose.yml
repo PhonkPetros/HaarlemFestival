@@ -26,7 +26,7 @@ services:
         ports:
             - 3306:3306
     environment:
-            SECRET_KEY: "BCA8773CCE41D5EF3C866A73F176C"       
+            SECRET_KEY: "BCA8773C"       
     phpmyadmin:
         image: phpmyadmin:latest
         ports:
