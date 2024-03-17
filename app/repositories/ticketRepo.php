@@ -114,6 +114,30 @@ class TicketRepo extends dbconfig
         }
     }
 
+    public function getTicketQuantity($ticketID)
+    {
+        $sql = 'SELECT quantity FROM [Ticket] WHERE ticket_id = :ticketID';
+    
+        try {
+            $stmt = $this->getConnection()->prepare($sql);
+            $stmt->bindParam(':ticketID', $ticketID, PDO::PARAM_INT);
+            $stmt->execute();
+    
+            $stmt->setFetchMode(PDO::FETCH_ASSOC);
+            $event = $stmt->fetch();
+    
+            if ($event) {
+                return (int) $event['quantity']; 
+            } else {
+                return 0; 
+            }
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+            return null; 
+        }
+    }
+    
+
 
 
 

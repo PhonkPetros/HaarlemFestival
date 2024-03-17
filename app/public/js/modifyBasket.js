@@ -16,6 +16,8 @@ function modifyItemQuantity(ticketId, eventId, change) {
                 document.querySelector(`#quantity-${ticketId}`).textContent = data.newQuantity;
                 document.querySelector(`#total-price-${ticketId}`).textContent = data.newTotalPrice.toFixed(2);
                 updateTotalCartPrice();
+            } else if (data.status === 'error') {
+                alert(data.message);
             }
         })
 
@@ -63,26 +65,26 @@ function generateAndShareLink() {
             'Content-Type': 'application/json',
         }
     })
-    .then(response => response.json())
-    .then(data => {
-        if (data.status === 'success') {
-            const shareableLink = data.link;
-            const shareLink = document.getElementById('shareLink');
-            shareLink.href = shareableLink;
-            shareLink.style.display = 'inline';
-        } else {
-            console.error('Error:', data.message);
-        }
-    })
-    .catch(error => console.error('Error:', error));
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                const shareableLink = data.link;
+                const shareLink = document.getElementById('shareLink');
+                shareLink.href = shareableLink;
+                shareLink.style.display = 'inline';
+            } else {
+                console.error('Error:', data.message);
+            }
+        })
+        .catch(error => console.error('Error:', error));
 }
 
 function copyToClipboard(event) {
     const shareLink = document.getElementById('shareLink');
     event.preventDefault();
-    navigator.clipboard.writeText(shareLink.href).then(function() {
+    navigator.clipboard.writeText(shareLink.href).then(function () {
         alert('Link copied to clipboard!');
-    }, function(err) {
+    }, function (err) {
         console.error('Could not copy text: ', err);
     });
 }

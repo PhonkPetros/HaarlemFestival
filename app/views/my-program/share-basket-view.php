@@ -1,6 +1,7 @@
 <div class="container mt-4">
     <div class="row justify-content-between align-items-center mb-3">
         <div class="col-auto">
+            
         </div>
     </div>
     <div class="ticket-row">

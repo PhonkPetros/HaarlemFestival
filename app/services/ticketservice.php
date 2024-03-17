@@ -24,4 +24,8 @@ class ticketservice {
     function getEventDetails($eventId){
         return $this->ticketRepo->getEventDetails($eventId);
     }
+
+    function getTicketQuantity($ticketID){
+        return $this->ticketRepo->getTicketQuantity($ticketID);
+    }
 }
