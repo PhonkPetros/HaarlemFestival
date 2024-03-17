@@ -15,11 +15,15 @@ class Myprogramcontroller
 
     private $myProgramService;
     private $userService;
+    private $navcontroller;
+
 
     public function __construct()
     {
         $this->myProgramService = new Myprogramservice();
         $this->userService = new registerservice();
+        $this->navcontroller = new NavigationController();
+
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }
@@ -130,6 +134,12 @@ class Myprogramcontroller
         if (!isset ($_SESSION['shopping_cart'])) {
             $_SESSION['shopping_cart'] = array();
         }
+    }
+
+    function showMyprogram()
+    {
+        $navigationController = $this->navcontroller->displayHeader();
+        require_once __DIR__ ."/../views/my-program/overview.php";
     }
 
 }

@@ -1,0 +1,31 @@
+.mycart-container {
+    width: 90%;
+    height: 500px;
+    background-color: rgba(255, 255, 255, 0.5);
+    margin: auto;
+    border-radius: 10px;
+    padding-top: 10px;
+}
+
+.pay-button {
+    width: Fixed (1,553px);
+    height: Fixed (88px);
+    top: 1223px;
+    left: 173px;
+    padding: 17 49 17 49;
+    gap: 10px;
+    border-radius: 20  ; 
+    background-color: #1AA428;
+
+}
+
+
+
+.myticket-container {
+    width: 90%;
+    height: 500px;
+    background-color: rgba(255, 255, 255, 0.5);
+    margin: auto;
+    border-radius: 10px;
+    padding-top: 200px;
+}

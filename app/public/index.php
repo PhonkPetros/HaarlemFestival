@@ -238,6 +238,14 @@ switch ($request) {
         $logoutController = new Logoutcontroller();
         $logoutController->logout();
         break;
+
+    case '/myprogram':
+        $myprogramcontroller = new Myprogramcontroller();
+        $myprogramcontroller->showMyprogram();
+        break;
+    
+
+    
     case '/admin/dashboard':
         $controller = new admincontroller();
         if ($method === 'GET') {
