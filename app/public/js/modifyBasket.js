@@ -1,4 +1,9 @@
-updateTotalCartPrice();
+
+
+document.addEventListener('DOMContentLoaded', function () {
+    updateTotalCartPrice();
+});
+
 function modifyItemQuantity(ticketId, eventId, change) {
     fetch('/modifyQuantity', {
         method: 'POST',
@@ -64,12 +69,22 @@ function generateAndShareLink() {
     .then(data => {
         if (data.status === 'success') {
             const shareableLink = data.link;
-            navigator.clipboard.writeText(shareableLink).then(function() {
-                alert('Shareable link copied to clipboard!');
-            }, function(err) {
-                console.error('Could not copy text: ', err);
-            });
+            const shareLink = document.getElementById('shareLink');
+            shareLink.href = shareableLink;
+            shareLink.style.display = 'inline';
+        } else {
+            console.error('Error:', data.message);
         }
     })
     .catch(error => console.error('Error:', error));
+}
+
+function copyToClipboard(event) {
+    const shareLink = document.getElementById('shareLink');
+    event.preventDefault();
+    navigator.clipboard.writeText(shareLink.href).then(function() {
+        alert('Link copied to clipboard!');
+    }, function(err) {
+        console.error('Could not copy text: ', err);
+    });
 }

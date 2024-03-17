@@ -55,7 +55,7 @@ class Myprogramcontroller
             return;
         }
     
-        $structuredTickets = $this->structureTicketsWithImages($sharedCart);
+        $structuredTickets = $this->structureSharedCart($sharedCart);
         require_once __DIR__ . '/../views/my-program/list-view.php';
     }
     
@@ -255,6 +255,30 @@ class Myprogramcontroller
         return $structuredTickets;
     }
 
+    private function structureSharedCart($cartData)
+{
+    $structuredTickets = [];
+    foreach ($cartData as $ticket) {
+        $eventId = $ticket['eventId'];
+        if (!array_key_exists($eventId, $structuredTickets)) {
+            $eventDetails = $this->ticketservice->getEventDetails($eventId);
+            $structuredTickets[$eventId] = [
+                'tickets' => [],
+                'image' => $eventDetails['picture'] ?? null,
+                'event_name' => $eventDetails['name'] ?? null,
+                'location' => $eventDetails['location'] ?? null,
+                'totalPrice' => 0
+            ];
+        }
+        $ticketTotalPrice = $ticket['quantity'] * $ticket['ticketPrice'];
+        $structuredTickets[$eventId]['totalPrice'] += $ticketTotalPrice;
+        $ticket['totalPrice'] = $ticketTotalPrice;
+        $structuredTickets[$eventId]['tickets'][] = $ticket;
+    }
+    return $structuredTickets;
+}
+
+
     private function getUniqueTimes($structuredTickets)
     {
         $allTimes = [];
@@ -282,7 +306,7 @@ class Myprogramcontroller
         $encodedCart = base64_encode(serialize($_SESSION['shopping_cart']));
         $hash = hash_hmac('sha256', $encodedCart, $_ENV['SECRET_KEY'] ?? 'default-secret'); 
     
-        $link = "http://localhost.com/share-cart/?cart=" . urlencode($encodedCart) . "&hash=" . $hash;
+        $link = "http://localhost/share-cart/?cart=" . urlencode($encodedCart) . "&hash=" . $hash;
         echo json_encode(['status' => 'success', 'link' => $link]);
         exit;
     }

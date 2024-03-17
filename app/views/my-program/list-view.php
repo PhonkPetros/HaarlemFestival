@@ -1,7 +1,15 @@
 <div class="container mt-4">
-<button onclick="generateAndShareLink()">Share Cart</button>
+    <div class="row justify-content-between align-items-center mb-3">
+        <div class="col-auto">
+        </div>
+        <div class="col-auto">
+            <button class="btn btn-primary" onclick="generateAndShareLink()">Share Cart</button>
+            <a id="shareLink" style="display: none;" onclick="copyToClipboard(event)">Copy Link</a>
+        </div>
+    </div>
+
     <div class="ticket-row">
-        <?php if (empty ($structuredTickets)): ?>
+        <?php if (empty($structuredTickets)): ?>
             <div style="justify-content: center; text-align: center; color: black;">
                 <h2>No Tickets Currently In Basket</h2>
             </div>
@@ -35,12 +43,17 @@
                         <button class="remove-btn"
                             onclick="deleteItemFromCart('<?= $ticket['ticketId'] ?>', '<?= $eventId ?>')">Remove</button>
                     </div>
-                <?php endforeach; ?>
+                </div>
             <?php endforeach; ?>
-        </div>
-
+        <?php endforeach; ?>
     </div>
-    <div>Total Cart Price: $<span id="total-cart-price">0.00</span></div>
+    <div class="row justify-content-end">
+        <div class="col-auto">
+        </div>
+        <div class="col-auto">
+            <div><h2>Total:</h2> <h3>$<span id="total-cart-price">0.00</span></h3></div>
+        </div>
+    </div>
 </div>
 
 <script src="/js/modifyBasket.js"></script>
