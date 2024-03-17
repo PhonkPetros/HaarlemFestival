@@ -49,6 +49,7 @@ class Myprogramcontroller
     }
     
     function showSharedCart($encodedCart, $hash) {
+        $this->navigationController->displayHeader();
         $sharedCart = $this->retrieveSharedCart($encodedCart, $hash);
         if ($sharedCart === null) {
             echo "Invalid or expired share link.";
@@ -56,12 +57,10 @@ class Myprogramcontroller
         }
     
         $structuredTickets = $this->structureSharedCart($sharedCart);
-        require_once __DIR__ . '/../views/my-program/list-view.php';
+        require_once __DIR__ . '/../views/my-program/share-basket-view.php';
     }
     
     
-
-
     function createReservation()
     {
         //creates a shopping cart if it does not exist in the session
@@ -321,9 +320,6 @@ class Myprogramcontroller
     
         return null;
     }
-    
-
-
 
 
 }
