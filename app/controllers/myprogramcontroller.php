@@ -6,6 +6,7 @@ use services\Myprogramservice;
 use services\registerservice;
 use services\ticketservice;
 use controllers\NavigationController;
+
 //call the user service to check update user data 
 
 require_once __DIR__ . '/../services/myprogramservice.php';
@@ -40,13 +41,13 @@ class Myprogramcontroller
         $structuredTickets = [];
         $uniqueTimes = [];
 
-        if (isset($_SESSION['shopping_cart']) && !empty($_SESSION['shopping_cart'])) {
+        if (isset ($_SESSION['shopping_cart']) && !empty ($_SESSION['shopping_cart'])) {
             $structuredTickets = $this->structureTicketsWithImages();
             $uniqueTimes = $this->getUniqueTimes($structuredTickets);
         }
         require_once __DIR__ . '/../views/my-program/list-view.php';
     }
-    
+
 
     function createReservation()
     {
@@ -126,8 +127,9 @@ class Myprogramcontroller
         exit;
     }
 
-    function updateUserInfo(){
-        
+    function updateUserInfo()
+    {
+
         $userInfo = [
             'firstName' => $_SESSION['user']['firstName'] ?? '',
             'lastName' => $_SESSION['user']['lastName'] ?? '',
@@ -135,16 +137,16 @@ class Myprogramcontroller
             'phoneNumber' => $_SESSION['user']['phoneNumber'] ?? '',
             'email' => $_SESSION['user']['email'] ?? ''
         ];
-    
+
 
         $userEmail = $userInfo['email'];
         $userExists = $this->userService->email_exists($userEmail);
-    
+
         if ($userExists) {
-            $this->userService->updateUser($userInfo); 
+            $this->userService->updateUser($userInfo);
         }
     }
-    
+
     function createShoppingCart()
     {
         if (!isset ($_SESSION['shopping_cart'])) {
@@ -152,34 +154,50 @@ class Myprogramcontroller
         }
     }
 
-
-    function addToItemQuantity($ticketId, $eventId, $amountToAdd)
-    {
+    function modifyItemQuantity() {
+        $data = json_decode(file_get_contents('php://input'), true);
+        $ticketId = $data['ticketId'];
+        $eventId = $data['eventId'];
+        $change = $data['change'];
+    
         foreach ($_SESSION['shopping_cart'] as &$item) {
             if ($item['ticketId'] == $ticketId && $item['eventId'] == $eventId) {
-                $item['quantity'] += $amountToAdd;
+                $item['quantity'] = max($item['quantity'] + $change, 1);
+                $newQuantity = $item['quantity'];
+                $newTotalPrice = $item['quantity'] * $item['ticketPrice'];
                 break;
             }
         }
         unset($item);
+    
+        header('Content-Type: application/json');
+        echo json_encode([
+            'status' => 'success',
+            'message' => 'Quantity modified successfully.',
+            'newQuantity' => $newQuantity,
+            'newTotalPrice' => $newTotalPrice 
+        ]);
     }
 
-    function subtractFromItemQuantity($ticketId, $eventId, $amountToSubtract)
-    {
-        foreach ($_SESSION['shopping_cart'] as &$item) {
-            if ($item['ticketId'] == $ticketId && $item['eventId'] == $eventId) {
-                $item['quantity'] -= $amountToSubtract;
-                if ($item['quantity'] < 1) {
-                    $item['quantity'] = 1;
-                }
-                break;
-            }
-        }
-        unset($item);
+    function updateTotalCartPrice() {
+        $totalCartPrice = array_sum(array_map(function ($item) {
+            return $item['quantity'] * $item['ticketPrice'];
+        }, $_SESSION['shopping_cart']));
+        
+        header('Content-Type: application/json');
+        echo json_encode([
+            'status' => 'success',
+            'message' => 'Total cart price updated successfully.',
+            'totalCartPrice' => $totalCartPrice 
+        ]);
     }
 
-    function deleteItemFromCart($ticketId, $eventId)
+    function deleteItemFromCart()
     {
+        $data = json_decode(file_get_contents('php://input'), true);
+        $ticketId = $data['ticketId'];
+        $eventId = $data['eventId'];
+
         foreach ($_SESSION['shopping_cart'] as $key => $item) {
             if ($item['ticketId'] == $ticketId && $item['eventId'] == $eventId) {
                 unset($_SESSION['shopping_cart'][$key]);
@@ -187,9 +205,19 @@ class Myprogramcontroller
                 break;
             }
         }
+
+        if (empty ($_SESSION['shopping_cart'])) {
+            $message = 'The shopping cart is now empty.';
+        } else {
+            $message = 'Item removed successfully.';
+        }
+
+        header('Content-Type: application/json');
+        echo json_encode([
+            'status' => 'success',
+            'message' => $message
+        ]);
     }
-
-
 
     private function structureTicketsWithImages()
     {
@@ -203,7 +231,7 @@ class Myprogramcontroller
                     'image' => $eventDetails['picture'] ?? null,
                     'event_name' => $eventDetails['name'] ?? null,
                     'location' => $eventDetails['location'] ?? null,
-                    'totalPrice' => 0 
+                    'totalPrice' => 0
                 ];
             }
             $ticketTotalPrice = $ticket['quantity'] * $ticket['ticketPrice'];
@@ -213,26 +241,49 @@ class Myprogramcontroller
         }
         return $structuredTickets;
     }
-    
-
 
     private function getUniqueTimes($structuredTickets)
     {
         $allTimes = [];
-    
+
         foreach ($structuredTickets as $event) {
             foreach ($event['tickets'] as $ticket) {
-                if (isset($ticket['ticketTime']) && is_string($ticket['ticketTime'])) {
+                if (isset ($ticket['ticketTime']) && is_string($ticket['ticketTime'])) {
                     $allTimes[] = $ticket['ticketTime'];
                 }
             }
         }
-    
+
         $uniqueTimes = array_unique($allTimes);
         sort($uniqueTimes);
-    
+
         return $uniqueTimes;
     }
+
+    function generateShareableLink() {
+        if (!isset($_SESSION['shopping_cart'])) {
+            return null;
+        }
     
+        $encodedCart = base64_encode(serialize($_SESSION['shopping_cart']));
+        $hash = hash_hmac('sha256', $encodedCart, 'your-secret-key'); 
+    
+        return "http://localhost.com/share-cart/?cart=" . urlencode($encodedCart) . "&hash=" . $hash;
+    }
+
+    function retrieveSharedCart($encodedCart, $hash) {
+        $isValid = hash_equals(hash_hmac('sha256', $encodedCart, 'your-secret-key'), $hash); 
+    
+        if ($isValid) {
+            return unserialize(base64_decode($encodedCart));
+        }
+    
+        return null;
+    }
+
+
+
 
 }
+
+

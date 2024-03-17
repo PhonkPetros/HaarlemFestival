@@ -46,6 +46,7 @@ $method = $_SERVER['REQUEST_METHOD'];
 $editPageID = null;
 $sectionEdit = null;
 $token = null;
+$shareCartID = null;
 $queryString = parse_url($request, PHP_URL_QUERY);
 $queryParams = [];
 if ($queryString !== null) {
@@ -66,13 +67,16 @@ if (strpos($request, '/sectionEdit/') === 0) {
 if (strpos($request, '/new-password/') === 0) {
     $token = htmlspecialchars($queryParams["token"] ?? '');
 }
+if (strpos($request, '/share-cart/') === 0) {
+    $shareCartID = htmlspecialchars($queryParams["cart"] ?? '');
+}
 
 //Please do not touch this
 if ($request === '/') {
     $pageID = '1';
 }
 
-if ($pageID || $eventID || $editPageID || $sectionEdit || $token) {
+if ($pageID || $eventID || $editPageID || $sectionEdit || $token || $shareCartID) {
     //this has to do with the editing of event details
     if ($eventID) {
         switch ($eventID) {
@@ -105,8 +109,6 @@ if ($pageID || $eventID || $editPageID || $sectionEdit || $token) {
         }
         exit;
     } elseif ($pageID) {
-
-
         //this has to with our own pages
         switch ($pageID) {
             case PAGE_ID_HOME:
@@ -181,8 +183,20 @@ if ($pageID || $eventID || $editPageID || $sectionEdit || $token) {
                 break;
 
         }
+    } elseif ($shareCartID) {
+        switch ($token) {
+            default;
+                $controller = new resetpasswordcontroller();
+                if ($method === 'GET' && $token !== null) {
+                    $controller->showNewPasswordForm();
+                }
+                break;
+
+        }
     }
 }
+
+
 if (preg_match("/^\/restaurant\/details\/(\d+)$/", $request, $matches)) {
     $restaurantId = $matches[1]; // This captures the numeric ID from the URL.
     $controller = new yummycontroller();
@@ -376,10 +390,28 @@ switch ($request) {
         break;
     case '/my-program':
         $controller = new Myprogramcontroller();
-        if ($method === 'GET'){
+        if ($method === 'GET') {
             $controller->show();
         }
         break;
+    case '/modifyQuantity':
+        $controller = new Myprogramcontroller();
+        if ($method === 'POST') {
+            $controller->modifyItemQuantity();
+        }
+        break;
+    case '/deleteItem':
+        $controller = new Myprogramcontroller();
+        if ($method === 'POST') {
+            $controller->deleteItemFromCart();
+        }
+        break;
+    case '/getTotalCartPrice':
+        $controller = new Myprogramcontroller();
+        if ($method === 'GET'){
+            $controller->updateTotalCartPrice();
+        }
+        break;    
     default:
         http_response_code(404);
         $navigation = new Navigationcontroller();

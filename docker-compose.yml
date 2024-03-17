@@ -25,6 +25,8 @@ services:
             - mysqldata:/var/lib/mysql
         ports:
             - 3306:3306
+    environment:
+            SECRET_KEY: "BCA8773CCE41D5EF3C866A73F176C"       
     phpmyadmin:
         image: phpmyadmin:latest
         ports:
