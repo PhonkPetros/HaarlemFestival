@@ -205,7 +205,24 @@ class Pagecontroller
                 'title' => $section['title'],
                 'content' => $section['editor_content'] ?? null,
                 'image' => $section['image_file_path'] ?? null,
-                'type' => $section['type'] ?? null, // Ensure 'type' is included here.
+                'type' => $section['type'] ?? null,
+            ];
+            $contentData[] = $sectionData;
+        }
+        return $contentData;
+    }
+
+
+    public function getContentAndImagesForResutrant() {
+        $pageId = htmlspecialchars(5);
+        $sections = $this->pageService->getSectionContentImages($pageId);
+        $contentData = [];
+        foreach ($sections as $section) {
+            $sectionData = [
+                'title' => $section['title'],
+                'content' => $section['editor_content'] ?? null,
+                'image' => $section['image_file_path'] ?? null,
+                'type' => $section['type'] ?? null,
             ];
             $contentData[] = $sectionData;
         }
@@ -230,6 +247,7 @@ class Pagecontroller
 
         return $all;
     }
+    
 
     public function addNewPage()
     {

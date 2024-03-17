@@ -1,4 +1,7 @@
 <?php
+
+
+
 session_start();
 
 use controllers\logincontroller;
@@ -15,12 +18,8 @@ use controllers\overview;
 use controllers\Templatecontroller;
 use controllers\yummycontroller;
 use controllers\Pagecontroller;
-use controllers\resetpasswordcontroller;
-use controllers\Myprogramcontroller;
 
 require_once __DIR__ . '/../controllers/overview.php';
-require_once __DIR__ . '/../controllers/myprogramcontroller.php';
-require_once __DIR__ . '/../config/constant-paths.php';
 require_once __DIR__ . '/../controllers/registercontroller.php';
 require_once __DIR__ . '/../controllers/logincontroller.php';
 require_once __DIR__ . '/../controllers/logoutcontroller.php';
@@ -34,25 +33,19 @@ require_once __DIR__ . '/../controllers/navigationcontroller.php';
 require_once __DIR__ . '/../controllers/pagecontroller.php';
 require_once __DIR__ . '/../controllers/templatecontroller.php';
 require_once __DIR__ . '/../controllers/yummycontroller.php';
-require_once __DIR__ . '/../controllers/resetpasswordcontroller.php';
-
 
 $request = $_SERVER['REQUEST_URI'];
 $method = $_SERVER['REQUEST_METHOD'];
 
-
-
 //Please do not touch this
 $editPageID = null;
 $sectionEdit = null;
-$token = null;
 $queryString = parse_url($request, PHP_URL_QUERY);
 $queryParams = [];
 if ($queryString !== null) {
     parse_str($queryString, $queryParams);
 }
 $pageID = htmlspecialchars($queryParams["pageid"] ?? '');
-
 $eventID = null;
 if (strpos($request, '/manage-event-details/') === 0) {
     $eventID = htmlspecialchars($queryParams["id"] ?? '');
@@ -63,38 +56,38 @@ if (strpos($request, '/edit-content/') === 0) {
 if (strpos($request, '/sectionEdit/') === 0) {
     $sectionEdit = htmlspecialchars($queryParams['section_id'] ?? '');
 }
-if (strpos($request, '/new-password/') === 0) {
-    $token = htmlspecialchars($queryParams["token"] ?? '');
-}
+
+
+
 
 //Please do not touch this
 if ($request === '/') {
     $pageID = '1';
 }
 
-if ($pageID || $eventID || $editPageID || $sectionEdit || $token) {
+if ($pageID || $eventID || $editPageID || $sectionEdit) {
     //this has to do with the editing of event details
     if ($eventID) {
         switch ($eventID) {
-            case EVENT_ID_DANCE:
+            case "5":
                 $controller = new Dancecontroller();
                 if ($method === 'GET') {
                     $controller->editEventDetails();
                 }
                 break;
-            case EVENT_ID_JAZZ:
+            case '6':
                 $controller = new Jazzcontroller();
                 if ($method === 'GET') {
-                    $controller->showEventDetails();
+                    $controller->editEventDetails();
                 }
                 break;
-            case EVENT_ID_RESTAURANT:
+            case '7':
                 $controller = new Restaurantcontroller();
                 if ($method === 'GET') {
                     $controller->editEventDetails();
                 }
                 break;
-            case EVENT_ID_HISTORY:
+            case '8':
                 $controller = new Historycontroller();
                 if ($method === 'GET') {
                     $controller->showeditEventDetails();
@@ -105,33 +98,31 @@ if ($pageID || $eventID || $editPageID || $sectionEdit || $token) {
         }
         exit;
     } elseif ($pageID) {
-
-
         //this has to with our own pages
         switch ($pageID) {
-            case PAGE_ID_HOME:
+            case "1":
                 $controller = new overview();
                 $controller->show();
                 break;
-            case PAGE_ID_HISTORY:
+            case '2':
                 $controller = new Historycontroller();
                 if ($method === 'GET') {
                     $controller->show();
                 }
                 break;
-            case PAGE_ID_DANCE:
+            case '3':
                 $controller = new Dancecontroller();
                 if ($method === 'GET') {
                     $controller->show();
                 }
                 break;
-            case PAGE_ID_JAZZ:
+            case '4':
                 $controller = new Jazzcontroller();
                 if ($method === 'GET') {
                     $controller->show();
                 }
                 break;
-            case PAGE_ID_YUMMY:
+            case '5':
                 $controller = new yummycontroller();
                 if ($method === 'GET') {
                     $controller->showYummyOverview();
@@ -171,18 +162,10 @@ if ($pageID || $eventID || $editPageID || $sectionEdit || $token) {
                 break;
         }
         exit;
-    } elseif ($token) {
-        switch ($token) {
-            default;
-                $controller = new resetpasswordcontroller();
-                if ($method === 'GET' && $token !== null) {
-                    $controller->showNewPasswordForm();
-                }
-                break;
-
-        }
     }
 }
+
+
 if (preg_match("/^\/restaurant\/details\/(\d+)$/", $request, $matches)) {
     $restaurantId = $matches[1]; // This captures the numeric ID from the URL.
     $controller = new yummycontroller();
@@ -192,7 +175,6 @@ if (preg_match("/^\/restaurant\/details\/(\d+)$/", $request, $matches)) {
     exit;
 }
 
-//Add routes for actions or admin routes that do not have to do with displaying detail pages or overview pages for your individual events
 switch ($request) {
     case '/login':
         $controller = new logincontroller();
@@ -202,26 +184,13 @@ switch ($request) {
             $controller->loginAction();
         }
         break;
+
     case '/reset-password':
         $controller = new resetpasswordcontroller();
         if ($method === 'GET') {
-            $controller->showResetPasswordForm();
+            $controller->show();
         } elseif ($method === 'POST') {
-            $controller->resetpasswordAction();
-        }
-        break;
-
-    case '/new-passwords':
-        $controller = new resetpasswordcontroller();
-        if ($method === 'POST') {
-            $controller->updatePasswordAction();
-        }
-        break;
-
-    case '/success-reset-password':
-        $controller = new resetpasswordcontroller();
-        if ($method === 'GET') {
-            $controller->successfulNewPassword();
+            $controller->loginAction();
         }
         break;
 
@@ -252,7 +221,7 @@ switch ($request) {
         break;
     case '/admin/delete-user':
         $controller = new admincontroller();
-        if ($method === 'POST' && isset ($_POST['user_id'])) {
+        if ($method === 'POST' && isset($_POST['user_id'])) {
             $controller->deleteUsers();
         }
         break;
@@ -362,19 +331,6 @@ switch ($request) {
             $controller->addTimeSlot();
         }
         break;
-    case '/admin/add-section':
-        $controller = new Pagecontroller();
-        if ($method === 'POST') {
-            $controller->addNewSection();
-        }
-        break;
-    case '/submit-reservation':
-        $controller = new Myprogramcontroller();
-        if ($method === 'POST') {
-            $controller->createReservation();
-        }
-        break;
-
     default:
         http_response_code(404);
         $navigation = new Navigationcontroller();
