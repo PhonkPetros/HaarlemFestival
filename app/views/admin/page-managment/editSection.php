@@ -21,11 +21,8 @@
                     <option value="Body" <?php echo ($sectionType === 'Body') ? 'selected' : ''; ?>>Body</option>
                     <option value="Title" <?php echo ($sectionType === 'Title') ? 'selected' : ''; ?>>Title</option>
                     <option value="Image" <?php echo ($sectionType === 'Image') ? 'selected' : ''; ?>>Image</option>
-                    <option value="ImageText" <?php echo ($sectionType === 'ImageText') ? 'selected' : ''; ?>>Image & Text
-                    </option>
+                    <option value="ImageText" <?php echo ($sectionType === 'ImageText') ? 'selected' : ''; ?>>Image & Text</option>
                 </select>
-                <input type="hidden" name="newType" value="<?php echo htmlspecialchars($sectionType); ?>">
-
             </div>
         </div>
 
