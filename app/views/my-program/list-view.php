@@ -59,6 +59,3 @@
     </div>
 </div>
 
-<script src="/js/modifyBasket.js"></script>
-
-<?php require_once __DIR__ . '/../general_views/footer.php'; ?>

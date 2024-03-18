@@ -48,14 +48,10 @@ class Myprogramcontroller
             $structuredTickets = $this->structureTicketsWithImages();
             $uniqueTimes = $this->getUniqueTimes($structuredTickets);
         }
-        require_once __DIR__ . '/../views/my-program/list-view.php';
-    }
-    function showMyprogram()
-    {
-        $navigationController = $this->navcontroller->displayHeader();
         require_once __DIR__ ."/../views/my-program/overview.php";
+    
     }
-
+  
     function showSharedCart($encodedCart, $hash)
     {
         $this->navigationController->displayHeader();

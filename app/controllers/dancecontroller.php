@@ -4,22 +4,27 @@ namespace controllers;
 
 use controllers\NavigationController;
 use repositories\DanceRepository;
+use controllers\Pagecontroller;
 
 require_once __DIR__ . '/../repositories/dancerepository.php';
+require_once __DIR__ . '/../controllers/pagecontroller.php';
 
 class Dancecontroller
 {
 
     private $navcontroller;
     private $repository;
+    private $pagecontroller;
     public function __construct() {
         $this->navcontroller = new NavigationController();
         $this->repository = new DanceRepository();
+        $this->pagecontroller = new Pagecontroller();
     }
 
     public function show()
     {
-        $navigation = $this->navcontroller->displayHeader();    
+        $navigation = $this->navcontroller->displayHeader();
+        $contentData = $this->pagecontroller->getContentAndImagesByPage();    
         require_once __DIR__ ."/../views/dance/overview.php";
     }
 

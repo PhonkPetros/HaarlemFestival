@@ -1,7 +1,7 @@
 <?php
 include __DIR__ . '/header.php';
 ?>
-<h1>My prograam</h1>
+<h1>Haarlem Festival</h1>
 
 
 <div class="festival-banner">
