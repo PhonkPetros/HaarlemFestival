@@ -14,7 +14,7 @@ class User implements \JsonSerializable
     private ?string $lastname;
     private ?string $address;
     private ?string $phone_number;
-    private ?int $rating;
+    private ?int $rating = null;
 
     public function jsonSerialize() : mixed{
         return [

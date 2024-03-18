@@ -62,10 +62,22 @@
     </div>
 </div>
 
-<div id="successPopup" class="modal" tabindex="-1" role="dialog" style="display:none;">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content" style="padding: 30px">
-            <div class="modal-body" id="successPopupContent">
+<div id="successPopup" class="modal" tabindex="-1" role="dialog">
+
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body text-center">
+                <div id="successPopupContent">
+                    <div class="checkmark-circle">
+                        <div class="background"></div>
+                        <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                            <circle class="checkmark-circle" cx="26" cy="26" r="25" fill="none"/>
+                            <path class="checkmark-check" stroke="#fff" stroke-width="2" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+                        </svg>
+                    </div>
+                    <h3>Success!</h3>
+                    <p>Your reservation has been confirmed.</p>
+                </div>
             </div>
         </div>
     </div>

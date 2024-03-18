@@ -103,7 +103,8 @@ document.addEventListener('DOMContentLoaded', function () {
     function showSuccessPopup(message) {
         var popupContent = `
         <div class="text-center">
-        <img src="/../img/checkbox-circle-fill.png" alt="Success" class="checkmark-circle-img" />
+        <img style=" width: 70px;
+        height: 70px;" src="/../img/checkbox-circle-fill.png" alt="Success" class="checkmark-circle-img" />
         <h4>You have successfully reserve this event. You can find your reservation in “My Program” page</h4>
         <button type="button" class="btn btn-dark" id="continueShopping">Continue Shopping</button>
         <button type="button" class="btn btn-dark" id="goToMyProgram">Go to My Program</button>
