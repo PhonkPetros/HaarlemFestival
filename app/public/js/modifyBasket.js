@@ -37,6 +37,7 @@ function deleteItemFromCart(ticketId, eventId) {
             if (data.status === 'success') {
                 document.querySelector(`#ticket-container-${ticketId}`).remove();
                 updateTotalCartPrice();
+                window.location.reload();
             }
         })
         .catch(error => console.error('Error:', error));

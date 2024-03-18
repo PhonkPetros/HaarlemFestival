@@ -64,14 +64,7 @@
 
 <div id="successPopup" class="modal" tabindex="-1" role="dialog" style="display:none;">
     <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Success</h5>
-                <button type="button" class="btn-close" class="close" data-dismiss="modal" aria-label="Close"
-                    onclick="closeSuccessPopup()">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
+        <div class="modal-content" style="padding: 30px">
             <div class="modal-body" id="successPopupContent">
             </div>
         </div>
@@ -94,7 +87,29 @@ $userSession = isset ($_SESSION['user']) ? json_encode([
     ]);
 ?>
 
+<style>
+.checkmark-circle {
+    width: 20px;
+    height: 20px;
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+    margin-bottom: 1rem;
+}
 
+.background {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: #4bb543;
+    position: absolute;
+}
+
+
+
+
+
+</style>
 <script>
     var userSession = <?php echo $userSession; ?>;
 </script>

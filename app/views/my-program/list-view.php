@@ -1,4 +1,4 @@
-<div class="container mt-4 item-container"> 
+<div class="container mt-4 item-container">
     <div class="row justify-content-between align-items-center mb-3">
         <div class="col-auto">
             <h3 style="text-decoration: underline;">My Cart</h3>
@@ -12,12 +12,14 @@
     <div class="ticket-row">
         <?php foreach ($structuredTickets as $eventId => $eventData): ?>
             <?php foreach ($eventData['tickets'] as $ticket): ?>
-                <div class="ticket-container" id="ticket-container-<?= $ticket['ticketId'] ?>" style="background-image: url('<?php echo $eventData['image']; ?>');">
-                    <div class="ticket-details">
+                <div class="ticket-container" id="ticket-container-<?= $ticket['ticketId'] ?>"
+                    style="height: 390px; background-image: url('<?php echo $eventData['image']; ?>');">
+
+                    <div class="ticket-details" style="height: 390px">
                         <h5 class="ticket-title">
                             <?php echo htmlspecialchars($eventData['event_name']); ?>
                         </h5>
-                        <p class="ticket-info">
+                        <p class="ticket-info" style=" font-size: 19px;">
                             Location:
                             <?php echo htmlspecialchars($eventData['location']); ?><br>
                             Date:
@@ -37,13 +39,14 @@
                             </span>
                             <button onclick="modifyItemQuantity('<?= $ticket['ticketId'] ?>', '<?= $eventId ?>', 1)">+</button>
                         </div>
-                        <button class="remove-btn" onclick="deleteItemFromCart('<?= $ticket['ticketId'] ?>', '<?= $eventId ?>')">Remove</button>
+                        <button class="remove-btn"
+                            onclick="deleteItemFromCart('<?= $ticket['ticketId'] ?>', '<?= $eventId ?>')">Remove</button>
                     </div>
                 </div>
             <?php endforeach; ?>
         <?php endforeach; ?>
     </div>
-    <?php if (empty($structuredTickets)): ?>
+    <?php if (empty ($structuredTickets)): ?>
         <div style="justify-content: center; text-align: center; color: black;">
             <h2>No Tickets Currently In Basket</h2>
         </div>
