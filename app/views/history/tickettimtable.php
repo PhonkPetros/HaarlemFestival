@@ -58,6 +58,6 @@
 </div>
 
 
-<?php require_once __DIR__ . '/../../views/history/popup-reservation-form.php' ?>
+<?php require_once __DIR__ . '/../../views/reservation-form/popup-reservation-form.php' ?>
 
 

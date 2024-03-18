@@ -69,6 +69,7 @@ if (strpos($request, '/new-password/') === 0) {
     $token = htmlspecialchars($queryParams["token"] ?? '');
 }
 
+
 //Please do not touch this
 if ($request === '/') {
     $pageID = '1';
@@ -107,8 +108,6 @@ if ($pageID || $eventID || $editPageID || $sectionEdit || $token) {
         }
         exit;
     } elseif ($pageID) {
-
-
         //this has to with our own pages
         switch ($pageID) {
             case PAGE_ID_HOME:
@@ -181,10 +180,23 @@ if ($pageID || $eventID || $editPageID || $sectionEdit || $token) {
                     $controller->showNewPasswordForm();
                 }
                 break;
-
         }
+        exit;
     }
 }
+
+if (strpos($request, '/share-cart/') === 0) {
+    $encodedCart = htmlspecialchars($queryParams["cart"] ?? '');
+    $hash = htmlspecialchars($queryParams["hash"] ?? '');
+
+    $controller = new Myprogramcontroller();
+    if ($method === 'GET' && $encodedCart !== null && $hash !== null) {
+        $controller->showSharedCart($encodedCart, $hash);
+    }
+    exit;
+}
+
+
 if (preg_match("/^\/restaurant\/details\/(\d+)$/", $request, $matches)) {
     $restaurantId = $matches[1]; // This captures the numeric ID from the URL.
     $controller = new yummycontroller();
@@ -385,7 +397,36 @@ switch ($request) {
             $controller->createReservation();
         }
         break;
-
+    case '/my-program':
+        $controller = new Myprogramcontroller();
+        if ($method === 'GET') {
+            $controller->show();
+        }
+        break;
+    case '/modifyQuantity':
+        $controller = new Myprogramcontroller();
+        if ($method === 'POST') {
+            $controller->modifyItemQuantity();
+        }
+        break;
+    case '/deleteItem':
+        $controller = new Myprogramcontroller();
+        if ($method === 'POST') {
+            $controller->deleteItemFromCart();
+        }
+        break;
+    case '/getTotalCartPrice':
+        $controller = new Myprogramcontroller();
+        if ($method === 'GET') {
+            $controller->updateTotalCartPrice();
+        }
+        break;
+    case '/get-share-link':
+        $controller = new Myprogramcontroller();
+        if ($method === 'GET') {
+            $controller->generateShareableLink();
+        }
+        break;
     default:
         http_response_code(404);
         $navigation = new Navigationcontroller();
