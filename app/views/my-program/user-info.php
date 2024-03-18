@@ -32,5 +32,3 @@
         </div>
     </form>
 </div>
-
-<script src="/js/modifyBasket.js"></script>
