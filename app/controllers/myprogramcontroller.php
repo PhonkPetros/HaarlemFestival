@@ -52,6 +52,19 @@ class Myprogramcontroller
     
     }
   
+    function showPayment(){
+        $this->navigationController->displayHeader();
+        $structuredTickets = [];
+        $uniqueTimes = [];
+        $userInfo = $this->getUserInfoFromCart();
+
+        if (isset ($_SESSION['shopping_cart']) && !empty ($_SESSION['shopping_cart'])) {
+            $structuredTickets = $this->structureTicketsWithImages();
+            $uniqueTimes = $this->getUniqueTimes($structuredTickets);
+        }
+        require_once __DIR__ ."/../views/my-program/payment.php";
+    }
+
     function showSharedCart($encodedCart, $hash)
     {
         $this->navigationController->displayHeader();
@@ -362,6 +375,15 @@ class Myprogramcontroller
         return null;
     }
 
+    function getUserInfoFromCart() {
+        foreach ($_SESSION['shopping_cart'] as $item) {
+            if (isset($item['user'])) {
+                return $item['user']; 
+            }
+        }
+        return null; 
+    }
+    
 
 }
 

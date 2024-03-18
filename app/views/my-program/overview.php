@@ -1,6 +1,3 @@
-<?php
-include __DIR__ . '/../general_views/header.php';
-?>
 
 
 <div class="container mt-4 myprogram-container">
@@ -14,6 +11,7 @@ include __DIR__ . '/../general_views/header.php';
         </div>
     </div>
     <? require_once __DIR__ . '/list-view.php'; ?>
+    
     <? require_once __DIR__ . '/purchased-ticket.php'; ?>
     <? require_once __DIR__ . '/agenda-view.php'; ?>
 
@@ -27,7 +25,6 @@ include __DIR__ . '/../general_views/header.php';
 
 
 
-<script src="/js/modifyBasket.js"></script>
 
 
 <?php

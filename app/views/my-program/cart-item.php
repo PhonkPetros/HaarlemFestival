@@ -1,7 +1,7 @@
 <div class="container mt-4 item-container">
     <div class="row justify-content-between align-items-center mb-3">
         <div class="col-auto">
-            <h3 style="text-decoration: underline;">My Cart</h3>
+            <h3 style="text-decoration: underline;">Tickets</h3>
         </div>
         <div class="col-auto">
             <button class="btn btn-primary" onclick="generateAndShareLink()">Share Cart</button>
@@ -58,9 +58,6 @@
                     <h2>Total: €<span id="total-cart-price">0.00</span></h2>
                 </div>
             </div>
-        </div>
-        <div class="d-flex justify-content-center" style="padding-top: 20px;">
-        <a href="/my-program/payment" class="btn btn-success" style="width: 100%;"><h4>Pay Now</h4></a>
         </div>
     <?php endif; ?>
 </div>

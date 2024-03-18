@@ -423,6 +423,12 @@ switch ($request) {
             $controller->generateShareableLink();
         }
         break;
+    case '/my-program/payment':
+        $controller = new Myprogramcontroller();
+        if ($method == 'GET') {
+            $controller->showPayment();
+        }
+        break;
     default:
         http_response_code(404);
         $navigation = new Navigationcontroller();
