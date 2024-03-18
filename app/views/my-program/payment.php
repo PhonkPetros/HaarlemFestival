@@ -5,7 +5,7 @@
 
     <? require_once __DIR__ . '/user-info.php'; ?>
     <? require_once __DIR__ . '/cart-item.php'; ?>
-    <? require_once __DIR__ . '/mollie-payement.php'; ?>
+    <? require_once __DIR__ . '/payment-choice.php'; ?>
 
 
   
