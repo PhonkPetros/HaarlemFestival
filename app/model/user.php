@@ -14,6 +14,7 @@ class User implements \JsonSerializable
     private ?string $lastname;
     private ?string $address;
     private ?string $phone_number;
+    private ?int $rating;
 
     public function jsonSerialize() : mixed{
         return [
@@ -26,6 +27,7 @@ class User implements \JsonSerializable
             'lastname' => $this->getLastname(),
             'address' => $this->getAddress(),
             'phone_number' => $this->getPhoneNumber(),
+            'rating' => $this->getRating(),
         ];
     }
 
@@ -36,6 +38,15 @@ class User implements \JsonSerializable
     public function setFirstname(?string $firstname): void {
         $this->firstname = $firstname;
     }
+
+    public function getRating(): ?int {
+        return $this->rating;
+    }
+
+    public function setRating(?int $rating): void {
+        $this->rating = $rating;
+    }
+
 
     public function getLastname(): ?string {
         return $this->lastname;

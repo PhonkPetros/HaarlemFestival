@@ -1,6 +1,7 @@
-<div class="container mt-4">
+<div class="container mt-4 item-container"> 
     <div class="row justify-content-between align-items-center mb-3">
         <div class="col-auto">
+            <h3 style="text-decoration: underline;">My Cart</h3>
         </div>
         <div class="col-auto">
             <button class="btn btn-primary" onclick="generateAndShareLink()">Share Cart</button>
@@ -9,15 +10,9 @@
     </div>
 
     <div class="ticket-row">
-        <?php if (empty($structuredTickets)): ?>
-            <div style="justify-content: center; text-align: center; color: black;">
-                <h2>No Tickets Currently In Basket</h2>
-            </div>
-        <?php endif; ?>
         <?php foreach ($structuredTickets as $eventId => $eventData): ?>
             <?php foreach ($eventData['tickets'] as $ticket): ?>
-                <div class="ticket-container" id="ticket-container-<?= $ticket['ticketId'] ?>"
-                    style="background-image: url('<?php echo $eventData['image']; ?>');">
+                <div class="ticket-container" id="ticket-container-<?= $ticket['ticketId'] ?>" style="background-image: url('<?php echo $eventData['image']; ?>');">
                     <div class="ticket-details">
                         <h5 class="ticket-title">
                             <?php echo htmlspecialchars($eventData['event_name']); ?>
@@ -40,22 +35,27 @@
                             </span>
                             <button onclick="modifyItemQuantity('<?= $ticket['ticketId'] ?>', '<?= $eventId ?>', 1)">+</button>
                         </div>
-                        <button class="remove-btn"
-                            onclick="deleteItemFromCart('<?= $ticket['ticketId'] ?>', '<?= $eventId ?>')">Remove</button>
+                        <button class="remove-btn" onclick="deleteItemFromCart('<?= $ticket['ticketId'] ?>', '<?= $eventId ?>')">Remove</button>
                     </div>
                 </div>
             <?php endforeach; ?>
         <?php endforeach; ?>
     </div>
-    <div class="row justify-content-end" style="border-top: 1px solid black; padding-top: 10px; margin-top: 20px">
-        <div class="col-auto">
+    <?php if (empty($structuredTickets)): ?>
+        <div style="justify-content: center; text-align: center; color: black;">
+            <h2>No Tickets Currently In Basket</h2>
         </div>
-        <div class="col-auto">
-            <div>
-                <h2>Total:</h2>
-                <h3>$<span id="total-cart-price">0.00</span></h3>
+    <?php else: ?>
+        <div class="row justify-content-end" style="border-top: 1px solid black; padding-top: 10px; margin-top: 20px">
+            <div class="col-auto"></div>
+            <div class="col-auto">
+                <div>
+                    <h2>Total: €<span id="total-cart-price">0.00</span></h2>
+                </div>
             </div>
         </div>
-    </div>
+        <div class="d-flex justify-content-center" style="padding-top: 20px;">
+            <button class="btn btn-success" style="width: 100%;">Pay Now</button>
+        </div>
+    <?php endif; ?>
 </div>
-
