@@ -37,9 +37,10 @@ require_once __DIR__ . '/../controllers/yummycontroller.php';
 require_once __DIR__ . '/../controllers/resetpasswordcontroller.php';
 
 
+$url = $_SERVER['REQUEST_URI'];
 $request = $_SERVER['REQUEST_URI'];
 $method = $_SERVER['REQUEST_METHOD'];
-
+echo $request;
 
 
 //Please do not touch this
@@ -55,6 +56,7 @@ $pageID = htmlspecialchars($queryParams["pageid"] ?? '');
 
 $eventID = null;
 if (strpos($request, '/manage-event-details/') === 0) {
+    echo "yes";
     $eventID = htmlspecialchars($queryParams["id"] ?? '');
 }
 if (strpos($request, '/edit-content/') === 0) {
@@ -191,7 +193,6 @@ if (preg_match("/^\/restaurant\/details\/(\d+)$/", $request, $matches)) {
     }
     exit;
 }
-
 //Add routes for actions or admin routes that do not have to do with displaying detail pages or overview pages for your individual events
 switch ($request) {
     case '/login':
@@ -211,9 +212,11 @@ switch ($request) {
         }
         break;
 
-    case '/new-passwords':
+    case '/new-password':
         $controller = new resetpasswordcontroller();
-        if ($method === 'POST') {
+        if ($method === 'GET') {
+            $controller->showNewPasswordForm();
+        } else if ($method === 'POST') {
             $controller->updatePasswordAction();
         }
         break;
@@ -238,14 +241,14 @@ switch ($request) {
         $logoutController = new Logoutcontroller();
         $logoutController->logout();
         break;
-
-    case '/myprogram':
-        $myprogramcontroller = new Myprogramcontroller();
-        $myprogramcontroller->showMyprogram();
+    case '/dance/addNewEvent':
+        $controller = new Dancecontroller();
+        $controller->addNewEvent();
         break;
-    
-
-    
+    case '/dance/updateEvent':
+        $controller = new Dancecontroller();
+        $controller->updateEvent();
+        break;
     case '/admin/dashboard':
         $controller = new admincontroller();
         if ($method === 'GET') {
@@ -390,4 +393,3 @@ switch ($request) {
         require __DIR__ . '/../views/404.php';
         break;
 }
-

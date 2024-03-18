@@ -14,6 +14,9 @@
     <link rel="stylesheet" href="/css/template.css">
     <link rel="stylesheet" href="/css/footer.css">
     <link rel="stylesheet" href="/css/myprogram.css">
+    <link rel="stylesheet" href="/css/myprogram.css">
+    <link rel="stylesheet" href="/css/ticket.css">
+    
     
 </head>
 
