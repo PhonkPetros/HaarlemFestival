@@ -3,7 +3,8 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Ticket Reservation</h5>
-                <button ttype="button" class="btn-close close" data-dismiss="modal" aria-label="Close" onclick="closeModal()">
+                <button ttype="button" class="btn-close close" data-dismiss="modal" aria-label="Close"
+                    onclick="closeModal()">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -12,7 +13,8 @@
                     <div class="form-group">
                         <label>Ticket Information</label>
                         <p id="ticketInfo">Event on <span id="ticketInfoDate"></span> at <span
-                                id="ticketInfoTime"></span>, Language: <span id="ticketInfoLanguage"></span></p>
+                                id="ticketInfoTime"></span> end at <span id="ticketInfoEndTime"></span>, Language: <span
+                                id="ticketInfoLanguage"></span></p>
                     </div>
                     <div class="form-group">
                         <label for="firstName">First Name</label>
@@ -48,6 +50,7 @@
                     <input type="hidden" id="ticketPrice">
                     <input type="hidden" id="ticketDate" name="ticketDate">
                     <input type="hidden" id="ticketTime" name="ticketTime">
+                    <input type="hidden" id="ticketEndTime" name="ticketEndTime">
                     <input type="hidden" id="ticketLanguage" name="ticketLanguage">
 
                 </form>

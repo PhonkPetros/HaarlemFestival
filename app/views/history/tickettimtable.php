@@ -2,7 +2,8 @@
   <h2>Schedule</h2>
 </div>
 
-<div class="p-5" style="background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('/img/scheduleimage.jpg') no-repeat center center; background-size: cover; ">
+<div class="p-5"
+  style="background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('/img/scheduleimage.jpg') no-repeat center center; background-size: cover; ">
   <?php foreach ($structuredTickets as $language => $dates): ?>
     <h3 class="text-uppercase text-white">
       <?php echo htmlspecialchars($language); ?>
@@ -28,7 +29,7 @@
               <?php foreach ($uniqueTimes as $timeSlot): ?>
                 <td>
                   <div class="slot-container" style="min-width: 120px;">
-                    <?php if (isset($times[$timeSlot]) && $times[$timeSlot]['quantity'] > 0): ?>
+                    <?php if (isset ($times[$timeSlot]) && $times[$timeSlot]['quantity'] > 0): ?>
                       <div class="slot-number">
                         <?php echo $times[$timeSlot]['quantity'] . ' slots'; ?>
                       </div>
@@ -39,7 +40,9 @@
                         data-ticket-id="<?= htmlspecialchars($times[$timeSlot]['ticket_id']) ?>"
                         data-event-id="<?= htmlspecialchars($times[$timeSlot]['event_id']) ?>"
                         data-price="<?= htmlspecialchars($times[$timeSlot]['price']) ?>"
-                        data-date="<?= htmlspecialchars($times[$timeSlot]['date']) ?>" data-time="<?= htmlspecialchars($times[$timeSlot]['time']) ?>"
+                        data-date="<?= htmlspecialchars($times[$timeSlot]['date']) ?>"
+                        data-time="<?= htmlspecialchars($times[$timeSlot]['time']) ?>"
+                        data-endtime="<?= htmlspecialchars(date('H:i', strtotime($times[$timeSlot]['endtime']))) ?>"
                         data-language="<?= htmlspecialchars($times[$timeSlot]['language']) ?>">
                         Reserve
                       </button>
@@ -59,5 +62,3 @@
 
 
 <?php require_once __DIR__ . '/../../views/reservation-form/popup-reservation-form.php' ?>
-
-

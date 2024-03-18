@@ -59,13 +59,13 @@ class Historycontroller
 
     public function addNewTimeSlot()
     {   
-        //is this if statement necessary? and shouldnt this be in our service instead?
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $eventId = htmlspecialchars($_POST['event_id'] ?? null);
             $date = htmlspecialchars($_POST['date'] ?? null);
             $quantity = htmlspecialchars($_POST['quantity'] ?? null);
             $language = htmlspecialchars($_POST['language'] ?? null);
             $time = htmlspecialchars($_POST['time'] ?? null);
+            $endTime = htmlspecialchars($_POST['endtime'] ?? null);
 
             $newTicket = new Ticket();
             $newTicket->setEventId($eventId);
@@ -75,6 +75,7 @@ class Historycontroller
             $newTicket->setTicketTime($time);
             $newTicket->setState('Not Used');
             $newTicket->setTicketHash($this->generateTicketHash($eventId, $date, $time));
+            $newTicket->setTicketEndTime($endTime);
 
             $result = $this->historyService->addNewTimeSlot($newTicket);
 
@@ -181,6 +182,7 @@ class Historycontroller
             $language = $ticket->getTicketLanguage();
             $date = $ticket->getTicketDate();
             $time = $ticket->getTicketTime();
+            $endTime = $ticket->getTicketEndTime();
             $quantity = $ticket->getQuantity();
     
             $structuredTickets[$language][$date][$time] = [
@@ -189,6 +191,7 @@ class Historycontroller
                 'language' => $language,
                 'date' => $date,
                 'time' => $time,
+                'endtime' => $endTime,
                 'quantity' => $quantity,
                 'price' => $price
             ];

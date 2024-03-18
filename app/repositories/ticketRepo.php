@@ -40,6 +40,7 @@ class TicketRepo extends dbconfig
                 $ticket->setTicketLanguage($ticketData['language']);
                 $ticket->setTicketDate($ticketData['Date']);
                 $ticket->setTicketTime($ticketData['Time']);
+                $ticket->setTicketEndTime($ticketData['endtime']);
 
                 $tickets[] = $ticket;
             }

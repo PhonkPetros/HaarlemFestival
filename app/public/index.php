@@ -53,7 +53,6 @@ $pageID = htmlspecialchars($queryParams["pageid"] ?? '');
 
 $eventID = null;
 if (strpos($request, '/manage-event-details/') === 0) {
-    echo "yes";
     $eventID = htmlspecialchars($queryParams["id"] ?? '');
 }
 if (strpos($request, '/edit-content/') === 0) {

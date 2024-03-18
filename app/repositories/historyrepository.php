@@ -38,7 +38,7 @@ class historyrepository extends dbconfig
     public function addNewTimeSlot(Ticket $newTicket)
     {
         
-        $checkSql = "SELECT COUNT(*) FROM Ticket WHERE event_id = :event_id AND Date = :date AND Time = :time AND language = :language";
+        $checkSql = "SELECT COUNT(*) FROM Ticket WHERE event_id = :event_id AND Date = :date AND Time = :time AND language = :language AND endtime = :endTime";
     
         try {
             $checkStmt = $this->getConnection()->prepare($checkSql);
@@ -46,6 +46,7 @@ class historyrepository extends dbconfig
             $checkStmt->bindValue(':date', $newTicket->getTicketDate());
             $checkStmt->bindValue(':time', $newTicket->getTicketTime());
             $checkStmt->bindValue(':language', $newTicket->getTicketLanguage());
+            $checkStmt->bindValue(':endTime', $newTicket->getTicketEndTime());
             $checkStmt->execute();
     
             $existingTicketCount = $checkStmt->fetchColumn();
@@ -55,8 +56,8 @@ class historyrepository extends dbconfig
                 return false;
             }
     
-            $insertSql = "INSERT INTO Ticket (quantity, ticket_hash, state, event_id, language, Date, Time)
-                          VALUES (:quantity, :ticket_hash, :state, :event_id, :language, :date, :time)";
+            $insertSql = "INSERT INTO Ticket (quantity, ticket_hash, state, event_id, language, Date, Time, endtime)
+                          VALUES (:quantity, :ticket_hash, :state, :event_id, :language, :date, :time, :endTime)";
     
             $insertStmt = $this->getConnection()->prepare($insertSql);
             $insertStmt->bindValue(':quantity', $newTicket->getQuantity());
@@ -66,6 +67,7 @@ class historyrepository extends dbconfig
             $insertStmt->bindValue(':language', $newTicket->getTicketLanguage());
             $insertStmt->bindValue(':date', $newTicket->getTicketDate());
             $insertStmt->bindValue(':time', $newTicket->getTicketTime());
+            $insertStmt->bindValue(':endTime', $newTicket->getTicketEndTime());
             $insertStmt->execute();
             return true;
         } catch (PDOException $e) {

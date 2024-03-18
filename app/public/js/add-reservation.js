@@ -2,10 +2,12 @@ document.addEventListener('DOMContentLoaded', function () {
     function openReservationModal(button) {
         var date = button.getAttribute('data-date');
         var time = button.getAttribute('data-time');
+        var endTime = button.getAttribute('data-endtime');
         var language = button.getAttribute('data-language');
         
         document.getElementById('ticketInfoDate').textContent = date;
         document.getElementById('ticketInfoTime').textContent = time;
+        document.getElementById('ticketInfoEndTime').textContent = endTime;
         document.getElementById('ticketInfoLanguage').textContent = language;
         
         document.getElementById('ticketId').value = button.getAttribute('data-ticket-id');
@@ -14,6 +16,7 @@ document.addEventListener('DOMContentLoaded', function () {
         
         document.getElementById('ticketDate').value = date;
         document.getElementById('ticketTime').value = time;
+        document.getElementById('ticketEndTime').value = endTime;
         document.getElementById('ticketLanguage').value = language;
     
         document.getElementById('firstName').value = userSession.firstName || '';
@@ -69,6 +72,7 @@ document.addEventListener('DOMContentLoaded', function () {
             ticketPrice: document.getElementById('ticketPrice').value,
             ticketDate: document.getElementById('ticketDate').value,
             ticketTime: document.getElementById('ticketTime').value,
+            ticketEndTime: document.getElementById('ticketEndTime').value,
             ticketLanguage: document.getElementById('ticketLanguage').value,
         };
 

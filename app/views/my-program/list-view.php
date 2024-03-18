@@ -22,8 +22,10 @@
                             <?php echo htmlspecialchars($eventData['location']); ?><br>
                             Date:
                             <?php echo htmlspecialchars($ticket['ticketDate']); ?><br>
-                            Time:
+                            Start Time:
                             <?php echo htmlspecialchars($ticket['ticketTime']); ?><br>
+                            End Time:
+                            <?php echo htmlspecialchars($ticket['ticketEndTime']); ?><br>
                             Price: $<span id="total-price-<?= $ticket['ticketId'] ?>">
                                 <?= htmlspecialchars($ticket['totalPrice']); ?>
                             </span>

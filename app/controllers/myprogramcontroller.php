@@ -100,6 +100,7 @@ class Myprogramcontroller
             'quantity' => $input['quantity'] ?? '',
             'ticketDate' => $input['ticketDate'] ?? '',
             'ticketTime' => $input['ticketTime'] ?? '',
+            'ticketEndTime' => $input['ticketEndTime'] ?? '',
             'user' => $userInfo
         ];
 
@@ -126,7 +127,8 @@ class Myprogramcontroller
                 $item['ticketId'] == $ticketInfo['ticketId'] &&
                 $item['eventId'] == $ticketInfo['eventId'] &&
                 $item['ticketDate'] == $ticketInfo['ticketDate'] &&
-                $item['ticketTime'] == $ticketInfo['ticketTime']
+                $item['ticketTime'] == $ticketInfo['ticketTime'] &&
+                $item['ticketEndTime'] == $ticketInfo['ticketEndTime']
             ) {
                 header('Content-Type: application/json');
                 echo json_encode([

@@ -56,9 +56,15 @@
                                     <p><strong>Date:</strong>
                                         <?= htmlspecialchars($ticket->getTicketDate()) ?>
                                     </p>
-                                    <p><strong>Time:</strong>
+                                    <p><strong>Start Time:</strong>
                                         <?= htmlspecialchars($ticket->getTicketTime()) ?>
                                     </p>
+                                    <p><strong>End Time:</strong>
+                                        <?php
+                                        echo $ticket->getTicketEndTime() ? htmlspecialchars(date('H:i', strtotime($ticket->getTicketEndTime()))) : '';
+                                        ?>
+                                    </p>
+
                                     <p><strong>Quantity:</strong>
                                         <?= htmlspecialchars($ticket->getQuantity()) ?>
                                     </p>
@@ -95,7 +101,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="newQuantity" class="form-label">Quantity</label>
-                        <input type="number" min="12" max="12" class="form-control" id="newQuantity" name="quantity"
+                        <input type="number" min="1" max="12" class="form-control" id="newQuantity" name="quantity"
                             required>
                     </div>
                     <div class="mb-3">
@@ -108,8 +114,12 @@
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label for="addnewtime" class="form-label">Time</label>
+                        <label for="addnewtime" class="form-label">Start Time</label>
                         <input type="time" class="form-control" id="addnewtime" name="time" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="addnewendtime" class="form-label">End Time</label>
+                        <input type="time" class="form-control" id="addnewendtime" name="endtime" required>
                     </div>
                 </form>
             </div>

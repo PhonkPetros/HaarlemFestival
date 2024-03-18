@@ -13,6 +13,7 @@ class Ticket implements \JsonSerializable
     private string $language;
     private ?string $date = null; 
     private ?string $time = null; 
+    private ?string $endTime = null;
     
 
     public function getTicketId(): int {
@@ -81,6 +82,15 @@ class Ticket implements \JsonSerializable
         $this->date = $date;
     }
 
+
+    public function getTicketEndTime(): ?string { 
+        return $this->endTime;
+    }
+
+    public function setTicketEndTime(?string $endTime): void {
+        $this->endTime = $endTime;
+    }
+
     public function getTicketTime(): ?string { 
         return $this->time;
     }
@@ -100,6 +110,7 @@ class Ticket implements \JsonSerializable
             'language' => $this->getTicketLanguage(),
             'date' => $this->getTicketDate(),
             'time'=> $this->getTicketTime(),
+            'endTime' => $this->getTicketEndTime()
         ];
     }
 }
