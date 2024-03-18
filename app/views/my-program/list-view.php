@@ -60,7 +60,7 @@
             </div>
         </div>
         <div class="d-flex justify-content-center" style="padding-top: 20px;">
-            <button class="btn btn-success" style="width: 100%;">Pay Now</button>
+        <button class="btn btn-success" style="width: 100%;"><h4>Pay Now</h4></button>
         </div>
     <?php endif; ?>
 </div>

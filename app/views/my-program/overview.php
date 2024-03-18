@@ -15,6 +15,11 @@ include __DIR__ . '/../general_views/header.php';
     </div>
     <? require_once __DIR__ . '/list-view.php'; ?>
     <? require_once __DIR__ . '/purchased-ticket.php'; ?>
+    <? require_once __DIR__ . '/agenda-view.php'; ?>
+
+
+  
+
 </div>
 
 
