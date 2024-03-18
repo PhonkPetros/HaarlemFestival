@@ -21,12 +21,12 @@ services:
             MYSQL_USER: 'developer'
             MYSQL_PASSWORD: 'secret123'
             MYSQL_DATABASE: 'developmentdb'
+            SECRET_KEY: "BE29CD2C3B49CAE7D5B4EBAC9A25D"   
         volumes:
             - mysqldata:/var/lib/mysql
         ports:
             - 3306:3306
-    environment:
-            SECRET_KEY: "BE29CD2C3B49CAE7D5B4EBAC9A25D"       
+            
     phpmyadmin:
         image: phpmyadmin:latest
         ports:
