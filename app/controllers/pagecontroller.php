@@ -208,7 +208,7 @@ class Pagecontroller
                 'title' => $section['title'],
                 'content' => $section['editor_content'] ?? null,
                 'image' => $section['image_file_path'] ?? null,
-                'type' => $section['type'] ?? null, // Ensure 'type' is included here.
+                'type' => $section['type'] ?? null, 
             ];
             $contentData[] = $sectionData;
         }

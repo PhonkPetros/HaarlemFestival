@@ -26,7 +26,7 @@ class registercontroller
     public function registerAction() {
         if ($_SERVER['REQUEST_METHOD'] == "POST") {
             $captchaResponse = $_POST['g-recaptcha-response'];
-            $secretKey = "6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe"; 
+            $secretKey = $_ENV['CAPTCHA_KEY']; 
             $response = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret={$secretKey}&response={$captchaResponse}");
             $responseKeys = json_decode($response, true);
 

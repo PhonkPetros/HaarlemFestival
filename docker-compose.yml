@@ -21,7 +21,8 @@ services:
             MYSQL_USER: 'developer'
             MYSQL_PASSWORD: 'secret123'
             MYSQL_DATABASE: 'developmentdb'
-            SECRET_KEY: "BE29CD2C3B49CAE7D5B4EBAC9A25D"   
+            SECRET_KEY: "BE29CD2C3B49CAE7D5B4EBAC9A25D"
+            CAPTCHA_KEY: '6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe'   
         volumes:
             - mysqldata:/var/lib/mysql
         ports:
