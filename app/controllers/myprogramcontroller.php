@@ -423,13 +423,22 @@ class Myprogramcontroller
      
         if ($paymentResult['status'] === 'success') {
             // Payment was successful, update database
-            $this->myProgramService->processOrder($userId, $_SESSION['shopping_cart']);
-            // Provide the payment URL so that the front-end can redirect the user
-            echo json_encode(['status' => 'success', 'paymentUrl' => $paymentResult['paymentUrl']]);
+            $orderProcessingResult = $this->myProgramService->processOrder($userId, $_SESSION['shopping_cart']);
+            
+            if($orderProcessingResult['status'] === 'success') {
+                // Clear the shopping cart after successful order processing
+                $_SESSION['shopping_cart'] = [];
+                
+                // Provide the payment URL so that the front-end can redirect the user
+                echo json_encode(['status' => 'success', 'paymentUrl' => $paymentResult['paymentUrl']]);
+            } else {
+                // Handle order processing failure
+                echo json_encode(['status' => 'error', 'message' => 'Order processing failed.']);
+            }
         } else {
             // Handle payment failure
             echo json_encode(['status' => 'error', 'message' => 'Payment failed.']);
-        }
+        }        
         exit;
     }
     

@@ -31,7 +31,7 @@ class MollieAPIController
                     "value" => (string) $totalPriceStr, 
                 ],
                 "description" => "Payment for tickets",
-                "redirectUrl" => "http://localhost/payment-success", // Adjust the URL to your needs
+                "redirectUrl" => "http://localhost/my-program/payment-success",
                 "metadata" => [
                     "order_id" => uniqid(),
                     "user_id" => $userId,
