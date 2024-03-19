@@ -13,7 +13,7 @@ class MollieAPIController
     public function __construct()
     {
         $this->mollieClient = new MollieApiClient();
-        $this->mollieClient->setApiKey("test_UDrK5yJUKaPRw2qKNNPtJhrmSx9kG7");
+        $this->mollieClient->setApiKey("test_2h39fKdqarwsuAwkFwhGsDFh5eppSH");
     }
 
     public function createPayment($userId, $cart, $paymentMethod, $issuer = null)
@@ -28,23 +28,16 @@ class MollieAPIController
             $paymentData = [
                 "amount" => [
                     "currency" => "EUR",
-                    "value" => (string) $totalPriceStr, 
+                    "value" => (string)$totalPriceStr,
                 ],
                 "description" => "Payment for tickets",
-                "redirectUrl" => "http://localhost/my-program/payment-success",
+                "redirectUrl" => "http://localhost/my-program/payment-success", 
                 "metadata" => [
                     "order_id" => uniqid(),
                     "user_id" => $userId,
                 ],
             ];
-
-            if ($paymentMethod === 'ideal' && $issuer) {
-                $paymentData['method'] = $paymentMethod;
-                $paymentData['issuer'] = $issuer; 
-            } else if ($paymentMethod === 'creditcard') {
-                $paymentData['method'] = $paymentMethod;
-            }
-
+            
             $payment = $this->mollieClient->payments->create($paymentData);
 
             return [
@@ -52,10 +45,13 @@ class MollieAPIController
                 'paymentUrl' => $payment->getCheckoutUrl(),
             ];
         } catch (ApiException $e) {
+            error_log("API call failed: " . $e->getMessage()); 
             return [
                 'status' => 'error',
                 'message' => "API call failed: " . htmlspecialchars($e->getMessage()),
             ];
         }
+        
     }
+
 }

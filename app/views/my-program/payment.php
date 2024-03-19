@@ -7,14 +7,7 @@
     <? require_once __DIR__ . '/cart-item.php'; ?>
     <? require_once __DIR__ . '/payment-choice.php'; ?>
 
-
-  
-
 </div>
-
-
-
-
 
 
 <script src="/js/modifyBasket.js"></script>

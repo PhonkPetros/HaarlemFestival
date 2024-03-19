@@ -52,11 +52,12 @@ class Myprogramcontroller
             $structuredTickets = $this->structureTicketsWithImages();
             $uniqueTimes = $this->getUniqueTimes($structuredTickets);
         }
-        require_once __DIR__ ."/../views/my-program/overview.php";
-    
+        require_once __DIR__ . "/../views/my-program/overview.php";
+
     }
-  
-    function showPayment(){
+
+    function showPayment()
+    {
         $this->navigationController->displayHeader();
         $structuredTickets = [];
         $uniqueTimes = [];
@@ -69,9 +70,10 @@ class Myprogramcontroller
         require_once __DIR__ . "/../views/my-program/payment.php";
     }
 
-    function showSuccess(){
+    function showSuccess()
+    {
         $this->navigationController->displayHeader();
-        require_once __DIR__ ."/../views/my-program/success.php";
+        require_once __DIR__ . "/../views/my-program/success.php";
     }
 
     function showSharedCart($encodedCart, $hash)
@@ -131,7 +133,7 @@ class Myprogramcontroller
             case EVENT_ID_JAZZ:
                 $ticketInfo['artistName'] = $input['artistName'] ?? '';
                 $ticketInfo['allAccessPass'] = $input['allAccesPass'] ?? '';
-                $ticketInfo['dayPass'] = $inputJSON['dayPass'] ?? ''; 
+                $ticketInfo['dayPass'] = $inputJSON['dayPass'] ?? '';
                 break;
             case EVENT_ID_RESTAURANT:
                 $ticketInfo['restaurantName'] = $input['restaurantName'] ?? '';
@@ -384,84 +386,73 @@ class Myprogramcontroller
         return null;
     }
 
-    function getUserInfoFromCart() {
+    function getUserInfoFromCart()
+    {
         foreach ($_SESSION['shopping_cart'] as $item) {
-            if (isset($item['user'])) {
-                return $item['user']; 
+            if (isset ($item['user'])) {
+                return $item['user'];
             }
         }
-        return null; 
+        return null;
     }
-    
 
     function initiatePayment() {
         $data = json_decode(file_get_contents('php://input'), true);
         $paymentMethod = $data['paymentMethod'] ?? null;
         $issuer = $data['issuer'] ?? null;
-
-
-        $userInfo = $this->getUserInfoFromCart();
-        $userExists = $this->userService->email_exists($userInfo['email']);
-        $userId = $this->userService->getUserIDThroughEmail($userInfo['email']);
     
-        if (!$userExists) {
+        $userInfo = $this->getUserInfoFromCart();
+        if (!$this->userService->email_exists($userInfo['email'])) {
             echo json_encode(['status' => 'error', 'message' => 'User needs to register.']);
             exit;
         }
-
-     
     
-        $ticketsAvailable = $this->checkTicketsAvailability($_SESSION['shopping_cart']);
-    
-   
-        if (!$ticketsAvailable) {
+        if (!$this->checkTicketsAvailability($_SESSION['shopping_cart'])) {
             echo json_encode(['status' => 'error', 'message' => 'Some tickets are not available in the requested quantity.']);
             exit;
         }
     
+        $userId = $this->userService->getUserIDThroughEmail($userInfo['email']);
         $paymentResult = $this->mollieAPIController->createPayment($userId, $_SESSION['shopping_cart'], $paymentMethod, $issuer);
-     
+    
         if ($paymentResult['status'] === 'success') {
-            // Payment was successful, update database
-            $orderProcessingResult = $this->myProgramService->processOrder($userId, $_SESSION['shopping_cart']);
-            
-            if($orderProcessingResult['status'] === 'success') {
-                // Clear the shopping cart after successful order processing
-                $_SESSION['shopping_cart'] = [];
-                
-                // Provide the payment URL so that the front-end can redirect the user
-                echo json_encode(['status' => 'success', 'paymentUrl' => $paymentResult['paymentUrl']]);
-            } else {
-                // Handle order processing failure
-                echo json_encode(['status' => 'error', 'message' => 'Order processing failed.']);
-            }
+            echo json_encode(['status' => 'success', 'paymentUrl' => $paymentResult['paymentUrl']]);
         } else {
-            // Handle payment failure
-            echo json_encode(['status' => 'error', 'message' => 'Payment failed.']);
-        }        
+            echo json_encode(['status' => 'error', 'message' => 'Payment initiation failed.']);
+        }
         exit;
     }
     
+    public function paymentSuccess() {
+            $userInfo = $this->getUserInfoFromCart();
+            $userId = $this->userService->getUserIDThroughEmail($userInfo['email']);
+            
+            $orderProcessingResult = $this->myProgramService->processOrder($userId, $_SESSION['shopping_cart']);
     
+            if ($orderProcessingResult['status'] === 'success') {
+                $_SESSION['shopping_cart'] = []; 
+                header('Location: http://localhost/my-program/order-confirmation');
+                exit;
+            } else {
+                echo json_encode(['status' => 'error', 'message' => ' Processing Order Failed.']);
+            }
+    }
     function checkTicketsAvailability($cart) {
         foreach ($cart as $cartItem) {
             $ticketId = $cartItem['ticketId'];
             $requestedQuantity = $cartItem['quantity'];
             $availableQuantity = $this->ticketservice->getTicketQuantity($ticketId);
     
-            if ($availableQuantity === null) {
-                return false;
-            }
-    
-            if ($requestedQuantity > $availableQuantity) {
+            if ($availableQuantity === null || $requestedQuantity > $availableQuantity) {
                 return false;
             }
         }
         return true;
     }
     
-    
-    
+
+
+
 
 
 }

@@ -438,9 +438,17 @@ switch ($request) {
     case '/my-program/payment-success':
         $controller = new Myprogramcontroller();
         if ($method == 'GET') {
+            $controller->paymentSuccess();
+        }
+        break;
+    case '/my-program/order-confirmation':
+        $controller = new Myprogramcontroller();
+        if ($method == 'GET') {
             $controller->showSuccess();
         }
         break;
+
+
     default:
         http_response_code(404);
         $navigation = new Navigationcontroller();

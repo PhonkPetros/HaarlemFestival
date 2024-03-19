@@ -37,11 +37,11 @@
             var paymentMethodElement = document.querySelector('.payment-method');
             var paymentMethod = paymentMethodElement.value;
             var issuerElement = document.getElementById('ideal-banks');
-            var issuer = paymentMethod === 'ideal' ? issuerElement.value : null; // Only set issuer if iDEAL is selected
+            var issuer = paymentMethod === 'ideal' ? issuerElement.value : null;
 
             var dataToSend = {
                 paymentMethod: paymentMethod,
-                issuer: issuer // Include issuer if available
+                issuer: issuer 
             };
 
 
