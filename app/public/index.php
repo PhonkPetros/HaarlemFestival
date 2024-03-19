@@ -37,10 +37,9 @@ require_once __DIR__ . '/../controllers/yummycontroller.php';
 require_once __DIR__ . '/../controllers/resetpasswordcontroller.php';
 
 
-$url = $_SERVER['REQUEST_URI'];
 $request = $_SERVER['REQUEST_URI'];
 $method = $_SERVER['REQUEST_METHOD'];
-echo $request;
+
 
 
 //Please do not touch this
