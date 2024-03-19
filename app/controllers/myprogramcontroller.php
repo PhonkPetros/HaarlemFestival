@@ -66,7 +66,7 @@ class Myprogramcontroller
             $structuredTickets = $this->structureTicketsWithImages();
             $uniqueTimes = $this->getUniqueTimes($structuredTickets);
         }
-        require_once __DIR__ ."/../views/my-program/payment.php";
+        require_once __DIR__ . "/../views/my-program/payment.php";
     }
 
     function showSuccess(){

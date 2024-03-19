@@ -437,7 +437,7 @@ switch ($request) {
         break;
     case '/my-program/payment-success':
         $controller = new Myprogramcontroller();
-        if ($method == 'POST') {
+        if ($method == 'GET') {
             $controller->showSuccess();
         }
         break;

@@ -53,11 +53,9 @@ class Myprogramrepository extends dbconfig
     
     private function createOrder($userId, $totalPrice)
     {
-     
-        // Use SQL Server specific function to get the current date and time
-        $stmt = $this->connection->prepare("INSERT INTO Orders (user_id, total_price, order_hash, status, created_at) VALUES (:user_id, :total_price, :order_hash, 'pending', CURRENT_TIMESTAMP)");
-        $orderHash = bin2hex(random_bytes(16));
     
+        $stmt = $this->connection->prepare("INSERT INTO Orders (user_id, total_price, order_hash, status, created_at) VALUES (:user_id, :total_price, :order_hash, 'Paid', CURRENT_TIMESTAMP)");
+        $orderHash = bin2hex(random_bytes(16));
         $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
         $stmt->bindParam(':total_price', $totalPrice); // Let PDO determine the best data type
         $stmt->bindParam(':order_hash', $orderHash);
@@ -98,41 +96,41 @@ class Myprogramrepository extends dbconfig
     
 
     private function updateTicketQuantity($ticketId, $quantityPurchased)
-    {  
-        try {
-            // Begin by getting the current quantity of the ticket
-            $currentQuantity = $this->getCurrentTicketQuantity($ticketId);
+{  
+    try {
+ 
+        $currentQuantity = $this->getCurrentTicketQuantity($ticketId);
+        
+
+        if ($currentQuantity === false) {
+            throw new \Exception("Ticket ID $ticketId not found");
+        }
+
+        if ($currentQuantity < $quantityPurchased) {
+            throw new \Exception("Not enough tickets available for Ticket ID $ticketId");
+        }
+
+        $newQuantity = $currentQuantity - $quantityPurchased;
       
-            if ($currentQuantity === null) {
-                throw new \Exception("Ticket ID $ticketId not found");
-            }
-    
-            if ($currentQuantity < $quantityPurchased) {
-                throw new \Exception("Not enough tickets available for Ticket ID $ticketId");
-            }
-    
-            // Calculate the new quantity
-            $newQuantity = $currentQuantity - $quantityPurchased;
-          
-    
-            // Update the ticket quantity with the new value
+
+        if ($newQuantity > 0) {
+
             $stmt = $this->connection->prepare("UPDATE Ticket SET quantity = :new_quantity WHERE ticket_id = :ticket_id");
-            
             $stmt->bindParam(':new_quantity', $newQuantity, PDO::PARAM_INT);
             $stmt->bindParam(':ticket_id', $ticketId, PDO::PARAM_INT);
-    
             $stmt->execute();
-    
-            if ($newQuantity === 0) {
-                $this->deleteTicket($ticketId);
-            }
-    
-            return true;
-        } catch (\Exception $e) {
-            error_log("Update ticket quantity failed: " . $e->getMessage());
-            return false;
+        } else {
+       
+            $this->deleteTicket($ticketId);
         }
+
+        return true;
+    } catch (\Exception $e) {
+        error_log("Update ticket quantity failed: " . $e->getMessage());
+        return false;
     }
+}
+
     
     private function getCurrentTicketQuantity($ticketId) {
         $stmt = $this->connection->prepare("SELECT quantity FROM Ticket WHERE ticket_id = :ticket_id");
