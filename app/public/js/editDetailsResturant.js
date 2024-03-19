@@ -33,7 +33,6 @@ function closeModalTimeSlot() {
     document.querySelector('#addTimeslotModal').style.display = 'none';
 }
 
-
 function saveChanges() {
     const id = document.querySelector('#editFormId').value;
     const name = document.querySelector('#editFormName').value;
@@ -99,7 +98,6 @@ function updateRestaurantRow(id, name, price, seats, startDate, endDate, picture
     }
 }
 
-
 document.addEventListener('DOMContentLoaded', function() {
     const addTimeslotButtons = document.querySelectorAll('.add-timeslot-btn');
     addTimeslotButtons.forEach(button => {
@@ -160,13 +158,48 @@ function addTimeSlot() {
 
 
 
+document.addEventListener('DOMContentLoaded', function() {
+    // Add event listener to the "Add Restaurant" button
+    document.querySelector('#addRestaurantButton').addEventListener('click', function() {
+        // Display the "Add Restaurant" modal
+        document.querySelector('#addRestaurantModal').style.display = 'block';
+    });
+
+    // Add event listener to close the modal when the "Close" button is clicked
+    document.querySelector('#addRestaurantModal .modal-footer button[data-dismiss="modal"]').addEventListener('click', function() {
+        closeModalAddRestaurant();
+    });
+});
 
 
+function closeModalAddRestaurant() {
+    document.querySelector('#addRestaurantModal').style.display = 'none';
+}
 
 
+function addRestaurant(event){
+    event.preventDefault();
 
+    const form = document.getElementById('addRestaurantForm');
 
+    const formData = new FormData(form);
 
-
-
-
+    fetch('/editResturantDetails/addRestaurant', {
+        method: 'POST',
+        body: formData,
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log(data);
+        if (data.success) {
+            alert('Restaurant added successfully.');
+            closeModalAddRestaurant();
+        } else {
+            alert('Failed to add the restaurant: ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred while adding the restaurant.');
+    });
+}

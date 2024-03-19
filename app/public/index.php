@@ -81,12 +81,6 @@ if ($pageID || $eventID || $editPageID || $sectionEdit) {
                     $controller->editEventDetails();
                 }
                 break;
-            case '7':
-                $controller = new Restaurantcontroller();
-                if ($method === 'GET') {
-                    $controller->editEventDetails();
-                }
-                break;
             case '8':
                 $controller = new Historycontroller();
                 if ($method === 'GET') {
@@ -94,7 +88,12 @@ if ($pageID || $eventID || $editPageID || $sectionEdit) {
                 }
                 break;
             default:
-                break;
+            $controller = new Restaurantcontroller();
+            if ($method === 'GET') {
+                $controller->editEventDetails($eventID);
+            }
+            break;
+
         }
         exit;
     } elseif ($pageID) {
@@ -329,6 +328,12 @@ switch ($request) {
         $controller = new Restaurantcontroller();
         if ($method === 'POST') {
             $controller->addTimeSlot();
+        }
+        break;
+    case "/editResturantDetails/addRestaurant":
+        $controller = new Restaurantcontroller();
+        if ($method === 'POST') {
+            $controller->addRestaurant();
         }
         break;
     default:

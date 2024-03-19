@@ -19,10 +19,9 @@ class Restaurantcontroller
     private $navigationController;
 
 
-    public function editEventDetails() {
+    public function editEventDetails($eventId) {
         
-        $restaurants = $this->restaurantService->getAllRestaurants();
-        $tickets = $this->restaurantService->getTicketTimeslotsForRestaurant();
+        $restaurants = $this->restaurantService->getRestaurant($eventId);
         require_once __DIR__ . '/../views/admin/manage-event-details/editDetailsRestaurant.php';
     }
     
@@ -114,6 +113,42 @@ class Restaurantcontroller
         $toHash = $eventId . $date . $time . uniqid('', true);
         return hash('sha256', $toHash);
     }
+    
+
+    public function addRestaurant() {
+        header('Content-Type: application/json');
+    
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            var_dump($_POST);
+    
+            $name = $_POST['name'] ?? '';
+            $location = $_POST['location'] ?? '';
+            $description = $_POST['description'] ?? '';
+            $price = $_POST['price'] ?? '';
+            $seats = $_POST['seats'] ?? 0;
+            $startDate = $_POST['startDate'] ?? '';
+            $endDate = $_POST['endDate'] ?? '';
+            $picturePath = $_POST['picturePath'] ?? '';
+    
+    
+            $response = ['success' => false, 'message' => 'An error occurred'];
+    
+            $result = $this->restaurantService->addRestaurant($name, $location, $description, $price, $seats, $startDate, $endDate, $picturePath);
+    
+    
+            if ($result) {
+                $response = ['success' => true, 'message' => 'Restaurant added successfully.'];
+            } else {
+                $response['message'] = 'Failed to add the restaurant.';
+            }
+    
+    
+            echo json_encode($response);
+    
+            exit;
+        }
+    }
+    
     
   
 }

@@ -16,8 +16,8 @@ class RestaurantService
         $this->restaurantRepo = new resturantrepository();
     }
 
-    public function getAllRestaurants() {
-        return $this->restaurantRepo->getAllRestaurants();
+    public function getRestaurant($eventId) {
+        return $this->restaurantRepo->getRestaurant($eventId);
     }
 
     public function updateRestaurantDetails($id, $name, $price, $seats, $startDate, $endDate, $picturePath) {
@@ -34,6 +34,10 @@ class RestaurantService
 
     public function getRestaurantByIdWithTimeslots($id) {
         return $this->restaurantRepo->getRestaurantByIdWithTimeslots($id);
+    }
+
+    public function addRestaurant($name, $location, $description, $price, $seats, $startDate, $endDate, $picturePath) {
+        return $this->restaurantRepo->addRestaurant($name, $location, $description, $price, $seats, $startDate, $endDate, $picturePath);
     }
 
     

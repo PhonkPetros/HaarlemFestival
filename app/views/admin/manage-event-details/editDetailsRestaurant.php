@@ -8,6 +8,8 @@
                 <th>ID</th>
                 <th>Picture</th>
                 <th>Name</th>
+                <th>Location</th>
+                <th>Description</th>
                 <th>Price</th>
                 <th>Seats</th>
                 <th>Start Date</th>
@@ -22,7 +24,9 @@
                     <tr id="restaurant-row-<?= htmlspecialchars($restaurant->getId()) ?>">
                         <td class="restaurant-id"><?= htmlspecialchars($restaurant->getId()) ?></td>
                         <td class="restaurant-picture"><img src="/img/<?= htmlspecialchars($restaurant->getPicture()) ?>" alt="No Image" style="width:100px; height:auto;"></td>
-                        <td class="restaurant-name"><?= htmlspecialchars($restaurant->getLocation()) ?></td>
+                        <td class="restaurant-name"><?= htmlspecialchars($restaurant->getName()) ?></td>
+                        <td class="restaurant-location"><?= htmlspecialchars($restaurant->getLocation()) ?></td>
+                        <td class="restaurant-description"><?= htmlspecialchars($restaurant->getDescription()) ?></td>
                         <td class="restaurant-price"><?= htmlspecialchars($restaurant->getPrice()) ?></td>
                         <td class="restaurant-seats"><?= htmlspecialchars($restaurant->getSeats()) ?></td>
                         <td class="restaurant-start-date"><?= htmlspecialchars($restaurant->getStartDate()) ?></td>
@@ -30,14 +34,15 @@
                         <td>
                             <button type="button" class="btn btn-primary edit-btn"
                                     data-id="<?= htmlspecialchars($restaurant->getId()) ?>"
-                                    data-name="<?= htmlspecialchars($restaurant->getLocation()) ?>"
+                                    data-name="<?= htmlspecialchars($restaurant->getName()) ?>"
+                                    data-location="<?= htmlspecialchars($restaurant->getLocation()) ?>"
+                                    data-description="<?= htmlspecialchars($restaurant->getDescription()) ?>"
                                     data-price="<?= htmlspecialchars($restaurant->getPrice()) ?>"
                                     data-seats="<?= htmlspecialchars($restaurant->getSeats()) ?>"
                                     data-start-date="<?= htmlspecialchars($restaurant->getStartDate()) ?>"
                                     data-end-date="<?= htmlspecialchars($restaurant->getEndDate()) ?>">
                                 Edit
                             </button>
-                            <button type="button" class="btn btn-primary add-timeslot-btn" data-id="<?= htmlspecialchars($restaurant->getId()) ?>" data-start-date="<?= htmlspecialchars($restaurant->getStartDate()) ?>" data-end-date="<?= htmlspecialchars($restaurant->getEndDate()) ?>">Add Timeslot</button>
                         </td>
                         <td>
                             <button type="button" class="btn btn-danger delete-btn" data-id="<?= htmlspecialchars($restaurant->getId()) ?>">Delete</button>
@@ -46,12 +51,17 @@
                 <?php endforeach; ?>
             <?php else: ?>
                 <tr>
-                    <td colspan="8">No restaurants found.</td>
+                    <td colspan="10">No restaurants found.</td>
                 </tr>
             <?php endif; ?>
         </tbody>
     </table>
 </div>
+
+<div id="addRestaurantButtonContainer" class="container mt-3">
+    <button type="button" class="btn btn-success" id="addRestaurantButton">Add Restaurant</button>
+</div>
+
 
 <div class="container mt-5">
     <h2>Restaurant Timeslots</h2>
@@ -75,7 +85,6 @@
                         <td><?= htmlspecialchars($ticket->getTicketTime()) ?></td>
                         <td>
                             <button type="button" class="btn btn-danger delete-timeslot-btn" data-event-id="<?= htmlspecialchars($ticket->getEventId()) ?>">Delete</button> 
-                           <!-- I should get the ticket Hash code the querry to delete since we are talking for individual diffrent tickets -->
                         </td>
                     </tr>
                 <?php endforeach; ?>
@@ -157,6 +166,58 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" onclick="closeModalTimeSlot()">Close</button>
                     <button type="submit" class="btn btn-primary" onclick="addTimeSlot()">Add Timeslot</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+<div id="addRestaurantModal" class="modal">
+    <div class="modal-dialog">
+        <form method="post" id="addRestaurantForm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Restaurant</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="addFormName">Name</label>
+                        <input type="text" class="form-control" id="addFormName" name="name">
+                    </div>
+                    <div class="form-group">
+                        <label for="addFormLocation">Location</label>
+                        <input type="text" class="form-control" id="addFormLocation" name="location">
+                    </div>
+                    <div class="form-group">
+                        <label for="addFormDescription">Description</label>
+                        <textarea class="form-control" id="addFormDescription" name="description" rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="addFormPrice">Price</label>
+                        <input type="text" class="form-control" id="addFormPrice" name="price">
+                    </div>
+                    <div class="form-group">
+                        <label for="addFormSeats">Seats</label>
+                        <input type="number" class="form-control" id="addFormSeats" name="seats">
+                    </div>
+                    <div class="form-group">
+                        <label for="addFormStartDate">Start Date</label>
+                        <input type="date" class="form-control" id="addFormStartDate" name="startDate">
+                    </div>
+                    <div class="form-group">
+                        <label for="addFormEndDate">End Date</label>
+                        <input type="date" class="form-control" id="addFormEndDate" name="endDate">
+                    </div>
+                    <div class="form-group">
+                        <label for="addFormPicture">Picture</label>
+                        <input type="file" class="form-control" id="addFormPicture" name="picture">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeModalAddRestaurant()">Close</button>
+                    <button type="submit" class="btn btn-primary" onclick="addRestaurant(event)">Add Restaurant</button>
                 </div>
             </div>
         </form>

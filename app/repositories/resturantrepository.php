@@ -15,31 +15,74 @@ require_once __DIR__ . '/../model/ticket.php';
 
 
 class resturantrepository extends dbconfig {
-    public function getAllRestaurants() {
+
+    public function getRestaurant($eventId) {
         $restaurants = [];
         try {
-            $stmt = $this->connection->prepare("SELECT * FROM [Event] WHERE NAME = 'Restaurant'");
+            $stmt = $this->connection->prepare(
+                "SELECT *
+                FROM Restaurant
+                JOIN Event ON Event.restaurant_id = Restaurant.resturant_id
+                WHERE Event.event_id = :event_id"
+            );
+            $stmt->bindValue(':event_id', $eventId);
             $stmt->execute();
             $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
     
             foreach ($results as $result) {
                 $restaurant = new \model\Restaurant();
-                $restaurant->setId($result['event_id']);
+                $restaurant->setId($result['restaurant_id']);
+                $restaurant->setDescription($result['description']);
+                $restaurant->setSeats($result['seats']);
+                $restaurant->setName($result['name']);
+                $restaurant->setStartDate($result['startDate']);
                 $restaurant->setLocation($result['location']);
                 $restaurant->setPrice($result['price']);
-                $restaurant->setSeats(isset($result['seats']) ? (int)$result['seats'] : null);
-                $restaurant->setStartDate($result['startDate']);
                 $restaurant->setEndDate($result['endDate']);
                 $restaurant->setPicture($result['picture']);
+    
                 $restaurants[] = $restaurant;
             }
-            
         } catch (PDOException $e) {
             echo "Error: " . $e->getMessage();
             return [];
         }
         return $restaurants;
     }
+
+    public function getAllRestaurants() {
+        $restaurants = [];
+        try {
+            $stmt = $this->connection->prepare(
+                "SELECT *
+                FROM Restaurant
+                JOIN Event ON Event.restaurant_id = Restaurant.resturant_id"
+            );
+            $stmt->execute();
+            $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+            foreach ($results as $result) {
+                $restaurant = new \model\Restaurant();
+                $restaurant->setId($result['restaurant_id']);
+                $restaurant->setDescription($result['description']);
+                $restaurant->setSeats($result['seats']);
+                $restaurant->setName($result['name']);
+                $restaurant->setStartDate($result['startDate']);
+                $restaurant->setLocation($result['location']);
+                $restaurant->setPrice($result['price']);
+                $restaurant->setEndDate($result['endDate']);
+                $restaurant->setPicture($result['picture']);
+    
+                $restaurants[] = $restaurant;
+            }
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+            return [];
+        }
+        return $restaurants;
+    }
+    
+    
     
     public function updateRestaurantDetails($id, $name, $price, $seats, $startDate, $endDate, $picturePath) {
         try {
@@ -112,13 +155,19 @@ class resturantrepository extends dbconfig {
         }
     }
 
-    public function getTicketTimeslotsForRestaurant() {
+    public function getTicketTimeslotsForRestaurant($eventId) {
         $timeslots = [];
     
         try {
-            $stmt = $this->connection->prepare("SELECT [Event].event_id, [Event].[location], Ticket.[Date], Ticket.[Time], Ticket.quantity FROM [Event] JOIN Ticket ON [Event].event_id = Ticket.event_id WHERE [Event].[name] = :eventName");
+            $sql = "SELECT * 
+                    FROM Restaurant 
+                    JOIN Event ON Event.restaurant_id = Restaurant.restaurant_id 
+                    JOIN Ticket ON Ticket.event_id = Event.event_id 
+                    WHERE Ticket.event_id = :eventId";
     
-            $stmt->bindValue(':eventName', 'Restaurant');
+            $stmt = $this->connection->prepare($sql);
+    
+            $stmt->bindValue(':eventId', $eventId);
     
             $stmt->execute();
     
@@ -139,6 +188,7 @@ class resturantrepository extends dbconfig {
     
         return $timeslots;
     }
+    
 
 
     public function getRestaurantByIdWithTimeslots($restaurantId) {
@@ -170,7 +220,7 @@ class resturantrepository extends dbconfig {
                         $restaurantDetails->setPicture($result['picture']);
                     }
                     
-                    if ($result['ticket_hash']) { // Check if there is a ticket associated with this event
+                    if ($result['ticket_hash']) { 
                         $ticket = new \model\Ticket();
                         $ticket->setEventId($result['event_id']);
                         $ticket->setTicketHash($result['ticket_hash']);
@@ -191,9 +241,36 @@ class resturantrepository extends dbconfig {
         }
     }
     
+    public function addRestaurant($name, $location, $description, $price, $seats, $startDate, $endDate, $picturePath) {
+        if (empty($name) || empty($location) || empty($description) || empty($price)) {
+            return false;
+        }
+        try {
+            $this->connection->beginTransaction();
     
-
+            $stmt = $this->connection->prepare("INSERT INTO Restaurant ([description], seats) VALUES (:description, :seats)");
+            $stmt->bindValue(':description', $description);
+            $stmt->bindValue(':seats', $seats);
+            $stmt->execute();
+            $restaurantId = $this->connection->lastInsertId();
     
+            $stmt = $this->connection->prepare("INSERT INTO [Event] ([name], startDate, location, price, endDate, picture, restaurant_id) 
+            VALUES (:name, :startDate, :location, :price, :endDate, :picture, :restaurantId)");
+            $stmt->bindValue(':name', $name);
+            $stmt->bindValue(':startDate', $startDate);
+            $stmt->bindValue(':location', $location);
+            $stmt->bindValue(':price', $price);
+            $stmt->bindValue(':endDate', $endDate);
+            $stmt->bindValue(':picture', $picturePath);
+            $stmt->bindValue(':restaurantId', $restaurantId);
+            $stmt->execute();
+            $this->connection->commit();
     
-    
+            return true; 
+        } catch (PDOException $e) {
+            $this->connection->rollBack();
+            echo "Error: " . $e->getMessage();
+            return false;
+        }
+    }
 }
