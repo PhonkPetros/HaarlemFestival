@@ -50,7 +50,7 @@ class Myprogramcontroller
 
         if (isset ($_SESSION['shopping_cart']) && !empty ($_SESSION['shopping_cart'])) {
             $structuredTickets = $this->structureTicketsWithImages();
-            $uniqueTimes = $this->getUniqueTimes($structuredTickets);
+       
         }
         require_once __DIR__ . "/../views/my-program/overview.php";
 
@@ -65,7 +65,6 @@ class Myprogramcontroller
 
         if (isset ($_SESSION['shopping_cart']) && !empty ($_SESSION['shopping_cart'])) {
             $structuredTickets = $this->structureTicketsWithImages();
-            $uniqueTimes = $this->getUniqueTimes($structuredTickets);
         }
         require_once __DIR__ . "/../views/my-program/payment.php";
     }
@@ -89,7 +88,7 @@ class Myprogramcontroller
     }
 
 
-
+    //Creates a reservation and adds reservations to shopping cart 
     function createReservation()
     {
         //creates a shopping cart if it does not exist in the session
@@ -128,6 +127,7 @@ class Myprogramcontroller
             'user' => $userInfo
         ];
 
+        //If your event has extra info that needs to be added to a shopping cart then add it below
         switch ($ticketInfo['eventId']) {
             case EVENT_ID_DANCE:
             case EVENT_ID_JAZZ:
@@ -146,6 +146,7 @@ class Myprogramcontroller
                 break;
         }
 
+        //Checking if the ticket already exists in the cart
         foreach ($_SESSION['shopping_cart'] as $item) {
             if (
                 $item['ticketId'] == $ticketInfo['ticketId'] &&
@@ -163,6 +164,7 @@ class Myprogramcontroller
             }
         }
 
+        //Checking if the ticket quantity being set in form is greater than what is set in database for that one ticket
         $ticketQuantity = $this->ticketservice->getTicketQuantity($ticketInfo['ticketId']);
         if ($ticketQuantity === null) {
             echo json_encode([
@@ -188,9 +190,9 @@ class Myprogramcontroller
         exit;
     }
 
+    //updates user info in database
     function updateUserInfo()
     {
-
         $userInfo = [
             'firstName' => $_SESSION['user']['firstName'] ?? '',
             'lastName' => $_SESSION['user']['lastName'] ?? '',
@@ -209,6 +211,7 @@ class Myprogramcontroller
     }
 
 
+    //creates a shopping cart if a shopping cart does not exist in the session data
     function createShoppingCart()
     {
         if (!isset ($_SESSION['shopping_cart'])) {
@@ -216,6 +219,7 @@ class Myprogramcontroller
         }
     }
 
+    //modifies ticket quantity using an api 
     function modifyItemQuantity()
     {
         $data = json_decode(file_get_contents('php://input'), true);
@@ -225,6 +229,7 @@ class Myprogramcontroller
 
         $ticketQuantity = $this->ticketservice->getTicketQuantity($ticketId);
 
+        //iterating items in shopping cart and setting it
         foreach ($_SESSION['shopping_cart'] as &$item) {
             if ($item['ticketId'] == $ticketId && $item['eventId'] == $eventId) {
                 $newTotalQuantity = $item['quantity'] + $change;
@@ -255,6 +260,7 @@ class Myprogramcontroller
     }
 
 
+    //updates the total cart price
     function updateTotalCartPrice()
     {
         $totalCartPrice = array_sum(array_map(function ($item) {
@@ -272,6 +278,7 @@ class Myprogramcontroller
         ]);
     }
 
+    // deletes items from shopping cart
     function deleteItemFromCart()
     {
         $data = json_decode(file_get_contents('php://input'), true);
@@ -299,6 +306,7 @@ class Myprogramcontroller
         ]);
     }
 
+    //structuring ticket data for ticket list view
     private function structureTicketsWithImages()
     {
         $structuredTickets = [];
@@ -322,6 +330,7 @@ class Myprogramcontroller
         return $structuredTickets;
     }
 
+    //structuring ticket data for shared cart view
     private function structureSharedCart($cartData)
     {
         $structuredTickets = [];
@@ -346,24 +355,8 @@ class Myprogramcontroller
     }
 
 
-    private function getUniqueTimes($structuredTickets)
-    {
-        $allTimes = [];
 
-        foreach ($structuredTickets as $event) {
-            foreach ($event['tickets'] as $ticket) {
-                if (isset ($ticket['ticketTime']) && is_string($ticket['ticketTime'])) {
-                    $allTimes[] = $ticket['ticketTime'];
-                }
-            }
-        }
-
-        $uniqueTimes = array_unique($allTimes);
-        sort($uniqueTimes);
-
-        return $uniqueTimes;
-    }
-
+    //generates a sharable link of the session data of the shopping cart by hashing it and url encodign to the url
     function generateShareableLink()
     {
         if (!isset ($_SESSION['shopping_cart']) || empty ($_SESSION['shopping_cart'])) {
@@ -380,6 +373,7 @@ class Myprogramcontroller
     }
 
 
+    // de-hashes the hashed shopping cart data
     function retrieveSharedCart($encodedCart, $hash)
     {
         $isValid = hash_equals(hash_hmac('sha256', $encodedCart, $_ENV['SECRET_KEY'] ?? 'default-secret'), $hash);
@@ -391,6 +385,7 @@ class Myprogramcontroller
         return null;
     }
 
+    //gets user info set in the shopping cart that is stored in session
     function getUserInfoFromCart()
     {
         foreach ($_SESSION['shopping_cart'] as $item) {
@@ -401,26 +396,33 @@ class Myprogramcontroller
         return null;
     }
 
+    //creating a new payment
     function initiatePayment()
     {
         $data = json_decode(file_get_contents('php://input'), true);
+        //geting the payment method
         $paymentMethod = $data['paymentMethod'] ?? null;
+        //getting issuer
         $issuer = $data['issuer'] ?? null;
 
+        // checking if user exists in database 
         $userInfo = $this->getUserInfoFromCart();
         if (!$this->userService->email_exists($userInfo['email'])) {
             echo json_encode(['status' => 'error', 'message' => 'User needs to register.']);
             exit;
         }
 
+        //checking if tickets are still available
         if (!$this->checkTicketsAvailability($_SESSION['shopping_cart'])) {
             echo json_encode(['status' => 'error', 'message' => 'Some tickets are not available in the requested quantity.']);
             exit;
         }
 
+        //calls the mollie api to create payment
         $userId = $this->userService->getUserIDThroughEmail($userInfo['email']);
         $paymentResult = $this->mollieAPIController->createPayment($userId, $_SESSION['shopping_cart'], $paymentMethod, $issuer);
 
+        // if the payment status is success then it redirects user to the payment screen 
         if ($paymentResult['status'] === 'success') {
             echo json_encode(['status' => 'success', 'paymentUrl' => $paymentResult['paymentUrl']]);
         } else {
@@ -429,21 +431,27 @@ class Myprogramcontroller
         exit;
     }
 
+    //if the mollie api returns with a good response then 
     public function paymentSuccess()
     {
         $userInfo = $this->getUserInfoFromCart();
         $userId = $this->userService->getUserIDThroughEmail($userInfo['email']);
 
+        //add orders, order items to database and modifies the quantity of tickets
         $orderProcessingResult = $this->myProgramService->processOrder($userId, $_SESSION['shopping_cart']);
 
+        //if the response is good the shopping cart data set to an empty array and user is redirected to success screen
         if ($orderProcessingResult['status'] === 'success') {
             $_SESSION['shopping_cart'] = [];
             header('Location: http://localhost/my-program/order-confirmation');
             exit;
         } else {
+            //else the display alert to user that the payment failed 
             echo json_encode(['status' => 'error', 'message' => ' Processing Order Failed.']);
         }
     }
+
+    //this checks if tickets are still available in database from session data 
     function checkTicketsAvailability($cart)
     {
         foreach ($cart as $cartItem) {
