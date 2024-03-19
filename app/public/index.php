@@ -429,6 +429,18 @@ switch ($request) {
             $controller->showPayment();
         }
         break;
+    case '/create-payment':
+        $controller = new Myprogramcontroller();
+        if ($method == 'POST') {
+            $controller->initiatePayment();
+        }
+        break;
+    case '/my-program/payment-success':
+        $controller = new Myprogramcontroller();
+        if ($method == 'POST') {
+            $controller->showSuccess();
+        }
+        break;
     default:
         http_response_code(404);
         $navigation = new Navigationcontroller();

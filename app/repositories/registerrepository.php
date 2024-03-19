@@ -38,6 +38,21 @@ class registerrepository extends dbconfig {
         }
     }
 
+    public function getUserIDThroughEmail($email) {
+        try {
+            $stmt = $this->connection->prepare("SELECT user_id FROM [User] WHERE email = :email");
+            $stmt->bindParam(':email', $email, PDO::PARAM_STR);
+            $stmt->execute();
+            
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $user ? $user['user_id'] : false;
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+            return false;
+        }
+    }
+    
+
     public function registerUser($newuser) {
         $username = $newuser->getUsername();
         $email = $newuser->getUserEmail();

@@ -12,8 +12,8 @@ class Myprogramservice
         $this->myprogramRepo = new Myprogramrepository();
     }
 
-    function processOrder($userInfo, $cart){
-        return $this->myprogramRepo->processOrder($userInfo, $cart);
+    function processOrder($userId, $cart){
+        return $this->myprogramRepo->processOrder($userId, $cart);
     }
 
     function createOrder($userId, $totalPrice){

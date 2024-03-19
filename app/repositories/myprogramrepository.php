@@ -15,7 +15,7 @@ class Myprogramrepository extends dbconfig
 {
 
 
-    public function processOrder($userInfo, $cart)
+    public function processOrder($userId, $cart)
     {
         $connection = $this->getConnection();
         $connection->beginTransaction();
@@ -26,11 +26,11 @@ class Myprogramrepository extends dbconfig
                 $totalPrice += $item['quantity'] * $item['ticketPrice'];
             }
 
-            $orderId = $this->createOrder($userInfo['user_id'], $totalPrice);
+            $orderId = $this->createOrder($userId, $totalPrice);
 
             foreach ($cart as $item) {
                 $this->updateTicketQuantity($item['ticketId'], $item['quantity']);
-                $this->createOrderItem($orderId, $userInfo['user_id'], $item);
+                $this->createOrderItem($orderId, $userId, $item);
             }
             $connection->commit();
             return ['status' => 'success', 'message' => 'Order processed successfully'];

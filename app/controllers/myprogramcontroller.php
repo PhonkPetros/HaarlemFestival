@@ -69,6 +69,11 @@ class Myprogramcontroller
         require_once __DIR__ ."/../views/my-program/payment.php";
     }
 
+    function showSuccess(){
+        $this->navigationController->displayHeader();
+        require_once __DIR__ ."/../views/my-program/success.php";
+    }
+
     function showSharedCart($encodedCart, $hash)
     {
         $this->navigationController->displayHeader();
@@ -390,33 +395,44 @@ class Myprogramcontroller
     
 
     function initiatePayment() {
+        $data = json_decode(file_get_contents('php://input'), true);
+        $paymentMethod = $data['paymentMethod'] ?? null;
+        $issuer = $data['issuer'] ?? null;
+
+
         $userInfo = $this->getUserInfoFromCart();
         $userExists = $this->userService->email_exists($userInfo['email']);
+        $userId = $this->userService->getUserIDThroughEmail($userInfo['email']);
     
         if (!$userExists) {
             echo json_encode(['status' => 'error', 'message' => 'User needs to register.']);
             exit;
         }
+
+     
     
         $ticketsAvailable = $this->checkTicketsAvailability($_SESSION['shopping_cart']);
     
+   
         if (!$ticketsAvailable) {
             echo json_encode(['status' => 'error', 'message' => 'Some tickets are not available in the requested quantity.']);
             exit;
         }
     
-        $paymentResult = $this->mollieAPIController->createPayment($userInfo, $_SESSION['shopping_cart']);
-    
+        $paymentResult = $this->mollieAPIController->createPayment($userId, $_SESSION['shopping_cart'], $paymentMethod, $issuer);
+     
         if ($paymentResult['status'] === 'success') {
             // Payment was successful, update database
-            $this->myProgramService->processOrder($userInfo, $_SESSION['shopping_cart']);
-            echo json_encode(['status' => 'success', 'message' => 'Payment successful and order processed.']);
+            $this->myProgramService->processOrder($userId, $_SESSION['shopping_cart']);
+            // Provide the payment URL so that the front-end can redirect the user
+            echo json_encode(['status' => 'success', 'paymentUrl' => $paymentResult['paymentUrl']]);
         } else {
             // Handle payment failure
             echo json_encode(['status' => 'error', 'message' => 'Payment failed.']);
         }
         exit;
     }
+    
     
     function checkTicketsAvailability($cart) {
         foreach ($cart as $cartItem) {
