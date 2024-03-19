@@ -19,7 +19,7 @@ class MollieAPIController
     public function createPayment($userId, $cart, $paymentMethod, $issuer = null)
     {
         $totalPrice = array_reduce($cart, function ($carry, $item) {
-            return $carry + ($item['quantity'] * $item['ticketPrice']);
+            return $carry + ($item['quantity'] * $item['ticketPrice'])*1.21;
         }, 0);
 
         $totalPriceStr = number_format($totalPrice, 2, '.', '');

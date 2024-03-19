@@ -208,6 +208,7 @@ class Myprogramcontroller
         }
     }
 
+
     function createShoppingCart()
     {
         if (!isset ($_SESSION['shopping_cart'])) {
@@ -253,17 +254,21 @@ class Myprogramcontroller
         ]);
     }
 
+
     function updateTotalCartPrice()
     {
         $totalCartPrice = array_sum(array_map(function ($item) {
             return $item['quantity'] * $item['ticketPrice'];
         }, $_SESSION['shopping_cart']));
 
+        $iva = $totalCartPrice * 0.21;
+        $totalCartPriceWithIVA = $totalCartPrice + $iva;
+
         header('Content-Type: application/json');
         echo json_encode([
             'status' => 'success',
             'message' => 'Total cart price updated successfully.',
-            'totalCartPrice' => $totalCartPrice
+            'totalCartPrice' => $totalCartPriceWithIVA,
         ]);
     }
 
@@ -396,25 +401,26 @@ class Myprogramcontroller
         return null;
     }
 
-    function initiatePayment() {
+    function initiatePayment()
+    {
         $data = json_decode(file_get_contents('php://input'), true);
         $paymentMethod = $data['paymentMethod'] ?? null;
         $issuer = $data['issuer'] ?? null;
-    
+
         $userInfo = $this->getUserInfoFromCart();
         if (!$this->userService->email_exists($userInfo['email'])) {
             echo json_encode(['status' => 'error', 'message' => 'User needs to register.']);
             exit;
         }
-    
+
         if (!$this->checkTicketsAvailability($_SESSION['shopping_cart'])) {
             echo json_encode(['status' => 'error', 'message' => 'Some tickets are not available in the requested quantity.']);
             exit;
         }
-    
+
         $userId = $this->userService->getUserIDThroughEmail($userInfo['email']);
         $paymentResult = $this->mollieAPIController->createPayment($userId, $_SESSION['shopping_cart'], $paymentMethod, $issuer);
-    
+
         if ($paymentResult['status'] === 'success') {
             echo json_encode(['status' => 'success', 'paymentUrl' => $paymentResult['paymentUrl']]);
         } else {
@@ -422,34 +428,36 @@ class Myprogramcontroller
         }
         exit;
     }
-    
-    public function paymentSuccess() {
-            $userInfo = $this->getUserInfoFromCart();
-            $userId = $this->userService->getUserIDThroughEmail($userInfo['email']);
-            
-            $orderProcessingResult = $this->myProgramService->processOrder($userId, $_SESSION['shopping_cart']);
-    
-            if ($orderProcessingResult['status'] === 'success') {
-                $_SESSION['shopping_cart'] = []; 
-                header('Location: http://localhost/my-program/order-confirmation');
-                exit;
-            } else {
-                echo json_encode(['status' => 'error', 'message' => ' Processing Order Failed.']);
-            }
+
+    public function paymentSuccess()
+    {
+        $userInfo = $this->getUserInfoFromCart();
+        $userId = $this->userService->getUserIDThroughEmail($userInfo['email']);
+
+        $orderProcessingResult = $this->myProgramService->processOrder($userId, $_SESSION['shopping_cart']);
+
+        if ($orderProcessingResult['status'] === 'success') {
+            $_SESSION['shopping_cart'] = [];
+            header('Location: http://localhost/my-program/order-confirmation');
+            exit;
+        } else {
+            echo json_encode(['status' => 'error', 'message' => ' Processing Order Failed.']);
+        }
     }
-    function checkTicketsAvailability($cart) {
+    function checkTicketsAvailability($cart)
+    {
         foreach ($cart as $cartItem) {
             $ticketId = $cartItem['ticketId'];
             $requestedQuantity = $cartItem['quantity'];
             $availableQuantity = $this->ticketservice->getTicketQuantity($ticketId);
-    
+
             if ($availableQuantity === null || $requestedQuantity > $availableQuantity) {
                 return false;
             }
         }
         return true;
     }
-    
+
 
 
 

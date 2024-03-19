@@ -55,7 +55,7 @@
             <div class="col-auto"></div>
             <div class="col-auto">
                 <div>
-                    <h2>Total: €<span id="total-cart-price">0.00</span></h2>
+                    <h2>Total with VAT 21%: €<span id="total-cart-price">0.00</span></h2>
                 </div>
             </div>
         </div>
