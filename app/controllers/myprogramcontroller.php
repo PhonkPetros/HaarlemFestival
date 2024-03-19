@@ -6,10 +6,12 @@ use services\Myprogramservice;
 use services\registerservice;
 use services\ticketservice;
 use controllers\NavigationController;
+use controllers\MollieAPIController;
 
 //call the user service to check update user data 
 
 require_once __DIR__ . '/../services/myprogramservice.php';
+require_once __DIR__ . '/../controllers/mollieAPIController.php';
 require_once __DIR__ . '/../services/registerservice.php';
 require_once __DIR__ . '/../config/constant-paths.php';
 require_once __DIR__ . '/../controllers/navigationcontroller.php';
@@ -19,6 +21,7 @@ require_once __DIR__ . '/../services/ticketservice.php';
 class Myprogramcontroller
 {
     private $navigationController;
+    private $mollieAPIController;
     private $ticketservice;
     private $myProgramService;
     private $userService;
@@ -32,6 +35,7 @@ class Myprogramcontroller
         $this->navigationController = new NavigationController();
         $this->userService = new registerservice();
         $this->navcontroller = new NavigationController();
+        $this->mollieAPIController = new MollieAPIController();
 
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
@@ -384,6 +388,56 @@ class Myprogramcontroller
         return null; 
     }
     
+
+    function initiatePayment() {
+        $userInfo = $this->getUserInfoFromCart();
+        $userExists = $this->userService->email_exists($userInfo['email']);
+    
+        if (!$userExists) {
+            echo json_encode(['status' => 'error', 'message' => 'User needs to register.']);
+            exit;
+        }
+    
+        $ticketsAvailable = $this->checkTicketsAvailability($_SESSION['shopping_cart']);
+    
+        if (!$ticketsAvailable) {
+            echo json_encode(['status' => 'error', 'message' => 'Some tickets are not available in the requested quantity.']);
+            exit;
+        }
+    
+        $paymentResult = $this->mollieAPIController->createPayment($userInfo, $_SESSION['shopping_cart']);
+    
+        if ($paymentResult['status'] === 'success') {
+            // Payment was successful, update database
+            $this->myProgramService->processOrder($userInfo, $_SESSION['shopping_cart']);
+            echo json_encode(['status' => 'success', 'message' => 'Payment successful and order processed.']);
+        } else {
+            // Handle payment failure
+            echo json_encode(['status' => 'error', 'message' => 'Payment failed.']);
+        }
+        exit;
+    }
+    
+    function checkTicketsAvailability($cart) {
+        foreach ($cart as $cartItem) {
+            $ticketId = $cartItem['ticketId'];
+            $requestedQuantity = $cartItem['quantity'];
+            $availableQuantity = $this->ticketservice->getTicketQuantity($ticketId);
+    
+            if ($availableQuantity === null) {
+                return false;
+            }
+    
+            if ($requestedQuantity > $availableQuantity) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    
+    
+
 
 }
 
