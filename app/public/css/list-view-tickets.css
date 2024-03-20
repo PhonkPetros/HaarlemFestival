@@ -124,3 +124,39 @@
         position: relative;
     }
 }
+
+.fc {
+    max-width: 100%;
+    margin-bottom: 1rem;
+}
+
+
+.fc .fc-view-harness {
+    background-color: white;
+
+    border-radius: 15px;
+
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+    padding: 1rem;
+  
+}
+
+
+.fc .fc-view-harness {
+
+    height: 650px;
+
+}
+
+
+
+
+.fc-daygrid-day {
+    border-radius: 10px;
+
+}
+.fc-event {
+    border-radius: 10px;
+
+}

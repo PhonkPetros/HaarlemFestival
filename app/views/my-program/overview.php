@@ -12,6 +12,13 @@
 </div>
 
 
+<script>
+var structuredOrderedItems = <?php echo json_encode($structuredOrderedItems); ?>;
+</script>
+
+<script src="/js/my-program-agenda.js"></script>
+<script src="/js/modifyBasket.js"></script>
+
 <?php
 include __DIR__ . '/../general_views/footer.php';
 ?>

@@ -64,4 +64,4 @@
         </div>
     <?php endif; ?>
 </div>
-<script src="/js/modifyBasket.js"></script>
+

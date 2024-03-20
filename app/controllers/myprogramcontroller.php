@@ -53,11 +53,13 @@ class Myprogramcontroller
             $structuredTickets = $this->structureTicketsWithImages();
 
         }
+
         $structuredOrderedItems = $this->getStructuredPurchasedOrderItemsByUserID();
 
         require_once __DIR__ . "/../views/my-program/overview.php";
 
     }
+
 
     function showPayment()
     {
@@ -78,11 +80,12 @@ class Myprogramcontroller
         require_once __DIR__ . "/../views/my-program/success.php";
     }
 
-    function showFailure(){
+    function showFailure()
+    {
         $this->navigationController->displayHeader();
         require_once __DIR__ . "/../views/my-program/failure.php";
     }
-    
+
 
     // function showSharedCart($encodedCart, $hash)
     // {
@@ -192,14 +195,14 @@ class Myprogramcontroller
         }
 
         $_SESSION['shopping_cart'][] = $ticketInfo;
-    
+
         header('Content-Type: application/json');
         echo json_encode([
             'status' => 'success',
             'message' => 'Reservation successfully created!',
         ]);
 
-   
+
         exit;
     }
 
@@ -502,49 +505,71 @@ class Myprogramcontroller
 
 
     //getting all the purchased tickets by userID and structuring them 
-    function getStructuredPurchasedOrderItemsByUserID() {
+    function getStructuredPurchasedOrderItemsByUserID()
+    {
         $structuredOrderItems = [];
-        $purchasedOrderItems = $this->myProgramService->getOrderItemsByUser($_SESSION['user']['userID']);
-        foreach ($purchasedOrderItems as $orderitem) {
-            $event_details = $this->ticketservice->getEventDetails($orderitem->getEventId());
-            $structuredItem = [
-                'order_item_id' => $orderitem->getOrderItemId(),
-                'order_id' => $orderitem->getOrderId(),
-                'user_id' => $orderitem->getUserId(),
-                'quantity' => $orderitem->getQuantity(),
-                'date' => $orderitem->getDate(),
-                'start_time' => $orderitem->getStartTime(),
-                'end_time' => $orderitem->getEndTime(),
-                'item_hash' => $orderitem->getItemHash(),
-                'event_id' => $orderitem->getEventId(),
-                'location' => $orderitem->getLocation(),
-                'event_details' => [
-                    'image' => $event_details['picture'] ?? null,
-                    'event_name' => $event_details['name'] ?? null,
-                ],
-            ];
-    
-            // Customize the structured item based on the event ID
-            switch ($orderitem->getEventId()) {
-                case EVENT_ID_HISTORY: // History
-                    $structuredItem['language'] = $orderitem->getLanguage();
-                    break;
-                case EVENT_ID_RESTAURANT: // Yummy
-                    $structuredItem['restaurant_name'] = $orderitem->getRestaurantName();
-                    $structuredItem['special_remarks'] = $orderitem->getSpecialRemarks();
-                    break;
-                case EVENT_ID_DANCE:
-                case EVENT_ID_JAZZ: // Events Dance and Jaz
-                    $structuredItem['ticket_type'] = $orderitem->getTicketType();
-                    $structuredItem['artist_name'] = $orderitem->getArtistName();
-                    break;
-            }    
-            $structuredOrderItems[] = $structuredItem;
+        if (isset ($_SESSION['user']) && isset ($_SESSION['user']['userID'])) {
+            $userID = $_SESSION['user']['userID'];
+            $purchasedOrderItems = $this->myProgramService->getOrderItemsByUser($userID);
+
+            foreach ($purchasedOrderItems as $orderitem) {
+                $event_details = $this->ticketservice->getEventDetails($orderitem->getEventId());
+                $structuredItem = [
+                    'order_item_id' => $orderitem->getOrderItemId(),
+                    'order_id' => $orderitem->getOrderId(),
+                    'user_id' => $orderitem->getUserId(),
+                    'quantity' => $orderitem->getQuantity(),
+                    'date' => $orderitem->getDate(),
+                    'start_time' => $orderitem->getStartTime(),
+                    'end_time' => $orderitem->getEndTime(),
+                    'item_hash' => $orderitem->getItemHash(),
+                    'event_id' => $orderitem->getEventId(),
+                    'location' => $orderitem->getLocation(),
+                    'event_details' => [
+                        'image' => $event_details['picture'] ?? null,
+                        'event_name' => $event_details['name'] ?? null,
+                    ],
+
+                ];
+
+                // Customize the structured item based on the event ID
+                switch ($orderitem->getEventId()) {
+                    case EVENT_ID_HISTORY: // History
+                        $structuredItem['language'] = $orderitem->getLanguage();
+                        break;
+                    case EVENT_ID_RESTAURANT: // Yummy
+                        $structuredItem['restaurant_name'] = $orderitem->getRestaurantName();
+                        $structuredItem['special_remarks'] = $orderitem->getSpecialRemarks();
+                        break;
+                    case EVENT_ID_DANCE:
+                    case EVENT_ID_JAZZ: // Events Dance and Jaz
+                        $structuredItem['ticket_type'] = $orderitem->getTicketType();
+                        $structuredItem['artist_name'] = $orderitem->getArtistName();
+                        break;
+                }
+
+                $structuredOrderItems[] = $structuredItem;
+            }
+            // Filter the structured order items to include only those within the specified date range
+            $filteredOrderedItems = array_filter($structuredOrderItems, function ($item) {
+                // Convert the item's date to a timestamp for easy comparison
+                $itemDateTimestamp = strtotime($item['date']);
+                // Define the start and end of the desired date range
+                $startDateTimestamp = strtotime("2024-06-26");
+                $endDateTimestamp = strtotime("2024-06-30");
+                // Include the item if its date is within the range
+                return $itemDateTimestamp >= $startDateTimestamp && $itemDateTimestamp <= $endDateTimestamp;
+            });
+
+            // Return only the items that passed the filtering
+            return $filteredOrderedItems;
+        } else {
+            return [];
         }
-    
-        return $structuredOrderItems;
     }
-    
+
+
+
 }
 
 
