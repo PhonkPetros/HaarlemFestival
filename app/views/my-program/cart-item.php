@@ -4,8 +4,8 @@
             <h3 style="text-decoration: underline;">Tickets</h3>
         </div>
         <div class="col-auto">
-            <button class="btn btn-primary" onclick="generateAndShareLink()">Share Cart</button>
-            <a id="shareLink" style="display: none;" onclick="copyToClipboard(event)">Copy Link</a>
+            <!-- <button class="btn btn-primary" onclick="generateAndShareLink()">Share Cart</button>
+            <a id="shareLink" style="display: none;" onclick="copyToClipboard(event)">Copy Link</a> -->
         </div>
     </div>
 

@@ -8,9 +8,11 @@ use DateTime;
 
 use Repositories\TicketRepo;
 use config\dbconfig;
+use model\OrderItem;
 
 require_once __DIR__ . '/../config/dbconfig.php';
 require_once __DIR__ . '/ticketRepo.php';
+require_once __DIR__ . '/../model/orderItem.php';
 
 
 class Myprogramrepository extends dbconfig
@@ -66,6 +68,7 @@ class Myprogramrepository extends dbconfig
         return $this->connection->lastInsertId();
     }
 
+    //modify this to contain event id location ticket type artistname restaurant name and special remarks
     private function createOrderItem($orderId, $userId, $item)
     {
         // Ensure the date format matches the one in your database
@@ -94,7 +97,6 @@ class Myprogramrepository extends dbconfig
         $stmt->execute();
 
     }
-
 
     private function updateTicketQuantity($ticketId, $quantityPurchased)
     {
@@ -160,5 +162,14 @@ class Myprogramrepository extends dbconfig
         return false;
     }
 
+    public function getOrderItemsByUser($userID){
+        $stmt = $this->connection->prepare("SELECT * FROM OrderItems WHERE user_id = :user_id ORDER BY date DESC");
+        $stmt->bindParam(':user_id', $userID, PDO::PARAM_INT);
+        $stmt->execute(); 
+        $stmt->setFetchMode(PDO::FETCH_CLASS, OrderItem::class); 
+        $orders = $stmt->fetchAll(); 
+        return $orders;
+    }
+    
 
 }

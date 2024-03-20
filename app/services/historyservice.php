@@ -19,8 +19,8 @@ class HistoryService
         $this->ticketRepo = new TicketRepo();
     }
 
-    public function getEventDetails() {
-        return $this->historyRepo->getEventDetails();
+    public function getEventDetails($eventID) {
+        return $this->historyRepo->getEventDetails($eventID);
     }
 
     public function getTickets($eventId) {

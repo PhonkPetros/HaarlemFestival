@@ -5,18 +5,10 @@
     <div class="row justify-content-between align-items-center mb-3 ">
         <div class="col-auto">
         </div>
-        <div class="col-auto">
-            <button class="btn btn-primary" onclick="generateAndShareLink()">Share My Program</button>
-            <a id="shareLink" style="display: none;" onclick="copyToClipboard(event)">Copy Link</a>
-        </div>
     </div>
     <? require_once __DIR__ . '/list-view.php'; ?>
-    
     <? require_once __DIR__ . '/purchased-ticket.php'; ?>
     <? require_once __DIR__ . '/agenda-view.php'; ?>
-
-
-  
 
 </div>
 

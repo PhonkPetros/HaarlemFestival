@@ -30,7 +30,7 @@ class Historycontroller
 
     public function show()
     {
-        $eventDetails = $this->historyService->getEventDetails();
+        $eventDetails = $this->historyService->getEventDetails(8);
         $structuredTickets = $this->getStructuredTickets($eventDetails->getEventId());
         $uniqueTimes = $this->getUniqueTimes($structuredTickets);
         $navigationController = $this->navigationController->displayHeader();
@@ -170,6 +170,8 @@ class Historycontroller
     private function getStructuredTickets($eventId)
     {
         $tickets = $this->historyService->getTickets($eventId);
+        $eventDetails = $this->historyService->getEventDetails($eventId);
+        $location = $eventDetails->getLocation();
         $ticketPrice = $this->historyService->getTicketPrice($eventId);
     
         $price = $ticketPrice ? $ticketPrice->getPrice() : null;
@@ -184,6 +186,7 @@ class Historycontroller
             $time = $ticket->getTicketTime();
             $endTime = $ticket->getTicketEndTime();
             $quantity = $ticket->getQuantity();
+
     
             $structuredTickets[$language][$date][$time] = [
                 'ticket_id' => $ticketId, 
@@ -193,7 +196,8 @@ class Historycontroller
                 'time' => $time,
                 'endtime' => $endTime,
                 'quantity' => $quantity,
-                'price' => $price
+                'price' => $price,
+                'location' => $location
             ];
         }
     

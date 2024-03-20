@@ -52,6 +52,7 @@
                     <input type="hidden" id="ticketTime" name="ticketTime">
                     <input type="hidden" id="ticketEndTime" name="ticketEndTime">
                     <input type="hidden" id="ticketLanguage" name="ticketLanguage">
+                    <input type="hidden" id="ticketLocation" name="ticketLocation">
 
                 </form>
             </div>

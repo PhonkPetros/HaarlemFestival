@@ -21,12 +21,16 @@ class Myprogramservice
     }
 
     function updateTicketQuantity($ticketId, $quantityPurchased){
-        return $this->updateTicketQuantity($ticketId, $quantityPurchased);
+        return $this->myprogramRepo->updateTicketQuantity($ticketId, $quantityPurchased);
     }
 
 
     function createOrderItem($orderId, $userId, $item){
-        return $this->createOrderItem($orderId, $userId, $item);
+        return $this->myprogramRepo->createOrderItem($orderId, $userId, $item);
+    }
+
+    function getOrderItemsByUser($userID){
+        return $this->myprogramRepo->getOrderItemsByUser($userID);
     }
 
 }

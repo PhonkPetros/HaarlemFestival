@@ -15,7 +15,7 @@ require_once __DIR__ . '/../model/ticket.php';
 
 class historyrepository extends dbconfig
 {
-    public function getEventDetails($eventID = "8")
+    public function getEventDetails($eventID)
     {
         $sql = 'SELECT * FROM [Event] WHERE event_id = :eventID';
 

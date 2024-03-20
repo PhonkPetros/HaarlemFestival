@@ -81,17 +81,17 @@ class Myprogramcontroller
     }
     
 
-    function showSharedCart($encodedCart, $hash)
-    {
-        $this->navigationController->displayHeader();
-        $sharedCart = $this->retrieveSharedCart($encodedCart, $hash);
-        if ($sharedCart === null) {
-            echo "Invalid or expired share link.";
-            return;
-        }
-        $structuredTickets = $this->structureSharedCart($sharedCart);
-        require_once __DIR__ . '/../views/my-program/share-basket-view.php';
-    }
+    // function showSharedCart($encodedCart, $hash)
+    // {
+    //     $this->navigationController->displayHeader();
+    //     $sharedCart = $this->retrieveSharedCart($encodedCart, $hash);
+    //     if ($sharedCart === null) {
+    //         echo "Invalid or expired share link.";
+    //         return;
+    //     }
+    //     $structuredTickets = $this->structureSharedCart($sharedCart);
+    //     require_once __DIR__ . '/../views/my-program/share-basket-view.php';
+    // }
 
 
     //Creates a reservation and adds reservations to shopping cart 
@@ -103,6 +103,7 @@ class Myprogramcontroller
         //decodes session data 
         $inputJSON = file_get_contents('php://input');
         $input = json_decode($inputJSON, true);
+
 
         //holds user info
         $userInfo = [
@@ -130,6 +131,7 @@ class Myprogramcontroller
             'ticketDate' => $input['ticketDate'] ?? '',
             'ticketTime' => $input['ticketTime'] ?? '',
             'ticketEndTime' => $input['ticketEndTime'] ?? '',
+            'ticketLocation' => $input['ticketLocation'] ?? '',
             'user' => $userInfo
         ];
 
@@ -187,12 +189,14 @@ class Myprogramcontroller
         }
 
         $_SESSION['shopping_cart'][] = $ticketInfo;
-
+    
         header('Content-Type: application/json');
         echo json_encode([
             'status' => 'success',
             'message' => 'Reservation successfully created!',
         ]);
+
+   
         exit;
     }
 
@@ -324,7 +328,6 @@ class Myprogramcontroller
                     'tickets' => [],
                     'image' => $eventDetails['picture'] ?? null,
                     'event_name' => $eventDetails['name'] ?? null,
-                    'location' => $eventDetails['location'] ?? null,
                     'totalPrice' => 0
                 ];
             }
@@ -337,46 +340,46 @@ class Myprogramcontroller
     }
 
     //structuring ticket data for shared cart view
-    private function structureSharedCart($cartData)
-    {
-        $structuredTickets = [];
-        foreach ($cartData as $ticket) {
-            $eventId = $ticket['eventId'];
-            if (!array_key_exists($eventId, $structuredTickets)) {
-                $eventDetails = $this->ticketservice->getEventDetails($eventId);
-                $structuredTickets[$eventId] = [
-                    'tickets' => [],
-                    'image' => $eventDetails['picture'] ?? null,
-                    'event_name' => $eventDetails['name'] ?? null,
-                    'location' => $eventDetails['location'] ?? null,
-                    'totalPrice' => 0
-                ];
-            }
-            $ticketTotalPrice = $ticket['quantity'] * $ticket['ticketPrice'];
-            $structuredTickets[$eventId]['totalPrice'] += $ticketTotalPrice;
-            $ticket['totalPrice'] = $ticketTotalPrice;
-            $structuredTickets[$eventId]['tickets'][] = $ticket;
-        }
-        return $structuredTickets;
-    }
+    // private function structureSharedCart($cartData)
+    // {
+    //     $structuredTickets = [];
+    //     foreach ($cartData as $ticket) {
+    //         $eventId = $ticket['eventId'];
+    //         if (!array_key_exists($eventId, $structuredTickets)) {
+    //             $eventDetails = $this->ticketservice->getEventDetails($eventId);
+    //             $structuredTickets[$eventId] = [
+    //                 'tickets' => [],
+    //                 'image' => $eventDetails['picture'] ?? null,
+    //                 'event_name' => $eventDetails['name'] ?? null,
+    //                 'location' => $eventDetails['location'] ?? null,
+    //                 'totalPrice' => 0
+    //             ];
+    //         }
+    //         $ticketTotalPrice = $ticket['quantity'] * $ticket['ticketPrice'];
+    //         $structuredTickets[$eventId]['totalPrice'] += $ticketTotalPrice;
+    //         $ticket['totalPrice'] = $ticketTotalPrice;
+    //         $structuredTickets[$eventId]['tickets'][] = $ticket;
+    //     }
+    //     return $structuredTickets;
+    // }
 
 
 
-    //generates a sharable link of the session data of the shopping cart by hashing it and url encodign to the url
-    function generateShareableLink()
-    {
-        if (!isset ($_SESSION['shopping_cart']) || empty ($_SESSION['shopping_cart'])) {
-            echo json_encode(['status' => 'error', 'message' => 'Cart is empty']);
-            exit;
-        }
+    // //generates a sharable link of the session data of the shopping cart by hashing it and url encodign to the url
+    // function generateShareableLink()
+    // {
+    //     if (!isset ($_SESSION['shopping_cart']) || empty ($_SESSION['shopping_cart'])) {
+    //         echo json_encode(['status' => 'error', 'message' => 'Cart is empty']);
+    //         exit;
+    //     }
 
-        $encodedCart = base64_encode(serialize($_SESSION['shopping_cart']));
-        $hash = hash_hmac('sha256', $encodedCart, $_ENV['SECRET_KEY'] ?? 'default-secret');
+    //     $encodedCart = base64_encode(serialize($_SESSION['shopping_cart']));
+    //     $hash = hash_hmac('sha256', $encodedCart, $_ENV['SECRET_KEY'] ?? 'default-secret');
 
-        $link = "http://localhost/share-cart/?cart=" . urlencode($encodedCart) . "&hash=" . $hash;
-        echo json_encode(['status' => 'success', 'link' => $link]);
-        exit;
-    }
+    //     $link = "http://localhost/share-cart/?cart=" . urlencode($encodedCart) . "&hash=" . $hash;
+    //     echo json_encode(['status' => 'success', 'link' => $link]);
+    //     exit;
+    // }
 
 
     // de-hashes the hashed shopping cart data
@@ -425,7 +428,7 @@ class Myprogramcontroller
         }
 
         //calls the mollie api to create payment
-        $userId = $this->userService->getUserIDThroughEmail($userInfo['email']);
+        $userId = $_SESSION['user']['userID'];
         $paymentResult = $this->mollieAPIController->createPayment($userId, $_SESSION['shopping_cart'], $paymentMethod, $issuer);
 
 
@@ -465,8 +468,7 @@ class Myprogramcontroller
         }
 
         // If payment is successful, proceed with the existing code
-        $userInfo = $this->getUserInfoFromCart();
-        $userId = $this->userService->getUserIDThroughEmail($userInfo['email']);
+        $userId = $_SESSION['user']['userID'];
         $orderProcessingResult = $this->myProgramService->processOrder($userId, $_SESSION['shopping_cart'], $paymentStatus);
 
         if ($orderProcessingResult['status'] === 'success') {
@@ -494,11 +496,6 @@ class Myprogramcontroller
         }
         return true;
     }
-
-
-
-
-
 
 }
 
