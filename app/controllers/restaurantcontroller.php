@@ -22,6 +22,7 @@ class Restaurantcontroller
     public function editEventDetails($eventId) {
         
         $restaurants = $this->restaurantService->getRestaurant($eventId);
+        $ticket = $this->restaurantService->getTimeslotsForRestaurant($eventId);
         require_once __DIR__ . '/../views/admin/manage-event-details/editDetailsRestaurant.php';
     }
     
@@ -31,11 +32,16 @@ class Restaurantcontroller
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $id = $_POST['id'] ?? null;
             $name = $_POST['name'] ?? '';
+            $description = $_POST['description'] ?? '';
+            $location = $_POST['location'] ?? '';
             $price = $_POST['price'] ?? '';
             $seats = $_POST['seats'] ?? 0;
             $startDate = $_POST['startDate'] ?? '';
             $endDate = $_POST['endDate'] ?? '';
             $picturePath = '';
+    
+            $price = max(0, floatval($price));
+            $seats = max(0, intval($seats)); 
     
             $response = ['success' => false, 'message' => 'An error occurred'];
     
@@ -47,16 +53,11 @@ class Restaurantcontroller
                 $allowedTypes = ['jpg', 'png', 'jpeg', 'gif'];
     
                 if (in_array($fileType, $allowedTypes)) {
-                    if (!file_exists($targetFilePath)) {
-                        if (move_uploaded_file($_FILES['picture']['tmp_name'], $targetFilePath)) {
-                            $picturePath = '' . $fileName; 
-                        } else {
-                            $response['message'] = 'Sorry, there was an error uploading your file.';
-                            echo json_encode($response);
-                            exit;
-                        }
+                    // Move the uploaded file to the target directory
+                    if (move_uploaded_file($_FILES['picture']['tmp_name'], $targetFilePath)) {
+                        $picturePath = $fileName; // Store the file name
                     } else {
-                        $response['message'] = 'Sorry, file already exists.';
+                        $response['message'] = 'Sorry, there was an error uploading your file.';
                         echo json_encode($response);
                         exit;
                     }
@@ -67,7 +68,8 @@ class Restaurantcontroller
                 }
             }
     
-            $result = $this->restaurantService->updateRestaurantDetails($id, $name, $price, $seats, $startDate, $endDate, $picturePath);
+            // Call the updateRestaurantDetails method with the updated picturePath
+            $result = $this->restaurantService->updateRestaurantDetails($id, $name, $price, $seats, $startDate, $endDate, $picturePath, $description, $location);
             if ($result) {
                 $response = ['success' => true, 'message' => 'Restaurant details updated successfully.'];
             } else {
@@ -78,6 +80,8 @@ class Restaurantcontroller
             exit;
         }
     }
+    
+    
     
 
     public function addTimeSlot() {

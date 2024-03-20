@@ -43,10 +43,12 @@
                                     data-end-date="<?= htmlspecialchars($restaurant->getEndDate()) ?>">
                                 Edit
                             </button>
+                            <button type="button" class="btn btn-primary add-timeslot-btn" data-id="<?= htmlspecialchars($restaurant->getId()) ?>">Add Timeslot</button>
                         </td>
                         <td>
                             <button type="button" class="btn btn-danger delete-btn" data-id="<?= htmlspecialchars($restaurant->getId()) ?>">Delete</button>
                         </td>
+                        
                     </tr>
                 <?php endforeach; ?>
             <?php else: ?>
@@ -112,6 +114,14 @@
                         <input type="text" class="form-control" id="editFormName" name="name">
                     </div>
                     <div class="form-group">
+                        <label for="editFormLocation">Location</label>
+                        <input type="text" class="form-control" id="editFormLocation" name="location">
+                    </div>
+                    <div class="form-group">
+                        <label for="editFormDescription">Description</label>
+                        <textarea class="form-control" id="editFormDescription" name="description" rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
                         <label for="editFormPrice">Price</label>
                         <input type="text" class="form-control" id="editFormPrice" name="price">
                     </div>
@@ -129,17 +139,18 @@
                     </div>
                     <div class="form-group">
                         <label for="editFormPicture">Picture</label>
-                        <input type="file" class="form-control" id="editFormPicture" name="picture">
+                        <input type="file" class="form-control-file" id="editFormPicture" name="picture">
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Close</button>
-                    <button type="button" class="btn btn-primary" id="saveChangesBtn" onclick="saveChanges()">Save</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="closeModal()">Close</button> <!-- Added data-dismiss attribute -->
+                    <button type="submit" class="btn btn-primary"  onclick="saveChanges(event)">Save changes</button>
                 </div>
             </div>
         </form>
     </div>
 </div>
+
 
 <div id="addTimeslotModal" class="modal">
     <div class="modal-dialog">
