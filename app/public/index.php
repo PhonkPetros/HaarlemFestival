@@ -447,6 +447,13 @@ switch ($request) {
             $controller->showSuccess();
         }
         break;
+
+    case '/my-program/payment-failure':
+        $controller = new Myprogramcontroller();
+        if($method == 'GET'){
+            $controller->showFailure();
+        }    
+        break;
     default:
         http_response_code(404);
         $navigation = new Navigationcontroller();

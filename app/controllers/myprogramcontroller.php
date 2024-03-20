@@ -50,7 +50,7 @@ class Myprogramcontroller
 
         if (isset ($_SESSION['shopping_cart']) && !empty ($_SESSION['shopping_cart'])) {
             $structuredTickets = $this->structureTicketsWithImages();
-       
+
         }
         require_once __DIR__ . "/../views/my-program/overview.php";
 
@@ -74,6 +74,12 @@ class Myprogramcontroller
         $this->navigationController->displayHeader();
         require_once __DIR__ . "/../views/my-program/success.php";
     }
+
+    function showFailure(){
+        $this->navigationController->displayHeader();
+        require_once __DIR__ . "/../views/my-program/failure.php";
+    }
+    
 
     function showSharedCart($encodedCart, $hash)
     {
@@ -422,7 +428,7 @@ class Myprogramcontroller
         $userId = $this->userService->getUserIDThroughEmail($userInfo['email']);
         $paymentResult = $this->mollieAPIController->createPayment($userId, $_SESSION['shopping_cart'], $paymentMethod, $issuer);
 
-       
+
         // if the payment status is success then it redirects user to the payment screen 
         if ($paymentResult['status'] === 'success') {
             echo json_encode(['status' => 'success', 'paymentUrl' => $paymentResult['paymentUrl']]);
@@ -435,20 +441,42 @@ class Myprogramcontroller
     //if the mollie api returns with a good response then 
     public function paymentSuccess()
     {
+        // Start the session if it hasn't been started already
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        // Check if the payment ID is stored in the session
+        if (!isset ($_SESSION['payment_id'])) {
+            echo json_encode(['status' => 'error', 'message' => 'Payment ID is required.']);
+            exit;
+        }
+
+        // Retrieve the payment ID from the session
+        $paymentId = $_SESSION['payment_id'];
+
+        // Retrieve the payment status using the payment ID
+        $paymentStatus = $this->mollieAPIController->getPaymentStatus($paymentId);
+
+        if ($paymentStatus !== 'paid') {
+            // Redirect to a failure page or handle the failure scenario
+            header('Location: http://localhost/my-program/payment-failure');
+            exit;
+        }
+
+        // If payment is successful, proceed with the existing code
         $userInfo = $this->getUserInfoFromCart();
         $userId = $this->userService->getUserIDThroughEmail($userInfo['email']);
+        $orderProcessingResult = $this->myProgramService->processOrder($userId, $_SESSION['shopping_cart'], $paymentStatus);
 
-        //add orders, order items to database and modifies the quantity of tickets
-        $orderProcessingResult = $this->myProgramService->processOrder($userId, $_SESSION['shopping_cart']);
-
-        //if the response is good the shopping cart data set to an empty array and user is redirected to success screen
         if ($orderProcessingResult['status'] === 'success') {
+            // Empty the shopping cart session data after successful order processing
             $_SESSION['shopping_cart'] = [];
             header('Location: http://localhost/my-program/order-confirmation');
             exit;
         } else {
-            //else the display alert to user that the payment failed 
-            echo json_encode(['status' => 'error', 'message' => ' Processing Order Failed.']);
+            echo json_encode(['status' => 'error', 'message' => 'Processing Order Failed.']);
+            exit;
         }
     }
 
