@@ -21,7 +21,7 @@
                         </h5>
                         <p class="ticket-info" style=" font-size: 19px;">
                             Location:
-                            <?php echo htmlspecialchars($eventData['location']); ?><br>
+                            <?php echo htmlspecialchars($ticket['ticketLocation']); ?><br>
                             Date:
                             <?php echo htmlspecialchars($ticket['ticketDate']); ?><br>
                             Start Time:

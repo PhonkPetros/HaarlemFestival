@@ -81,18 +81,43 @@ class Myprogramrepository extends dbconfig
         $endTime = new DateTime($item['ticketEndTime']);
         $formattedEndTime = $endTime->format('H:i:s');
 
-        $itemHash = hash('sha256', $userId . $item['ticketId'] . microtime());
+        $itemHash = hash('sha256', $userId . $orderId . microtime());
 
-        $stmt = $this->connection->prepare("INSERT INTO OrderItems (order_id, user_id, quantity, language, date, start_time, end_time, item_hash) VALUES (:order_id, :user_id, :quantity, :language, :date, :start_time, :end_time, :item_hash)");
+        $ticketType = '';
+        if (isset($item['allAccessPass'])) {
+            $ticketType = 'allaccesspass';
+        } elseif (isset($item['dayPass'])) {
+            $ticketType = 'daypass';
+        }
 
+        //intializing 
+        $language = $item['ticketLanguage'] ?? null;
+        $eventId = $item['eventId'] ?? null;
+        $location = $item['ticketLocation'] ?? null;
+        $ticketType = $ticketType ?: null; 
+        $artistName = $item['artistName'] ?? null;
+        $restaurantName = $item['restaurantName'] ?? null;
+        $specialRemarks = $item['specialRemarks'] ?? null;
+
+        $sql = "INSERT INTO OrderItems (order_id, user_id, quantity, language, date, start_time, end_time, item_hash, event_id, location, ticket_type, artist_name, restaurant_name, special_remarks) 
+        VALUES (:order_id, :user_id, :quantity, :language, :date, :start_time, :end_time, :item_hash, :event_id, :location, :ticket_type, :artist_name, :restaurant_name, :special_remarks)";
+
+        $stmt = $this->connection->prepare($sql);
         $stmt->bindParam(':order_id', $orderId, PDO::PARAM_INT);
         $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
         $stmt->bindParam(':quantity', $item['quantity'], PDO::PARAM_INT);
-        $stmt->bindParam(':language', $item['ticketLanguage'], PDO::PARAM_STR);
+        $stmt->bindParam(':language', $language, PDO::PARAM_STR);
         $stmt->bindParam(':date', $formattedDate);
         $stmt->bindParam(':start_time', $formattedStartTime);
         $stmt->bindParam(':end_time', $formattedEndTime);
         $stmt->bindParam(':item_hash', $itemHash);
+        $stmt->bindParam(':event_id', $eventId, PDO::PARAM_INT);
+        $stmt->bindParam(':location', $location, PDO::PARAM_STR);
+        $stmt->bindParam(':ticket_type', $ticketType, PDO::PARAM_STR);
+        $stmt->bindParam(':artist_name', $artistName, PDO::PARAM_STR);
+        $stmt->bindParam(':restaurant_name', $restaurantName, PDO::PARAM_STR);
+        $stmt->bindParam(':special_remarks', $specialRemarks, PDO::PARAM_STR);
+    
 
         $stmt->execute();
 
