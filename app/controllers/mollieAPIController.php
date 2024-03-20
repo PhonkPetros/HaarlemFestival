@@ -37,9 +37,12 @@ class MollieAPIController
                     "user_id" => $userId,
                 ],
             ];
+
             
             $payment = $this->mollieClient->payments->create($paymentData);
-
+            //use payement id to retrieve the id of a payment and then create a check inside the payment success to check
+            // the status of the payment if its anything else thats not paid then display payment failure page
+            $payment->id;
             return [
                 'status' => 'success',
                 'paymentUrl' => $payment->getCheckoutUrl(),

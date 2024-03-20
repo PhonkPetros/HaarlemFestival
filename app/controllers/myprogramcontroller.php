@@ -422,6 +422,7 @@ class Myprogramcontroller
         $userId = $this->userService->getUserIDThroughEmail($userInfo['email']);
         $paymentResult = $this->mollieAPIController->createPayment($userId, $_SESSION['shopping_cart'], $paymentMethod, $issuer);
 
+       
         // if the payment status is success then it redirects user to the payment screen 
         if ($paymentResult['status'] === 'success') {
             echo json_encode(['status' => 'success', 'paymentUrl' => $paymentResult['paymentUrl']]);
