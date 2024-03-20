@@ -182,10 +182,10 @@ class resturantrepository extends dbconfig {
     
 
     public function getTimeslotsForRestaurant($eventId) {
-        $tickets = []; // To store the full ticket details, not just timeslots.
+        $tickets = [];
         try {
             $stmt = $this->connection->prepare(
-                "SELECT ticket_id, ticket_hash, date AS ticket_date, time AS ticket_time, quantity 
+                "SELECT ticket_id, ticket_hash, date, time, quantity 
                 FROM Ticket 
                 WHERE event_id = :event_id"
             );
@@ -195,11 +195,11 @@ class resturantrepository extends dbconfig {
     
             foreach ($results as $result) {
                 $ticket = new \model\Ticket();
-                $ticket->setEventId($eventId); // Assuming you have such a setter; if not, you may need to adjust.
-                $ticket->setTicketId($result['ticket_id']); // Assuming you add this setter to your Ticket model
+                $ticket->setEventId($eventId);
+                $ticket->setTicketId($result['ticket_id']);
                 $ticket->setTicketHash($result['ticket_hash']);
-                $ticket->setTicketDate($result['ticket_date']);
-                $ticket->setTicketTime($result['ticket_time']);
+                $ticket->setTicketDate($result['date']); 
+                $ticket->setTicketTime($result['time']);
                 $ticket->setQuantity($result['quantity']);
                 $tickets[] = $ticket;
             }
@@ -209,6 +209,7 @@ class resturantrepository extends dbconfig {
         }
         return $tickets;
     }
+    
     
     
 

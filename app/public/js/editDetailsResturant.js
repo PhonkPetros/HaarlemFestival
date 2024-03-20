@@ -138,7 +138,6 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function addTimeSlot() {
-    // Prevent the default form submission
     event.preventDefault();
 
     const restaurantId = document.querySelector('#addTimeslotFormId').value;
@@ -159,28 +158,42 @@ function addTimeSlot() {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            alert('Timeslot added successfully');
-            closeModalTimeslot();
+            Swal.fire({
+                icon: 'success',
+                title: 'Success',
+                text: 'Timeslot added successfully',
+            }).then(() => {
+                window.location.reload(); // Refresh the page after successful addition
+            });
         } else {
-            alert('Failed to add timeslot: ' + data.message);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Failed to add timeslot: ' + data.message,
+            });
         }
     })
     .catch(error => {
         console.error('Error:', error);
-        alert('An error occurred');
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'An error occurred',
+        });
     });
 }
 
 
 
+
+
+
+
 document.addEventListener('DOMContentLoaded', function() {
-    // Add event listener to the "Add Restaurant" button
     document.querySelector('#addRestaurantButton').addEventListener('click', function() {
-        // Display the "Add Restaurant" modal
         document.querySelector('#addRestaurantModal').style.display = 'block';
     });
 
-    // Add event listener to close the modal when the "Close" button is clicked
     document.querySelector('#addRestaurantModal .modal-footer button[data-dismiss="modal"]').addEventListener('click', function() {
         closeModalAddRestaurant();
     });
@@ -192,7 +205,7 @@ function closeModalAddRestaurant() {
 }
 
 
-function addRestaurant(event){
+function addRestaurant(event) {
     event.preventDefault();
 
     const form = document.getElementById('addRestaurantForm');
@@ -207,14 +220,41 @@ function addRestaurant(event){
     .then(data => {
         console.log(data);
         if (data.success) {
-            alert('Restaurant added successfully.');
-            closeModalAddRestaurant();
+            Swal.fire({
+                icon: 'success',
+                title: 'Success',
+                text: 'Restaurant added successfully.',
+            }).then(() => {
+                closeModalAddRestaurant();
+                
+                const restaurantTableBody = document.querySelector('tbody');
+                const newRow = document.createElement('tr');
+                newRow.innerHTML = `
+                    <td>${formData.get('name')}</td>
+                    <td><a href="/manage-event-details/editDetails?id=${data.restaurantId}">Edit</a></td>
+                `;
+                restaurantTableBody.appendChild(newRow);
+            });
         } else {
-            alert('Failed to add the restaurant: ' + data.message);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Failed to add the restaurant: ' + data.message,
+            });
         }
     })
     .catch(error => {
         console.error('Error:', error);
-        alert('An error occurred while adding the restaurant.');
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'An error occurred while adding the restaurant.',
+        });
     });
 }
+
+
+
+
+
+

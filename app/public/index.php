@@ -336,6 +336,12 @@ switch ($request) {
             $controller->addRestaurant();
         }
         break;
+    case "/editResturantDetails/deleteRestaurant":
+        $controller = new Restaurantcontroller();
+        if ($method === 'POST') {
+            $controller->deleteTimeSlot();
+        }
+        break;
     default:
         http_response_code(404);
         $navigation = new Navigationcontroller();

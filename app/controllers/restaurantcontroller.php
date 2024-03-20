@@ -22,7 +22,7 @@ class Restaurantcontroller
     public function editEventDetails($eventId) {
         
         $restaurants = $this->restaurantService->getRestaurant($eventId);
-        $ticket = $this->restaurantService->getTimeslotsForRestaurant($eventId);
+        $tickets = $this->restaurantService->getTimeslotsForRestaurant($eventId);
         require_once __DIR__ . '/../views/admin/manage-event-details/editDetailsRestaurant.php';
     }
     
@@ -94,7 +94,7 @@ class Restaurantcontroller
             $quantity = $_POST['quantity'] ?? 0;
     
             $response = ['success' => false, 'message' => 'An error occurred'];
-    
+            
     
             if ($restaurantId && $date && $time && $quantity) {
                 $result = $this->restaurantService->addTimeSlot($restaurantId, $ticketHash = $this->generateTicketHash($restaurantId, $date, $time) ,$date, $time, $quantity);
@@ -123,7 +123,6 @@ class Restaurantcontroller
         header('Content-Type: application/json');
     
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            var_dump($_POST);
     
             $name = $_POST['name'] ?? '';
             $location = $_POST['location'] ?? '';
@@ -135,7 +134,6 @@ class Restaurantcontroller
             $picturePath = $_POST['picturePath'] ?? '';
     
     
-            $response = ['success' => false, 'message' => 'An error occurred'];
     
             $result = $this->restaurantService->addRestaurant($name, $location, $description, $price, $seats, $startDate, $endDate, $picturePath);
     
@@ -143,7 +141,7 @@ class Restaurantcontroller
             if ($result) {
                 $response = ['success' => true, 'message' => 'Restaurant added successfully.'];
             } else {
-                $response['message'] = 'Failed to add the restaurant.';
+                $response = ['success' => false, 'message' => 'Failed to add the restaurant.'];
             }
     
     
@@ -152,6 +150,8 @@ class Restaurantcontroller
             exit;
         }
     }
+
+    
     
     
   
