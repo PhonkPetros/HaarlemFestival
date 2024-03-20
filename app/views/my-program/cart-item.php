@@ -13,13 +13,13 @@
         <?php foreach ($structuredTickets as $eventId => $eventData): ?>
             <?php foreach ($eventData['tickets'] as $ticket): ?>
                 <div class="ticket-container" id="ticket-container-<?= $ticket['ticketId'] ?>"
-                    style="height: 390px; background-image: url('<?php echo $eventData['image']; ?>');">
+                    style="background-image: url('<?php echo $eventData['image']; ?>');">
 
-                    <div class="ticket-details" style="height: 390px">
+                    <div class="ticket-details">
                         <h5 class="ticket-title">
                             <?php echo htmlspecialchars($eventData['event_name']); ?>
                         </h5>
-                        <p class="ticket-info" style=" font-size: 19px;">
+                        <p class="ticket-info" style="font-size: 19px;">
                             Location:
                             <?php echo htmlspecialchars($ticket['ticketLocation']); ?><br>
                             Date:

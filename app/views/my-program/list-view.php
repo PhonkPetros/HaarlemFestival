@@ -9,17 +9,17 @@
         </div>
     </div>
 
-    <div class="ticket-row">
+    <div class="ticket-row" >
         <?php foreach ($structuredTickets as $eventId => $eventData): ?>
             <?php foreach ($eventData['tickets'] as $ticket): ?>
                 <div class="ticket-container" id="ticket-container-<?= $ticket['ticketId'] ?>"
-                    style="height: 390px; background-image: url('<?php echo $eventData['image']; ?>');">
+                    style="background-image: url('<?php echo $eventData['image']; ?>');">
 
-                    <div class="ticket-details" style="height: 390px">
+                    <div class="ticket-details">
                         <h5 class="ticket-title">
                             <?php echo htmlspecialchars($eventData['event_name']); ?>
                         </h5>
-                        <p class="ticket-info" style=" font-size: 19px;">
+                        <p class="ticket-info" style="font-size: 19px;">
                             Location:
                             <?php echo htmlspecialchars($ticket['ticketLocation']); ?><br>
                             Date:
@@ -60,7 +60,7 @@
             </div>
         </div>
         <div class="d-flex justify-content-center" style="padding-top: 20px;">
-        <a href="/my-program/payment" class="btn btn-success" style="width: 100%;"><h4>Pay Now</h4></a>
+            <a href="/my-program/payment" class="btn btn-success" style="width: 100%;"><h4>Pay Now</h4></a>
         </div>
     <?php endif; ?>
 </div>
