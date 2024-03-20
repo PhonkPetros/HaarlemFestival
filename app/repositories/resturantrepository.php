@@ -147,23 +147,39 @@ class resturantrepository extends dbconfig {
     
     public function addTimeSlot($restaurantId, $ticket_hash, $date, $time, $quantity) {
         try {
-            $stmt = $this->connection->prepare("INSERT INTO [Ticket] (event_id, ticket_hash, date, time, quantity, state) VALUES (:restaurantId, :ticket_hash, :date, :time, :quantity, :state)");
-    
-            $stmt->bindValue(':restaurantId', $restaurantId, PDO::PARAM_INT);
-            $stmt->bindValue(':ticket_hash', $ticket_hash);
-            $stmt->bindValue(':date', $date);
-            $stmt->bindValue(':time', $time);
-            $stmt->bindValue(':quantity', $quantity, PDO::PARAM_INT);
-            $stmt->bindValue(':state', 'Not Used');
-    
-            $stmt->execute();
+            $checkEventStmt = $this->connection->prepare("SELECT event_id FROM [Event] WHERE restaurant_id = :restaurantId");
+            $checkEventStmt->bindValue(':restaurantId', $restaurantId, PDO::PARAM_INT);
+            $checkEventStmt->execute();
             
-            return $stmt->rowCount() > 0;
+            $eventRow = $checkEventStmt->fetch(PDO::FETCH_ASSOC);
+            
+            if (!$eventRow) {
+                echo "Error: No events found for the provided restaurant ID.";
+                return false;
+            }
+            
+            $eventId = $eventRow['event_id'];
+            
+            $insertStmt = $this->connection->prepare("INSERT INTO [Ticket] (event_id, ticket_hash, date, time, quantity, state) VALUES (:event_id, :ticket_hash, :date, :time, :quantity, :state)");
+            $insertStmt->bindValue(':event_id', $eventId, PDO::PARAM_INT); 
+            $insertStmt->bindValue(':ticket_hash', $ticket_hash);
+            $insertStmt->bindValue(':date', $date);
+            $insertStmt->bindValue(':time', $time);
+            $insertStmt->bindValue(':quantity', $quantity, PDO::PARAM_INT);
+            $insertStmt->bindValue(':state', 'Not Used');
+            $insertStmt->execute();
+            
+            return $insertStmt->rowCount() > 0;
         } catch (PDOException $e) {
             echo "Error: " . $e->getMessage();
             return false;
         }
     }
+    
+    
+    
+    
+    
 
     public function getTimeslotsForRestaurant($eventId) {
         $tickets = []; // To store the full ticket details, not just timeslots.

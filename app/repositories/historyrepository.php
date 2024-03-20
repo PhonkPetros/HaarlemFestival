@@ -35,44 +35,51 @@ class historyrepository extends dbconfig
     }
 
 
-    public function addNewTimeSlot(Ticket $newTicket)
-    {
-        
-        $checkSql = "SELECT COUNT(*) FROM Ticket WHERE event_id = :event_id AND Date = :date AND Time = :time AND language = :language";
+    public function addTimeSlot($restaurantId, $ticket_hash, $date, $time, $quantity) {
+        $getEventIdSql = "SELECT event_id FROM Event WHERE restaurant_id = :restaurantId LIMIT 1";
     
         try {
-            $checkStmt = $this->getConnection()->prepare($checkSql);
-            $checkStmt->bindValue(':event_id', $newTicket->getEventId());
-            $checkStmt->bindValue(':date', $newTicket->getTicketDate());
-            $checkStmt->bindValue(':time', $newTicket->getTicketTime());
-            $checkStmt->bindValue(':language', $newTicket->getTicketLanguage());
-            $checkStmt->execute();
-    
-            $existingTicketCount = $checkStmt->fetchColumn();
-    
-            if ($existingTicketCount > 0) {
-                error_log("A ticket with the same date, time, and language already exists.");
+            $getEventIdStmt = $this->connection->prepare($getEventIdSql);
+            $getEventIdStmt->bindValue(':restaurantId', $restaurantId, PDO::PARAM_INT);
+            $getEventIdStmt->execute();
+            
+            $eventId = $getEventIdStmt->fetchColumn();
+            
+            if (!$eventId) {
+                echo "<script>alert('No event found for the specified restaurant ID.');</script>";
                 return false;
             }
     
-            $insertSql = "INSERT INTO Ticket (quantity, ticket_hash, state, event_id, language, Date, Time)
-                          VALUES (:quantity, :ticket_hash, :state, :event_id, :language, :date, :time)";
+            $checkSql = "SELECT COUNT(*) FROM Ticket WHERE event_id = :event_id AND Date = :date AND Time = :time";
+            $checkStmt = $this->connection->prepare($checkSql);
+            $checkStmt->bindValue(':event_id', $eventId, PDO::PARAM_INT);
+            $checkStmt->bindValue(':date', $date);
+            $checkStmt->bindValue(':time', $time);
+            $checkStmt->execute();
     
-            $insertStmt = $this->getConnection()->prepare($insertSql);
-            $insertStmt->bindValue(':quantity', $newTicket->getQuantity());
-            $insertStmt->bindValue(':ticket_hash', $newTicket->getTicketHash());
-            $insertStmt->bindValue(':state', $newTicket->getState());
-            $insertStmt->bindValue(':event_id', $newTicket->getEventId());
-            $insertStmt->bindValue(':language', $newTicket->getTicketLanguage());
-            $insertStmt->bindValue(':date', $newTicket->getTicketDate());
-            $insertStmt->bindValue(':time', $newTicket->getTicketTime());
+            if ($checkStmt->fetchColumn() > 0) {
+                echo "<script>alert('A timeslot with the same date and time already exists.');</script>";
+                return false;
+            }
+    
+            $insertSql = "INSERT INTO Ticket (event_id, ticket_hash, date, time, quantity, state) 
+                          VALUES (:event_id, :ticket_hash, :date, :time, :quantity, 'Not Used')";
+            $insertStmt = $this->connection->prepare($insertSql);
+            $insertStmt->bindValue(':event_id', $eventId, PDO::PARAM_INT);
+            $insertStmt->bindValue(':ticket_hash', $ticket_hash);
+            $insertStmt->bindValue(':date', $date);
+            $insertStmt->bindValue(':time', $time);
+            $insertStmt->bindValue(':quantity', $quantity, PDO::PARAM_INT);
             $insertStmt->execute();
+    
             return true;
         } catch (PDOException $e) {
-            error_log("Error: " . $e->getMessage());
+            echo "<script>alert('Error: " . addslashes($e->getMessage()) . "');</script>";
             return false;
         }
     }
+    
+    
 
     public function existEvent($newEventName, $eventId){
         $sql = "SELECT COUNT(*) FROM [Event] WHERE name = :name AND event_id != :eventId";
