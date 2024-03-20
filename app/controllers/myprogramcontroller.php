@@ -46,12 +46,15 @@ class Myprogramcontroller
     {
         $this->navigationController->displayHeader();
         $structuredTickets = [];
+        $structuredOrderedItems = [];
         $uniqueTimes = [];
 
         if (isset ($_SESSION['shopping_cart']) && !empty ($_SESSION['shopping_cart'])) {
             $structuredTickets = $this->structureTicketsWithImages();
 
         }
+        $structuredOrderedItems = $this->getStructuredPurchasedOrderItemsByUserID();
+
         require_once __DIR__ . "/../views/my-program/overview.php";
 
     }
@@ -497,6 +500,51 @@ class Myprogramcontroller
         return true;
     }
 
+
+    //getting all the purchased tickets by userID and structuring them 
+    function getStructuredPurchasedOrderItemsByUserID() {
+        $structuredOrderItems = [];
+        $purchasedOrderItems = $this->myProgramService->getOrderItemsByUser($_SESSION['user']['userID']);
+        foreach ($purchasedOrderItems as $orderitem) {
+            $event_details = $this->ticketservice->getEventDetails($orderitem->getEventId());
+            $structuredItem = [
+                'order_item_id' => $orderitem->getOrderItemId(),
+                'order_id' => $orderitem->getOrderId(),
+                'user_id' => $orderitem->getUserId(),
+                'quantity' => $orderitem->getQuantity(),
+                'date' => $orderitem->getDate(),
+                'start_time' => $orderitem->getStartTime(),
+                'end_time' => $orderitem->getEndTime(),
+                'item_hash' => $orderitem->getItemHash(),
+                'event_id' => $orderitem->getEventId(),
+                'location' => $orderitem->getLocation(),
+                'event_details' => [
+                    'image' => $event_details['picture'] ?? null,
+                    'event_name' => $event_details['name'] ?? null,
+                ],
+            ];
+    
+            // Customize the structured item based on the event ID
+            switch ($orderitem->getEventId()) {
+                case EVENT_ID_HISTORY: // History
+                    $structuredItem['language'] = $orderitem->getLanguage();
+                    break;
+                case EVENT_ID_RESTAURANT: // Yummy
+                    $structuredItem['restaurant_name'] = $orderitem->getRestaurantName();
+                    $structuredItem['special_remarks'] = $orderitem->getSpecialRemarks();
+                    break;
+                case EVENT_ID_DANCE:
+                case EVENT_ID_JAZZ: // Events Dance and Jaz
+                    $structuredItem['ticket_type'] = $orderitem->getTicketType();
+                    $structuredItem['artist_name'] = $orderitem->getArtistName();
+                    break;
+            }    
+            $structuredOrderItems[] = $structuredItem;
+        }
+    
+        return $structuredOrderItems;
+    }
+    
 }
 
 
