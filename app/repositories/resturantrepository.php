@@ -270,22 +270,33 @@ class resturantrepository extends dbconfig {
         try {
             $this->connection->beginTransaction();
     
-            $stmt = $this->connection->prepare("INSERT INTO Restaurant ([description], seats) VALUES (:description, :seats)");
-            $stmt->bindValue(':description', $description);
-            $stmt->bindValue(':seats', $seats);
-            $stmt->execute();
+            // Insert a new page if it doesn't exist, using $name as the page name
+            $stmtPage = $this->connection->prepare("INSERT INTO page (name) VALUES (:pageName)");
+            $stmtPage->bindValue(':pageName', $name);
+            $stmtPage->execute();
+            
+            // Get the ID of the newly inserted page
+            $pageId = $this->connection->lastInsertId();
+    
+            // Insert the restaurant with the page_id
+            $stmtRestaurant = $this->connection->prepare("INSERT INTO Restaurant (description, seats, page_id) VALUES (:description, :seats, :pageId)");
+            $stmtRestaurant->bindValue(':description', $description);
+            $stmtRestaurant->bindValue(':seats', $seats);
+            $stmtRestaurant->bindValue(':pageId', $pageId);
+            $stmtRestaurant->execute();
             $restaurantId = $this->connection->lastInsertId();
     
-            $stmt = $this->connection->prepare("INSERT INTO [Event] ([name], startDate, location, price, endDate, picture, restaurant_id) 
+            // Insert the event associated with the restaurant
+            $stmtEvent = $this->connection->prepare("INSERT INTO Event (name, startDate, location, price, endDate, picture, restaurant_id) 
             VALUES (:name, :startDate, :location, :price, :endDate, :picture, :restaurantId)");
-            $stmt->bindValue(':name', $name);
-            $stmt->bindValue(':startDate', $startDate);
-            $stmt->bindValue(':location', $location);
-            $stmt->bindValue(':price', $price);
-            $stmt->bindValue(':endDate', $endDate);
-            $stmt->bindValue(':picture', $picturePath);
-            $stmt->bindValue(':restaurantId', $restaurantId);
-            $stmt->execute();
+            $stmtEvent->bindValue(':name', $name);
+            $stmtEvent->bindValue(':startDate', $startDate);
+            $stmtEvent->bindValue(':location', $location);
+            $stmtEvent->bindValue(':price', $price);
+            $stmtEvent->bindValue(':endDate', $endDate);
+            $stmtEvent->bindValue(':picture', $picturePath);
+            $stmtEvent->bindValue(':restaurantId', $restaurantId);
+            $stmtEvent->execute();
             $this->connection->commit();
     
             return true; 
@@ -295,4 +306,33 @@ class resturantrepository extends dbconfig {
             return false;
         }
     }
+    
+    public function insertTempleteContent(){
+        
+    }
+    
+
+// <div class="div-3">Ratatouille</div>
+// <div class="div-4">Establishing his restaurant in 2013, the cook made his goal to serve French meals, with a friendly atmosphere. The success of chef Jouza Jaring, made the restaurant one of a kind Michelin rated restaurant.</div>
+// <h2 class="cuisine-text">The cuisine la french</h2>
+// <h3 class="mt-2">Caviar</h3><p>The luxurious caviar comes from the Caspian sea, having a rich flavor from the seas.</p>
+// <h3 class="mt-2">Le dîner</h3><p>The expensive Kinmemai rice comes from the Japanese fields, hand picked by the finest hands, stored in the finest basement.</p>
+// <h3 class="mt-2">Le déjeuner</h3><p>The finest caramel cheesecake made specifically from the rarest breed of goats with a pinch of French grapes.</p>
+// <h3 class="mt-2">Le repas</h3><p>The French curry made from special herbs has a special taste from the rarest herbs.</p>
+// <h1>Traditional French cuisineerrr</h1>
+// <p>Made with tremendous amount of love and skill, the meals made by Chef Jfouza are renown in Haarlem for their unique taste from simple spaghetti meatballs to the famous world renown ratatouille.</p>
+// <h2 class="gallery">Galleries</h2>
+// <h2 class="location-google-maps">Location</h2>
+// <p>This is some test content for Page ID 5.dsadas</p>
+// <div class="div-3">Ratatouille</div>
+// <div class="div-4">Establishing his restaurant in 2013, the cook made his goal to serve French meals, with a friendly atmosphere. The success of chef Jouza Jaring, made the restaurant one of a kind Michelin rated restaurant.</div>
+// <h2 class="cuisine-text">The cuisine la french</h2>
+// <h3 class="mt-2">Caviar</h3><p>The luxurious caviar comes from the Caspian sea, having a rich flavor from the seas.</p>
+// <h3 class="mt-2">Le dîner</h3><p>The expensive Kinmemai rice comes from the Japanese fields, hand picked by the finest hands, stored in the finest basement.</p>
+// <h3 class="mt-2">Le déjeuner</h3><p>The finest caramel cheesecake made specifically from the rarest breed of goats with a pinch of French grapes.</p>
+// <h3 class="mt-2">Le repas</h3><p>The French curry made from special herbs has a special taste from the rarest herbs.</p>
+// <h1>Traditional French cuisineerrr</h1>
+// <p>Made with tremendous amount of love and skill, the meals made by Chef Jfouza are renown in Haarlem for their unique taste from simple spaghetti meatballs to the famous world renown ratatouille.</p>
+// <h2 class="gallery">Galleries</h2>
+// <h2 class="location-google-maps">Location</h2>
 }

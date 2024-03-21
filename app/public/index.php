@@ -87,11 +87,17 @@ if ($pageID || $eventID || $editPageID || $sectionEdit) {
                     $controller->showeditEventDetails();
                 }
                 break;
+            case $eventID > 8:
+                $controller = new Restaurantcontroller();
+                if ($method === 'GET') {
+                    $controller->editEventDetails($eventID);
+                }
+                break;
             default:
-            $controller = new Restaurantcontroller();
-            if ($method === 'GET') {
-                $controller->editEventDetails($eventID);
-            }
+                $controller = new TemplateController();
+                if ($method === 'GET') {
+                    $controller->show();
+                }
             break;
 
         }
