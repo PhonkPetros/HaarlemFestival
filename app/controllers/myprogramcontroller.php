@@ -477,6 +477,7 @@ class Myprogramcontroller
         $userId = $_SESSION['user']['userID'];
         $orderProcessingResult = $this->myProgramService->processOrder($userId, $_SESSION['shopping_cart'], $paymentStatus);
 
+        
         if ($orderProcessingResult['status'] === 'success') {
             // Empty the shopping cart session data after successful order processing
             $_SESSION['shopping_cart'] = [];
