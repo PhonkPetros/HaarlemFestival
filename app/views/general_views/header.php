@@ -29,8 +29,10 @@
     <link rel="stylesheet" href="/css/myprogram.css">
     <link rel="stylesheet" href="/css/myprogram.css">
     <link rel="stylesheet" href="/css/ticket.css">
+    <link rel="stylesheet" href="/css/danceDetail.css">
 
-
+    
+    
     <link rel="stylesheet" href="/css/list-view-tickets.css">
 
 </head>

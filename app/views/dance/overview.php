@@ -25,12 +25,15 @@ include __DIR__ . '/../general_views/navbar.php';
         </div>
 
         <div class="highlightContainer">
-            <img src="/img/nickiHighlight.png" width="250px" alt="">
+            <?php foreach ($artists as $artist): ?>
+                <a href="/dance/?artist=<?= $artist['artistId'] ?>"><img src="<?= $artist['profile'] ?>" width="250px" alt=""></a>
+            <?php endforeach; ?>
+            <!-- <img src="/img/nickiHighlight.png" width="250px" alt="">
             <img src="/img/tiestoHighlight.png" width="250px" alt="">
             <img src="/img/hardwellHighlight.png" width="250px" alt="">
             <img src="/img/afroHighlight.png" width="250px" alt="">
             <img src="/img/arminHighlight.png" width="250px" alt="">
-            <img src="/img/martinHighlight.png" width="250px" alt="">
+            <img src="/img/martinHighlight.png" width="250px" alt=""> -->
         </div>
 
     <?php elseif ($index === 1): ?>

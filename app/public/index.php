@@ -44,6 +44,8 @@ $method = $_SERVER['REQUEST_METHOD'];
 $editPageID = null;
 $sectionEdit = null;
 $token = null;
+$dancePageID = null;
+
 $queryString = parse_url($request, PHP_URL_QUERY);
 $queryParams = [];
 if ($queryString !== null) {
@@ -64,14 +66,16 @@ if (strpos($request, '/sectionEdit/') === 0) {
 if (strpos($request, '/new-password/') === 0) {
     $token = htmlspecialchars($queryParams["token"] ?? '');
 }
-
+if (strpos($request, '/dance/') === 0) {
+    $dancePageID = htmlspecialchars($queryParams["artist"] ?? '');
+}
 
 //Please do not touch this
 if ($request === '/') {
     $pageID = '1';
 }
 
-if ($pageID || $eventID || $editPageID || $sectionEdit || $token) {
+if ($pageID || $eventID || $editPageID || $sectionEdit || $token || $dancePageID) {
     //this has to do with the editing of event details
     if ($eventID) {
         switch ($eventID) {
@@ -178,6 +182,16 @@ if ($pageID || $eventID || $editPageID || $sectionEdit || $token) {
                 break;
         }
         exit;
+    } elseif ($dancePageID) {
+        switch ($dancePageID) {
+            default;
+                $controller = new Dancecontroller();
+                if ($method === 'GET') {
+                    $controller->showArtist($dancePageID);
+                }
+                break;
+        }
+        exit;
     }
 }
 
@@ -256,6 +270,34 @@ switch ($request) {
     case '/dance/updateEvent':
         $controller = new Dancecontroller();
         $controller->updateEvent();
+        break;
+    case '/dance/addNewArtist':
+        $controller = new Dancecontroller();
+        $controller->addNewArtist();
+        break;
+    case '/dance/updateArtist':
+        $controller = new Dancecontroller();
+        $controller->updateArtist();
+        break;
+    case '/dance/deleteArtist':
+        $controller = new Dancecontroller();
+        $controller->deleteArtist();
+        break;
+    case '/dance/deleteEvent':
+        $controller = new Dancecontroller();
+        $controller->deleteEvent();
+        break;
+    case '/dance/addNewVenue':
+        $controller = new Dancecontroller();
+        $controller->addVenue();
+        break;
+    case '/dance/updateVenue':
+        $controller = new Dancecontroller();
+        $controller->updateVenue();
+        break;
+    case '/dance/deleteVenue':
+        $controller = new Dancecontroller();
+        $controller->deleteVenue();
         break;
     case '/admin/dashboard':
         $controller = new admincontroller();
