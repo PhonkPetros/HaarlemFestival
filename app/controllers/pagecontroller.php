@@ -68,6 +68,7 @@ class Pagecontroller
 
     public function updateContent() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['section_id'])) {
+   
             $sectionID = $_POST['section_id'];
             $content = empty($_POST['content']) ? null : $_POST['content'];
             $title = $_POST['sectionTitle'];
@@ -89,7 +90,9 @@ class Pagecontroller
                 }
             }
     
+    
             try {
+       
                 $this->pageService->updateSectionContent($sectionID, $content, $imageAction ?? []);
                 $this->pageService->updateSectionTitle($sectionID, $title);
 
@@ -205,7 +208,7 @@ class Pagecontroller
                 'title' => $section['title'],
                 'content' => $section['editor_content'] ?? null,
                 'image' => $section['image_file_path'] ?? null,
-                'type' => $section['type'] ?? null, // Ensure 'type' is included here.
+                'type' => $section['type'] ?? null, 
             ];
             $contentData[] = $sectionData;
         }

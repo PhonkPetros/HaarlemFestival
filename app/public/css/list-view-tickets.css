@@ -1,0 +1,126 @@
+.ticket-row {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.ticket-container {
+    color: white;
+    width: 300px;
+    min-height: 350px;
+    background-color: #000;
+    border-radius: 10px;
+    margin-right: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    position: relative;
+}
+
+.item-container{
+    background-color: rgba(255, 255, 255, 0.5);
+    margin: auto;
+    border-radius: 10px;
+    padding: 30px;
+    border: 2px solid black
+}
+
+.myprogram-container{
+    margin: auto;
+    padding: 30px;
+  
+}
+
+.ticket-details {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    padding: 20px;
+    text-align: center;
+}
+
+.ticket-title {
+    color: white;
+    font-size: 1.5em;
+    margin-bottom: 10px;
+}
+
+.ticket-info {
+    color: white;
+    font-size: 2px;
+    margin-bottom: 15px;
+}
+
+.ticket-controls {
+    display: flex;
+    color: black;
+    justify-content: space-between;
+    align-items: center;
+    background: white;
+    border-radius: 20px;
+    padding: 10px;
+    margin: 10px 0;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.ticket-controls button {
+    background: #ddd;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    margin: 0;
+    cursor: pointer;
+}
+
+.ticket-controls .quantity {
+    padding: 10px 20px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: inset 0px 0px 5px rgba(0, 0, 0, 0.2);
+}
+
+.remove-btn {
+    background: #ff0000;
+    color: white;
+    border: none;
+    padding: 15px 0;
+    cursor: pointer;
+    border-radius: 20px;
+    width: 100%;
+    text-transform: uppercase;
+    margin-top: 9px;
+}
+
+.ticket-controls button,
+.remove-btn {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.ticket-controls button:hover {
+    background: #ebedeb;
+}
+
+.remove-btn:hover {
+    background: #cc0000;
+}
+
+@media (max-width: 768px) {
+    .ticket-row {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .ticket-container {
+        width: 90%;
+        min-height: 350px;
+        margin-right: 0;
+        margin-bottom: 20px;
+        margin-left: 0;
+        margin: 10px auto;
+    }
+
+    .ticket-details {
+        position: relative;
+    }
+}

@@ -25,14 +25,37 @@ class DanceService
         return $this->repository->getArtists();
     }
 
-    public function addArtist($name, $image)
+    public function getArtistById($artistId)
     {
-        $this->repository->addArtist($name, $image);
+        return $this->repository->getArtistById($artistId);
     }
 
-    public function updateArtist($artistId, $name, $image)
+    public function getVenues()
     {
-        $this->repository->updateArtist($artistId, $name, $image);
+        return $this->repository->getVenues();
+    }
+
+    public function addVenue($name, $location, $picture) {
+        $this->repository->addVenue($name, $location, $picture);
+    }
+
+    public function updateVenue($venueId, $name, $location, $picture) {
+        $this->repository->updateVenue($venueId, $name, $location, $picture);
+    }
+
+    public function deleteVenue($venueId) {
+        $this->repository->deleteVenue($venueId);
+    }
+
+    public function addArtist($name, $description, $profile, $image1, $image2, $image3, $video, $album)
+    {
+        $this->repository->addArtist($name, $description, $profile, $image1, $image2, $image3, $video, $album);
+    }
+    
+
+    public function updateArtist($artistId, $name, $description, $profile, $image1, $image2, $image3, $video, $album)
+    {
+        $this->repository->updateArtist($artistId, $name, $description, $profile, $image1, $image2, $image3, $video, $album);
     }
 
     public function deleteArtist($artistId)
@@ -40,14 +63,19 @@ class DanceService
         $this->repository->deleteArtist($artistId);
     }
 
-    public function addDanceEvent($venue, $address, $dateTime, $price, $image)
+    public function addDanceEvent($venue, $dateTime, $price, $oneDayPrice, $allDaysPrice, $artists, $image)
     {
-        $this->repository->addDanceEvent($venue, $address, $dateTime, $price, $image);
+        $this->repository->addDanceEvent($venue, $dateTime, $price, $oneDayPrice, $allDaysPrice, $artists, $image);
     }
 
-    public function updateDanceEvent($danceEventId, $venue, $address, $dateTime, $price, $image)
+    public function updateDanceEventWithImage($danceEventId, $venue, $address, $dateTime, $price, $oneDayPrice, $allDaysPrice, $artists, $image)
     {
-        $this->repository->updateDanceEvent($danceEventId, $venue, $address, $dateTime, $price, $image);
+        $this->repository->updateDanceEventWithImage($danceEventId, $venue, $address, $dateTime, $price, $oneDayPrice, $allDaysPrice, $artists, $image);
+    }
+
+    public function updateDanceEvent($danceEventId, $venue, $address, $dateTime, $price, $oneDayPrice, $allDaysPrice, $artists)
+    {
+        $this->repository->updateDanceEvent($danceEventId, $venue, $address, $dateTime, $price, $oneDayPrice, $allDaysPrice, $artists);
     }
 
     public function deleteDanceEvent($danceEventId)

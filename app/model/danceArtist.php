@@ -1,15 +1,23 @@
 <?php
 namespace model;
 
-class DanceArtist {
-    private int $artistId;
-    private string $name;
-    private string $image;
+class DanceArtist implements \JsonSerializable {
+    public int $artistId;
+    public string $name;
+    public $profile;
 
-    public function __construct(int $artistId, string $name, string $image) {
+    public function __construct(int $artistId, string $name, $profile) {
         $this->artistId = $artistId;
         $this->name = $name;
-        $this->image = $image;
+        $this->profile = $profile;
+    }
+
+    public function jsonSerialize(): mixed {
+        return [
+            'id' => $this->getArtistId(),
+            'name' => $this->getName(),
+            'profile' => $this->getProfile()
+        ];
     }
 
     public function getArtistId(): int {
@@ -20,7 +28,7 @@ class DanceArtist {
         return $this->name;
     }
 
-    public function getImage(): string {
-        return $this->image;
+    public function getProfile() {
+        return $this->profile;
     }
 }

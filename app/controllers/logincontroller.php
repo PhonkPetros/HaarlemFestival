@@ -38,23 +38,26 @@ class logincontroller
     {
         $user = $this->loginService->login($username, $password);
         if ($user) {
-
             $_SESSION['user'] = [
                 'userID' => $user->getUserId(),
                 'username' => $user->getUsername(),
                 'role' => $user->getUserRole(),
                 'email' => $user->getUserEmail(),
                 'password_hash' => $user->getPassword(),
-                'firstName' => $user->getFirstname(), 
-                'lastName' => $user->getLastname(), 
+                'firstName' => $user->getFirstname(),
+                'lastName' => $user->getLastname(),
                 'phoneNumber' => $user->getPhoneNumber(),
                 'address' => $user->getAddress()
             ];
-            
-
+    
             $_SESSION['role'] = $user->getUserRole();
-
-
+            if (isset($_SESSION['shopping_cart'])) {
+                foreach ($_SESSION['shopping_cart'] as &$item) {
+                    $item['user'] = $_SESSION['user'];
+                }
+                unset($item);
+            }
+    
             switch ($_SESSION['role']) {
                 case 'customer':
                     header('Location: /');
@@ -66,10 +69,10 @@ class logincontroller
                     header('Location: /');
                     exit();
             }
-
         } else {
             return false;
         }
     }
+    
 
 }

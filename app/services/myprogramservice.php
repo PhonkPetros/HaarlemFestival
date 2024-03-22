@@ -12,4 +12,21 @@ class Myprogramservice
         $this->myprogramRepo = new Myprogramrepository();
     }
 
+    function processOrder($userId, $cart){
+        return $this->myprogramRepo->processOrder($userId, $cart);
+    }
+
+    function createOrder($userId, $totalPrice){
+        return $this->myprogramRepo->createOrder($userId, $totalPrice);
+    }
+
+    function updateTicketQuantity($ticketId, $quantityPurchased){
+        return $this->updateTicketQuantity($ticketId, $quantityPurchased);
+    }
+
+
+    function createOrderItem($orderId, $userId, $item){
+        return $this->createOrderItem($orderId, $userId, $item);
+    }
+
 }
