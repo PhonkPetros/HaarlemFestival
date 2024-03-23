@@ -34,7 +34,7 @@ class Historycontroller
         $structuredTickets = $this->getStructuredTickets($eventDetails->getEventId());
         $uniqueTimes = $this->getUniqueTimes($structuredTickets);
         $navigationController = $this->navigationController->displayHeader();
-        
+
         $contentData = $this->pagecontroller->getContentAndImagesByPage();
         $carouselItems = $this->pagecontroller->getCarouselImagesForHistory(14);
         require_once __DIR__ . '/../views/history/overview.php';
@@ -50,7 +50,7 @@ class Historycontroller
 
     public function showeditEventDetails()
     {
-        $eventDetails = $this->historyService->getEventDetails();
+        $eventDetails = $this->historyService->getEventDetails(8);
         $eventId = $eventDetails->getEventId();
         $eventTickets = $this->historyService->getTickets($eventId);
         require_once __DIR__ . '/../views/admin/manage-event-details/editDetailsHistory.php';
@@ -58,14 +58,17 @@ class Historycontroller
 
 
     public function addNewTimeSlot()
-    {   
+    {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $eventId = htmlspecialchars($_POST['event_id'] ?? null);
-            $date = htmlspecialchars($_POST['date'] ?? null);
-            $quantity = htmlspecialchars($_POST['quantity'] ?? null);
-            $language = htmlspecialchars($_POST['language'] ?? null);
-            $time = htmlspecialchars($_POST['time'] ?? null);
-            $endTime = htmlspecialchars($_POST['endtime'] ?? null);
+            header('Content-Type: application/json');
+            header('X-Content-Type-Options: nosniff');
+
+            $eventId = filter_input(INPUT_POST, 'event_id', FILTER_SANITIZE_NUMBER_INT);
+            $date = filter_input(INPUT_POST, 'date', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            $quantity = filter_input(INPUT_POST, 'quantity', FILTER_SANITIZE_NUMBER_INT);
+            $language = filter_input(INPUT_POST, 'language', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            $time = filter_input(INPUT_POST, 'time', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            $endTime = filter_input(INPUT_POST, 'endtime', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
             $newTicket = new Ticket();
             $newTicket->setEventId($eventId);
@@ -79,8 +82,6 @@ class Historycontroller
 
             $result = $this->historyService->addNewTimeSlot($newTicket);
 
-
-            header('Content-Type: application/json');
             if ($result) {
                 echo json_encode(['success' => true, 'message' => 'Timeslot added successfully.']);
             } else {
@@ -90,17 +91,21 @@ class Historycontroller
         }
     }
 
+
     public function editEventDetails()
     {
         try {
-            $eventId = htmlspecialchars($_POST['event_id'] ?? null);
-            $newEventName = htmlspecialchars($_POST['name'] ?? null);
-            $newStartDate = htmlspecialchars($_POST['startDate'] ?? null);
-            $newEndDate = htmlspecialchars($_POST['endDate'] ?? null);
-            $newLocation = htmlspecialchars($_POST['location'] ?? null);
-            $newPrice = htmlspecialchars($_POST['price'] ?? null);
+            header('Content-Type: application/json');
+            header('X-Content-Type-Options: nosniff');
 
-            $currentEventDetails = $this->historyService->getEventDetails();
+            $eventId = filter_input(INPUT_POST, 'event_id', FILTER_SANITIZE_NUMBER_INT);
+            $newEventName = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            $newStartDate = filter_input(INPUT_POST, 'startDate', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            $newEndDate = filter_input(INPUT_POST, 'endDate', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            $newLocation = filter_input(INPUT_POST, 'location', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            $newPrice = filter_input(INPUT_POST, 'price', FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+
+            $currentEventDetails = $this->historyService->getEventDetails(8);
             $existingPicturePath = $currentEventDetails->getPicture();
 
             $uploadDirectory = '/img/EventImages/';
@@ -125,30 +130,32 @@ class Historycontroller
         exit;
     }
 
+
     public function removeTimeslot()
     {
         try {
-            $ticketID = htmlspecialchars($_POST['ticket_id'] ?? null);
+            $ticketID = filter_input(INPUT_POST, 'ticket_id', FILTER_SANITIZE_NUMBER_INT);
 
             $result = $this->historyService->removeTimeslot($ticketID);
             header('Content-Type: application/json');
             if ($result) {
                 echo json_encode(['success' => true, 'message' => 'Timeslot removed successfully.']);
             } else {
-                echo json_encode(['success' => false, 'message' => 'Failed to revmove timeslot.']);
+                echo json_encode(['success' => false, 'message' => 'Failed to remove timeslot.']);
             }
             exit;
 
         } catch (Exception $e) {
+            header('HTTP/1.1 500 Internal Server Error');
             echo json_encode(['success' => false, 'message' => $e->getMessage()]);
         }
-
     }
+
 
 
     private function uploadImage($imageFile, $uploadDirectory)
     {
-        if (isset($imageFile) && $imageFile['error'] == UPLOAD_ERR_OK) {
+        if (isset ($imageFile) && $imageFile['error'] == UPLOAD_ERR_OK) {
             $imageFileName = basename($imageFile['name']);
             $absoluteUploadPath = $_SERVER['DOCUMENT_ROOT'] . $uploadDirectory . $imageFileName;
 
@@ -173,11 +180,11 @@ class Historycontroller
         $eventDetails = $this->historyService->getEventDetails($eventId);
         $location = $eventDetails->getLocation();
         $ticketPrice = $this->historyService->getTicketPrice($eventId);
-    
+
         $price = $ticketPrice ? $ticketPrice->getPrice() : null;
-    
+
         $structuredTickets = [];
-    
+
         foreach ($tickets as $ticket) {
             $ticketId = $ticket->getTicketId();
             $eventId = $ticket->getEventId();
@@ -187,9 +194,9 @@ class Historycontroller
             $endTime = $ticket->getTicketEndTime();
             $quantity = $ticket->getQuantity();
 
-    
+
             $structuredTickets[$language][$date][$time] = [
-                'ticket_id' => $ticketId, 
+                'ticket_id' => $ticketId,
                 'event_id' => $eventId,
                 'language' => $language,
                 'date' => $date,
@@ -200,7 +207,7 @@ class Historycontroller
                 'location' => $location
             ];
         }
-    
+
         return $structuredTickets;
     }
 
