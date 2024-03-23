@@ -46,7 +46,11 @@
                             <button type="button" class="btn btn-primary add-timeslot-btn" data-id="<?= htmlspecialchars($restaurant->getId()) ?>">Add Timeslot</button>
                         </td>
                         <td>
-                            <button type="button" class="btn btn-danger delete-btn" data-id="<?= htmlspecialchars($restaurant->getId()) ?>">Delete</button>
+                        <form method="POST" action="/restaurant/delete">
+                            <input type="hidden" name="delete_restaurant_id" value="<?= htmlspecialchars($restaurant->getId()) ?>">
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </form>
+
                         </td>
                         
                     </tr>
@@ -79,8 +83,11 @@
                         <td><?= htmlspecialchars($ticket->getTicketDate()) ?></td>
                         <td><?= htmlspecialchars($ticket->getTicketTime()) ?></td>
                         <td>
-                            <button type="button" class="btn btn-danger delete-timeslot-btn" data-event-id="<?= htmlspecialchars($ticket->getEventId()) ?>">Delete</button> 
-                        </td>
+                        <form method="post" action="/restaurant/deletetimeslot">
+                            <input type="hidden" name="delete_timeslot_id" value="<?= htmlspecialchars($ticket->getTicketHash()) ?>">
+                            <button type="submit" class="btn btn-danger delete-timeslot-btn">Delete</button> 
+                        </form>
+                    </td>
                     </tr>
                 <?php endforeach; ?>
                 <?php if (empty($tickets)): ?>

@@ -10,43 +10,31 @@
 </head>
 <body>
 <div class="div">
-  <img src="/img/<?= htmlspecialchars($restaurantDetails->getPicture()) ?>"class="img"/>
   <div class="div-2">
-    <?php echo $contentData[2]['content']; ?>
   </div>
 </div>
 
 <section class="cuisine-container">
-  <img src="/img/uploads/<?php echo $contentData[26]['image']; ?>" alt="French cuisine" class="cuisine-image" />
-  <?php echo $contentData[3]['content']; ?>
 </section>
 
 <div class="container mt-5">
   <div class="row">
     <div class="col-md-3 mb-4 img-container">
-    <img src="/img/uploads/<?php echo $contentData[22]['image']; ?>" alt="Caviar dish" class="img-fluid">
     <div class="white-background">
-      <?php echo $contentData[4]['content']; ?>
     </div>
   </div>
 
   <div class="col-md-3 mb-4 img-container">
-    <img src="/img/uploads/<?php echo $contentData[23]['image']; ?>" alt="Le dîner dish" class="img-fluid">
     <div class="white-background">
-      <?php echo $contentData[5]['content']; ?>
     </div>
   </div>
 
   <div class="col-md-3 mb-4 img-container">
-    <img src="/img/uploads/<?php echo $contentData[24]['image']; ?>" alt="Le déjeuner dish" class="img-fluid">
     <div class="white-background">
-      <?php echo $contentData[6]['content']; ?>
     </div>
   </div>
   <div class="col-md-3 mb-4 img-container">
-    <img src="/img/uploads/<?php echo $contentData[25]['image']; ?>" alt="Le déjeuner dish" class="img-fluid">
     <div class="white-background">
-      <?php echo $contentData[7]['content']; ?>
     </div>
   </div>
   </div>
@@ -91,31 +79,29 @@
   </div>
 </div>
 
-<?php echo $contentData[9]['content']; ?>
 <div class="container mt-5">
   <div class="row">
     <div class="col-md-4 mb-4">
-      <img src="/img/uploads/<?php echo $contentData[28]['image']; ?>" alt="Image 1" class="img-fluid custom-img">
     </div>
     <div class="col-md-4 mb-4">
-      <img src="/img/uploads/<?php echo $contentData[29]['image']; ?>" alt="Image 2" class="img-fluid custom-img">
     </div>
     <div class="col-md-4 mb-4">
-      <img src="/img/uploads/<?php echo $contentData[30]['image']; ?>" alt="Image 3" class="img-fluid custom-img">
     </div>
   </div>
 </div>
 
 
 <div class="location-google-maps white-text">
-    <?php echo $contentData[10]['content']; ?>
 </div>
 
 
 
 <div class="picture-location">
-  <img src="/img/uploads/<?php echo $contentData[22]['image']; ?>" alt="Location Picture" class="img-location">
 </div>
+
+
+<?php  echo var_dump($contentData);
+?>
 
 <?php include __DIR__ . '/../general_views/footer.php'; ?>
 

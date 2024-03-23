@@ -340,12 +340,18 @@ class Pagerepository extends dbconfig
             }
 
             $this->connection->commit();
+            return $pageId;
+
         } catch (PDOException $e) {
             $this->connection->rollback();
             error_log('Failed to create page and its sections: ' . $e->getMessage());
             throw $e;
         }
     }
+
+    
+
+
 
     public function addNewSection($pageId, $defaultTitle = 'New Section', $defaultType = 'undefined') {
         try {
@@ -375,13 +381,74 @@ class Pagerepository extends dbconfig
             $stmt->execute();
     
             $this->connection->commit();
+
         } catch (PDOException $e) {
             $this->connection->rollback();
             error_log('Failed to add new section: ' . $e->getMessage());
             throw $e;
         }
     }
+
+    public function createResturantPage($newPageName, $section)
+    {
+        try {
+            $this->connection->beginTransaction();
+
+            $stmt = $this->connection->prepare('INSERT INTO page (name) VALUES (:name)');
+            $stmt->bindParam(':name', $newPageName, PDO::PARAM_STR);
+            $stmt->execute();
+            $pageId = $this->connection->lastInsertId();
+
+            $currentDateTime = date('Y-m-d H:i:s');
+
+            foreach ($section as $sectionData) {
+                $stmt = $this->connection->prepare('INSERT INTO editor (content, created) VALUES (:content, :created)');
+                $stmt->bindParam(':content', $sectionData['content'], PDO::PARAM_STR);
+                $stmt->bindParam(':created', $currentDateTime, PDO::PARAM_STR);
+                $stmt->execute();
+                $editorId = $this->connection->lastInsertId();
+
+                $stmt = $this->connection->prepare('INSERT INTO image (file_path) VALUES (:file_path)');
+                $stmt->bindParam(':file_path', $sectionData['image'], PDO::PARAM_STR);
+                $stmt->execute();
+                $imageId = $this->connection->lastInsertId();
+
+                $stmt = $this->connection->prepare('INSERT INTO section (page_id, editor_id, image_id, title, type) VALUES (:page_id, :editor_id, :image_id, :title, :type)');
+                $stmt->bindParam(':page_id', $pageId, PDO::PARAM_INT);
+                $stmt->bindParam(':editor_id', $editorId, PDO::PARAM_INT);
+                $stmt->bindParam(':image_id', $imageId, PDO::PARAM_INT);
+                $stmt->bindParam(':title', $sectionData['title'], PDO::PARAM_STR);
+                $stmt->bindParam(':type', $sectionData['type'], PDO::PARAM_STR);
+                $stmt->execute();
+            }
+
+            $this->connection->commit();
+            return $pageId;
+
+        } catch (PDOException $e) {
+            $this->connection->rollback();
+            error_log('Failed to create page and its sections: ' . $e->getMessage());
+            throw $e;
+        }
+    }
+
+    public function getPageIdByRestaurantId($restaurant_id){
+        try {
+            $stmt = $this->connection->prepare('SELECT page_id FROM restaurant WHERE restaurant_id = :restaurant_id');
+            $stmt->bindParam(':restaurant_id', $restaurant_id, PDO::PARAM_INT);
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
     
+            return $result;
+        } catch (PDOException $e) {
+            error_log('Failed to fetch page id: ' . $e->getMessage());
+            return null;
+        }
+    }
+    
+
+    
+
 
 
 }

@@ -342,7 +342,13 @@ switch ($request) {
             $controller->addRestaurant();
         }
         break;
-    case "/editResturantDetails/deleteRestaurant":
+    case "/restaurant/delete":
+        $controller = new Restaurantcontroller();
+        if ($method === 'POST') {
+            $controller->deleteRestaurant();
+        }
+        break;
+    case "/restaurant/deletetimeslot":
         $controller = new Restaurantcontroller();
         if ($method === 'POST') {
             $controller->deleteTimeSlot();

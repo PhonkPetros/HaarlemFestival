@@ -256,9 +256,4 @@ body {
   border-radius: 5px; /* Optional: Adds rounded corners to the container */
 }
 
-body {
-  background: url('/img/25192f4eda302e18aece7516878ae9e5.jpg') no-repeat center center fixed; 
-  background-size: cover;
-  margin: 0;
-  padding: 0;
-}
+

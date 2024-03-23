@@ -52,7 +52,7 @@ class SMTPController
     }
 
     public function sendInvoice(){
-        
+
     }
 
 

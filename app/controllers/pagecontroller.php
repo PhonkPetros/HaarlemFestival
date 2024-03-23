@@ -213,8 +213,8 @@ class Pagecontroller
     }
 
 
-    public function getContentAndImagesForResutrant() {
-        $pageId = htmlspecialchars(5);
+    public function getContentAndImagesForResutrant($restaurnatId) {
+        $pageId = $this->pageService->getPageIdByRestaurantId($restaurnatId);
         $sections = $this->pageService->getSectionContentImages($pageId);
         $contentData = [];
         foreach ($sections as $section) {

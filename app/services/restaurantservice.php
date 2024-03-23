@@ -44,5 +44,13 @@ class RestaurantService
         return $this->restaurantRepo->addRestaurant($name, $location, $description, $price, $seats, $startDate, $endDate, $picturePath);
     }
 
+    public function deleteRestaurant($id) {
+        return $this->restaurantRepo->deleteRestaurant($id);
+    }
+
+    public function deleteTimeSlot($id) {
+        return $this->restaurantRepo->deleteTimeslot($id);
+    }
+
     
 }

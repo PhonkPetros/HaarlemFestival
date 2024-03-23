@@ -31,14 +31,14 @@ class yummycontroller
     }
 
 
-    public function showChoseResturant($id)
+    public function showChoseResturant($restaurantId)
     {
         $navigationController = $this->navigationController->displayHeader();
-        $restaurantDetails = $this->restaurantService->getRestaurantByIdWithTimeslots($id);
-        $contentData = $this->pagecontroller->getContentAndImagesForResutrant();
-        $carouselItems = $this->pagecontroller->getCarouselImagesForHistory(5);
+        $restaurantDetails = $this->restaurantService->getRestaurantByIdWithTimeslots($restaurantId);
+        $contentData = $this->pagecontroller->getContentAndImagesForResutrant($restaurantId);
         require_once __DIR__ . '/../views/yummy/resturant.php';
     }
+
 
     public function editContent(){
         require_once __DIR__ ."/../views/admin/page-managment/editYummy.php";

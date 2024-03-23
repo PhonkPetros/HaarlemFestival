@@ -151,8 +151,20 @@ class Restaurantcontroller
         }
     }
 
+    public function deleteRestaurant(){
+        if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["delete_restaurant_id"])) {
+            $this->restaurantService->deleteRestaurant($_POST["delete_restaurant_id"]);
+            header('Location: /admin/managefestival');
+            exit(); 
+        }        
+    }
+
+    public function deleteTimeSlot(){
+        if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["delete_timeslot_id"])) {
+            $this->restaurantService->deleteTimeSlot($_POST["delete_timeslot_id"]);
+            header('Location: ' . $_SERVER['HTTP_REFERER']);
+            exit(); 
+        }        
+    }
     
-    
-    
-  
 }
