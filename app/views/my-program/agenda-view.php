@@ -5,12 +5,6 @@
         </div>
     </div>
 
-    <?php if (empty ($structuredOrderedItems)): ?>
-        <div style="justify-content: center; text-align: center; color: black;">
-            <h2>No Ticket Have Been Purchased.</h2>
-        </div>
-    <?php endif; ?>
-
     <div id="calendar" class="row row-cols-1 row-cols-md-8 g-9"></div>
 
     <div id="successPopup" class="modal" tabindex="-1" role="dialog">

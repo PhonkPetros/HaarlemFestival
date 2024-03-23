@@ -24,36 +24,45 @@ class registercontroller
     }
 
     public function registerAction() {
-        if ($_SERVER['REQUEST_METHOD'] == "POST") {
-            $captchaResponse = $_POST['g-recaptcha-response'];
+        if ($_SERVER['REQUEST_METHOD'] === "POST") {
+            $captchaResponse = filter_input(INPUT_POST, 'g-recaptcha-response', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
             $secretKey = '6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe'; 
             $response = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret={$secretKey}&response={$captchaResponse}");
             $responseKeys = json_decode($response, true);
-
+    
             if (!$responseKeys["success"]) {
                 $registrationStatus = "CAPTCHA verification failed. Please try again.";
                 require_once '../views/register.php';
                 return;
             }
-
-            $username = htmlspecialchars($_POST['username']);
-            $password = htmlspecialchars($_POST['password']);
-            $email = htmlspecialchars($_POST['email']);
-
-            $newuser = new User();
-            $newuser->setUsername($username);
-            $newuser->setPassword($password);
-            $newuser->setUserEmail($email);
-
-        
+    
+            $username = filter_input(INPUT_POST, 'username', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            $passwordRaw = filter_input(INPUT_POST, 'password', FILTER_DEFAULT);
+            $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
+    
+            // Ensure email is valid
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                $registrationStatus = "Invalid email address. Please provide a valid email.";
+                require_once '../views/register.php';
+                return;
+            }
+    
+            $hashedPassword = password_hash($passwordRaw, PASSWORD_DEFAULT); 
+    
+            $newUser = new User();
+            $newUser->setUsername($username);
+            $newUser->setPassword($hashedPassword);
+            $newUser->setUserEmail($email);
+    
             if (!$this->registerService->username_exists($username) && !$this->registerService->email_exists($email)) {
-                $this->registerService->register($newuser);
-                header('Location: /login'); 
+                $this->registerService->register($newUser);
+                header('Location: /login');
                 exit;
             } else {
-                $registrationStatus = "Username already exists. Please choose a different one.";
+                $registrationStatus = "Username or email already exists. Please choose a different one.";
                 require_once '../views/register.php';
             }
         }
     }
+    
 }
