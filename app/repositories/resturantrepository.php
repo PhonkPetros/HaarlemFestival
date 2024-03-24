@@ -259,7 +259,7 @@ class resturantrepository extends dbconfig {
                 
             }
     
-            return $restaurantDetails;
+            return ['restaurantDetails' => $restaurantDetails, 'timeslots' => $timeslots];
         } catch (PDOException $e) {
             echo "Error: " . $e->getMessage();
             return null;

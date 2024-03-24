@@ -32,12 +32,19 @@ class yummycontroller
 
 
     public function showChoseResturant($restaurantId)
-    {
-        $navigationController = $this->navigationController->displayHeader();
-        $restaurantDetails = $this->restaurantService->getRestaurantByIdWithTimeslots($restaurantId);
-        $contentData = $this->pagecontroller->getContentAndImagesForResutrant($restaurantId);
-        require_once __DIR__ . '/../views/yummy/resturant.php';
-    }
+{
+    $navigationController = $this->navigationController->displayHeader();
+    
+    $restaurantData = $this->restaurantService->getRestaurantByIdWithTimeslots($restaurantId);
+    
+    $restaurantDetails = $restaurantData['restaurantDetails'];
+    $timeslots = $restaurantData['timeslots'];
+    
+    $contentData = $this->pagecontroller->getContentAndImagesForResutrant($restaurantId);
+    
+    require_once __DIR__ . '/../views/yummy/resturant.php';
+}
+
 
 
     public function editContent(){

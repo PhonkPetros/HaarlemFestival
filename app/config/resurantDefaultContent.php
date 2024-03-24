@@ -1,16 +1,16 @@
 <?php
 
 return [
-    ['title' => 'Ratatouille', 'content' => '<div class="div-3">Ratatouille</div>', 'type' => 'Banner', 'image' => 'default.jpg'],
-    ['title' => 'Establishment', 'content' => '<div class="div-4">Establishing his restaurant in 2013, the cook made his goal to serve French meals, with a friendly atmosphere. The success of chef Jouza Jaring, made the restaurant one of a kind Michelin rated restaurant.</div>', 'type' => 'Body', 'image' => 'default.jpg'],
-    ['title' => 'The French Cuisine', 'content' => '<h2 class="cuisine-text">The cuisine la french</h2>', 'type' => 'Body', 'image' => 'default.jpg'],
-    ['title' => 'Caviar', 'content' => '<h3 class="mt-2">Caviar</h3><p>The luxurious caviar comes from the Caspian sea, having a rich flavor from the seas.</p>', 'type' => 'Body', 'image' => 'default.jpg'],
-    ['title' => 'Le dîner', 'content' => '<h3 class="mt-2">Le dîner</h3><p>The expensive Kinmemai rice comes from the Japanese fields, hand picked by the finest hands, stored in the finest basement.</p>', 'type' => 'Body', 'image' => 'default.jpg'],
-    ['title' => 'Le déjeuner', 'content' => '<h3 class="mt-2">Le déjeuner</h3><p>The finest caramel cheesecake made specifically from the rarest breed of goats with a pinch of French grapes.</p>', 'type' => 'Body', 'image' => 'default.jpg'],
-    ['title' => 'Le repas', 'content' => '<h3 class="mt-2">Le repas</h3><p>The French curry made from special herbs has a special taste from the rarest herbs.</p>', 'type' => 'Body', 'image' => 'default.jpg'],
-    ['title' => 'Traditional French Cuisine', 'content' => '<h1>Traditional French cuisineerrr</h1>', 'type' => 'Body', 'image' => 'default.jpg'],
-    ['title' => 'Chef Jfouza', 'content' => '<p>Made with tremendous amount of love and skill, the meals made by Chef Jfouza are renown in Haarlem for their unique taste from simple spaghetti meatballs to the famous world renown ratatouille.</p>', 'type' => 'Body', 'image' => 'default.jpg'],
-    ['title' => 'Galleries', 'content' => '<h2 class="gallery">Galleries</h2>', 'type' => 'Body', 'image' => 'default.jpg'],
-    ['title' => 'Location', 'content' => '<h2 class="location-google-maps">Location</h2>', 'type' => 'Body', 'image' => 'default.jpg'],
+    ['title' => 'Resturant Header', 'content' => '<div class="div-3">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</div>', 'type' => 'Banner', 'image' => 'default.jpg'],
+    ['title' => 'Establishment', 'content' => '<div class="div-4">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</div>', 'type' => 'Body', 'image' => 'default.jpg'],
+    ['title' => 'Banner', 'content' => '<h2 class="cuisine-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</h2>', 'type' => 'Body', 'image' => 'default.jpg'],
+    ['title' => 'MealOne', 'content' => '<h3 class="mt-2">Lorem ipsum dolor sit amet</h3><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>', 'type' => 'Body', 'image' => 'default.jpg'],
+    ['title' => 'MealTwo', 'content' => '<h3 class="mt-2">Lorem ipsum dolor sit amet</h3><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>', 'type' => 'Body', 'image' => 'default.jpg'],
+    ['title' => 'MealThree', 'content' => '<h3 class="mt-2">Lorem ipsum dolor sit amet</h3><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>', 'type' => 'Body', 'image' => 'default.jpg'],
+    ['title' => 'MealFour', 'content' => '<h3 class="mt-2">Lorem ipsum dolor sit amet</h3><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>', 'type' => 'Body', 'image' => 'default.jpg'],
+    ['title' => 'Header', 'content' => '<h1>Lorem ipsum dolor sit amet</h1>', 'type' => 'Body', 'image' => 'default.jpg'],
+    ['title' => 'InformationChef', 'content' => '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>', 'type' => 'Body', 'image' => 'default.jpg'],
+    ['title' => 'Galleries', 'content' => '<h2 class="gallery">Lorem ipsum dolor sit amet</h2>', 'type' => 'Body', 'image' => 'default.jpg'],
+    ['title' => 'Location', 'content' => '<h2 class="location-google-maps">Lorem ipsum dolor sit amet</h2>', 'type' => 'Body', 'image' => 'default.jpg'],
 ];
 ?>

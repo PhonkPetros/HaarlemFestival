@@ -75,10 +75,10 @@ class Pagerepository extends dbconfig
         $sections = [];
         try {
             $stmt = $this->connection->prepare("
-                SELECT s.*, e.content as editor_content, i.file_path as image_file_path, s.type
+               SELECT s.*, e.content as editor_content, i.file_path as image_file_path, s.type
                 FROM section s
-                LEFT JOIN editor e ON s.editor_id = e.id
-                LEFT JOIN image i ON s.image_id = i.image_id
+                JOIN editor e ON s.editor_id = e.id
+                JOIN image i ON s.image_id = i.image_id
                 WHERE s.page_id = :page_id
                 ORDER BY s.section_id ASC
             ");
@@ -88,7 +88,7 @@ class Pagerepository extends dbconfig
         } catch (PDOException $e) {
             error_log('Failed to fetch sections with content and images: ' . $e->getMessage());
         }
-    
+        
         return $sections;
     }
     
@@ -434,8 +434,8 @@ class Pagerepository extends dbconfig
 
     public function getPageIdByRestaurantId($restaurant_id){
         try {
-            $stmt = $this->connection->prepare('SELECT page_id FROM restaurant WHERE restaurant_id = :restaurant_id');
-            $stmt->bindParam(':restaurant_id', $restaurant_id, PDO::PARAM_INT);
+            $stmt = $this->connection->prepare('SELECT page_id FROM Restaurant WHERE resturant_id = :resturant_id');
+            $stmt->bindParam(':resturant_id', $restaurant_id, PDO::PARAM_INT);
             $stmt->execute();
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
     
