@@ -44,8 +44,9 @@
                     <div class="card">
                         <img src="/img/<?= htmlspecialchars($restaurant->getPicture()) ?>" class="card-img-top" alt="<?= htmlspecialchars($restaurant->getLocation()) ?>">
                         <div class="card-body">
-                            <h5 class="card-title"><?= htmlspecialchars($restaurant->getLocation()) ?></h5>
+                            <h5 class="card-title"><?= htmlspecialchars($restaurant->getName()) ?></h5>
                             <ul class="list-group list-group-flush">
+                                <li class="list-group-item">Description: <?= htmlspecialchars($restaurant->getDescription()) ?></li>
                                 <li class="list-group-item">Price: <?= htmlspecialchars($restaurant->getPrice()) ?></li>
                                 <li class="list-group-item">Seats: <?= htmlspecialchars($restaurant->getSeats()) ?></li>
                             </ul>
