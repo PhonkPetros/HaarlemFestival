@@ -50,14 +50,4 @@ class SMTPController
             return false;
         }
     }
-
-    public function sendInvoice(){
-
-    }
-
-
-
-    public function sendTicket(){
-
-    }
 }

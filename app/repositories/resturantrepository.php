@@ -8,75 +8,32 @@ use PDOException;
 use DateTime;
 use model\Resturant;
 use model\Ticket;
-use repositories\Pagerepository;
 
 require_once __DIR__ . '/../config/dbconfig.php';
 require_once __DIR__ . '/../model/resturant.php';
 require_once __DIR__ . '/../model/ticket.php';
-require_once __DIR__ . '/../repositories/pagerepository.php';
 
 
 class resturantrepository extends dbconfig {
-
-    public function getRestaurant($eventId) {
-        $restaurants = [];
-        try {
-            $stmt = $this->connection->prepare(
-                "SELECT *
-                FROM Restaurant
-                JOIN Event ON Event.restaurant_id = Restaurant.resturant_id
-                WHERE Event.event_id = :event_id"
-            );
-            $stmt->bindValue(':event_id', $eventId);
-            $stmt->execute();
-            $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    
-            foreach ($results as $result) {
-                $restaurant = new \model\Restaurant();
-                $restaurant->setId($result['restaurant_id']);
-                $restaurant->setDescription($result['description']);
-                $restaurant->setSeats($result['seats']);
-                $restaurant->setName($result['name']);
-                $restaurant->setStartDate($result['startDate']);
-                $restaurant->setLocation($result['location']);
-                $restaurant->setPrice($result['price']);
-                $restaurant->setEndDate($result['endDate']);
-                $restaurant->setPicture($result['picture']);
-    
-                $restaurants[] = $restaurant;
-            }
-        } catch (PDOException $e) {
-            echo "Error: " . $e->getMessage();
-            return [];
-        }
-        return $restaurants;
-    }
-
     public function getAllRestaurants() {
         $restaurants = [];
         try {
-            $stmt = $this->connection->prepare(
-                "SELECT *
-                FROM Restaurant
-                JOIN Event ON Event.restaurant_id = Restaurant.resturant_id"
-            );
+            $stmt = $this->connection->prepare("SELECT * FROM [Event] WHERE NAME = 'Restaurant'");
             $stmt->execute();
             $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
     
             foreach ($results as $result) {
                 $restaurant = new \model\Restaurant();
-                $restaurant->setId($result['restaurant_id']);
-                $restaurant->setDescription($result['description']);
-                $restaurant->setSeats($result['seats']);
-                $restaurant->setName($result['name']);
-                $restaurant->setStartDate($result['startDate']);
+                $restaurant->setId($result['event_id']);
                 $restaurant->setLocation($result['location']);
                 $restaurant->setPrice($result['price']);
+                $restaurant->setSeats(isset($result['seats']) ? (int)$result['seats'] : null);
+                $restaurant->setStartDate($result['startDate']);
                 $restaurant->setEndDate($result['endDate']);
                 $restaurant->setPicture($result['picture']);
-    
                 $restaurants[] = $restaurant;
             }
+            
         } catch (PDOException $e) {
             echo "Error: " . $e->getMessage();
             return [];
@@ -84,49 +41,37 @@ class resturantrepository extends dbconfig {
         return $restaurants;
     }
     
-    
-    
-    public function updateRestaurantDetails($id, $name, $price, $seats, $startDate, $endDate, $picturePath, $description, $location) {
+    public function updateRestaurantDetails($id, $name, $price, $seats, $startDate, $endDate, $picturePath) {
         try {
-            $price = max(0, floatval($price));
-            $seats = max(0, intval($seats));
-    
-            $sqlRestaurant = "UPDATE Restaurant SET description = :description, seats = :seats";
-            $sqlRestaurant .= " WHERE resturant_id = :id";
-    
-            $stmtRestaurant = $this->connection->prepare($sqlRestaurant);
-            $stmtRestaurant->bindValue(':id', $id, PDO::PARAM_INT);
-            $stmtRestaurant->bindValue(':description', $description);
-            $stmtRestaurant->bindValue(':seats', $seats, PDO::PARAM_INT);
-            $stmtRestaurant->execute();
+            $sql = "UPDATE [Event] SET location = :location, price = :price, seats = :seats, startDate = :startDate, endDate = :endDate";
             
-            $sqlEvent = "UPDATE Event SET name = :name, location = :location, price = :price, startDate = :startDate, endDate = :endDate";
             if (!empty($picturePath)) {
-                $sqlEvent .= ", picture = :eventPicture";
+                $sql .= ", picture = :picture";
             }
-            $sqlEvent .= " WHERE restaurant_id = :id";
     
-            $stmtEvent = $this->connection->prepare($sqlEvent);
-            $stmtEvent->bindValue(':id', $id, PDO::PARAM_INT);
-            $stmtEvent->bindValue(':name', $name);
-            $stmtEvent->bindValue(':location', $location);
-            $stmtEvent->bindValue(':price', $price);
-            $stmtEvent->bindValue(':startDate', $startDate);
-            $stmtEvent->bindValue(':endDate', $endDate);
+            $sql .= " WHERE event_id = :id";
+    
+            $stmt = $this->connection->prepare($sql);
+    
+            $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+            $stmt->bindValue(':location', $name);
+            $stmt->bindValue(':price', $price);
+            $stmt->bindValue(':seats', $seats, PDO::PARAM_INT);
+            $stmt->bindValue(':startDate', $startDate);
+            $stmt->bindValue(':endDate', $endDate);
+    
             if (!empty($picturePath)) {
-                $stmtEvent->bindValue(':eventPicture', $picturePath);
+                $stmt->bindValue(':picture', $picturePath);
             }
-            $stmtEvent->execute();
     
-            return true;
+            $stmt->execute();
+    
+            return $stmt->rowCount() > 0;
         } catch (PDOException $e) {
             echo "Error: " . $e->getMessage();
             return false;
         }
     }
-    
-    
-    
 
 
     public function getTicketTimeslotsForResturant($id) {
@@ -149,81 +94,61 @@ class resturantrepository extends dbconfig {
     
     public function addTimeSlot($restaurantId, $ticket_hash, $date, $time, $quantity) {
         try {
-            $checkEventStmt = $this->connection->prepare("SELECT event_id FROM [Event] WHERE restaurant_id = :restaurantId");
-            $checkEventStmt->bindValue(':restaurantId', $restaurantId, PDO::PARAM_INT);
-            $checkEventStmt->execute();
+            $stmt = $this->connection->prepare("INSERT INTO [Ticket] (event_id, ticket_hash, date, time, quantity, state) VALUES (:restaurantId, :ticket_hash, :date, :time, :quantity, :state)");
+    
+            $stmt->bindValue(':restaurantId', $restaurantId, PDO::PARAM_INT);
+            $stmt->bindValue(':ticket_hash', $ticket_hash);
+            $stmt->bindValue(':date', $date);
+            $stmt->bindValue(':time', $time);
+            $stmt->bindValue(':quantity', $quantity, PDO::PARAM_INT);
+            $stmt->bindValue(':state', 'Not Used');
+    
+            $stmt->execute();
             
-            $eventRow = $checkEventStmt->fetch(PDO::FETCH_ASSOC);
-            
-            if (!$eventRow) {
-                echo "Error: No events found for the provided restaurant ID.";
-                return false;
-            }
-            
-            $eventId = $eventRow['event_id'];
-            
-            $insertStmt = $this->connection->prepare("INSERT INTO [Ticket] (event_id, ticket_hash, date, time, quantity, state) VALUES (:event_id, :ticket_hash, :date, :time, :quantity, :state)");
-            $insertStmt->bindValue(':event_id', $eventId, PDO::PARAM_INT); 
-            $insertStmt->bindValue(':ticket_hash', $ticket_hash);
-            $insertStmt->bindValue(':date', $date);
-            $insertStmt->bindValue(':time', $time);
-            $insertStmt->bindValue(':quantity', $quantity, PDO::PARAM_INT);
-            $insertStmt->bindValue(':state', 'Not Used');
-            $insertStmt->execute();
-            
-            return $insertStmt->rowCount() > 0;
+            return $stmt->rowCount() > 0;
         } catch (PDOException $e) {
             echo "Error: " . $e->getMessage();
             return false;
         }
     }
-    
-    
-    
-    
-    
 
-    public function getTimeslotsForRestaurant($eventId) {
-        $tickets = [];
-        try {
-            $stmt = $this->connection->prepare(
-                "SELECT ticket_id, ticket_hash, date, time, quantity 
-                FROM Ticket 
-                WHERE event_id = :event_id"
-            );
-            $stmt->bindValue(':event_id', $eventId, PDO::PARAM_INT);
-            $stmt->execute();
-            $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    public function getTicketTimeslotsForRestaurant() {
+        $timeslots = [];
     
-            foreach ($results as $result) {
+        try {
+            $stmt = $this->connection->prepare("SELECT [Event].event_id, [Event].[location], Ticket.[Date], Ticket.[Time], Ticket.quantity FROM [Event] JOIN Ticket ON [Event].event_id = Ticket.event_id WHERE [Event].[name] = :eventName");
+    
+            $stmt->bindValue(':eventName', 'Restaurant');
+    
+            $stmt->execute();
+    
+            $ticketResults = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+            foreach ($ticketResults as $ticketResult) {
                 $ticket = new \model\Ticket();
-                $ticket->setEventId($eventId);
-                $ticket->setTicketId($result['ticket_id']);
-                $ticket->setTicketHash($result['ticket_hash']);
-                $ticket->setTicketDate($result['date']); 
-                $ticket->setTicketTime($result['time']);
-                $ticket->setQuantity($result['quantity']);
-                $tickets[] = $ticket;
+                $ticket->setEventId($ticketResult['event_id']);
+                $ticket->setQuantity($ticketResult['quantity']);
+                $ticket->setTicketDate($ticketResult['Date']);
+                $ticket->setTicketTime($ticketResult['Time']);
+    
+                $timeslots[] = $ticket;
             }
         } catch (PDOException $e) {
             echo "Error: " . $e->getMessage();
-            return [];
         }
-        return $tickets;
+    
+        return $timeslots;
     }
-    
-    
-    
+
 
     public function getRestaurantByIdWithTimeslots($restaurantId) {
         $restaurantDetails = null;
         try {
             $stmt = $this->connection->prepare(
-                "SELECT [Event].*, Ticket.ticket_hash, Ticket.date AS ticket_date, Ticket.time AS ticket_time, Ticket.quantity, Restaurant.* 
+                "SELECT [Event].*, Ticket.ticket_hash, Ticket.date AS ticket_date, Ticket.time AS ticket_time, Ticket.quantity 
                 FROM [Event] 
-                JOIN Ticket ON [Event].event_id = Ticket.event_id 
-                JOIN Restaurant ON [Event].restaurant_id = Restaurant.resturant_id
-                WHERE [Event].restaurant_id = :restaurantId"
+                LEFT JOIN Ticket ON [Event].event_id = Ticket.event_id 
+                WHERE [Event].event_id = :restaurantId AND [Event].name = 'Restaurant'"
             );
     
             $stmt->bindValue(':restaurantId', $restaurantId, PDO::PARAM_INT);
@@ -245,7 +170,7 @@ class resturantrepository extends dbconfig {
                         $restaurantDetails->setPicture($result['picture']);
                     }
                     
-                    if ($result['ticket_hash']) { 
+                    if ($result['ticket_hash']) { // Check if there is a ticket associated with this event
                         $ticket = new \model\Ticket();
                         $ticket->setEventId($result['event_id']);
                         $ticket->setTicketHash($result['ticket_hash']);
@@ -259,80 +184,16 @@ class resturantrepository extends dbconfig {
                 
             }
     
-            return ['restaurantDetails' => $restaurantDetails, 'timeslots' => $timeslots];
+            return $restaurantDetails;
         } catch (PDOException $e) {
             echo "Error: " . $e->getMessage();
             return null;
         }
     }
     
-    public function addRestaurant($name, $location, $description, $price, $seats, $startDate, $endDate, $picturePath) {
-        if (empty($name) || empty($location) || empty($description) || empty($price)) {
-            return false;
-        }
-        try {
-            $this->connection->beginTransaction();
-            
-            $pageRepository = new Pagerepository();
-            $content = include __DIR__ . '/../config/resurantDefaultContent.php';
-            $pageId = $pageRepository->createResturantPage($name, $content);
     
-            $stmtRestaurant = $this->connection->prepare("INSERT INTO Restaurant (description, seats, page_id) VALUES (:description, :seats, :pageId)");
-            $stmtRestaurant->bindValue(':description', $description);
-            $stmtRestaurant->bindValue(':seats', $seats);
-            $stmtRestaurant->bindValue(':pageId', $pageId);
-            $stmtRestaurant->execute();
-            $restaurantId = $this->connection->lastInsertId();
-    
-            $stmtEvent = $this->connection->prepare("INSERT INTO Event (name, startDate, location, price, endDate, picture, restaurant_id) 
-            VALUES (:name, :startDate, :location, :price, :endDate, :picture, :restaurantId)");
-            $stmtEvent->bindValue(':name', $name);
-            $stmtEvent->bindValue(':startDate', $startDate);
-            $stmtEvent->bindValue(':location', $location);
-            $stmtEvent->bindValue(':price', $price);
-            $stmtEvent->bindValue(':endDate', $endDate);
-            $stmtEvent->bindValue(':picture', $picturePath);
-            $stmtEvent->bindValue(':restaurantId', $restaurantId);
-            $stmtEvent->execute();
-            $this->connection->commit();
-    
-            return true; 
-        } catch (PDOException $e) {
-            $this->connection->rollBack();
-            echo "Error: " . $e->getMessage();
-            return false;
-        }
-    }
 
-    public function deleteRestaurant($restaurantId) {
-        try {
-            $this->connection->beginTransaction();
     
-            $stmtDeleteRestaurant = $this->connection->prepare("DELETE FROM Restaurant WHERE resturant_id = :restaurantId");
-            $stmtDeleteRestaurant->bindValue(':restaurantId', $restaurantId, PDO::PARAM_INT);
-            $stmtDeleteRestaurant->execute();
     
-            $this->connection->commit();
     
-            return true;
-        } catch (PDOException $e) {
-            $this->connection->rollBack();
-            echo "Error: " . $e->getMessage();
-            return false;
-        }
-    }
-
-    public function deleteTimeslot($ticket_hash){
-        try {
-            $stmt = $this->connection->prepare("DELETE FROM Ticket WHERE ticket_hash = :ticket_hash");
-            $stmt->bindValue(':ticket_hash', $ticket_hash);
-            $stmt->execute();
-            return $stmt->rowCount() > 0;
-        } catch (PDOException $e) {
-            echo "Error: " . $e->getMessage();
-            return false;
-        }
-
-    }
-
 }
