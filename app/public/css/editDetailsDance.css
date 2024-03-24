@@ -1,0 +1,11 @@
+.dance-event {
+    display: flex;
+}
+
+.dance-event-information {
+    margin-left: 1rem;
+}
+
+.dance-event-information p {
+    margin-bottom: 0.75rem;
+}

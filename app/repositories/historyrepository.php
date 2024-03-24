@@ -15,7 +15,7 @@ require_once __DIR__ . '/../model/ticket.php';
 
 class historyrepository extends dbconfig
 {
-    public function getEventDetails($eventID = "8")
+    public function getEventDetails($eventID)
     {
         $sql = 'SELECT * FROM [Event] WHERE event_id = :eventID';
 
@@ -46,7 +46,7 @@ class historyrepository extends dbconfig
             $checkStmt->bindValue(':date', $newTicket->getTicketDate());
             $checkStmt->bindValue(':time', $newTicket->getTicketTime());
             $checkStmt->bindValue(':language', $newTicket->getTicketLanguage());
-           // $checkStmt->bindValue(':endTime', $newTicket->getTicketEndTime());
+            $checkStmt->bindValue(':endTime', $newTicket->getTicketEndTime());
             $checkStmt->execute();
     
             $existingTicketCount = $checkStmt->fetchColumn();
@@ -67,7 +67,7 @@ class historyrepository extends dbconfig
             $insertStmt->bindValue(':language', $newTicket->getTicketLanguage());
             $insertStmt->bindValue(':date', $newTicket->getTicketDate());
             $insertStmt->bindValue(':time', $newTicket->getTicketTime());
-           // $insertStmt->bindValue(':endTime', $newTicket->getTicketEndTime());
+            $insertStmt->bindValue(':endTime', $newTicket->getTicketEndTime());
             $insertStmt->execute();
             return true;
         } catch (PDOException $e) {
@@ -75,8 +75,6 @@ class historyrepository extends dbconfig
             return false;
         }
     }
-    
-    
 
     public function existEvent($newEventName, $eventId){
         $sql = "SELECT COUNT(*) FROM [Event] WHERE name = :name AND event_id != :eventId";

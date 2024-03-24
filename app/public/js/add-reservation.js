@@ -2,32 +2,37 @@ document.addEventListener('DOMContentLoaded', function () {
     function openReservationModal(button) {
         var date = button.getAttribute('data-date');
         var time = button.getAttribute('data-time');
+        var endTime = button.getAttribute('data-endtime');
         var language = button.getAttribute('data-language');
-        
+        var location = button.getAttribute('data-location');
+
         document.getElementById('ticketInfoDate').textContent = date;
         document.getElementById('ticketInfoTime').textContent = time;
+        document.getElementById('ticketInfoEndTime').textContent = endTime;
         document.getElementById('ticketInfoLanguage').textContent = language;
-        
+
         document.getElementById('ticketId').value = button.getAttribute('data-ticket-id');
         document.getElementById('eventId').value = button.getAttribute('data-event-id');
         document.getElementById('ticketPrice').value = button.getAttribute('data-price');
-        
+
         document.getElementById('ticketDate').value = date;
         document.getElementById('ticketTime').value = time;
+        document.getElementById('ticketEndTime').value = endTime;
         document.getElementById('ticketLanguage').value = language;
-    
+        document.getElementById('ticketLocation').value = location;
+
         document.getElementById('firstName').value = userSession.firstName || '';
         document.getElementById('lastName').value = userSession.lastName || '';
         document.getElementById('address').value = userSession.address || '';
         document.getElementById('phoneNumber').value = userSession.phoneNumber || '';
         document.getElementById('email').value = userSession.email || '';
-    
+
         document.getElementById('submitReservationButton').addEventListener('click', submitReservation);
-        
+
         updateTotalPrice();
         document.getElementById('reservationModal').style.display = 'block';
     }
-    
+
 
     function closeModal() {
         document.getElementById('reservationModal').style.display = 'none';
@@ -69,7 +74,9 @@ document.addEventListener('DOMContentLoaded', function () {
             ticketPrice: document.getElementById('ticketPrice').value,
             ticketDate: document.getElementById('ticketDate').value,
             ticketTime: document.getElementById('ticketTime').value,
+            ticketEndTime: document.getElementById('ticketEndTime').value,
             ticketLanguage: document.getElementById('ticketLanguage').value,
+            ticketLocation: document.getElementById('ticketLocation').value,
         };
 
         fetch('/submit-reservation', {
@@ -84,7 +91,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (obj.status === 200 && obj.body.status === 'success') {
                     console.log('Success:', obj.body.message);
                     showSuccessPopup(obj.body.message);
-                    closeModal(); // Close reservation modal
+                    closeModal();
                 } else {
                     console.error('Server-side error:', obj.body.message);
                     alert(obj.body.message);
@@ -98,14 +105,18 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function showSuccessPopup(message) {
         var popupContent = `
-            <p>${message}</p>
-            <button type="button" class="btn btn-secondary" id="continueShopping">Continue Shopping</button>
-            <button type="button" class="btn btn-primary" id="goToMyProgram">Go to My Program</button>
+        <div class="text-center">
+        <img style=" width: 70px;
+        height: 70px;" src="/../img/checkbox-circle-fill.png" alt="Success" class="checkmark-circle-img" />
+        <h4>You have successfully reserve this event. You can find your reservation in “My Program” page</h4>
+        <button type="button" class="btn btn-dark" id="continueShopping">Continue Shopping</button>
+        <button type="button" class="btn btn-dark" id="goToMyProgram">Go to My Program</button>
+    </div>
         `;
 
         document.getElementById('successPopupContent').innerHTML = popupContent;
         document.getElementById('successPopup').style.display = 'block';
- 
+
         document.getElementById('continueShopping').addEventListener('click', closeSuccessPopup);
         document.getElementById('goToMyProgram').addEventListener('click', goToMyProgram);
     }
@@ -113,7 +124,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function goToMyProgram() {
         window.location.href = '/my-program';
     }
-    
+
     function closeSuccessPopup() {
         document.getElementById('successPopup').style.display = 'none';
     }
