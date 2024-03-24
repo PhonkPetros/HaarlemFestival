@@ -91,10 +91,10 @@ if ($pageID || $eventID || $editPageID || $sectionEdit || $token || $dancePageID
                     $controller->showEventDetails();
                 }
                 break;
-            case EVENT_ID_RESTAURANT:
+            case $eventID > EVENT_ID_HISTORY:
                 $controller = new Restaurantcontroller();
                 if ($method === 'GET') {
-                    $controller->editEventDetails();
+                    $controller->editEventDetails($eventID);
                 }
                 break;
             case EVENT_ID_HISTORY:
@@ -492,9 +492,9 @@ switch ($request) {
 
     case '/my-program/payment-failure':
         $controller = new Myprogramcontroller();
-        if($method == 'GET'){
+        if ($method == 'GET') {
             $controller->showFailure();
-        }    
+        }
         break;
     default:
         http_response_code(404);
