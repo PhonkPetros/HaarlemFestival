@@ -257,3 +257,95 @@ body {
 }
 
 
+/* This uses !important to ensure the rule takes precedence */
+.picture img.img-fluid {
+  max-width: 100% !important;
+  height: auto !important;
+}
+
+
+
+.restaurant-info-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 20px;
+}
+
+.restaurant-info {
+  display: flex;
+}
+
+.restaurant-image-container {
+  flex: 0 0 auto; /* Do not grow or shrink, use image's natural size */
+  margin-right: 20px; /* Space between image and content */
+}
+
+.responsive-image {
+  max-width: 100%; /* Image max width is the width of its container */
+  height: auto; /* Height is auto to maintain aspect ratio */
+}
+
+.restaurant-content, .restaurant-rating, .restaurant-contact {
+  flex: 1; /* Fill available space */
+}
+
+.restaurant-rating span.star {
+  color: #FFD700; /* Gold color for stars */
+}
+
+.restaurant-contact {
+  margin-top: 20px; /* Space above contact info */
+}
+
+
+
+
+.restaurant-info-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 20px;
+  background-color: #ffffff; /* White background for the wrapper */
+  border-radius: 8px; /* Rounded corners for the outer wrapper */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional: adds a subtle shadow for depth */
+  padding: 20px; /* Padding around the entire wrapper for spacing */
+}
+
+.restaurant-info {
+  display: flex;
+}
+
+.restaurant-image-container {
+  flex: 0 0 auto; /* Do not grow or shrink, use image's natural size */
+  margin-right: 20px; /* Space between image and content */
+}
+
+.responsive-image {
+  max-width: 100%; /* Image max width is the width of its container */
+  height: auto; /* Height is auto to maintain aspect ratio */
+  border-radius: 5px; /* Optional: rounded corners for the image */
+}
+
+.restaurant-content, .restaurant-rating, .restaurant-contact {
+  flex: 1; /* Fill available space */
+}
+
+.restaurant-rating span.star {
+  color: #FFD700; /* Gold color for stars */
+}
+
+.restaurant-contact {
+  margin-top: 20px; /* Space above contact info */
+}
+
+@media (max-width: 768px) {
+  .restaurant-info {
+    flex-direction: column; /* Stack image and content vertically on smaller screens */
+  }
+
+  .restaurant-image-container {
+    margin-right: 0; /* No right margin on smaller screens */
+    margin-bottom: 20px; /* Space below image */
+  }
+}

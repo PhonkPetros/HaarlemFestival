@@ -217,47 +217,53 @@ class resturantrepository extends dbconfig {
 
     public function getRestaurantByIdWithTimeslots($restaurantId) {
         $restaurantDetails = null;
+        $timeslots = [];
+    
         try {
+            // Fetch restaurant and event details
             $stmt = $this->connection->prepare(
-                "SELECT [Event].*, Ticket.ticket_hash, Ticket.date AS ticket_date, Ticket.time AS ticket_time, Ticket.quantity, Restaurant.* 
-                FROM [Event] 
-                JOIN Ticket ON [Event].event_id = Ticket.event_id 
-                JOIN Restaurant ON [Event].restaurant_id = Restaurant.resturant_id
-                WHERE [Event].restaurant_id = :restaurantId"
+                "SELECT *
+                 FROM Restaurant 
+                 JOIN [Event] ON Restaurant.resturant_id = [Event].restaurant_id
+                 WHERE Restaurant.resturant_id = :restaurantId"
             );
     
             $stmt->bindValue(':restaurantId', $restaurantId, PDO::PARAM_INT);
             $stmt->execute();
-    
             $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            $timeslots = [];
-            
+    
             if ($results) {
                 foreach ($results as $result) {
                     if (!$restaurantDetails) {
                         $restaurantDetails = new \model\Restaurant();
-                        $restaurantDetails->setId($result['event_id']);
-                        $restaurantDetails->setLocation($result['location']);
-                        $restaurantDetails->setPrice($result['price']);
+                        $restaurantDetails->setId($result['resturant_id'] ?? '');
+                        $restaurantDetails->setLocation($result['location'] ?? '');
+                        $restaurantDetails->setPrice($result['price'] ?? 0); // Assuming 0 is a sensible default for price
                         $restaurantDetails->setSeats(isset($result['seats']) ? (int)$result['seats'] : null);
-                        $restaurantDetails->setStartDate($result['startDate']);
-                        $restaurantDetails->setEndDate($result['endDate']);
-                        $restaurantDetails->setPicture($result['picture']);
+                        $restaurantDetails->setStartDate($result['startDate'] ?? '');
+                        $restaurantDetails->setEndDate($result['endDate'] ?? '');
+                        $restaurantDetails->setPicture($result['picture'] ?? '');
                     }
-                    
-                    if ($result['ticket_hash']) { 
+            
+                    $ticketStmt = $this->connection->prepare("SELECT * FROM Ticket WHERE event_id = :eventId");
+                    $ticketStmt->bindValue(':eventId', $result['event_id'] ?? 0, PDO::PARAM_INT);
+                    $ticketStmt->execute();
+                    $ticketResults = $ticketStmt->fetchAll(PDO::FETCH_ASSOC);
+            
+                    foreach ($ticketResults as $ticketResult) {
                         $ticket = new \model\Ticket();
-                        $ticket->setEventId($result['event_id']);
-                        $ticket->setTicketHash($result['ticket_hash']);
-                        $ticket->setTicketDate($result['ticket_date']);
-                        $ticket->setTicketTime($result['ticket_time']);
-                        $ticket->setQuantity($result['quantity']);
+                        $ticket->setEventId($ticketResult['event_id'] ?? '');
+                        $ticket->setTicketHash($ticketResult['ticket_hash'] ?? '');
+                        $ticket->setTicketDate($ticketResult['Date'] ?? '');
+                        $ticket->setTicketTime($ticketResult['Time'] ?? '');
+                        $ticket->setQuantity($ticketResult['quantity'] ?? '');
                         $timeslots[] = $ticket;
                     }
                 }
-    
-                
             }
+            
+            return ['restaurantDetails' => $restaurantDetails, 'timeslots' => $timeslots];
+            
     
             return ['restaurantDetails' => $restaurantDetails, 'timeslots' => $timeslots];
         } catch (PDOException $e) {
@@ -265,6 +271,8 @@ class resturantrepository extends dbconfig {
             return null;
         }
     }
+    
+
     
     public function addRestaurant($name, $location, $description, $price, $seats, $startDate, $endDate, $picturePath) {
         if (empty($name) || empty($location) || empty($description) || empty($price)) {

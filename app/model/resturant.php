@@ -84,6 +84,7 @@ class Restaurant implements \JsonSerializable{
     public function getDescription(): string {
         return $this->description;
     }
+    
     public function setEndDate(string $endDate): void {
         $this->endDate = $endDate;
     }

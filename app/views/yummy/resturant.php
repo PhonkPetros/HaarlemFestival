@@ -6,12 +6,14 @@
     <title>Restaurant Details</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/css/resturant.css">
+    <link rel="stylesheet" href="/css/yum.css">
 </head>
 <body>
 <div class="div">
 <?php
 if ($restaurantDetails !== null) {
   $picture = $restaurantDetails->getPicture();
+  var_dump($picture);
   if(empty($picture) || is_null($picture)) {
       $picture = "default.jpg";
   } else {
@@ -57,28 +59,37 @@ if ($restaurantDetails !== null) {
   </div>
 </div>
 
-<div class="akm-49">
-  <div class="info">
-    <div class="picture">
-      <img src="/img/<?php echo $contentData[7]['image']?>" alt="Restaurant Picture" class="img-fluid">
+<div class="restaurant-info-wrapper">
+  <div class="restaurant-info">
+    <div class="restaurant-image-container">
+      <img src="/img/<?php echo $contentData[7]['image']?>" alt="Restaurant Picture" class="responsive-image"> <!-- Renamed class for the image -->
     </div>
-    <div class="content">
-    <?php echo $contentData[7]['content']?>
-      <div class="rating">
+    <div class="restaurant-content">
+      <?php echo $contentData[7]['content'] ?>
+      <div class="restaurant-rating">
         <span class="star">&#9733;</span>
         <span class="star">&#9733;</span>
         <span class="star">&#9733;</span>
         <span class="star">&#9733;</span>
         <span class="star">&#9733;</span>
       </div>
-      <?php echo $contentData[8]['content']?>
-      <div class="contact">
-</div>
-
+      <?php echo $contentData[8]['content'] ?>
+      <div class="restaurant-contact">
+        <div class="restaurant-address">
+          <p><?php echo htmlspecialchars($restaurantDetails->getLocation())?></p>
+        </div>
+        <div class="restaurant-phone">
+          <p><?php echo htmlspecialchars($restaurantDetails->getStartDate())?></p>
+        </div>
+        <div class="restaurant-email">
+          <p><?php echo htmlspecialchars($restaurantDetails->getEndDate())?></p> 
+        </div>
+      </div>
       <button class="book-table">BOOK A TABLE</button>
     </div>
   </div>
 </div>
+
 
 
 <div class="container-table mt-5">
