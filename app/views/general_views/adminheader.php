@@ -16,6 +16,8 @@
     <link rel="stylesheet" href="/css/manage-users.css">
     <link rel="stylesheet" href="/css/editDetailsHistory.css">
     <link rel="stylesheet" href="/css/editDetailsDance.css">
+    <link rel="stylesheet" href="/css/orderOverview.css">
+
 </head>
 <body>
 <main>
@@ -37,7 +39,7 @@
             <a class="nav-link" href="/admin/page-management/editfestival">Page Management</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="/admin/orders">Orders</a>
+            <a class="nav-link" href="/admin/order-overview">Order overview</a>
         </li>
                 </ul>
                 <form class="d-flex">
