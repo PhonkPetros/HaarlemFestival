@@ -498,6 +498,13 @@ switch ($request) {
             $controller->showOverviewTable();
         }
         break;
+    
+    case '/admin/order-overview/export':
+        $controller = new orderoverviewcontroller();
+        if ($method == 'GET') {
+            $controller->exportExcel();
+        }
+        break;
         
     default:
         http_response_code(404);

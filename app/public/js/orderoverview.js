@@ -29,3 +29,7 @@ $(document).on('click', 'tr', function () {
 
     orderDetailsModal.style.display = "block";
 });
+
+$(document).on('click', '.modal .btn-close', function (e) {
+    e.target.closest('.modal').style.display = 'none';
+});

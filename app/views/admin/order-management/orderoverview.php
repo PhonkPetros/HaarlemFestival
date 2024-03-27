@@ -10,7 +10,8 @@
 <div class = container>
     <h1> Order Summary</h1>
     <h2> order summaries from all users</h2>
-
+    <a class="btn btn-primary" href="/admin/order-overview/export">Export .xls</a>
+    
     <div class = "table-container">
         <table class="table">
             <thead>
