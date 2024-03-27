@@ -29,4 +29,23 @@ class Myprogramservice
         return $this->createOrderItem($orderId, $userId, $item);
     }
 
+    function getAllOrders()
+    {   
+        
+        $allOrders =  $this->myprogramRepo->getAllOrders();
+
+        for ($i = 0; $i < count($allOrders); $i++) 
+        {
+            if (isset($allOrders[$i]['location'])) {
+                $allOrders[$i]['events'] = "History";
+            } else if (isset($allOrders[$i]['restaurant_name'])) {
+                $allOrders[$i]['events'] = "Yummy ({$allOrders[$i]['restaurant_name']})";
+            } else if (isset($allOrders[$i]['artist_name'])) {
+                $allOrders[$i]['events'] = "Dance ({$allOrders[$i]['artist_name']})";
+            }
+        }
+
+        return $allOrders;
+    }
+
 }
