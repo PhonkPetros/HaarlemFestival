@@ -9,7 +9,7 @@
         </div>
     </div>
 
-    <div class="ticket-row" >
+    <div class="ticket-row">
         <?php foreach ($structuredTickets as $eventId => $eventData): ?>
             <?php foreach ($eventData['tickets'] as $ticket): ?>
                 <div class="ticket-container" id="ticket-container-<?= $ticket['ticketId'] ?>"
@@ -46,7 +46,7 @@
             <?php endforeach; ?>
         <?php endforeach; ?>
     </div>
-    <?php if (empty ($structuredTickets)): ?>
+    <?php if (empty($structuredTickets)): ?>
         <div style="justify-content: center; text-align: center; color: black;">
             <h2>No Tickets Currently In Basket</h2>
         </div>
@@ -60,8 +60,9 @@
             </div>
         </div>
         <div class="d-flex justify-content-center" style="padding-top: 20px;">
-            <a href="/my-program/payment" class="btn btn-success" style="width: 100%;"><h4>Pay Now</h4></a>
+            <a id="pay-now" href="/my-program/payment" class="btn btn-success" style="width: 100%;">
+                <h4>Pay Now</h4>
+            </a>
         </div>
     <?php endif; ?>
 </div>
-

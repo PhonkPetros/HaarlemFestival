@@ -54,6 +54,9 @@ class Myprogramcontroller
 
         }
 
+        if(!isset($_SESSION['user'])){
+            $user = null; 
+        }
         $structuredOrderedItems = $this->getStructuredPurchasedOrderItemsByUserID();
 
         require_once __DIR__ . "/../views/my-program/overview.php";
@@ -71,7 +74,17 @@ class Myprogramcontroller
         if (isset ($_SESSION['shopping_cart']) && !empty ($_SESSION['shopping_cart'])) {
             $structuredTickets = $this->structureTicketsWithImages();
         }
-        require_once __DIR__ . "/../views/my-program/payment.php";
+
+        $userInfo = $this->getUserInfoFromCart();
+        if (!$this->userService->email_exists($userInfo['email'])) {
+            echo json_encode(['status' => 'error', 'message' => 'User needs to register.']);
+            exit;
+        }
+        else{
+            require_once __DIR__ . "/../views/my-program/payment.php";
+        }
+
+      
     }
 
     function showSuccess()
@@ -119,15 +132,6 @@ class Myprogramcontroller
             'phoneNumber' => $input['phoneNumber'] ?? '',
             'email' => $input['email'] ?? ''
         ];
-
-        //updates the user object in the session
-        $_SESSION['user']['firstName'] = $userInfo['firstName'];
-        $_SESSION['user']['lastName'] = $userInfo['lastName'];
-        $_SESSION['user']['address'] = $userInfo['address'];
-        $_SESSION['user']['phoneNumber'] = $userInfo['phoneNumber'];
-        $_SESSION['user']['email'] = $userInfo['email'];
-
-        $this->updateUserInfo();
 
         $ticketInfo = [
             'ticketId' => $input['ticketId'] ?? '',
@@ -204,26 +208,6 @@ class Myprogramcontroller
 
 
         exit;
-    }
-
-    //updates user info in database
-    function updateUserInfo()
-    {
-        $userInfo = [
-            'firstName' => $_SESSION['user']['firstName'] ?? '',
-            'lastName' => $_SESSION['user']['lastName'] ?? '',
-            'address' => $_SESSION['user']['address'] ?? '',
-            'phoneNumber' => $_SESSION['user']['phoneNumber'] ?? '',
-            'email' => $_SESSION['user']['email'] ?? ''
-        ];
-
-
-        $userEmail = $userInfo['email'];
-        $userExists = $this->userService->email_exists($userEmail);
-
-        if ($userExists) {
-            $this->userService->updateUser($userInfo);
-        }
     }
 
 
