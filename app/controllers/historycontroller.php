@@ -8,15 +8,11 @@ use Exception;
 use model\Event;
 use controllers\Navigationcontroller;
 use controllers\Pagecontroller;
-use model\History;
-use model\Page;
 
 require_once __DIR__ . '/../model/event.php';
 require_once __DIR__ . '/../services/historyservice.php';
 require_once __DIR__ . '/../controllers/navigationcontroller.php';
 require_once __DIR__ . '/../controllers/pagecontroller.php';
-require_once __DIR__ . '/../model/history.php';
-require_once __DIR__ . '/../model/page.php';
 
 class Historycontroller
 {
@@ -24,27 +20,23 @@ class Historycontroller
     private $navigationController;
     private $pagecontroller;
     private $event;
-    private $history;
-    private $pageModel;
     public function __construct()
     {
         $this->historyService = new HistoryService();
         $this->navigationController = new Navigationcontroller();
         $this->pagecontroller = new Pagecontroller();
         $this->event = new Event();
-        $this->history = new History();
-        $this->pageModel = new Page();
     }
 
     public function show()
     {
         $eventDetails = $this->historyService->getEventDetails(8);
-        $structuredTickets = $this->history->getStructuredTickets($eventDetails->getEventId());
-        $uniqueTimes = $this->history->getUniqueTimes($structuredTickets);
+        $structuredTickets = $this->getStructuredTickets($eventDetails->getEventId());
+        $uniqueTimes = $this->getUniqueTimes($structuredTickets);
         $navigationController = $this->navigationController->displayHeader();
 
-        $contentData = $this->pageModel->getContentAndImagesByPage();
-        $carouselItems = $this->pageModel->getCarouselImagesForHistory(14);
+        $contentData = $this->pagecontroller->getContentAndImagesByPage();
+        $carouselItems = $this->pagecontroller->getCarouselImagesForHistory(14);
         require_once __DIR__ . '/../views/history/overview.php';
     }
 
@@ -182,5 +174,56 @@ class Historycontroller
         return hash('sha256', $toHash);
     }
 
-   
+    private function getStructuredTickets($eventId)
+    {
+        $tickets = $this->historyService->getTickets($eventId);
+        $eventDetails = $this->historyService->getEventDetails($eventId);
+        $location = $eventDetails->getLocation();
+        $ticketPrice = $this->historyService->getTicketPrice($eventId);
+
+        $price = $ticketPrice ? $ticketPrice->getPrice() : null;
+
+        $structuredTickets = [];
+
+        foreach ($tickets as $ticket) {
+            $ticketId = $ticket->getTicketId();
+            $eventId = $ticket->getEventId();
+            $language = $ticket->getTicketLanguage();
+            $date = $ticket->getTicketDate();
+            $time = $ticket->getTicketTime();
+            $endTime = $ticket->getTicketEndTime();
+            $quantity = $ticket->getQuantity();
+
+
+            $structuredTickets[$language][$date][$time] = [
+                'ticket_id' => $ticketId,
+                'event_id' => $eventId,
+                'language' => $language,
+                'date' => $date,
+                'time' => $time,
+                'endtime' => $endTime,
+                'quantity' => $quantity,
+                'price' => $price,
+                'location' => $location
+            ];
+        }
+
+        return $structuredTickets;
+    }
+
+    private function getUniqueTimes($structuredTickets)
+    {
+        $allTimes = [];
+
+        foreach ($structuredTickets as $dates) {
+            foreach ($dates as $times) {
+                $allTimes = array_merge($allTimes, array_keys($times));
+            }
+        }
+
+        $uniqueTimes = array_unique($allTimes);
+        sort($uniqueTimes);
+
+        return $uniqueTimes;
+    }
 }

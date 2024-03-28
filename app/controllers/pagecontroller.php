@@ -7,28 +7,23 @@ use services\pageservice;
 use PDOException;
 use Exception;
 use services\ContentService;
-use model\Page;
 
 
 require_once __DIR__ . "/../services/pageservice.php";
 require_once __DIR__ . "/../services/contentservice.php";
 require_once __DIR__ . '/../config/constant-paths.php';
-require_once __DIR__ . '/../model/page.php';
 
 
 class Pagecontroller
 {
     private $pageService;
     private $contentService;
-    private $pageModel;
 
 
     public function __construct()
     {
         $this->pageService = new Pageservice();
         $this->contentService = new ContentService();
-        $this->pageModel = new Page();
-
     }
 
     public function editContent()
@@ -46,10 +41,11 @@ class Pagecontroller
       
         $sectionData = $this->pageService->getSectionContentImagesCarousel($sectionID)[0] ?? null;
         $sectionType = $this->pageService->getType($sectionID);
+    
         $editorContent = null;
         $imageFilePath = null;
         $pageIDFromSection = $sectionData['page_id'] ?? '';
-        $carouselItems = $this->pageModel->getCarouselImagesForHistory($sectionID);
+        $carouselItems = $this->getCarouselImagesForHistory($sectionID);
         if ($sectionData) {
             $editorContent = $sectionData['editor_content'] ?? null;
             $imageFilePath = $sectionData['image_file_path'] ?? null;
@@ -199,7 +195,61 @@ class Pagecontroller
         $pageDetails = $this->pageService->getPageDetails($page);
         return $pageDetails;
     }
+
+    public function getContentAndImagesByPage() {
+        $pageId = htmlspecialchars($_GET['pageid']);
+        $sections = $this->pageService->getSectionContentImages($pageId);
+        $contentData = [];
+        foreach ($sections as $section) {
+            $sectionData = [
+                'title' => $section['title'],
+                'content' => $section['editor_content'] ?? null,
+                'image' => $section['image_file_path'] ?? null,
+                'type' => $section['type'] ?? null,
+            ];
+            $contentData[] = $sectionData;
+        }
+        return $contentData;
+    }
+
+
+    public function getContentAndImagesForResutrant($restaurnatId) {
+        $pageIdArray = $this->pageService->getPageIdByRestaurantId($restaurnatId);
+        $pageId = $pageIdArray["page_id"] ?? null;
+        $sections = $this->pageService->getSectionContentImages($pageId);
+        $contentData = [];
+        foreach ($sections as $section) {
+            $sectionData = [
+                'title' => $section['title'],
+                'content' => $section['editor_content'] ?? null,
+                'image' => $section['image_file_path'] ?? null,
+                'type' => $section['type'] ?? null,
+            ];
+            $contentData[] = $sectionData;
+        }
+        return $contentData;
+    }
     
+    public function getCarouselImagesForHistory($sectionID)
+    {
+        $carouselItems = $this->contentService->getCarouselItemsBySectionId($sectionID);
+        $all = [];
+
+        foreach ($carouselItems as $item) {
+            $imageData = $this->contentService->getImageById($item->getImageId());
+            if ($imageData) {
+                $all['carouselItems'][] = [
+                    'image' => $imageData->getFilePath(),
+                    'label' => $item->getLabel(),
+                    'carousel_id' => $item->getCarouselId(),
+                ];
+            }
+        }
+
+        return $all;
+    }
+    
+
     public function addNewPage()
     {
         $newPageName = htmlspecialchars($_POST['pageTitle']);

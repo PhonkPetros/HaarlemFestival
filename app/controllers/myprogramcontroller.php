@@ -7,7 +7,6 @@ use services\registerservice;
 use services\ticketservice;
 use controllers\NavigationController;
 use controllers\MollieAPIController;
-use model\Ticket;
 
 //call the user service to check update user data 
 
@@ -17,7 +16,6 @@ require_once __DIR__ . '/../services/registerservice.php';
 require_once __DIR__ . '/../config/constant-paths.php';
 require_once __DIR__ . '/../controllers/navigationcontroller.php';
 require_once __DIR__ . '/../services/ticketservice.php';
-require_once __DIR__ . '/../model/ticket.php';
 
 
 class Myprogramcontroller
@@ -28,7 +26,6 @@ class Myprogramcontroller
     private $myProgramService;
     private $userService;
     private $navcontroller;
-    private $ticket;
 
 
     public function __construct()
@@ -39,7 +36,6 @@ class Myprogramcontroller
         $this->userService = new registerservice();
         $this->navcontroller = new NavigationController();
         $this->mollieAPIController = new MollieAPIController();
-        $this->ticket = new Ticket();
 
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
@@ -54,14 +50,14 @@ class Myprogramcontroller
         $uniqueTimes = [];
 
         if (isset ($_SESSION['shopping_cart']) && !empty ($_SESSION['shopping_cart'])) {
-            $structuredTickets = $this->ticket->structureTicketsWithImages();
+            $structuredTickets = $this->structureTicketsWithImages();
 
         }
 
         if(!isset($_SESSION['user'])){
             $user = null; 
         }
-        $structuredOrderedItems = $this->ticket->getStructuredPurchasedOrderItemsByUserID();
+        $structuredOrderedItems = $this->getStructuredPurchasedOrderItemsByUserID();
 
         require_once __DIR__ . "/../views/my-program/overview.php";
 
@@ -76,7 +72,7 @@ class Myprogramcontroller
         $userInfo = $this->getUserInfoFromCart();
 
         if (isset ($_SESSION['shopping_cart']) && !empty ($_SESSION['shopping_cart'])) {
-            $structuredTickets = $this->ticket->structureTicketsWithImages();
+            $structuredTickets = $this->structureTicketsWithImages();
         }
 
         $userInfo = $this->getUserInfoFromCart();
@@ -310,7 +306,28 @@ class Myprogramcontroller
         ]);
     }
 
-  
+    //structuring ticket data for ticket list view
+    private function structureTicketsWithImages()
+    {
+        $structuredTickets = [];
+        foreach ($_SESSION['shopping_cart'] as $ticket) {
+            $eventId = $ticket['eventId'];
+            if (!array_key_exists($eventId, $structuredTickets)) {
+                $eventDetails = $this->ticketservice->getEventDetails($eventId);
+                $structuredTickets[$eventId] = [
+                    'tickets' => [],
+                    'image' => $eventDetails['picture'] ?? null,
+                    'event_name' => $eventDetails['name'] ?? null,
+                    'totalPrice' => 0
+                ];
+            }
+            $ticketTotalPrice = $ticket['quantity'] * $ticket['ticketPrice'];
+            $structuredTickets[$eventId]['totalPrice'] += $ticketTotalPrice;
+            $ticket['totalPrice'] = $ticketTotalPrice;
+            $structuredTickets[$eventId]['tickets'][] = $ticket;
+        }
+        return $structuredTickets;
+    }
 
     //structuring ticket data for shared cart view
     // private function structureSharedCart($cartData)
@@ -436,7 +453,7 @@ class Myprogramcontroller
 
         if ($paymentStatus !== 'paid') {
             // Redirect to a failure page or handle the failure scenario
-            header('Location: ' . BASE_URL . '/my-program/payment-failure');
+            header('Location: http://localhost/my-program/payment-failure');
             exit;
         }
 
@@ -447,7 +464,7 @@ class Myprogramcontroller
         if ($orderProcessingResult['status'] === 'success') {
             // Empty the shopping cart session data after successful order processing
             $_SESSION['shopping_cart'] = [];
-            header('Location:' . BASE_URL . '/my-program/order-confirmation');
+            header('Location: http://localhost/my-program/order-confirmation');
             exit;
         } else {
             echo json_encode(['status' => 'error', 'message' => 'Processing Order Failed.']);
@@ -471,7 +488,69 @@ class Myprogramcontroller
     }
 
 
-   
+    //getting all the purchased tickets by userID and structuring them 
+    function getStructuredPurchasedOrderItemsByUserID()
+    {
+        $structuredOrderItems = [];
+        if (isset ($_SESSION['user']) && isset ($_SESSION['user']['userID'])) {
+            $userID = $_SESSION['user']['userID'];
+            $purchasedOrderItems = $this->myProgramService->getOrderItemsByUser($userID);
+
+            foreach ($purchasedOrderItems as $orderitem) {
+                $event_details = $this->ticketservice->getEventDetails($orderitem->getEventId());
+                $structuredItem = [
+                    'order_item_id' => $orderitem->getOrderItemId(),
+                    'order_id' => $orderitem->getOrderId(),
+                    'user_id' => $orderitem->getUserId(),
+                    'quantity' => $orderitem->getQuantity(),
+                    'date' => $orderitem->getDate(),
+                    'start_time' => $orderitem->getStartTime(),
+                    'end_time' => $orderitem->getEndTime(),
+                    'item_hash' => $orderitem->getItemHash(),
+                    'event_id' => $orderitem->getEventId(),
+                    'location' => $orderitem->getLocation(),
+                    'event_details' => [
+                        'image' => $event_details['picture'] ?? null,
+                        'event_name' => $event_details['name'] ?? null,
+                    ],
+
+                ];
+
+                // Customize the structured item based on the event ID
+                switch ($orderitem->getEventId()) {
+                    case EVENT_ID_HISTORY: // History
+                        $structuredItem['language'] = $orderitem->getLanguage();
+                        break;
+                    case EVENT_ID_RESTAURANT: // Yummy
+                        $structuredItem['restaurant_name'] = $orderitem->getRestaurantName();
+                        $structuredItem['special_remarks'] = $orderitem->getSpecialRemarks();
+                        break;
+                    case EVENT_ID_DANCE:
+                    case EVENT_ID_JAZZ: // Events Dance and Jaz
+                        $structuredItem['ticket_type'] = $orderitem->getTicketType();
+                        $structuredItem['artist_name'] = $orderitem->getArtistName();
+                        break;
+                }
+
+                $structuredOrderItems[] = $structuredItem;
+            }
+            // Filter the structured order items to include only those within the specified date range
+            $filteredOrderedItems = array_filter($structuredOrderItems, function ($item) {
+                // Convert the item's date to a timestamp for easy comparison
+                $itemDateTimestamp = strtotime($item['date']);
+                // Define the start and end of the desired date range
+                $startDateTimestamp = strtotime("2024-06-26");
+                $endDateTimestamp = strtotime("2024-06-30");
+                // Include the item if its date is within the range
+                return $itemDateTimestamp >= $startDateTimestamp && $itemDateTimestamp <= $endDateTimestamp;
+            });
+
+            // Return only the items that passed the filtering
+            return $filteredOrderedItems;
+        } else {
+            return [];
+        }
+    }
 
 
 

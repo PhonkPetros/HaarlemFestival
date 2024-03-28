@@ -5,7 +5,6 @@ namespace controllers;
 require_once __DIR__ . '/../vendor/autoload.php';
 use Mollie\Api\MollieApiClient;
 use Mollie\Api\Exceptions\ApiException;
-require_once __DIR__ . '/../config/constant-paths.php';
 
 class MollieAPIController
 {
@@ -14,7 +13,7 @@ class MollieAPIController
     public function __construct()
     {
         $this->mollieClient = new MollieApiClient();
-        $this->mollieClient->setApiKey(MOLLIE_KEY);
+        $this->mollieClient->setApiKey("test_2h39fKdqarwsuAwkFwhGsDFh5eppSH");
     }
 
     public function createPayment($userId, $cart, $paymentMethod, $issuer = null)
@@ -32,7 +31,7 @@ class MollieAPIController
                     "value" => (string) $totalPriceStr,
                 ],
                 "description" => "Payment for tickets",
-                "redirectUrl" => BASE_URL . "/my-program/payment-success",
+                "redirectUrl" => "http://localhost/my-program/payment-success",
                 "metadata" => [
                     "order_id" => uniqid(),
                     "user_id" => $userId,

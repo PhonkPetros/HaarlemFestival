@@ -9,7 +9,6 @@ require_once __DIR__ . '/../controllers/pagecontroller.php';
 use controllers\Navigationcontroller;
 use repositories\resturantrepository;
 use controllers\Pagecontroller;
-use model\Page;
 
 
 class yummycontroller
@@ -19,13 +18,10 @@ class yummycontroller
         $this->navigationController = new Navigationcontroller();
         $this->restaurantService = new resturantrepository();
         $this->pagecontroller = new Pagecontroller();
-        $this->pageModel = new Page();
-       
     }
     private $pagecontroller;
     private $navigationController;
     private $restaurantService;
-    private $pageModel;
 
     public function showYummyOverview()
     {
@@ -44,7 +40,7 @@ class yummycontroller
     $restaurantDetails = $restaurantData['restaurantDetails'];
     $timeslots = $restaurantData['timeslots'];
     
-    $contentData = $this->pageModel->getContentAndImagesForResutrant($restaurantId);
+    $contentData = $this->pagecontroller->getContentAndImagesForResutrant($restaurantId);
     
     require_once __DIR__ . '/../views/yummy/resturant.php';
     }
