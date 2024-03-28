@@ -5,6 +5,7 @@ namespace controllers;
 require_once __DIR__ . '/../vendor/autoload.php';
 use Mollie\Api\MollieApiClient;
 use Mollie\Api\Exceptions\ApiException;
+require_once __DIR__ . '/../config/constant-paths.php';
 
 class MollieAPIController
 {
@@ -13,7 +14,7 @@ class MollieAPIController
     public function __construct()
     {
         $this->mollieClient = new MollieApiClient();
-        $this->mollieClient->setApiKey("test_2h39fKdqarwsuAwkFwhGsDFh5eppSH");
+        $this->mollieClient->setApiKey(MOLLIE_KEY);
     }
 
     public function createPayment($userId, $cart, $paymentMethod, $issuer = null)
