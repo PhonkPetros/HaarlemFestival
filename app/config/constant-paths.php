@@ -14,3 +14,4 @@ define('EVENT_ID_HISTORY', '8');
 
 define('MOLLIE_KEY', 'test_2h39fKdqarwsuAwkFwhGsDFh5eppSH');
 
+define('CAPTCHA_KEY', '6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe');

@@ -453,7 +453,7 @@ class Myprogramcontroller
 
         if ($paymentStatus !== 'paid') {
             // Redirect to a failure page or handle the failure scenario
-            header('Location: http://localhost/my-program/payment-failure');
+            header('Location: /my-program/payment-failure');
             exit;
         }
 
@@ -464,7 +464,7 @@ class Myprogramcontroller
         if ($orderProcessingResult['status'] === 'success') {
             // Empty the shopping cart session data after successful order processing
             $_SESSION['shopping_cart'] = [];
-            header('Location: http://localhost/my-program/order-confirmation');
+            header('Location: /my-program/order-confirmation');
             exit;
         } else {
             echo json_encode(['status' => 'error', 'message' => 'Processing Order Failed.']);
