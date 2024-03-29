@@ -243,16 +243,18 @@ class resturantrepository extends dbconfig {
                         $restaurantDetails->setStartDate($result['startDate'] ?? '');
                         $restaurantDetails->setEndDate($result['endDate'] ?? '');
                         $restaurantDetails->setPicture($result['picture'] ?? '');
+                        $restaurantDetails->setEventId($result['event_id'] ?? '');
                     }
             
                     $ticketStmt = $this->connection->prepare("SELECT * FROM Ticket WHERE event_id = :eventId");
-                    $ticketStmt->bindValue(':eventId', $result['event_id'] ?? 0, PDO::PARAM_INT);
+                    $ticketStmt->bindValue(':eventId', $restaurantDetails->getEventId(), PDO::PARAM_INT);
                     $ticketStmt->execute();
                     $ticketResults = $ticketStmt->fetchAll(PDO::FETCH_ASSOC);
             
                     foreach ($ticketResults as $ticketResult) {
                         $ticket = new \model\Ticket();
                         $ticket->setEventId($ticketResult['event_id'] ?? '');
+                        $ticket->setTicketId($ticketResult['ticket_id'] ?? '');
                         $ticket->setTicketHash($ticketResult['ticket_hash'] ?? '');
                         $ticket->setTicketDate($ticketResult['Date'] ?? '');
                         $ticket->setTicketTime($ticketResult['Time'] ?? '');

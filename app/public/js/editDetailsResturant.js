@@ -212,7 +212,7 @@ function addRestaurant(event) {
 
     const formData = new FormData(form);
 
-    fetch('/editResturantDetails/addRestaurant', {
+    fetch('/editRestaurantDetails/addRestaurant', {
         method: 'POST',
         body: formData,
     })

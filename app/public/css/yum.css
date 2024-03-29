@@ -4,6 +4,11 @@
     margin-bottom: 15px; /* Optional: Adds some space below the container */
     border-radius: 5px; /* Optional: Adds rounded corners to the container */
   }
+
+
+  .text-background{
+    background-color: white;
+  }
   
   body {
     background: url('/img/25192f4eda302e18aece7516878ae9e5.jpg') no-repeat center center fixed; 
@@ -149,10 +154,6 @@
   }
 
 
-/* Alternatively, using Bootstrap's built-in class directly, ensure your image has the 'img-fluid' class */
-
-
-  
   @media (max-width: 768px) {
     .info-container {
       flex-direction: column; /* Stack items vertically on small screens */
@@ -223,6 +224,8 @@
     margin-top: 20px; /* Space above contact info */
   }
   
+
+
   @media (max-width: 768px) {
     .restaurant-info {
       flex-direction: column; /* Stack image and content vertically on smaller screens */
@@ -233,6 +236,10 @@
       margin-bottom: 20px; /* Space below image */
     }
   }
+
+  
+  
+
   
   
 

@@ -1,4 +1,7 @@
 <?php
+
+
+
 session_start();
 
 use controllers\logincontroller;
@@ -15,12 +18,9 @@ use controllers\overview;
 use controllers\Templatecontroller;
 use controllers\yummycontroller;
 use controllers\Pagecontroller;
-use controllers\resetpasswordcontroller;
 use controllers\Myprogramcontroller;
 
 require_once __DIR__ . '/../controllers/overview.php';
-require_once __DIR__ . '/../controllers/myprogramcontroller.php';
-require_once __DIR__ . '/../config/constant-paths.php';
 require_once __DIR__ . '/../controllers/registercontroller.php';
 require_once __DIR__ . '/../controllers/logincontroller.php';
 require_once __DIR__ . '/../controllers/logoutcontroller.php';
@@ -34,8 +34,7 @@ require_once __DIR__ . '/../controllers/navigationcontroller.php';
 require_once __DIR__ . '/../controllers/pagecontroller.php';
 require_once __DIR__ . '/../controllers/templatecontroller.php';
 require_once __DIR__ . '/../controllers/yummycontroller.php';
-require_once __DIR__ . '/../controllers/resetpasswordcontroller.php';
-
+require_once __DIR__ . '/../controllers/myprogramcontroller.php';
 
 $request = $_SERVER['REQUEST_URI'];
 $method = $_SERVER['REQUEST_METHOD'];
@@ -43,16 +42,12 @@ $method = $_SERVER['REQUEST_METHOD'];
 //Please do not touch this
 $editPageID = null;
 $sectionEdit = null;
-$token = null;
-$dancePageID = null;
-
 $queryString = parse_url($request, PHP_URL_QUERY);
 $queryParams = [];
 if ($queryString !== null) {
     parse_str($queryString, $queryParams);
 }
 $pageID = htmlspecialchars($queryParams["pageid"] ?? '');
-
 $eventID = null;
 if (strpos($request, '/manage-event-details/') === 0) {
     $eventID = htmlspecialchars($queryParams["id"] ?? '');
@@ -63,76 +58,79 @@ if (strpos($request, '/edit-content/') === 0) {
 if (strpos($request, '/sectionEdit/') === 0) {
     $sectionEdit = htmlspecialchars($queryParams['section_id'] ?? '');
 }
-if (strpos($request, '/new-password/') === 0) {
-    $token = htmlspecialchars($queryParams["token"] ?? '');
-}
-if (strpos($request, '/dance/') === 0) {
-    $dancePageID = htmlspecialchars($queryParams["artist"] ?? '');
-}
+
+
+
+
 
 //Please do not touch this
 if ($request === '/') {
     $pageID = '1';
 }
 
-if ($pageID || $eventID || $editPageID || $sectionEdit || $token || $dancePageID) {
+if ($pageID || $eventID || $editPageID || $sectionEdit) {
     //this has to do with the editing of event details
     if ($eventID) {
         switch ($eventID) {
-            case EVENT_ID_DANCE:
+            case "5":
                 $controller = new Dancecontroller();
                 if ($method === 'GET') {
                     $controller->editEventDetails();
                 }
                 break;
-            case EVENT_ID_JAZZ:
+            case '6':
                 $controller = new Jazzcontroller();
                 if ($method === 'GET') {
-                    $controller->showEventDetails();
+                    $controller->editEventDetails();
                 }
                 break;
-            case $eventID > EVENT_ID_HISTORY:
-                $controller = new Restaurantcontroller();
-                if ($method === 'GET') {
-                    $controller->editEventDetails($eventID);
-                }
-                break;
-            case EVENT_ID_HISTORY:
+            case '8':
                 $controller = new Historycontroller();
                 if ($method === 'GET') {
                     $controller->showeditEventDetails();
                 }
                 break;
-            default:
+            case $eventID > 8:
+                $controller = new Restaurantcontroller();
+                if ($method === 'GET') {
+                    $controller->editEventDetails($eventID);
+                }
                 break;
+            default:
+                $controller = new TemplateController();
+                if ($method === 'GET') {
+                    $controller->show();
+                }
+            break;
+
         }
         exit;
     } elseif ($pageID) {
         //this has to with our own pages
         switch ($pageID) {
-            case PAGE_ID_HOME:
+            case "1":
                 $controller = new overview();
                 $controller->show();
                 break;
-            case PAGE_ID_HISTORY:
+            case '2':
                 $controller = new Historycontroller();
                 if ($method === 'GET') {
                     $controller->show();
                 }
                 break;
-            case PAGE_ID_DANCE:
+            case '3':
                 $controller = new Dancecontroller();
                 if ($method === 'GET') {
                     $controller->show();
                 }
                 break;
-            case PAGE_ID_JAZZ:
+            case '4':
                 $controller = new Jazzcontroller();
                 if ($method === 'GET') {
                     $controller->show();
                 }
                 break;
-            case PAGE_ID_YUMMY:
+            case '5':
                 $controller = new yummycontroller();
                 if ($method === 'GET') {
                     $controller->showYummyOverview();
@@ -182,16 +180,6 @@ if ($pageID || $eventID || $editPageID || $sectionEdit || $token || $dancePageID
                 break;
         }
         exit;
-    } elseif ($dancePageID) {
-        switch ($dancePageID) {
-            default;
-                $controller = new Dancecontroller();
-                if ($method === 'GET') {
-                    $controller->showArtist($dancePageID);
-                }
-                break;
-        }
-        exit;
     }
 }
 
@@ -225,10 +213,11 @@ switch ($request) {
             $controller->loginAction();
         }
         break;
+
     case '/reset-password':
         $controller = new resetpasswordcontroller();
         if ($method === 'GET') {
-            $controller->showResetPasswordForm();
+            $controller->show();
         } elseif ($method === 'POST') {
             $controller->resetpasswordAction();
         }
@@ -271,34 +260,6 @@ switch ($request) {
         $controller = new Dancecontroller();
         $controller->updateEvent();
         break;
-    case '/dance/addNewArtist':
-        $controller = new Dancecontroller();
-        $controller->addNewArtist();
-        break;
-    case '/dance/updateArtist':
-        $controller = new Dancecontroller();
-        $controller->updateArtist();
-        break;
-    case '/dance/deleteArtist':
-        $controller = new Dancecontroller();
-        $controller->deleteArtist();
-        break;
-    case '/dance/deleteEvent':
-        $controller = new Dancecontroller();
-        $controller->deleteEvent();
-        break;
-    case '/dance/addNewVenue':
-        $controller = new Dancecontroller();
-        $controller->addVenue();
-        break;
-    case '/dance/updateVenue':
-        $controller = new Dancecontroller();
-        $controller->updateVenue();
-        break;
-    case '/dance/deleteVenue':
-        $controller = new Dancecontroller();
-        $controller->deleteVenue();
-        break;
     case '/admin/dashboard':
         $controller = new admincontroller();
         if ($method === 'GET') {
@@ -313,7 +274,7 @@ switch ($request) {
         break;
     case '/admin/delete-user':
         $controller = new admincontroller();
-        if ($method === 'POST' && isset ($_POST['user_id'])) {
+        if ($method === 'POST' && isset($_POST['user_id'])) {
             $controller->deleteUsers();
         }
         break;
@@ -423,16 +384,22 @@ switch ($request) {
             $controller->addTimeSlot();
         }
         break;
-    case '/admin/add-section':
-        $controller = new Pagecontroller();
+    case "/editRestaurantDetails/addRestaurant":
+        $controller = new Restaurantcontroller();
         if ($method === 'POST') {
-            $controller->addNewSection();
+            $controller->addRestaurant();
         }
         break;
-    case '/submit-reservation':
-        $controller = new Myprogramcontroller();
+    case "/restaurant/delete":
+        $controller = new Restaurantcontroller();
         if ($method === 'POST') {
-            $controller->createReservation();
+            $controller->deleteRestaurant();
+        }
+        break;
+    case "/restaurant/deletetimeslot":
+        $controller = new Restaurantcontroller();
+        if ($method === 'POST') {
+            $controller->deleteTimeSlot();
         }
         break;
     case '/my-program':
@@ -492,8 +459,14 @@ switch ($request) {
 
     case '/my-program/payment-failure':
         $controller = new Myprogramcontroller();
-        if ($method == 'GET') {
+        if($method == 'GET'){
             $controller->showFailure();
+        }    
+        break;
+    case '/reservation/restaurant':
+        $controller = new Restaurantcontroller();
+        if ($method === 'POST') {
+            $controller->makeAnReservation();
         }
         break;
     default:
