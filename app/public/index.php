@@ -501,7 +501,7 @@ switch ($request) {
     
     case '/admin/order-overview/export':
         $controller = new orderoverviewcontroller();
-        if ($method == 'GET') {
+        if ($method == 'POST') {
             $controller->exportExcel();
         }
         break;
