@@ -8,7 +8,7 @@
     <? require_once __DIR__ . '/list-view.php'; ?>
     <? require_once __DIR__ . '/purchased-ticket.php'; ?>
     <? require_once __DIR__ . '/agenda-view.php'; ?>
-
+    <?php var_dump($_SESSION['shopping_cart']); ?>
 </div>
 
 

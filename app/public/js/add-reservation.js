@@ -5,35 +5,67 @@ document.addEventListener('DOMContentLoaded', function () {
         var endTime = button.getAttribute('data-endtime');
         var language = button.getAttribute('data-language');
         var location = button.getAttribute('data-location');
+        var restaurantName = button.getAttribute('data-restaurant-name');
+        var specialRemarks = button.getAttribute('data-special-remarks');
 
-        document.getElementById('ticketInfoDate').textContent = date;
-        document.getElementById('ticketInfoTime').textContent = time;
-        document.getElementById('ticketInfoEndTime').textContent = endTime;
-        document.getElementById('ticketInfoLanguage').textContent = language;
+       
+        console.log(`Reservation Data: date=${date}, time=${time}, endTime=${endTime}, language=${language}, location=${location}, restaurantName=${restaurantName}`);
 
-        document.getElementById('ticketId').value = button.getAttribute('data-ticket-id');
-        document.getElementById('eventId').value = button.getAttribute('data-event-id');
-        document.getElementById('ticketPrice').value = button.getAttribute('data-price');
+        if (document.getElementById('ticketInfoDate')) document.getElementById('ticketInfoDate').textContent = date || '';
+        if (document.getElementById('ticketInfoTime')) document.getElementById('ticketInfoTime').textContent = time || '';
+        if (document.getElementById('ticketInfoEndTime')) document.getElementById('ticketInfoEndTime').textContent = endTime || '';
+        if (document.getElementById('ticketInfoLanguage')) document.getElementById('ticketInfoLanguage').textContent = language || '';
+        if (document.getElementById('ticketInfoRestaurant')) document.getElementById('ticketInfoRestaurant').textContent = restaurantName || '';
+        if (document.getElementById('specialRequest')) document.getElementById('specialRequest').value = specialRemarks || '';
 
-        document.getElementById('ticketDate').value = date;
-        document.getElementById('ticketTime').value = time;
-        document.getElementById('ticketEndTime').value = endTime;
-        document.getElementById('ticketLanguage').value = language;
-        document.getElementById('ticketLocation').value = location;
+        
+        ['ticketId', 'eventId', 'ticketPrice', 'ticketDate', 'ticketTime', 'ticketEndTime', 'ticketLocation', 'ticketRestaurantName', 'specialRequest'].forEach(id => {
+            if (document.getElementById(id)) {
+                switch (id) {
+                    case 'ticketId':
+                        document.getElementById(id).value = button.getAttribute('data-ticket-id');
+                        break;
+                    case 'eventId':
+                        document.getElementById(id).value = button.getAttribute('data-event-id');
+                        break;
+                    case 'ticketPrice':
+                        document.getElementById(id).value = button.getAttribute('data-price');
+                        break;
+                    case 'ticketDate':
+                        document.getElementById(id).value = date;
+                        break;
+                    case 'ticketTime':
+                        document.getElementById(id).value = time;
+                        break;
+                    case 'ticketEndTime':
+                        document.getElementById(id).value = endTime;
+                        break;
+                    case 'ticketLocation':
+                        document.getElementById(id).value = location;
+                        break;
+                    case 'ticketRestaurantName':
+                        document.getElementById(id).value = restaurantName || " ";
+                        break;
+                    case 'specialRemarks':
+                        document.getElementById(id).value = specialRemarks || " ";
+                        break;
+                    
+                }
+            }
+        });
 
-        document.getElementById('firstName').value = userSession.firstName || '';
-        document.getElementById('lastName').value = userSession.lastName || '';
-        document.getElementById('address').value = userSession.address || '';
-        document.getElementById('phoneNumber').value = userSession.phoneNumber || '';
-        document.getElementById('email').value = userSession.email || '';
+        if (document.getElementById('ticketLanguage')) document.getElementById('ticketLanguage').value = language || " ";
+        
+        ['firstName', 'lastName', 'address', 'phoneNumber', 'email'].forEach(id => {
+            if (document.getElementById(id)) document.getElementById(id).value = userSession[id] || '';
+        });
 
         document.getElementById('submitReservationButton').addEventListener('click', submitReservation);
 
         updateTotalPrice();
         document.getElementById('reservationModal').style.display = 'block';
     }
-
-
+    
     function closeModal() {
         document.getElementById('reservationModal').style.display = 'none';
     }
@@ -62,23 +94,77 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     function submitReservation() {
-        var formData = {
-            firstName: document.getElementById('firstName').value,
-            lastName: document.getElementById('lastName').value,
-            address: document.getElementById('address').value,
-            phoneNumber: document.getElementById('phoneNumber').value,
-            email: document.getElementById('email').value,
-            quantity: document.getElementById('quantity').value,
-            ticketId: document.getElementById('ticketId').value,
-            eventId: document.getElementById('eventId').value,
-            ticketPrice: document.getElementById('ticketPrice').value,
-            ticketDate: document.getElementById('ticketDate').value,
-            ticketTime: document.getElementById('ticketTime').value,
-            ticketEndTime: document.getElementById('ticketEndTime').value,
-            ticketLanguage: document.getElementById('ticketLanguage').value,
-            ticketLocation: document.getElementById('ticketLocation').value,
-        };
-
+        var formData = {};
+    
+        if (document.getElementById('firstName')) {
+            formData.firstName = document.getElementById('firstName').value;
+        }
+    
+        if (document.getElementById('lastName')) {
+            formData.lastName = document.getElementById('lastName').value;
+        }
+    
+        if (document.getElementById('address')) {
+            formData.address = document.getElementById('address').value;
+        }
+    
+        if (document.getElementById('phoneNumber')) {
+            formData.phoneNumber = document.getElementById('phoneNumber').value;
+        }
+    
+        if (document.getElementById('email')) {
+            formData.email = document.getElementById('email').value;
+        }
+    
+        if (document.getElementById('quantity')) {
+            formData.quantity = document.getElementById('quantity').value;
+        }
+    
+        if (document.getElementById('ticketId')) {
+            formData.ticketId = document.getElementById('ticketId').value;
+        }
+    
+        if (document.getElementById('eventId')) {
+            formData.eventId = document.getElementById('eventId').value;
+        }
+    
+        if (document.getElementById('ticketPrice')) {
+            formData.ticketPrice = document.getElementById('ticketPrice').value;
+        }
+    
+        if (document.getElementById('ticketDate')) {
+            formData.ticketDate = document.getElementById('ticketDate').value;
+        }
+    
+        if (document.getElementById('ticketTime')) {
+            formData.ticketTime = document.getElementById('ticketTime').value;
+        }
+    
+        if (document.getElementById('ticketEndTime')) {
+            formData.ticketEndTime = document.getElementById('ticketEndTime').value;
+        }
+    
+        if (document.getElementById('ticketLanguage')) {
+            formData.ticketLanguage = document.getElementById('ticketLanguage').value || " ";
+        }
+    
+        if (document.getElementById('ticketLocation')) {
+            formData.ticketLocation = document.getElementById('ticketLocation').value;
+        }
+    
+        if (document.getElementById('ticketRestaurantName')) {
+            formData.ticketRestaurantName = document.getElementById('ticketRestaurantName').value || " ";
+        }
+    
+        if (document.getElementById('specialRemarks')) {
+            formData.specialRemarks = document.getElementById('specialRemarks').value || " ";
+        }
+    
+        if (Object.keys(formData).length === 0) {
+            console.log("No data to submit.");
+            return;
+        }
+    
         fetch('/submit-reservation', {
             method: 'POST',
             headers: {
@@ -86,22 +172,23 @@ document.addEventListener('DOMContentLoaded', function () {
             },
             body: JSON.stringify(formData),
         })
-            .then(response => response.json().then(data => ({ status: response.status, body: data })))
-            .then(obj => {
-                if (obj.status === 200 && obj.body.status === 'success') {
-                    console.log('Success:', obj.body.message);
-                    showSuccessPopup(obj.body.message);
-                    closeModal();
-                } else {
-                    console.error('Server-side error:', obj.body.message);
-                    alert(obj.body.message);
-                }
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-                alert('An error occurred while submitting the reservation.');
-            });
+        .then(response => response.json().then(data => ({ status: response.status, body: data })))
+        .then(obj => {
+            if (obj.status === 200 && obj.body.status === 'success') {
+                console.log('Success:', obj.body.message);
+                showSuccessPopup(obj.body.message);
+                closeModal();
+            } else {
+                console.error('Server-side error:', obj.body.message);
+                alert(obj.body.message);
+            }
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+            alert('An error occurred while submitting the reservation.');
+        });
     }
+    
 
     function showSuccessPopup(message) {
         var popupContent = `

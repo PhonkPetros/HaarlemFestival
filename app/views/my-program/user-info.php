@@ -1,7 +1,7 @@
 <style>
-.input-shadow {
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
+    .input-shadow {
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
 </style>
 
 <div class="container mt-4 item-container">
@@ -11,24 +11,24 @@
                 <div class="col-md-6 mb-3">
                     <label for="firstname">First name</label>
                     <input type="text" class="form-control input-shadow" id="firstname" name="firstname"
-                        value="<?php echo htmlspecialchars($userDetails ? $userDetails->getFirstname() : ''); ?>"  disabled>
+                        value="<?php echo htmlspecialchars($userInfo['firstName'] ?? ''); ?>"  disabled>
                 </div>
                 <div class="col-md-6 mb-3">
                     <label for="lastname">Last name</label>
                     <input type="text" class="form-control input-shadow" id="lastname" name="lastname"
-                        value="<?php echo htmlspecialchars($userDetails ? $userDetails->getLastname() : ''); ?>"  disabled>
+                        value="<?php echo htmlspecialchars($userInfo['lastName'] ?? ''); ?>"  disabled>
                 </div>
             </div>
         </div>
         <div class="form-group mb-3" style="margin: 6px;">
             <label for="phonenumber">Phone number</label>
             <input type="text" class="form-control input-shadow" id="phonenumber" name="phonenumber"
-                value="<?php echo htmlspecialchars($userDetails ? $userDetails->getPhoneNumber() : ''); ?>"  disabled>
+                value="<?php echo htmlspecialchars($userInfo['phoneNumber'] ?? ''); ?>"  disabled>
         </div>
         <div class="form-group mb-3" style="margin: 6px;"> 
             <label for="emailaddress">Email-Address</label>
             <input type="email" class="form-control input-shadow" id="emailaddress" name="emailaddress"
-                value="<?php echo htmlspecialchars($userDetails ? $userDetails->getUserEmail() : ''); ?>" disabled>
+                value="<?php echo htmlspecialchars($userInfo['email'] ?? ''); ?>" disabled>
         </div>
     </form>
 </div>

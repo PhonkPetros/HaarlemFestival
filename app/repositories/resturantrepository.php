@@ -238,6 +238,7 @@ class resturantrepository extends dbconfig {
                         $restaurantDetails = new \model\Restaurant();
                         $restaurantDetails->setId($result['resturant_id'] ?? '');
                         $restaurantDetails->setLocation($result['location'] ?? '');
+                        $restaurantDetails->setName($result['name'] ?? '');
                         $restaurantDetails->setPrice($result['price'] ?? 0); // Assuming 0 is a sensible default for price
                         $restaurantDetails->setSeats(isset($result['seats']) ? (int)$result['seats'] : null);
                         $restaurantDetails->setStartDate($result['startDate'] ?? '');

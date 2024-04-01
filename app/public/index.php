@@ -272,7 +272,6 @@ switch ($request) {
             $controller->successfulNewPassword();
         }
         break;
-
     case '/register':
         $controller = new registercontroller();
         if ($method === 'GET') {
@@ -281,7 +280,6 @@ switch ($request) {
             $controller->registerAction();
         }
         break;
-
     case '/logout':
         $logoutController = new Logoutcontroller();
         $logoutController->logout();
@@ -627,12 +625,6 @@ switch ($request) {
             $controller->updateTotalCartPrice();
         }
         break;
-    case '/get-share-link':
-        $controller = new Myprogramcontroller();
-        if ($method === 'GET') {
-            $controller->generateShareableLink();
-        }
-        break;
     case '/my-program/payment':
         $controller = new Myprogramcontroller();
         if ($method == 'GET') {
@@ -669,12 +661,7 @@ switch ($request) {
             $controller->makeAnReservation();
         }
         break;
-    case '/payment/get-tickets-info':
-        $controller = new Myprogramcontroller();
-        if ($method === 'GET') {
-            $controller->fetchTicketDetails();
-        }
-        break;
+    
     case '/admin/order-overview':
         if ($_SESSION['role'] === 'admin') {
             $controller = new orderoverviewcontroller();
@@ -694,6 +681,12 @@ switch ($request) {
             }
         } else {
             http_response_code(404);
+        }
+        break;
+    case '/submit-reservation':
+        $controller = new Myprogramcontroller();
+        if ($method === 'POST') {
+            $controller->createReservation();
         }
         break;
     default:
