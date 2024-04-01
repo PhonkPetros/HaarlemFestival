@@ -32,7 +32,6 @@ class Myprogramrepository extends dbconfig
         try {
             $totalPrice = 0.0; // Initialize as float
             foreach ($cart as $item) {
-                // Ensure we convert to the correct data type before arithmetic operations
                 $totalPrice += (int) $item['quantity'] * (float) $item['ticketPrice'];
             }
 

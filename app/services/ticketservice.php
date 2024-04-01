@@ -28,4 +28,12 @@ class ticketservice {
     function getTicketQuantity($ticketID){
         return $this->ticketRepo->getTicketQuantity($ticketID);
     }
+
+    function getReservedTicketsByUserId($userID) {
+        return $this->ticketRepo->getReservedTicketsByUserId($userID);
+    }
+
+    function getUserDetails($userID){
+        return $this->ticketRepo->getUserDetails($userID);
+    }
 }

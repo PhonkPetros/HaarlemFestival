@@ -173,27 +173,33 @@ class Restaurantcontroller
             echo json_encode(['error' => 'User not logged in', 'login_required' => true]);
             return;
         }
-        
+    
         $data = json_decode(file_get_contents('php://input'), true);
-        
+    
         $errors = $this->validateReservationFields($data);
         if (!empty($errors)) {
             echo json_encode(['errors' => $errors]);
             return;
         }
     
+        $ticketId = $data['ticketId'];
+        $user_id = $_SESSION['user']['userID']; 
+        $specialRequest = $data['specialRequest'];
+        $address = $data['address'];
+        $firstName = $data['firstName'];
+        $lastName = $data['lastName'];
+        $phoneNumber = $data['phoneNumber'];
         $quantity = $data['quantity'];
-        $reservationPrice = 10.00;
+        $reservationPrice = 10.00; // Assuming a fixed price per reservation
         $totalPrice = $quantity * $reservationPrice;
     
         $mollieController = new MollieAPIController();
-        $paymentResponse = $mollieController->createPayment($_SESSION['user']['userID'], [
+        $paymentResponse = $mollieController->createPayment($user_id, [
             ['quantity' => $quantity, 'ticketPrice' => $totalPrice]
-        ], "creditcard"); // Assuming credit card for simplicity, adapt as needed
+        ], "creditcard");
     
         if ($paymentResponse['status'] === 'success') {
-            // Optionally, mark tickets as "reserved" in your database here
-            // This is a temporary state, to be finalized upon payment success
+            $this->restaurantService->addReservation($ticketId, $user_id, $specialRequest, $address, $firstName, $lastName, $phoneNumber);
             
             echo json_encode(['success' => true, 'paymentUrl' => $paymentResponse['paymentUrl']]);
         } else {

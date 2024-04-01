@@ -31,47 +31,67 @@
 
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        var checkoutButton = document.getElementById('checkout-button');
-        checkoutButton.addEventListener('click', function () {
-            var paymentMethodElement = document.querySelector('.payment-method');
-            var paymentMethod = paymentMethodElement.value;
-            var issuerElement = document.getElementById('ideal-banks');
-            var issuer = paymentMethod === 'ideal' ? issuerElement.value : null;
+document.addEventListener('DOMContentLoaded', function () {
+    var checkoutButton = document.getElementById('checkout-button');
 
-            var dataToSend = {
-                paymentMethod: paymentMethod,
-                issuer: issuer 
-            };
-
-
-            fetch('/create-payment', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(dataToSend)
-            })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok ' + response.statusText);
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    if (data.status === 'success') {
-                        window.location.href = data.paymentUrl;
-                    } else {
-                        alert('Error: ' + data.message);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('Error: Could not initiate payment.');
-                });
-        });
+    checkoutButton.addEventListener('click', function () {
+        fetchTicketsInfo(initiatePayment);
     });
+});
 
+function fetchTicketsInfo(callback) {
+    fetch('/payment/get-tickets-info', {
+        method: 'GET'
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok ' + response.statusText);
+        }
+        return response.json();
+    })
+    .then(data => {
+        var paymentMethodElement = document.querySelector('.payment-method');
+        var paymentMethod = paymentMethodElement.value;
+        var issuerElement = document.getElementById('ideal-banks');
+        // Determine if an issuer is needed based on the payment method
+        var issuer = paymentMethod === 'ideal' ? issuerElement.value : null;
+
+        // Construct the data to send including ticketsInfo fetched
+        var dataToSend = {
+            paymentMethod: paymentMethod,
+            issuer: issuer,
+            ticketsInfo: data // The fetched data is directly used here
+        };
+
+        callback(dataToSend);
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error: Could not retrieve ticket information.');
+    });
+}
+
+function initiatePayment(dataToSend) {
+    fetch('/create-payment', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(dataToSend)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            window.location.href = data.paymentUrl;
+        } else {
+            alert('Error: ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error: Could not initiate payment.');
+    });
+}
 </script>
 
 

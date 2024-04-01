@@ -345,4 +345,46 @@ class resturantrepository extends dbconfig {
 
     }
 
+    public function addReservation($ticket_id, $user_id, $specialRequest, $address, $firstName, $lastName, $phoneNumber) {
+        try {
+            $this->connection->beginTransaction();
+            
+            $stmtTicket = $this->connection->prepare("
+                UPDATE Ticket 
+                SET user_id = :user_id, 
+                    state = 'Reserved', 
+                    special_request = :specialRequest
+                WHERE ticket_id = :ticket_id");
+            $stmtTicket->bindValue(':ticket_id', $ticket_id);
+            $stmtTicket->bindValue(':user_id', $user_id);
+            $stmtTicket->bindValue(':specialRequest', $specialRequest);
+            $stmtTicket->execute();
+            
+            $stmtUser = $this->connection->prepare("
+                UPDATE [User] 
+                SET address = :address, 
+                    firstname = :firstname, 
+                    lastname = :lastname, 
+                    phone_number = :phone_number
+                WHERE user_id = :user_id");
+            $stmtUser->bindValue(':user_id', $user_id);
+            $stmtUser->bindValue(':address', $address);
+            $stmtUser->bindValue(':firstname', $firstName);
+            $stmtUser->bindValue(':lastname', $lastName);
+            $stmtUser->bindValue(':phone_number', $phoneNumber);
+            $stmtUser->execute();
+            
+            $this->connection->commit();
+            
+            return true;
+        } catch (PDOException $e) {
+            $this->connection->rollBack();
+            echo "Error: " . $e->getMessage();
+            return false;
+        }
+    }
+    
+
+
+
 }

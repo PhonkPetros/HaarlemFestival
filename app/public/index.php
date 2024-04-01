@@ -469,6 +469,12 @@ switch ($request) {
             $controller->makeAnReservation();
         }
         break;
+    case '/payment/get-tickets-info':
+        $controller = new Myprogramcontroller();
+        if ($method === 'GET') {
+            $controller->fetchTicketDetails();
+        }
+        break;
     default:
         http_response_code(404);
         $navigation = new Navigationcontroller();

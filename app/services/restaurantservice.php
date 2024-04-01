@@ -48,8 +48,12 @@ class RestaurantService
         return $this->restaurantRepo->deleteRestaurant($id);
     }
 
-    public function deleteTimeSlot($id) {
-        return $this->restaurantRepo->deleteTimeslot($id);
+    public function deleteTimeSlot($ticket_hash) {
+        return $this->restaurantRepo->deleteTimeslot($ticket_hash);
+    }
+
+    public function addReservation($ticket_id, $user_id, $specialRequest, $address, $firstName, $lastName, $phoneNumber) {
+        return $this->restaurantRepo->addReservation($ticket_id, $user_id, $specialRequest, $address, $firstName, $lastName, $phoneNumber);
     }
 
     

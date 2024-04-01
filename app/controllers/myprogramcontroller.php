@@ -18,6 +18,7 @@ require_once __DIR__ . '/../controllers/navigationcontroller.php';
 require_once __DIR__ . '/../services/ticketservice.php';
 
 
+
 class Myprogramcontroller
 {
     private $navigationController;
@@ -26,6 +27,7 @@ class Myprogramcontroller
     private $myProgramService;
     private $userService;
     private $navcontroller;
+    private $smtpController;
 
 
     public function __construct()
@@ -36,6 +38,7 @@ class Myprogramcontroller
         $this->userService = new registerservice();
         $this->navcontroller = new NavigationController();
         $this->mollieAPIController = new MollieAPIController();
+
 
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
@@ -54,6 +57,9 @@ class Myprogramcontroller
 
         }
 
+        $userId = $_SESSION['user']['userID'] ?? null;
+        $reservedTickets = $this->ticketservice->getReservedTicketsByUserId($userId) ?: [];
+
         $structuredOrderedItems = $this->getStructuredPurchasedOrderItemsByUserID();
 
         require_once __DIR__ . "/../views/my-program/overview.php";
@@ -67,6 +73,10 @@ class Myprogramcontroller
         $structuredTickets = [];
         $uniqueTimes = [];
         $userInfo = $this->getUserInfoFromCart();
+
+        $userId = $_SESSION['user']['userID'] ?? null;
+        $reservedTickets = $this->ticketservice->getReservedTicketsByUserId($userId) ?: [];
+        $userDetails = $this->ticketservice->getUserDetails($userId);
 
         if (isset ($_SESSION['shopping_cart']) && !empty ($_SESSION['shopping_cart'])) {
             $structuredTickets = $this->structureTicketsWithImages();
@@ -132,14 +142,19 @@ class Myprogramcontroller
         $ticketInfo = [
             'ticketId' => $input['ticketId'] ?? '',
             'eventId' => $input['eventId'] ?? '',
-            'ticketPrice' => $input['ticketPrice'] ?? '',
-            'quantity' => $input['quantity'] ?? '',
+            'ticketPrice' => $input['ticketPrice'] ?? 0, // Assuming default price is 0 if not provided
+            'quantity' => $input['quantity'] ?? 0, // Assuming default quantity is 0 if not provided
             'ticketDate' => $input['ticketDate'] ?? '',
             'ticketTime' => $input['ticketTime'] ?? '',
             'ticketEndTime' => $input['ticketEndTime'] ?? '',
             'ticketLocation' => $input['ticketLocation'] ?? '',
             'user' => $userInfo
         ];
+        
+
+
+
+        
 
         //If your event has extra info that needs to be added to a shopping cart then add it below
         switch ($ticketInfo['eventId']) {
@@ -400,52 +415,74 @@ class Myprogramcontroller
         return null;
     }
 
-    //gets user info set in the shopping cart that is stored in session
     function getUserInfoFromCart()
     {
-        foreach ($_SESSION['shopping_cart'] as $item) {
-            if (isset ($item['user'])) {
-                return $item['user'];
+        if (isset($_SESSION['shopping_cart']) && is_array($_SESSION['shopping_cart']) && !empty($_SESSION['shopping_cart'])) {
+            foreach ($_SESSION['shopping_cart'] as $item) {
+                if (isset($item['user'])) {
+                    return $item['user'];
+                }
             }
         }
         return null;
     }
 
+
+    
+
+
     //creating a new payment
     function initiatePayment()
     {
         $data = json_decode(file_get_contents('php://input'), true);
-        //geting the payment method
-        $paymentMethod = $data['paymentMethod'] ?? null;
-        //getting issuer
-        $issuer = $data['issuer'] ?? null;
 
-        // checking if user exists in database 
-        $userInfo = $this->getUserInfoFromCart();
-        if (!$this->userService->email_exists($userInfo['email'])) {
+        if (!is_array($data) || !isset($data['ticketsInfo'], $data['ticketsInfo']['ticketDetails'][0])) {
+            echo json_encode(['status' => 'error', 'message' => 'Invalid ticket data.']);
+            exit;
+        }
+
+        // Extract the first ticketDetails item to validate it has ticketId and quantity
+        $firstTicketDetail = $data['ticketsInfo']['ticketDetails'][0];
+        if (!isset($firstTicketDetail['ticketId']) || !isset($firstTicketDetail['quantity'])) {
+            echo json_encode(['status' => 'error', 'message' => 'Invalid ticket data.']);
+            exit;
+        }
+
+        $userId = $_SESSION['user']['userID'];
+        $userDetails = $this->ticketservice->getUserDetails($userId);
+
+        if (!$userDetails || !$this->userService->email_exists($userDetails->getUserEmail())) {
             echo json_encode(['status' => 'error', 'message' => 'User needs to register.']);
             exit;
         }
 
-        //checking if tickets are still available
-        if (!$this->checkTicketsAvailability($_SESSION['shopping_cart'])) {
-            echo json_encode(['status' => 'error', 'message' => 'Some tickets are not available in the requested quantity.']);
+        $shoppingCart = [
+            'ticketDetails' => $data['ticketsInfo']['ticketDetails'],
+            'userDetails' => [
+                'username' => $userDetails->getUsername(),
+                'lastname' => $userDetails->getLastname(),
+                'email' => $userDetails->getUserEmail(),
+                'phoneNumber' => $userDetails->getPhoneNumber()
+            ]
+        ];
+
+        $_SESSION['shopping_cart'] = $shoppingCart; 
+
+            if (!$this->checkTicketsAvailability($shoppingCart['ticketDetails'])) {
+                echo json_encode(['status' => 'error', 'message' => 'Some tickets are not available in the requested quantity.']);
+                exit;
+            }
+
+            $paymentResult = $this->mollieAPIController->createPayment($userId, $shoppingCart['ticketDetails'], $data['paymentMethod'], $data['issuer']);
+
+            if ($paymentResult['status'] === 'success') {
+                echo json_encode(['status' => 'success', 'paymentUrl' => $paymentResult['paymentUrl']]);
+            } else {
+                echo json_encode(['status' => 'error', 'message' => 'Payment initiation failed.']);
+            }
             exit;
-        }
-
-        //calls the mollie api to create payment
-        $userId = $_SESSION['user']['userID'];
-        $paymentResult = $this->mollieAPIController->createPayment($userId, $_SESSION['shopping_cart'], $paymentMethod, $issuer);
-
-
-        // if the payment status is success then it redirects user to the payment screen 
-        if ($paymentResult['status'] === 'success') {
-            echo json_encode(['status' => 'success', 'paymentUrl' => $paymentResult['paymentUrl']]);
-        } else {
-            echo json_encode(['status' => 'error', 'message' => 'Payment initiation failed.']);
-        }
-        exit;
     }
+
 
     //if the mollie api returns with a good response then 
     public function paymentSuccess()
@@ -568,6 +605,41 @@ class Myprogramcontroller
         }
     }
 
+
+    public function fetchTicketDetails()
+    {
+        header('Content-Type: application/json');
+
+        $userId = $_SESSION['user']['userID'] ?? null;
+
+        if (is_null($userId)) {
+            echo json_encode(['status' => 'error', 'message' => 'No user session found.']);
+            exit;
+        }
+
+        $ticketsInCart = $this->ticketservice->getReservedTicketsByUserId($userId);
+
+        if ($ticketsInCart === null) {
+            echo json_encode(['status' => 'error', 'message' => 'Failed to retrieve tickets from the cart.']);
+            exit;
+        }
+
+        // Convert ticket details to a JSON-friendly structure
+        $ticketDetails = [];
+        foreach ($ticketsInCart as $ticket) {
+            $ticketDetails[] = [
+                'ticketId' => $ticket->getTicketId(),
+                'date' => $ticket->getTicketDate(),
+                'time' => $ticket->getTicketTime(),
+                'ticketPrice' => $ticket->getPrice(),
+                'quantity' => $ticket->getQuantity(),
+                'specialRequest' => $ticket->getSpecialRequest(),
+            ];
+        }
+
+        echo json_encode(['status' => 'success', 'ticketDetails' => $ticketDetails]);
+        exit;
+    }
 
 
 }
