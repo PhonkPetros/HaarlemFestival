@@ -57,8 +57,10 @@ class Myprogramcontroller
 
         }
 
-        $userId = $_SESSION['user']['userID'] ?? null;
-        $reservedTickets = $this->ticketservice->getReservedTicketsByUserId($userId) ?: [];
+
+        if(!isset($_SESSION['user'])){
+            $user = null; 
+        }
 
         $structuredOrderedItems = $this->getStructuredPurchasedOrderItemsByUserID();
 
@@ -81,7 +83,17 @@ class Myprogramcontroller
         if (isset ($_SESSION['shopping_cart']) && !empty ($_SESSION['shopping_cart'])) {
             $structuredTickets = $this->structureTicketsWithImages();
         }
-        require_once __DIR__ . "/../views/my-program/payment.php";
+
+        $userInfo = $this->getUserInfoFromCart();
+        if (!$this->userService->email_exists($userInfo['email'])) {
+            echo json_encode(['status' => 'error', 'message' => 'User needs to register.']);
+            exit;
+        }
+        else{
+            require_once __DIR__ . "/../views/my-program/payment.php";
+        }
+
+      
     }
 
     function showSuccess()
@@ -129,15 +141,6 @@ class Myprogramcontroller
             'phoneNumber' => $input['phoneNumber'] ?? '',
             'email' => $input['email'] ?? ''
         ];
-
-        //updates the user object in the session
-        $_SESSION['user']['firstName'] = $userInfo['firstName'];
-        $_SESSION['user']['lastName'] = $userInfo['lastName'];
-        $_SESSION['user']['address'] = $userInfo['address'];
-        $_SESSION['user']['phoneNumber'] = $userInfo['phoneNumber'];
-        $_SESSION['user']['email'] = $userInfo['email'];
-
-        $this->updateUserInfo();
 
         $ticketInfo = [
             'ticketId' => $input['ticketId'] ?? '',
@@ -219,26 +222,6 @@ class Myprogramcontroller
 
 
         exit;
-    }
-
-    //updates user info in database
-    function updateUserInfo()
-    {
-        $userInfo = [
-            'firstName' => $_SESSION['user']['firstName'] ?? '',
-            'lastName' => $_SESSION['user']['lastName'] ?? '',
-            'address' => $_SESSION['user']['address'] ?? '',
-            'phoneNumber' => $_SESSION['user']['phoneNumber'] ?? '',
-            'email' => $_SESSION['user']['email'] ?? ''
-        ];
-
-
-        $userEmail = $userInfo['email'];
-        $userExists = $this->userService->email_exists($userEmail);
-
-        if ($userExists) {
-            $this->userService->updateUser($userInfo);
-        }
     }
 
 
@@ -456,24 +439,13 @@ class Myprogramcontroller
             exit;
         }
 
-        $shoppingCart = [
-            'ticketDetails' => $data['ticketsInfo']['ticketDetails'],
-            'userDetails' => [
-                'username' => $userDetails->getUsername(),
-                'lastname' => $userDetails->getLastname(),
-                'email' => $userDetails->getUserEmail(),
-                'phoneNumber' => $userDetails->getPhoneNumber()
-            ]
-        ];
 
-        $_SESSION['shopping_cart'] = $shoppingCart; 
-
-            if (!$this->checkTicketsAvailability($shoppingCart['ticketDetails'])) {
+            if (!$this->checkTicketsAvailability($_SESSION['shopping_cart'])) {
                 echo json_encode(['status' => 'error', 'message' => 'Some tickets are not available in the requested quantity.']);
                 exit;
             }
 
-            $paymentResult = $this->mollieAPIController->createPayment($userId, $shoppingCart['ticketDetails'], $data['paymentMethod'], $data['issuer']);
+            $paymentResult = $this->mollieAPIController->createPayment($userId, $_SESSION['shopping_cart'], $data['paymentMethod'], $data['issuer']);
 
             if ($paymentResult['status'] === 'success') {
                 echo json_encode(['status' => 'success', 'paymentUrl' => $paymentResult['paymentUrl']]);
@@ -506,7 +478,7 @@ class Myprogramcontroller
 
         if ($paymentStatus !== 'paid') {
             // Redirect to a failure page or handle the failure scenario
-            header('Location: http://localhost/my-program/payment-failure');
+            header('Location: /my-program/payment-failure');
             exit;
         }
 
@@ -517,7 +489,7 @@ class Myprogramcontroller
         if ($orderProcessingResult['status'] === 'success') {
             // Empty the shopping cart session data after successful order processing
             $_SESSION['shopping_cart'] = [];
-            header('Location: http://localhost/my-program/order-confirmation');
+            header('Location: /my-program/order-confirmation');
             exit;
         } else {
             echo json_encode(['status' => 'error', 'message' => 'Processing Order Failed.']);
@@ -605,41 +577,6 @@ class Myprogramcontroller
         }
     }
 
-
-    public function fetchTicketDetails()
-    {
-        header('Content-Type: application/json');
-
-        $userId = $_SESSION['user']['userID'] ?? null;
-
-        if (is_null($userId)) {
-            echo json_encode(['status' => 'error', 'message' => 'No user session found.']);
-            exit;
-        }
-
-        $ticketsInCart = $this->ticketservice->getReservedTicketsByUserId($userId);
-
-        if ($ticketsInCart === null) {
-            echo json_encode(['status' => 'error', 'message' => 'Failed to retrieve tickets from the cart.']);
-            exit;
-        }
-
-        // Convert ticket details to a JSON-friendly structure
-        $ticketDetails = [];
-        foreach ($ticketsInCart as $ticket) {
-            $ticketDetails[] = [
-                'ticketId' => $ticket->getTicketId(),
-                'date' => $ticket->getTicketDate(),
-                'time' => $ticket->getTicketTime(),
-                'ticketPrice' => $ticket->getPrice(),
-                'quantity' => $ticket->getQuantity(),
-                'specialRequest' => $ticket->getSpecialRequest(),
-            ];
-        }
-
-        echo json_encode(['status' => 'success', 'ticketDetails' => $ticketDetails]);
-        exit;
-    }
 
 
 }

@@ -4,8 +4,6 @@
             <h3 style="text-decoration: underline;">My Cart & Reserved Tickets</h3>
         </div>
     </div>
-    
-    <!-- Shopping Cart Tickets -->
     <div class="ticket-row">
         <?php foreach ($structuredTickets as $eventId => $eventData): ?>
             <?php foreach ($eventData['tickets'] as $ticket): ?>
@@ -38,27 +36,7 @@
             <?php endforeach; ?>
         <?php endforeach; ?> 
     </div>
-    <div class="ticket-row">
-            <?php foreach ($reservedTickets as $ticket): ?>
-                <div class="ticket-container" 
-                    id="ticket-container-reserved-<?= htmlspecialchars($ticket->getTicketId()) ?>"
-                    style="background-color: #f0f0f0; padding: 10px; margin-bottom: 10px; border-radius: 5px;"
-                    data-price="<?= htmlspecialchars($ticket->getPrice()) ?>"
-                    data-quantity="<?= htmlspecialchars($ticket->getQuantity()) ?>">
-
-                    <div class="ticket-details">
-                        <p class="ticket-info" style="font-size: 19px;">
-                            State: <?= htmlspecialchars($ticket->getState()); ?><br>
-                            Date: <?= htmlspecialchars($ticket->getTicketDate()); ?><br>
-                            Time: <?= htmlspecialchars($ticket->getTicketTime()); ?><br>
-                            Quantity: <?= htmlspecialchars($ticket->getQuantity()); ?><br>
-                            Price: €<?= htmlspecialchars($ticket->getPrice()); ?><br>
-                        </p>
-                    </div>
-                </div>
-            <?php endforeach; ?>
-        </div>
-    <?php if (empty($structuredTickets) && empty($reservedTickets)): ?>
+    <?php if (empty($structuredTickets)): ?>
         <div style="justify-content: center; text-align: center; color: black;">
             <h2>No Tickets Currently In Basket or Reserved</h2>
         </div>
@@ -71,35 +49,9 @@
             </div>
         </div>
         <div class="d-flex justify-content-center" style="padding-top: 20px;">
-            <a href="/my-program/payment" class="btn btn-success" style="width: 100%;"><h4>Pay Now</h4></a>
+            <a id="pay-now" href="/my-program/payment" class="btn btn-success" style="width: 100%;">
+                <h4>Pay Now</h4>
+            </a>
         </div>
     <?php endif; ?>
 </div>
-
-<script>
-function calculateTotal() {
-    let totalPrice = 0;
-    const vatRate = 0.21;
-
-    document.querySelectorAll('.ticket-container').forEach(container => {
-    console.log(container.dataset.price, container.dataset.quantity); // Debugging line
-    const price = parseFloat(container.dataset.price); 
-    const quantity = parseInt(container.dataset.quantity); 
-        if (!isNaN(price) && !isNaN(quantity)) { // Check if both values are numbers
-            totalPrice += price * quantity;
-        }
-    });
-
-
-    const totalPriceWithVAT = totalPrice + (totalPrice * vatRate);
-
-    document.getElementById('total-cart-price').textContent = totalPriceWithVAT.toFixed(2);
-}
-
-document.addEventListener('DOMContentLoaded', calculateTotal);
-
-document.querySelectorAll('.quantity-input').forEach(input => {
-    input.addEventListener('change', calculateTotal);
-});
-</script>
-

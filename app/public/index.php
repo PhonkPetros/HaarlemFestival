@@ -19,6 +19,7 @@ use controllers\Templatecontroller;
 use controllers\yummycontroller;
 use controllers\Pagecontroller;
 use controllers\Myprogramcontroller;
+use controllers\orderoverviewcontroller;
 
 require_once __DIR__ . '/../controllers/overview.php';
 require_once __DIR__ . '/../controllers/registercontroller.php';
@@ -35,6 +36,9 @@ require_once __DIR__ . '/../controllers/pagecontroller.php';
 require_once __DIR__ . '/../controllers/templatecontroller.php';
 require_once __DIR__ . '/../controllers/yummycontroller.php';
 require_once __DIR__ . '/../controllers/myprogramcontroller.php';
+require_once __DIR__ . '/../controllers/resetpasswordcontroller.php';
+require_once __DIR__ . '/../controllers/orderoverviewcontroller.php';
+
 
 $request = $_SERVER['REQUEST_URI'];
 $method = $_SERVER['REQUEST_METHOD'];
@@ -65,29 +69,51 @@ if (strpos($request, '/sectionEdit/') === 0) {
 
 //Please do not touch this
 if ($request === '/') {
-    $pageID = '1';
+    $pageID = PAGE_ID_HOME;
 }
 
 if ($pageID || $eventID || $editPageID || $sectionEdit) {
     //this has to do with the editing of event details
     if ($eventID) {
         switch ($eventID) {
-            case "5":
-                $controller = new Dancecontroller();
-                if ($method === 'GET') {
-                    $controller->editEventDetails();
+            case EVENT_ID_DANCE:
+                if ($_SESSION['role'] === 'admin') {
+                    $controller = new Dancecontroller();
+                    if ($method === 'GET') {
+                        $controller->editEventDetails();
+                    }
+                } else {
+                    http_response_code(404);
                 }
                 break;
-            case '6':
-                $controller = new Jazzcontroller();
-                if ($method === 'GET') {
-                    $controller->editEventDetails();
+            case EVENT_ID_JAZZ:
+                if ($_SESSION['role'] === 'admin') {
+                    $controller = new Jazzcontroller();
+                    if ($method === 'GET') {
+                        $controller->showEventDetails();
+                    }
+                } else {
+                    http_response_code(404);
                 }
                 break;
-            case '8':
-                $controller = new Historycontroller();
-                if ($method === 'GET') {
-                    $controller->showeditEventDetails();
+            case $eventID > EVENT_ID_HISTORY:
+                if ($_SESSION['role'] === 'admin') {
+                    $controller = new Restaurantcontroller();
+                    if ($method === 'GET') {
+                        $controller->editEventDetails($eventID);
+                    }
+                } else {
+                    http_response_code(404);
+                }
+                break;
+            case EVENT_ID_HISTORY:
+                if ($_SESSION['role'] === 'admin') {
+                    $controller = new Historycontroller();
+                    if ($method === 'GET') {
+                        $controller->showeditEventDetails();
+                    }
+                } else {
+                    http_response_code(404);
                 }
                 break;
             case $eventID > 8:
@@ -148,11 +174,15 @@ if ($pageID || $eventID || $editPageID || $sectionEdit) {
         //this has to with editing pages overview
         switch ($editPageID) {
             default;
-                $controller = new Pagecontroller;
-                if ($method === 'GET') {
-                    $controller->editContent();
-                } else if ($method === 'POST') {
-                    $controller->deleteSection();
+                if ($_SESSION['role'] === 'admin') {
+                    $controller = new Pagecontroller;
+                    if ($method === 'GET') {
+                        $controller->editContent();
+                    } else if ($method === 'POST') {
+                        $controller->deleteSection();
+                    }
+                } else {
+                    http_response_code(404);
                 }
                 break;
         }
@@ -161,11 +191,15 @@ if ($pageID || $eventID || $editPageID || $sectionEdit) {
         //this has to with editing section content
         switch ($sectionEdit) {
             default;
-                $controller = new Pagecontroller;
-                if ($method === 'GET') {
-                    $controller->editSectionContent();
-                } else if ($method === 'POST') {
-                    $controller->updateContent();
+                if ($_SESSION['role'] === 'admin') {
+                    $controller = new Pagecontroller;
+                    if ($method === 'GET') {
+                        $controller->editSectionContent();
+                    } else if ($method === 'POST') {
+                        $controller->updateContent();
+                    }
+                } else {
+                    http_response_code(404);
                 }
                 break;
         }
@@ -253,41 +287,126 @@ switch ($request) {
         $logoutController->logout();
         break;
     case '/dance/addNewEvent':
-        $controller = new Dancecontroller();
-        $controller->addNewEvent();
+        if ($_SESSION['role'] === 'admin') {
+            $controller = new Dancecontroller();
+            $controller->addNewEvent();
+        } else {
+            http_response_code(404);
+        }
         break;
     case '/dance/updateEvent':
-        $controller = new Dancecontroller();
-        $controller->updateEvent();
+        if ($_SESSION['role'] === 'admin') {
+            $controller = new Dancecontroller();
+            $controller->updateEvent();
+        } else {
+            http_response_code(404);
+        }
+        break;
+    case '/dance/addNewArtist':
+        if ($_SESSION['role'] === 'admin') {
+            $controller = new Dancecontroller();
+            $controller->addNewArtist();
+        } else {
+            http_response_code(404);
+        }
+        break;
+    case '/dance/updateArtist':
+        if ($_SESSION['role'] === 'admin') {
+            $controller = new Dancecontroller();
+            $controller->updateArtist();
+        } else {
+            http_response_code(404);
+        }
+        break;
+    case '/dance/deleteArtist':
+        if ($_SESSION['role'] === 'admin') {
+            $controller = new Dancecontroller();
+            $controller->deleteArtist();
+        } else {
+            http_response_code(404);
+        }
+        break;
+    case '/dance/deleteEvent':
+        if ($_SESSION['role'] === 'admin') {
+            $controller = new Dancecontroller();
+            $controller->deleteEvent();
+        } else {
+            http_response_code(404);
+        }
+        break;
+    case '/dance/addNewVenue':
+        if ($_SESSION['role'] === 'admin') {
+            $controller = new Dancecontroller();
+            $controller->addVenue();
+        } else {
+            http_response_code(404);
+        }
+        break;
+    case '/dance/updateVenue':
+        if ($_SESSION['role'] === 'admin') {
+            $controller = new Dancecontroller();
+            $controller->updateVenue();
+        } else {
+            http_response_code(404);
+        }
+        break;
+    case '/dance/deleteVenue':
+        if ($_SESSION['role'] === 'admin') {
+            $controller = new Dancecontroller();
+            $controller->deleteVenue();
+        } else {
+            http_response_code(404);
+        }
         break;
     case '/admin/dashboard':
-        $controller = new admincontroller();
-        if ($method === 'GET') {
-            $controller->show();
+        if ($_SESSION['role'] === 'admin') {
+            $controller = new admincontroller();
+            if ($method === 'GET') {
+                $controller->show();
+            }
+        } else {
+            http_response_code(404);
         }
         break;
     case '/admin/manage-users':
-        $controller = new admincontroller();
-        if ($method === 'GET') {
-            $controller->manageUsers();
+        if ($_SESSION['role'] === 'admin') {
+            $controller = new admincontroller();
+            if ($method === 'GET') {
+                $controller->manageUsers();
+
+            }
+        } else {
+            http_response_code(404);
         }
         break;
     case '/admin/delete-user':
-        $controller = new admincontroller();
-        if ($method === 'POST' && isset($_POST['user_id'])) {
-            $controller->deleteUsers();
+        if ($_SESSION['role'] === 'admin') {
+            $controller = new admincontroller();
+            if ($method === 'POST' && isset($_POST['user_id'])) {
+                $controller->deleteUsers();
+            }
+        } else {
+            http_response_code(404);
         }
         break;
     case '/admin/filter-users':
-        $controller = new admincontroller();
-        if ($method === 'POST') {
-            $controller->filterUsers();
+        if ($_SESSION['role'] === 'admin') {
+            $controller = new admincontroller();
+            if ($method === 'POST') {
+                $controller->filterUsers();
+            }
+        } else {
+            http_response_code(404);
         }
         break;
     case '/admin/fetch-all-users':
-        $controller = new admincontroller();
-        if ($method === 'GET') {
-            $controller->getAllUsers();
+        if ($_SESSION['role'] === 'admin') {
+            $controller = new admincontroller();
+            if ($method === 'GET') {
+                $controller->getAllUsers();
+            }
+        } else {
+            http_response_code(404);
         }
         break;
     case '/account':
@@ -295,111 +414,193 @@ switch ($request) {
         $controller->show();
         break;
     case '/admin/add-user':
-        $controller = new admincontroller();
-        if ($method === 'POST') {
-            $controller->addUsers();
+        if ($_SESSION['role'] === 'admin') {
+            $controller = new admincontroller();
+            if ($method === 'POST') {
+                $controller->addUsers();
+            }
+        } else {
+            http_response_code(404);
         }
         break;
     case '/admin/edit-user':
-        $controller = new admincontroller();
-        if ($method === 'POST') {
-            $controller->editUsers();
+        if ($_SESSION['role'] === 'admin') {
+            $controller = new admincontroller();
+            if ($method === 'POST') {
+                $controller->editUsers();
+            }
+        } else {
+            http_response_code(404);
         }
         break;
+
     case '/admin/managefestival':
-        $controller = new admincontroller();
-        if ($method === 'GET') {
-            $controller->manageFestivals();
+        if ($_SESSION['role'] === 'admin') {
+            $controller = new admincontroller();
+            if ($method === 'GET') {
+                $controller->manageFestivals();
+            }
+        } else {
+            http_response_code(404);
         }
         break;
     case '/admin/page-management/editfestival':
-        $controller = new admincontroller();
-        if ($method === 'GET') {
-            $controller->editFestivals();
+        if ($_SESSION['role'] === 'admin') {
+            $controller = new admincontroller();
+            if ($method === 'GET') {
+                $controller->editFestivals();
+            }
+        } else {
+            http_response_code(404);
         }
         break;
     case '/admin/orders':
-        $controller = new admincontroller();
-        if ($method === 'GET') {
-            $controller->manageOrders();
+        if ($_SESSION['role'] === 'admin') {
+            $controller = new admincontroller();
+            if ($method === 'GET') {
+                $controller->manageOrders();
+            }
+        } else {
+            http_response_code(404);
         }
         break;
     case '/editDetailsHistory/addNewTimeSlot':
-        $controller = new Historycontroller();
-        if ($method === 'POST') {
-            $controller->addNewTimeSlot();
+        if ($_SESSION['role'] === 'admin') {
+            $controller = new Historycontroller();
+            if ($method === 'POST') {
+                $controller->addNewTimeSlot();
+            }
+        } else {
+            http_response_code(404);
         }
         break;
     case '/editDetailsHistory/editEventDetails':
-        $controller = new Historycontroller();
-        if ($method === 'POST') {
-            $controller->editEventDetails();
+        if ($_SESSION['role'] === 'admin') {
+            $controller = new Historycontroller();
+            if ($method === 'POST') {
+                $controller->editEventDetails();
+            }
+        } else {
+            http_response_code(404);
         }
         break;
     case '/editDetailsHistory/deleteTimeSlot':
-        $controller = new Historycontroller();
-        if ($method === 'POST') {
-            $controller->removeTimeslot();
+        if ($_SESSION['role'] === 'admin') {
+            $controller = new Historycontroller();
+            if ($method === 'POST') {
+                $controller->removeTimeslot();
+            }
+        } else {
+            http_response_code(404);
         }
         break;
     case '/modify-navigation/edit-navigation':
-        $controller = new Navigationcontroller();
-        if ($method === 'GET') {
-            $controller->modifyNavigationPage();
+        if ($_SESSION['role'] === 'admin') {
+            $controller = new Navigationcontroller();
+            if ($method === 'GET') {
+                $controller->modifyNavigationPage();
+            }
+        } else {
+            http_response_code(404);
         }
         break;
     case '/edit-navigation/modified':
-        $controller = new Navigationcontroller();
-        if ($method === 'POST') {
-            $controller->updateNavigation();
+        if ($_SESSION['role'] === 'admin') {
+            $controller = new Navigationcontroller();
+            if ($method === 'POST') {
+                $controller->updateNavigation();
+            }
+        } else {
+            http_response_code(404);
         }
         break;
     case '/add-page':
-        $controller = new Pagecontroller();
-        if ($method === 'POST') {
-            $controller->addNewPage();
+        if ($_SESSION['role'] === 'admin') {
+            $controller = new Pagecontroller();
+            if ($method === 'POST') {
+                $controller->addNewPage();
+            }
+        } else {
+            http_response_code(404);
         }
         break;
     case '/sectionDelete':
-        $controller = new Pagecontroller();
-        if ($method === 'POST') {
-            $controller->deleteSection();
+        if ($_SESSION['role'] === 'admin') {
+            $controller = new Pagecontroller();
+            if ($method === 'POST') {
+                $controller->deleteSection();
+            }
+        } else {
+            http_response_code(404);
         }
         break;
     case '/delete-page':
-        $controller = new Pagecontroller();
-        if ($method === 'POST') {
-            $controller->deletePage();
+        if ($_SESSION['role'] === 'admin') {
+            $controller = new Pagecontroller();
+            if ($method === 'POST') {
+                $controller->deletePage();
+            }
+        } else {
+            http_response_code(404);
         }
         break;
     case "/editResturantDetails/updateRestaurantDetails":
-        $controller = new Restaurantcontroller();
-        if ($method === 'POST') {
-            $controller->updateRestaurantDetails();
+        if ($_SESSION['role'] === 'admin') {
+            $controller = new Restaurantcontroller();
+            if ($method === 'POST') {
+                $controller->updateRestaurantDetails();
+            }
+        } else {
+            http_response_code(404);
         }
         break;
     case "/editResturantDetails/addTimeSlot":
-        $controller = new Restaurantcontroller();
-        if ($method === 'POST') {
-            $controller->addTimeSlot();
+        if ($_SESSION['role'] === 'admin') {
+            $controller = new Restaurantcontroller();
+            if ($method === 'POST') {
+                $controller->addTimeSlot();
+            }
+        } else {
+            http_response_code(404);
         }
         break;
     case "/editRestaurantDetails/addRestaurant":
+        if ($_SESSION['role'] === 'admin') {
         $controller = new Restaurantcontroller();
         if ($method === 'POST') {
             $controller->addRestaurant();
+        } }else {
+            http_response_code(404);
+        }
+        break;
+
+    case '/admin/add-section':
+        if ($_SESSION['role'] === 'admin') {
+            $controller = new Pagecontroller();
+            if ($method === 'POST') {
+                $controller->addNewSection();
+            }
+        } else {
+            http_response_code(404);
         }
         break;
     case "/restaurant/delete":
+        if ($_SESSION['role'] === 'admin') {
         $controller = new Restaurantcontroller();
         if ($method === 'POST') {
             $controller->deleteRestaurant();
         }
+    }else {
+        http_response_code(404);
+    }
         break;
     case "/restaurant/deletetimeslot":
+        if ($_SESSION['role'] === 'admin') {
         $controller = new Restaurantcontroller();
         if ($method === 'POST') {
             $controller->deleteTimeSlot();
+        } } else {
+            http_response_code(404);
         }
         break;
     case '/my-program':
@@ -456,7 +657,6 @@ switch ($request) {
             $controller->showSuccess();
         }
         break;
-
     case '/my-program/payment-failure':
         $controller = new Myprogramcontroller();
         if($method == 'GET'){
@@ -473,6 +673,27 @@ switch ($request) {
         $controller = new Myprogramcontroller();
         if ($method === 'GET') {
             $controller->fetchTicketDetails();
+        }
+        break;
+    case '/admin/order-overview':
+        if ($_SESSION['role'] === 'admin') {
+            $controller = new orderoverviewcontroller();
+            if ($method == 'GET') {
+                $controller->showOverviewTable();
+            }
+        } else {
+            http_response_code(404);
+        }
+
+        break;
+    case '/admin/order-overview/export':
+        if ($_SESSION['role'] === 'admin') {
+            $controller = new orderoverviewcontroller();
+            if ($method == 'GET') {
+                $controller->exportExcel();
+            }
+        } else {
+            http_response_code(404);
         }
         break;
     default:

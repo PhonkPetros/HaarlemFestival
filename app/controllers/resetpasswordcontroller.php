@@ -25,18 +25,18 @@ class resetpasswordcontroller
 
     public function successfulNewPassword ()
     {
-        require_once'../views/general_views/password-updated.php';
+        require_once '../views/general_views/password-updated.php';
     }
 
     public function showLinkSuccessfullySent()
     {
-        require_once'../views/general_views/reset-link-sent.php';
+        require_once '../views/general_views/reset-link-sent.php';
 
     }
 
     public function showInvalidEmail()
     {
-        require_once'../views/general_views/invalid-email.php';
+        require_once '../views/general_views/invalid-email.php';
     }
 
     public function resetpasswordAction()

@@ -7,6 +7,7 @@ use model\User;
 
 require_once __DIR__ . '/../services/registerservice.php';
 require_once __DIR__ . '/../model/user.php';
+require_once __DIR__ . '/../config/constant-paths.php';
 
 class registercontroller
 {
@@ -26,7 +27,7 @@ class registercontroller
     public function registerAction() {
         if ($_SERVER['REQUEST_METHOD'] === "POST") {
             $captchaResponse = filter_input(INPUT_POST, 'g-recaptcha-response', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-            $secretKey = '6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe'; 
+            $secretKey = CAPTCHA_KEY; 
             $response = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret={$secretKey}&response={$captchaResponse}");
             $responseKeys = json_decode($response, true);
     
