@@ -43,7 +43,8 @@
                         data-date="<?= htmlspecialchars($times[$timeSlot]['date']) ?>"
                         data-time="<?= htmlspecialchars($times[$timeSlot]['time']) ?>"
                         data-endtime="<?= htmlspecialchars(date('H:i', strtotime($times[$timeSlot]['endtime']))) ?>"
-                        data-language="<?= htmlspecialchars($times[$timeSlot]['language']) ?>">
+                        data-language="<?= htmlspecialchars($times[$timeSlot]['language']) ?>"
+                        data-location="<?= htmlspecialchars($times[$timeSlot]['location']) ?>">
                         Reserve
                       </button>
                     <?php else: ?>

@@ -4,8 +4,8 @@
             <h3 style="text-decoration: underline;">Tickets</h3>
         </div>
         <div class="col-auto">
-            <button class="btn btn-primary" onclick="generateAndShareLink()">Share Cart</button>
-            <a id="shareLink" style="display: none;" onclick="copyToClipboard(event)">Copy Link</a>
+            <!-- <button class="btn btn-primary" onclick="generateAndShareLink()">Share Cart</button>
+            <a id="shareLink" style="display: none;" onclick="copyToClipboard(event)">Copy Link</a> -->
         </div>
     </div>
 
@@ -13,15 +13,15 @@
         <?php foreach ($structuredTickets as $eventId => $eventData): ?>
             <?php foreach ($eventData['tickets'] as $ticket): ?>
                 <div class="ticket-container" id="ticket-container-<?= $ticket['ticketId'] ?>"
-                    style="height: 390px; background-image: url('<?php echo $eventData['image']; ?>');">
+                    style="background-image: url('<?php echo $eventData['image']; ?>');">
 
-                    <div class="ticket-details" style="height: 390px">
+                    <div class="ticket-details">
                         <h5 class="ticket-title">
                             <?php echo htmlspecialchars($eventData['event_name']); ?>
                         </h5>
-                        <p class="ticket-info" style=" font-size: 19px;">
+                        <p class="ticket-info" style="font-size: 19px;">
                             Location:
-                            <?php echo htmlspecialchars($eventData['location']); ?><br>
+                            <?php echo htmlspecialchars($ticket['ticketLocation']); ?><br>
                             Date:
                             <?php echo htmlspecialchars($ticket['ticketDate']); ?><br>
                             Start Time:
@@ -61,4 +61,4 @@
         </div>
     <?php endif; ?>
 </div>
-<script src="/js/modifyBasket.js"></script>
+

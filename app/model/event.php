@@ -15,6 +15,7 @@ class Event implements \JsonSerializable
     private ?int $dayPass;
     private ?int $allDayPass;
     private ?int $seats;
+    private ?int $restaurant_id;
 
     public function jsonSerialize(): mixed {
         return [
@@ -29,6 +30,7 @@ class Event implements \JsonSerializable
             'dayPass'=> $this->getDayPass(),
             'allDayPass'=> $this->getAllDayPass(),
             'seats'=> $this->getSeats(),
+            'restaurant_id' =>$this->getRestaurantID(),
         ];
     }
 
@@ -62,6 +64,15 @@ class Event implements \JsonSerializable
     public function setSeats(?int $seats) {
         return $this->$seats = $seats;
     }
+
+
+    public function getRestaurantID(): ?int {
+        return $this->restaurant_id;
+    }
+    public function setRestaurantID(?int $restaurant_id) {
+        return $this->$restaurant_id = $restaurant_id;
+    }
+
     public function setArtist(?string $artist) {
         return $this->artist = $artist;
     }

@@ -491,7 +491,6 @@ switch ($request) {
             $controller->showSuccess();
         }
         break;
-
     case '/admin/order-overview':
         $controller = new orderoverviewcontroller();
         if ($method == 'GET') {
@@ -505,7 +504,12 @@ switch ($request) {
             $controller->exportExcel();
         }
         break;
-        
+     case '/my-program/payment-failure':
+        $controller = new Myprogramcontroller();
+        if($method == 'GET'){
+            $controller->showFailure();
+        }    
+        break;
     default:
         http_response_code(404);
         $navigation = new Navigationcontroller();

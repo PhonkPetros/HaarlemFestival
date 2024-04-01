@@ -55,14 +55,15 @@ class AdminController
 
     public function editUsers() {
         header('Content-Type: application/json');
+        header('X-Content-Type-Options: nosniff'); 
         
-        $userid = htmlspecialchars($_POST['user_id'] ?? '');
-        $username = htmlspecialchars($_POST['username'] ?? '');
-        $email = htmlspecialchars($_POST['email'] ?? '');
-        $role = htmlspecialchars($_POST['role'] ?? '');
+        $userid = filter_input(INPUT_POST, 'user_id', FILTER_SANITIZE_NUMBER_INT);
+        $username = filter_input(INPUT_POST, 'username', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL); 
+        $role = filter_input(INPUT_POST, 'role', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     
-        if (empty($userid) || empty($username) || empty($email) || empty($role)) {
-            echo json_encode(['success' => false, 'message' => 'Missing user details for update.']);
+        if (empty($userid) || empty($username) || !$email || empty($role)) { 
+            echo json_encode(['success' => false, 'message' => 'Invalid or missing user details for update.']);
             return;
         }
 
@@ -79,7 +80,8 @@ class AdminController
 
     public function deleteUsers() {
         header('Content-Type: application/json');
-        $userID = htmlspecialchars($_POST['user_id'] ?? '');
+        header('X-Content-Type-Options: nosniff');
+        $userID = filter_input(INPUT_POST, 'user_id', FILTER_SANITIZE_NUMBER_INT);
         $result = $this->adminservice->deleteUsers($userID);
         if ($result) {
             echo json_encode(['success' => true, 'message' => 'User has been deleted']);
@@ -88,41 +90,37 @@ class AdminController
         }
     }
     
+    
     public function filterUsers() {
         header('Content-Type: application/json');
-        $username = '%' . htmlspecialchars($_POST['username'] ?? '') . '%'; // Using % for LIKE SQL query
-        $role = htmlspecialchars($_POST['role'] ?? '');
+        $username = '%' . filter_input(INPUT_POST, 'username', FILTER_SANITIZE_FULL_SPECIAL_CHARS) . '%'; // Using % for LIKE SQL query
+        $role = filter_input(INPUT_POST, 'role', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         $filteredUsers = $this->adminservice->filterUsers($username, $role);
         echo json_encode($filteredUsers);
     }
+    
 
     public function addUsers() {
         header('Content-Type: application/json');
-        $username = htmlspecialchars($_POST['username'] ?? '');
-        $email = isset($_POST['email']) ? htmlspecialchars($_POST['email']) : null;
-        $role = htmlspecialchars($_POST['role'] ?? '');
-        $password = htmlspecialchars($_POST['password'] ?? '');
+        header('X-Content-Type-Options: nosniff');
+        $username = filter_input(INPUT_POST, 'username', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
+        $role = filter_input(INPUT_POST, 'role', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $password = $_POST['password'] ?? ''; 
+
+        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+    
         $usernameInUse = $this->adminservice->username_exists($username);
         $emailInUse = $this->adminservice->email_exists($email);
-
+    
         $newUser = new User();
-        $newUser->setUsername( $username );
-        $newUser->setUserEmail( $email );
-        $newUser->setUserRole( $role );
-        $newUser->setPassword( $password );
-
-
-        if($usernameInUse || $emailInUse){
+        $newUser->setUsername($username);
+        $newUser->setUserEmail($email);
+        $newUser->setUserRole($role);
+        $newUser->setPassword($hashedPassword);
+    
+        if($usernameInUse || $emailInUse) {
             $message = 'Username and/or email already in use';
-            if ($usernameInUse) {
-                $message = 'Username already in use';
-            }
-            if ($emailInUse) {
-                $message = 'Email already in use';
-            }
-            if ($usernameInUse && $emailInUse) {
-                $message = 'Both username and email are already in use';
-            }
             echo json_encode(['success'=> false, 'message'=> $message]);
             return; 
         }
@@ -133,4 +131,5 @@ class AdminController
             echo json_encode(['success' => false, 'message' => 'Failed to add user']);
         }
     }
+    
 }

@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', function () {
         var time = button.getAttribute('data-time');
         var endTime = button.getAttribute('data-endtime');
         var language = button.getAttribute('data-language');
+        var location = button.getAttribute('data-location');
 
         document.getElementById('ticketInfoDate').textContent = date;
         document.getElementById('ticketInfoTime').textContent = time;
@@ -18,6 +19,7 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('ticketTime').value = time;
         document.getElementById('ticketEndTime').value = endTime;
         document.getElementById('ticketLanguage').value = language;
+        document.getElementById('ticketLocation').value = location;
 
         document.getElementById('firstName').value = userSession.firstName || '';
         document.getElementById('lastName').value = userSession.lastName || '';
@@ -74,6 +76,7 @@ document.addEventListener('DOMContentLoaded', function () {
             ticketTime: document.getElementById('ticketTime').value,
             ticketEndTime: document.getElementById('ticketEndTime').value,
             ticketLanguage: document.getElementById('ticketLanguage').value,
+            ticketLocation: document.getElementById('ticketLocation').value,
         };
 
         fetch('/submit-reservation', {

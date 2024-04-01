@@ -12,21 +12,25 @@ class Myprogramservice
         $this->myprogramRepo = new Myprogramrepository();
     }
 
-    function processOrder($userId, $cart){
-        return $this->myprogramRepo->processOrder($userId, $cart);
+    function processOrder($userId, $cart, $paymentStatus){
+        return $this->myprogramRepo->processOrder($userId, $cart, $paymentStatus);
     }
 
-    function createOrder($userId, $totalPrice){
-        return $this->myprogramRepo->createOrder($userId, $totalPrice);
+    function createOrder($userId, $totalPrice, $paymentStatus){
+        return $this->myprogramRepo->createOrder($userId, $totalPrice, $paymentStatus);
     }
 
     function updateTicketQuantity($ticketId, $quantityPurchased){
-        return $this->updateTicketQuantity($ticketId, $quantityPurchased);
+        return $this->myprogramRepo->updateTicketQuantity($ticketId, $quantityPurchased);
     }
 
 
     function createOrderItem($orderId, $userId, $item){
-        return $this->createOrderItem($orderId, $userId, $item);
+        return $this->myprogramRepo->createOrderItem($orderId, $userId, $item);
+    }
+
+    function getOrderItemsByUser($userID){
+        return $this->myprogramRepo->getOrderItemsByUser($userID);
     }
 
     function getAllOrders()

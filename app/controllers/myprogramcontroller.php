@@ -46,15 +46,20 @@ class Myprogramcontroller
     {
         $this->navigationController->displayHeader();
         $structuredTickets = [];
+        $structuredOrderedItems = [];
         $uniqueTimes = [];
 
         if (isset ($_SESSION['shopping_cart']) && !empty ($_SESSION['shopping_cart'])) {
             $structuredTickets = $this->structureTicketsWithImages();
-       
+
         }
+
+        $structuredOrderedItems = $this->getStructuredPurchasedOrderItemsByUserID();
+
         require_once __DIR__ . "/../views/my-program/overview.php";
 
     }
+
 
     function showPayment()
     {
@@ -75,17 +80,24 @@ class Myprogramcontroller
         require_once __DIR__ . "/../views/my-program/success.php";
     }
 
-    function showSharedCart($encodedCart, $hash)
+    function showFailure()
     {
         $this->navigationController->displayHeader();
-        $sharedCart = $this->retrieveSharedCart($encodedCart, $hash);
-        if ($sharedCart === null) {
-            echo "Invalid or expired share link.";
-            return;
-        }
-        $structuredTickets = $this->structureSharedCart($sharedCart);
-        require_once __DIR__ . '/../views/my-program/share-basket-view.php';
+        require_once __DIR__ . "/../views/my-program/failure.php";
     }
+
+
+    // function showSharedCart($encodedCart, $hash)
+    // {
+    //     $this->navigationController->displayHeader();
+    //     $sharedCart = $this->retrieveSharedCart($encodedCart, $hash);
+    //     if ($sharedCart === null) {
+    //         echo "Invalid or expired share link.";
+    //         return;
+    //     }
+    //     $structuredTickets = $this->structureSharedCart($sharedCart);
+    //     require_once __DIR__ . '/../views/my-program/share-basket-view.php';
+    // }
 
 
     //Creates a reservation and adds reservations to shopping cart 
@@ -97,6 +109,7 @@ class Myprogramcontroller
         //decodes session data 
         $inputJSON = file_get_contents('php://input');
         $input = json_decode($inputJSON, true);
+
 
         //holds user info
         $userInfo = [
@@ -124,6 +137,7 @@ class Myprogramcontroller
             'ticketDate' => $input['ticketDate'] ?? '',
             'ticketTime' => $input['ticketTime'] ?? '',
             'ticketEndTime' => $input['ticketEndTime'] ?? '',
+            'ticketLocation' => $input['ticketLocation'] ?? '',
             'user' => $userInfo
         ];
 
@@ -187,6 +201,8 @@ class Myprogramcontroller
             'status' => 'success',
             'message' => 'Reservation successfully created!',
         ]);
+
+
         exit;
     }
 
@@ -318,7 +334,6 @@ class Myprogramcontroller
                     'tickets' => [],
                     'image' => $eventDetails['picture'] ?? null,
                     'event_name' => $eventDetails['name'] ?? null,
-                    'location' => $eventDetails['location'] ?? null,
                     'totalPrice' => 0
                 ];
             }
@@ -331,46 +346,46 @@ class Myprogramcontroller
     }
 
     //structuring ticket data for shared cart view
-    private function structureSharedCart($cartData)
-    {
-        $structuredTickets = [];
-        foreach ($cartData as $ticket) {
-            $eventId = $ticket['eventId'];
-            if (!array_key_exists($eventId, $structuredTickets)) {
-                $eventDetails = $this->ticketservice->getEventDetails($eventId);
-                $structuredTickets[$eventId] = [
-                    'tickets' => [],
-                    'image' => $eventDetails['picture'] ?? null,
-                    'event_name' => $eventDetails['name'] ?? null,
-                    'location' => $eventDetails['location'] ?? null,
-                    'totalPrice' => 0
-                ];
-            }
-            $ticketTotalPrice = $ticket['quantity'] * $ticket['ticketPrice'];
-            $structuredTickets[$eventId]['totalPrice'] += $ticketTotalPrice;
-            $ticket['totalPrice'] = $ticketTotalPrice;
-            $structuredTickets[$eventId]['tickets'][] = $ticket;
-        }
-        return $structuredTickets;
-    }
+    // private function structureSharedCart($cartData)
+    // {
+    //     $structuredTickets = [];
+    //     foreach ($cartData as $ticket) {
+    //         $eventId = $ticket['eventId'];
+    //         if (!array_key_exists($eventId, $structuredTickets)) {
+    //             $eventDetails = $this->ticketservice->getEventDetails($eventId);
+    //             $structuredTickets[$eventId] = [
+    //                 'tickets' => [],
+    //                 'image' => $eventDetails['picture'] ?? null,
+    //                 'event_name' => $eventDetails['name'] ?? null,
+    //                 'location' => $eventDetails['location'] ?? null,
+    //                 'totalPrice' => 0
+    //             ];
+    //         }
+    //         $ticketTotalPrice = $ticket['quantity'] * $ticket['ticketPrice'];
+    //         $structuredTickets[$eventId]['totalPrice'] += $ticketTotalPrice;
+    //         $ticket['totalPrice'] = $ticketTotalPrice;
+    //         $structuredTickets[$eventId]['tickets'][] = $ticket;
+    //     }
+    //     return $structuredTickets;
+    // }
 
 
 
-    //generates a sharable link of the session data of the shopping cart by hashing it and url encodign to the url
-    function generateShareableLink()
-    {
-        if (!isset ($_SESSION['shopping_cart']) || empty ($_SESSION['shopping_cart'])) {
-            echo json_encode(['status' => 'error', 'message' => 'Cart is empty']);
-            exit;
-        }
+    // //generates a sharable link of the session data of the shopping cart by hashing it and url encodign to the url
+    // function generateShareableLink()
+    // {
+    //     if (!isset ($_SESSION['shopping_cart']) || empty ($_SESSION['shopping_cart'])) {
+    //         echo json_encode(['status' => 'error', 'message' => 'Cart is empty']);
+    //         exit;
+    //     }
 
-        $encodedCart = base64_encode(serialize($_SESSION['shopping_cart']));
-        $hash = hash_hmac('sha256', $encodedCart, $_ENV['SECRET_KEY'] ?? 'default-secret');
+    //     $encodedCart = base64_encode(serialize($_SESSION['shopping_cart']));
+    //     $hash = hash_hmac('sha256', $encodedCart, $_ENV['SECRET_KEY'] ?? 'default-secret');
 
-        $link = "http://localhost/share-cart/?cart=" . urlencode($encodedCart) . "&hash=" . $hash;
-        echo json_encode(['status' => 'success', 'link' => $link]);
-        exit;
-    }
+    //     $link = "http://localhost/share-cart/?cart=" . urlencode($encodedCart) . "&hash=" . $hash;
+    //     echo json_encode(['status' => 'success', 'link' => $link]);
+    //     exit;
+    // }
 
 
     // de-hashes the hashed shopping cart data
@@ -419,8 +434,9 @@ class Myprogramcontroller
         }
 
         //calls the mollie api to create payment
-        $userId = $this->userService->getUserIDThroughEmail($userInfo['email']);
+        $userId = $_SESSION['user']['userID'];
         $paymentResult = $this->mollieAPIController->createPayment($userId, $_SESSION['shopping_cart'], $paymentMethod, $issuer);
+
 
         // if the payment status is success then it redirects user to the payment screen 
         if ($paymentResult['status'] === 'success') {
@@ -434,20 +450,42 @@ class Myprogramcontroller
     //if the mollie api returns with a good response then 
     public function paymentSuccess()
     {
-        $userInfo = $this->getUserInfoFromCart();
-        $userId = $this->userService->getUserIDThroughEmail($userInfo['email']);
+        // Start the session if it hasn't been started already
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
+        }
 
-        //add orders, order items to database and modifies the quantity of tickets
-        $orderProcessingResult = $this->myProgramService->processOrder($userId, $_SESSION['shopping_cart']);
+        // Check if the payment ID is stored in the session
+        if (!isset ($_SESSION['payment_id'])) {
+            echo json_encode(['status' => 'error', 'message' => 'Payment ID is required.']);
+            exit;
+        }
 
-        //if the response is good the shopping cart data set to an empty array and user is redirected to success screen
+        // Retrieve the payment ID from the session
+        $paymentId = $_SESSION['payment_id'];
+
+        // Retrieve the payment status using the payment ID
+        $paymentStatus = $this->mollieAPIController->getPaymentStatus($paymentId);
+
+        if ($paymentStatus !== 'paid') {
+            // Redirect to a failure page or handle the failure scenario
+            header('Location: http://localhost/my-program/payment-failure');
+            exit;
+        }
+
+        // If payment is successful, proceed with the existing code
+        $userId = $_SESSION['user']['userID'];
+        $orderProcessingResult = $this->myProgramService->processOrder($userId, $_SESSION['shopping_cart'], $paymentStatus);
+
+        
         if ($orderProcessingResult['status'] === 'success') {
+            // Empty the shopping cart session data after successful order processing
             $_SESSION['shopping_cart'] = [];
             header('Location: http://localhost/my-program/order-confirmation');
             exit;
         } else {
-            //else the display alert to user that the payment failed 
-            echo json_encode(['status' => 'error', 'message' => ' Processing Order Failed.']);
+            echo json_encode(['status' => 'error', 'message' => 'Processing Order Failed.']);
+            exit;
         }
     }
 
@@ -467,7 +505,69 @@ class Myprogramcontroller
     }
 
 
+    //getting all the purchased tickets by userID and structuring them 
+    function getStructuredPurchasedOrderItemsByUserID()
+    {
+        $structuredOrderItems = [];
+        if (isset ($_SESSION['user']) && isset ($_SESSION['user']['userID'])) {
+            $userID = $_SESSION['user']['userID'];
+            $purchasedOrderItems = $this->myProgramService->getOrderItemsByUser($userID);
 
+            foreach ($purchasedOrderItems as $orderitem) {
+                $event_details = $this->ticketservice->getEventDetails($orderitem->getEventId());
+                $structuredItem = [
+                    'order_item_id' => $orderitem->getOrderItemId(),
+                    'order_id' => $orderitem->getOrderId(),
+                    'user_id' => $orderitem->getUserId(),
+                    'quantity' => $orderitem->getQuantity(),
+                    'date' => $orderitem->getDate(),
+                    'start_time' => $orderitem->getStartTime(),
+                    'end_time' => $orderitem->getEndTime(),
+                    'item_hash' => $orderitem->getItemHash(),
+                    'event_id' => $orderitem->getEventId(),
+                    'location' => $orderitem->getLocation(),
+                    'event_details' => [
+                        'image' => $event_details['picture'] ?? null,
+                        'event_name' => $event_details['name'] ?? null,
+                    ],
+
+                ];
+
+                // Customize the structured item based on the event ID
+                switch ($orderitem->getEventId()) {
+                    case EVENT_ID_HISTORY: // History
+                        $structuredItem['language'] = $orderitem->getLanguage();
+                        break;
+                    case EVENT_ID_RESTAURANT: // Yummy
+                        $structuredItem['restaurant_name'] = $orderitem->getRestaurantName();
+                        $structuredItem['special_remarks'] = $orderitem->getSpecialRemarks();
+                        break;
+                    case EVENT_ID_DANCE:
+                    case EVENT_ID_JAZZ: // Events Dance and Jaz
+                        $structuredItem['ticket_type'] = $orderitem->getTicketType();
+                        $structuredItem['artist_name'] = $orderitem->getArtistName();
+                        break;
+                }
+
+                $structuredOrderItems[] = $structuredItem;
+            }
+            // Filter the structured order items to include only those within the specified date range
+            $filteredOrderedItems = array_filter($structuredOrderItems, function ($item) {
+                // Convert the item's date to a timestamp for easy comparison
+                $itemDateTimestamp = strtotime($item['date']);
+                // Define the start and end of the desired date range
+                $startDateTimestamp = strtotime("2024-06-26");
+                $endDateTimestamp = strtotime("2024-06-30");
+                // Include the item if its date is within the range
+                return $itemDateTimestamp >= $startDateTimestamp && $itemDateTimestamp <= $endDateTimestamp;
+            });
+
+            // Return only the items that passed the filtering
+            return $filteredOrderedItems;
+        } else {
+            return [];
+        }
+    }
 
 
 
