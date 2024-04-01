@@ -17,6 +17,7 @@ use controllers\yummycontroller;
 use controllers\Pagecontroller;
 use controllers\resetpasswordcontroller;
 use controllers\Myprogramcontroller;
+use controllers\orderoverviewcontroller;
 
 require_once __DIR__ . '/../controllers/overview.php';
 require_once __DIR__ . '/../controllers/myprogramcontroller.php';
@@ -35,6 +36,7 @@ require_once __DIR__ . '/../controllers/pagecontroller.php';
 require_once __DIR__ . '/../controllers/templatecontroller.php';
 require_once __DIR__ . '/../controllers/yummycontroller.php';
 require_once __DIR__ . '/../controllers/resetpasswordcontroller.php';
+require_once __DIR__ . '/../controllers/orderoverviewcontroller.php';
 
 
 $request = $_SERVER['REQUEST_URI'];
@@ -489,8 +491,20 @@ switch ($request) {
             $controller->showSuccess();
         }
         break;
-
-    case '/my-program/payment-failure':
+    case '/admin/order-overview':
+        $controller = new orderoverviewcontroller();
+        if ($method == 'GET') {
+            $controller->showOverviewTable();
+        }
+        break;
+    
+    case '/admin/order-overview/export':
+        $controller = new orderoverviewcontroller();
+        if ($method == 'POST') {
+            $controller->exportExcel();
+        }
+        break;
+     case '/my-program/payment-failure':
         $controller = new Myprogramcontroller();
         if($method == 'GET'){
             $controller->showFailure();
