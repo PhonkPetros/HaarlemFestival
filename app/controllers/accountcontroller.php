@@ -65,13 +65,13 @@ class AccountController
     }
 
 
-    private function sendEmail($message)
+    private function sendEmail($message )
     {
         $subject = 'Account Update Confirmation';
         $recipientEmail = $this->user->getUserEmail();
         $recipientName = $this->user->getUsername();
 
-        return $this->smtpController->sendEmail($recipientEmail, $recipientName, $subject, $message);
+        return $this->smtpController->sendEmail($recipientEmail, $recipientName, $subject, $message, $attachment = null);
     }
 
 

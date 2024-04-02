@@ -46,6 +46,8 @@ $method = $_SERVER['REQUEST_METHOD'];
 //Please do not touch this
 $editPageID = null;
 $sectionEdit = null;
+$token = null;
+$dancePageID = null;
 $queryString = parse_url($request, PHP_URL_QUERY);
 $queryParams = [];
 if ($queryString !== null) {
@@ -62,7 +64,12 @@ if (strpos($request, '/edit-content/') === 0) {
 if (strpos($request, '/sectionEdit/') === 0) {
     $sectionEdit = htmlspecialchars($queryParams['section_id'] ?? '');
 }
-
+if (strpos($request, '/new-password/') === 0) {
+    $token = htmlspecialchars($queryParams["token"] ?? '');
+}
+if (strpos($request, '/dance/') === 0) {
+    $dancePageID = htmlspecialchars($queryParams["artist"] ?? '');
+}
 
 //Please do not touch this
 if ($request === '/') {
@@ -122,12 +129,6 @@ if ($pageID || $eventID || $editPageID || $sectionEdit || $token || $dancePageID
                     respondWith404();
                 }
                 break;
-            case $eventID > 8:
-                $controller = new Restaurantcontroller();
-                if ($method === 'GET') {
-                    $controller->editEventDetails($eventID);
-                }
-                break;
             default:
                 $controller = new TemplateController();
                 if ($method === 'GET') {
@@ -140,29 +141,29 @@ if ($pageID || $eventID || $editPageID || $sectionEdit || $token || $dancePageID
     } elseif ($pageID) {
         //this has to with our own pages
         switch ($pageID) {
-            case "1":
+            case PAGE_ID_HOME:
                 $controller = new overview();
                 $controller->show();
                 break;
-            case '2':
+            case PAGE_ID_HISTORY:
                 $controller = new Historycontroller();
                 if ($method === 'GET') {
                     $controller->show();
                 }
                 break;
-            case '3':
+            case PAGE_ID_DANCE:
                 $controller = new Dancecontroller();
                 if ($method === 'GET') {
                     $controller->show();
                 }
                 break;
-            case '4':
+            case PAGE_ID_JAZZ:
                 $controller = new Jazzcontroller();
                 if ($method === 'GET') {
                     $controller->show();
                 }
                 break;
-            case '5':
+            case PAGE_ID_YUMMY:
                 $controller = new yummycontroller();
                 if ($method === 'GET') {
                     $controller->showYummyOverview();
@@ -415,7 +416,9 @@ switch ($request) {
         break;
     case '/account':
         $controller = new accountcontroller();
-        $controller->show();
+        if ($method === 'GET') {
+            $controller->show();
+        }
         break;
     case '/admin/add-user':
         if ($_SESSION['role'] === 'admin') {
