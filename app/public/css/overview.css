@@ -1,4 +1,4 @@
-body {
+.container-wrapper {
     background: url('../img/overviewbackground.png') no-repeat center center fixed ;
     background-size: cover;
 }
@@ -14,6 +14,16 @@ h1 {
     -webkit-text-stroke-color: #000;
     margin-top: 15px;
     margin-bottom: 35px;
+}
+.landingimage {
+    width: 100%; /* Sets image container to full width */
+    overflow: hidden; /* Prevents overflow if the image is wider than the screen */
+}
+
+.landingimage img {
+    width: 100%; /* Makes the image stretch to cover the container width */
+    height: auto; /* Keeps the image aspect ratio intact */
+    display: block; /* Removes any extra space below the image */
 }
 
 .festival-banner {
