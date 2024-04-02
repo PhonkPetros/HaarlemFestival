@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     var addNewSectionBtn = document.getElementById('addNewSectionBtn');
-    if (!addNewSectionBtn.disabled) {
+    var deleteButtons = document.querySelectorAll('.delete-section-btn');
+    if (addNewSectionBtn && !addNewSectionBtn.disabled) {
         addNewSectionBtn.addEventListener('click', function() {
             var pageId = addNewSectionBtn.getAttribute('data-page-id');
             fetch('/admin/add-section', {
@@ -32,4 +33,22 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
     }
+ 
+    deleteButtons.forEach(function(button) {
+        button.addEventListener('click', function() {
+            var sectionId = this.getAttribute('data-section-id');
+            swal({
+                title: "Are you sure?",
+                text: "Do you want to delete this section?",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+            .then((willDelete) => {
+                if (willDelete) {
+                    document.getElementById('deleteSection-' + sectionId).submit();
+                }
+            });
+        });
+    });
 });

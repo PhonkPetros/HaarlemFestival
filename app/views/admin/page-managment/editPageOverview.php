@@ -1,12 +1,12 @@
 <?php include __DIR__ . '/../../general_views/adminheader.php'; ?>
 
-<h1>Edit
-    <?php echo htmlspecialchars($pageDetails->getName()); ?>
-</h1>
 
-<div class="container">
+
+<div class="container" style="margin-top: 20px;">
+    <h1>Edit
+        <?php echo htmlspecialchars($pageDetails->getName()); ?>
+    </h1>
     <?php
-
     $disabledPages = [PAGE_ID_HOME, PAGE_ID_HISTORY, PAGE_ID_DANCE, PAGE_ID_JAZZ, PAGE_ID_YUMMY];
     $disableButton = in_array($pageDetails->getId(), $disabledPages);
     ?>
@@ -15,9 +15,8 @@
                echo 'disabled'; ?>>
             Add New Section
         </button>
-
     </div>
-    <?php if (!empty ($allSections)): ?>
+    <?php if (!empty($allSections)): ?>
         <div class="table-responsive">
             <table class="table table-bordered table-hover">
                 <thead>
@@ -44,12 +43,14 @@
                             <td>
                                 <a href="/sectionEdit/?section_id=<?php echo urlencode($section->getSectionId()); ?>"
                                     class="btn btn-primary btn-sm">Edit</a>
-                                <form action="/sectionDelete" method="post"
-                                    onsubmit="return confirm('Are you sure you want to delete this section?');">
+                                <button type="button" class="btn btn-danger btn-sm delete-section-btn"
+                                    data-section-id="<?php echo htmlspecialchars($section->getSectionId()); ?>">Delete</button>
+                                <form id="deleteSection-<?php echo htmlspecialchars($section->getSectionId()); ?>"
+                                    action="/sectionDelete" method="post" style="display: none;">
                                     <input type="hidden" name="section_id"
                                         value="<?php echo htmlspecialchars($section->getSectionId()); ?>">
-                                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                                 </form>
+
                             </td>
                         </tr>
                         <?php $sectionCount++; ?>
@@ -62,6 +63,7 @@
         <p>No sections found for this page.</p>
     <?php endif; ?>
 </div>
+
 
 
 <script src="/js/add-new-section.js"></script>
