@@ -10,8 +10,7 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <link rel="stylesheet" href="/css/navbar.css">
-    <link rel="stylesheet" href="/css/main.css">
-    <link rel="stylesheet" href="/css/overview.css">
+    <link rel="stylesheet" href="/css/admindashboard.css">
     <link rel="stylesheet" href="/css/footer.css">
     <link rel="stylesheet" href="/css/manage-users.css">
     <link rel="stylesheet" href="/css/editDetailsHistory.css">
