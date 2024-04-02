@@ -56,8 +56,8 @@ function filterUsers(username, role) {
 }
 function deleteUser(userId) {
     swal({
-        title: "Are you sure?",
-        text: `Do you want to delete user ${userId}? This action cannot be undone.`,
+        title: `Are you sure?`,
+        text: `Do you want to delete user ${userId}?`,
         icon: "warning",
         buttons: true,
         dangerMode: true,
@@ -71,24 +71,19 @@ function deleteUser(userId) {
                 method: 'POST',
                 body: formData
             })
-            .then(response => {
-                if (!response.ok) throw new Error('Failed to delete user');
-                return response.json();
-            })
+            .then(response => response.json())
             .then(() => {
-                swal("User deleted successfully", {
+                fetchUsers();
+                swal(`User ${userId} has been deleted.`, {
                     icon: "success",
-                }).then(() => {
-                    fetchUsers(); 
                 });
             })
             .catch(error => {
                 console.error('Error:', error);
-                swal("Error", "Error deleting user.", "error");
+                swal("Oops", "There was an error deleting the user.", "error");
             });
         }
     });
 }
-
 
 

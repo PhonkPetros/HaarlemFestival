@@ -1,3 +1,62 @@
+function setupEventListeners() {
+    setupFilterButton();
+    setupResetButton();
+    setupModalControls();
+    setupAddUserFormSubmission();
+    var editUserForm = document.getElementById('editUserForm');
+    if (editUserForm) {
+        editUserForm.onsubmit = function(event) {
+            event.preventDefault();
+            submitEditUserForm();
+        };
+    }
+}
+
+
+function setupFilterButton() {
+    document.getElementById('filterBtn').addEventListener('click', function() {
+        const username = document.getElementById('username').value;
+        const role = document.getElementById('role').value;
+        filterUsers(username, role);
+    });
+}
+
+function setupResetButton() {
+    document.getElementById('resetBtn').addEventListener('click', function() {
+        document.getElementById('username').value = '';
+        document.getElementById('role').value = '';
+        fetchUsers();
+    });
+}
+
+function setupModalControls() {
+    const openModalBtn = document.getElementById('openAddUserModal');
+    const addUserModal = document.getElementById('addUserModal');
+    const closeModalBtn = document.querySelector('.modal .closeBtn');
+
+    openModalBtn.addEventListener('click', function() {
+        addUserModal.style.display = 'block';
+    });
+
+    closeModalBtn.addEventListener('click', function() {
+        addUserModal.style.display = 'none';
+    });
+
+    window.addEventListener('click', function(event) {
+        if (event.target === addUserModal) {
+            addUserModal.style.display = 'none';
+        }
+    });
+}
+
+function setupAddUserFormSubmission() {
+    const addUserForm = document.getElementById('addUserForm');
+    addUserForm.addEventListener('submit', function(event) {
+        event.preventDefault();
+        validateAndSubmitAddUserForm();
+    });
+}
+
 function validateAndSubmitAddUserForm() {
     const password = document.querySelector('input[name="password"]').value;
     const confirmPassword = document.querySelector('input[name="confirmPassword"]').value;
@@ -25,16 +84,13 @@ function submitAddUserForm() {
         body: formData
     })
     .then(response => {
-        if (!response.ok) {
-            throw new Error('Failed to add user');
-        }
-        return response.json();
+        if (response.ok) return response.json();
+        return Promise.reject('Failed to add user');
     })
     .then(() => {
-        swal("Success", "User has been added", "success").then(() => {
-            fetchUsers();
-            document.getElementById('addUserModal').style.display = 'none';
-        });
+        swal("Success", "User has been added", "success");
+        fetchUsers();
+        document.getElementById('addUserModal').style.display = 'none'; 
     })
     .catch(error => {
         console.error('Error:', error);
