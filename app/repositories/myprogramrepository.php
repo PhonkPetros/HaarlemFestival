@@ -15,6 +15,7 @@ require_once __DIR__ . '/ticketRepo.php';
 require_once __DIR__ . '/../model/orderItem.php';
 
 
+
 class Myprogramrepository extends dbconfig
 {
     private $ticketRepo;
@@ -32,21 +33,17 @@ class Myprogramrepository extends dbconfig
         try {
             $totalPrice = 0.0; // Initialize as float
             foreach ($cart as $item) {
-                // Ensure we convert to the correct data type before arithmetic operations
                 $totalPrice += (int) $item['quantity'] * (float) $item['ticketPrice'];
             }
 
             $orderId = $this->createOrder($userId, $totalPrice, $paymentStatus);
 
             foreach ($cart as $item) {
-                $success = $this->updateTicketQuantity((int) $item['ticketId'], (int) $item['quantity']);
-                if (!$success) {
-                    throw new \Exception("Could not update ticket quantity for ticket ID: {$item['ticketId']}");
-                }
-                $this->createOrderItem($orderId, $userId, $item);
+                $itemHash = $this->createOrderItem($orderId, $userId, $item); // Capture the returned ItemHash
+                $itemHashes[] = $itemHash;
             }
             $this->connection->commit();
-            return ['status' => 'success', 'message' => 'Order processed successfully'];
+            return ['status' => 'success', 'message' => 'Order processed successfully', 'itemHashes' => $itemHashes];
         } catch (\Exception $e) {
             $this->connection->rollback();
             return ['status' => 'error', 'message' => 'Order processing failed: ' . $e->getMessage()];
@@ -82,6 +79,7 @@ class Myprogramrepository extends dbconfig
         $formattedEndTime = $endTime->format('H:i:s');
 
         $itemHash = hash('sha256', $userId . $orderId . microtime());
+
 
         $ticketType = '';
         if (isset($item['allAccessPass'])) {
@@ -120,6 +118,7 @@ class Myprogramrepository extends dbconfig
     
 
         $stmt->execute();
+         return $itemHash;
 
     }
 
