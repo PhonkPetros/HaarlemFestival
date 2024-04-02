@@ -23,18 +23,18 @@ class logincontroller
     public function loginAction()
     {
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
-            $username = filter_input(INPUT_POST, "username", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-            $password = filter_input(INPUT_POST, "password", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-    
+            $username = htmlspecialchars($_POST["username"]);
+            $password = htmlspecialchars($_POST["password"]);
             $authenticated = $this->authenticateLogin($username, $password);
-    
+
             if (!$authenticated) {
                 $loginError = "Invalid username or password.";
-                require_once '../views/login.php';
-            } else {
+                require_once '../views/login.php'; 
             }
         }
     }
+
+
     
 
     private function authenticateLogin($username, $password)
