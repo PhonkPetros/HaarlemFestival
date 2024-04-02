@@ -66,9 +66,13 @@ h1 {
     align-items: center;
     width: 200px;
 }
-
+p{
+    text-align: center;
+}
 .individual-event p {
     padding-bottom: 10px;
+    text-align: center;
+    align-items: center;
 }
 
 .individual-event img {

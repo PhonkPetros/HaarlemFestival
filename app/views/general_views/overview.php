@@ -147,62 +147,62 @@ include __DIR__ . '/header.php';
             </div>
 
             <div class="individual-event">
-                <img src="/img/bavoKerkBanner.jpg" alt="">
+                <img src="/img/foxthemayors.jpg" alt="">
                 <p>Fox & The Mayors</p>
             </div>
 
             <div class="individual-event">
-                <img src="/img/bavoKerkBanner.jpg" alt="">
+                <img src="/img/unclesue.jpg" alt="">
                 <p>Uncle Sue</p>
             </div>
 
             <div class="individual-event">
-                <img src="/img/bavoKerkBanner.jpg" alt="">
+                <img src="/img/krisallen.jpeg" alt="">
                 <p>Kris Allen</p>
             </div>
 
             <div class="individual-event">
-                <img src="/img/bavoKerkBanner.jpg" alt="">
+                <img src="/img/mylessanki.jpg" alt="">
                 <p>Myles Sanko</p>
             </div>
 
             <div class="individual-event">
-                <img src="/img/bavoKerkBanner.jpg" alt="">
+                <img src="/img/soulsix.jpeg" alt="">
                 <p>Soul Six</p>
             </div>
 
             <div class="individual-event">
-                <img src="/img/bavoKerkBanner.jpg" alt="">
+                <img src="/img/ruis.jpg" alt="">
                 <p>Ruis Soundsystem</p>
             </div>
 
             <div class="individual-event">
-                <img src="/img/bavoKerkBanner.jpg" alt="">
+                <img src="/img/familyxl.jpeg" alt="">
                 <p>The Family XL</p>
             </div>
 
             <div class="individual-event">
-                <img src="/img/bavoKerkBanner.jpg" alt="">
+                <img src="/img/garedenord.jpg" alt="">
                 <p>Gare Du Nord</p>
             </div>
 
             <div class="individual-event">
-                <img src="/img/bavoKerkBanner.jpg" alt="">
+                <img src="/img/rilan.jpeg" alt="">
                 <p>Rilan and the bombardiers</p>
             </div>
 
             <div class="individual-event">
-                <img src="/img/bavoKerkBanner.jpg" alt="">
+                <img src="/img/han bennink.jpg" alt="">
                 <p>Han Bennink</p>
             </div>
 
             <div class="individual-event">
-                <img src="/img/bavoKerkBanner.jpg" alt="">
+                <img src="/img/nordanians.jpg" alt="">
                 <p>The Nordanians</p>
             </div>
 
             <div class="individual-event">
-                <img src="/img/bavoKerkBanner.jpg" alt="">
+                <img src="/img/lilith.jpg" alt="">
                 <p>Lilith Merlot</p>
             </div>
         </div>
@@ -217,37 +217,37 @@ include __DIR__ . '/header.php';
         <div class="banner-content">
             <!-- for every event / artist make this-->
             <div class="individual-event">
-                <img src="/img/bavoKerkBanner.jpg" alt="">
+                <img src="/img/cafederoemer.jpg" alt="">
                 <p>Cafe de roemer</p>
             </div>
 
             <div class="individual-event">
-                <img src="/img/bavoKerkBanner.jpg" alt="">
+                <img src="/img/ratatoulle.jpg" alt="">
                 <p>Ratatouille</p>
             </div>
 
             <div class="individual-event">
-                <img src="/img/bavoKerkBanner.jpg" alt="">
+                <img src="/img/ML.jpg" alt="">
                 <p>ML Restaurant</p>
             </div>
 
             <div class="individual-event">
-                <img src="/img/bavoKerkBanner.jpg" alt="">
+                <img src="/img/fris.jpg" alt="">
                 <p>Fris Restaurant</p>
             </div>
 
             <div class="individual-event">
-                <img src="/img/bavoKerkBanner.jpg" alt="">
+                <img src="/img/specktackel.jpg" alt="">
                 <p>Specktacel</p>
             </div>
 
             <div class="individual-event">
-                <img src="/img/bavoKerkBanner.jpg" alt="">
+                <img src="/img/cafebrinkman.jpg" alt="">
                 <p>Grand cafe Brinkman</p>
             </div>
 
             <div class="individual-event">
-                <img src="/img/bavoKerkBanner.jpg" alt="">
+                <img src="/img/urbanfrenchy.jpg" alt="">
                 <p>Urban Frenchy Bistro Toujours</p>
             </div>
         </div>
