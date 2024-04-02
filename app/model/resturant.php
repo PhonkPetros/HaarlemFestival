@@ -14,9 +14,18 @@ class Restaurant implements \JsonSerializable{
     private string $endDate;
     private ?string $picture;
     private string $description;
+    private int $eventId;
 
     public function getId(): int {
         return $this->id;
+    }
+
+    public function setEventId(int $eventId): void {
+        $this->eventId = $eventId;
+    }
+
+    public function getEventId(): int {
+        return $this->eventId;
     }
 
     public function setId(int $id): void {

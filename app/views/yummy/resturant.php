@@ -39,22 +39,30 @@ if ($restaurantDetails !== null) {
   <div class="row">
     <div class="col-md-3 mb-4">
       <img src="/img/<?php echo $contentData[3]['image']?>" alt="Caviar dish" class="img-fluid">
-      <?php echo $contentData[3]['content']?>
+      <div style="background-color: #ffffff; padding: 10px; margin-top: 10px;">
+        <?php echo $contentData[3]['content']?>
+      </div>
     </div>
 
     <div class="col-md-3 mb-4">
       <img src="/img/<?php echo $contentData[4]['image']?>" alt="Le dîner dish" class="img-fluid">
-      <?php echo $contentData[4]['content']?>
+      <div style="background-color: #ffffff; padding: 10px; margin-top: 10px;">
+       <?php echo $contentData[4]['content']?>
+      </div>
     </div>
 
     <div class="col-md-3 mb-4">
       <img src="/img/<?php echo $contentData[5]['image']?>" alt="Le déjeuner dish" class="img-fluid">
+      <div style="background-color: #ffffff; padding: 10px; margin-top: 10px;">
       <?php echo $contentData[5]['content']?>
+      </div>
     </div>
 
     <div class="col-md-3 mb-4">
       <img src="/img/<?php echo $contentData[6]['image']?>" alt="Le repas dish" class="img-fluid">
-      <?php echo $contentData[6]['content']?>
+      <div style="background-color: #ffffff; padding: 10px; margin-top: 10px;">
+        <?php echo $contentData[6]['content']?>
+      </div>
     </div>
   </div>
 </div>
@@ -84,8 +92,8 @@ if ($restaurantDetails !== null) {
         <div class="restaurant-email">
           <p><?php echo htmlspecialchars($restaurantDetails->getEndDate())?></p> 
         </div>
+        <?php echo $restaurantDetails->getPrice()?>
       </div>
-      <button class="book-table">BOOK A TABLE</button>
     </div>
   </div>
 </div>
@@ -98,18 +106,32 @@ if ($restaurantDetails !== null) {
       <thead>
         <tr>
           <th scope="col">TimeSlots</th>
+          <th scope="col">Ticket ID</th>
           <th scope="col">Date</th>
           <th scope="col">Time</th>
           <th scope="col">Quantity</th>
         </tr>
       </thead>
       <tbody>
-        <?php foreach ($timeslots as $index => $ticket): ?>
+      <?php foreach ($timeslots as $index => $ticket): ?>
           <tr>
-            <th scope="row"><?php echo $index + 1; ?></th>
-            <td><?php echo htmlspecialchars($ticket->getTicketDate()); ?></td>
-            <td><?php echo htmlspecialchars($ticket->getTicketTime()); ?></td>
-            <td><?php echo htmlspecialchars($ticket->getQuantity()); ?></td>
+              <th scope="row"><?php echo $index + 1; ?></th>
+              <td><?php echo htmlspecialchars($ticket->getTicketId()); ?></td>
+              <td><?php echo htmlspecialchars($ticket->getTicketDate()); ?></td>
+              <td><?php echo htmlspecialchars($ticket->getTicketTime()); ?></td>
+              <td><?php echo htmlspecialchars($ticket->getQuantity()); ?></td>
+              <td>
+                <button class="btn btn-primary btn-block btn-reserve reserve-btn" 
+                data-ticket-id="<?= htmlspecialchars($ticket->getTicketId()) ?>"
+                data-event-id="<?= htmlspecialchars($ticket->getEventId()) ?>"
+                data-endtime="<?= htmlspecialchars(date('H:i', strtotime($ticket->getTicketTime() . '  +8 hours'))) ?>"
+                data-price="<?= htmlspecialchars($restaurantDetails->getPrice()) ?>"
+                data-date="<?= htmlspecialchars($ticket->getTicketDate()) ?>"
+                data-time="<?= htmlspecialchars($ticket->getTicketTime()) ?>"
+                data-location="<?= htmlspecialchars($restaurantDetails->getLocation()) ?>"
+                data-restaurant-name="<?= htmlspecialchars($restaurantDetails->getName()) ?>"
+                data-special-remarks="">Reserve</button>
+              </td>
           </tr>
         <?php endforeach; ?>
       </tbody>
@@ -137,6 +159,19 @@ if ($restaurantDetails !== null) {
 <div class="picture-location">
   <img src="/img/<?php echo $contentData[10]['image']?>" alt="Location Picture" class="img-location">
 </div>
+
+<?php require_once __DIR__ . '/../../views/reservation-form/popup-reservation-restaurant.php' ?>
+
+
+<script src="/js/add-reservation.js"></script>
+
+
+
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.9/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
 
 <?php include __DIR__ . '/../general_views/footer.php'; ?>
 

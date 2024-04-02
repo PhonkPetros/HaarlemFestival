@@ -7,6 +7,11 @@ th, td {
     text-align: left;
 }
 
+
+.text-background{
+  background-color: white;
+}
+
 .div {
   display: flex;
   flex-direction: column;
@@ -348,4 +353,10 @@ body {
     margin-right: 0; /* No right margin on smaller screens */
     margin-bottom: 20px; /* Space below image */
   }
+}
+
+
+.text-background {
+  background-color: #ffffff;
+  padding: 10px;
 }

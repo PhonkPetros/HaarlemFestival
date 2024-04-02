@@ -7,6 +7,7 @@ use services\registerservice;
 use services\ticketservice;
 use controllers\NavigationController;
 use controllers\MollieAPIController;
+use model\OrderItem;
 
 //call the user service to check update user data 
 
@@ -16,10 +17,13 @@ require_once __DIR__ . '/../services/registerservice.php';
 require_once __DIR__ . '/../config/constant-paths.php';
 require_once __DIR__ . '/../controllers/navigationcontroller.php';
 require_once __DIR__ . '/../services/ticketservice.php';
+require_once __DIR__ . '/../controllers/smtpcontroller.php';
+require_once __DIR__ . '/../model/orderItem.php';
 
 
 class Myprogramcontroller
 {
+    private $smtpcontroller;
     private $navigationController;
     private $mollieAPIController;
     private $ticketservice;
@@ -36,6 +40,7 @@ class Myprogramcontroller
         $this->userService = new registerservice();
         $this->navcontroller = new NavigationController();
         $this->mollieAPIController = new MollieAPIController();
+        $this->smtpcontroller = new SMTPController();
 
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
@@ -134,6 +139,7 @@ class Myprogramcontroller
             'ticketLocation' => $input['ticketLocation'] ?? '',
             'user' => $userInfo
         ];
+        
 
         //If your event has extra info that needs to be added to a shopping cart then add it below
         switch ($ticketInfo['eventId']) {
@@ -153,6 +159,7 @@ class Myprogramcontroller
             default:
                 break;
         }
+
 
         //Checking if the ticket already exists in the cart
         foreach ($_SESSION['shopping_cart'] as $item) {
@@ -190,12 +197,12 @@ class Myprogramcontroller
 
         $_SESSION['shopping_cart'][] = $ticketInfo;
 
+
         header('Content-Type: application/json');
         echo json_encode([
             'status' => 'success',
             'message' => 'Reservation successfully created!',
         ]);
-
 
         exit;
     }
@@ -421,10 +428,8 @@ class Myprogramcontroller
         exit;
     }
 
-    //if the mollie api returns with a good response then 
     public function paymentSuccess()
     {
-        // Start the session if it hasn't been started already
         if (session_status() == PHP_SESSION_NONE) {
             session_start();
         }
@@ -435,24 +440,42 @@ class Myprogramcontroller
             exit;
         }
 
-        // Retrieve the payment ID from the session
         $paymentId = $_SESSION['payment_id'];
 
-        // Retrieve the payment status using the payment ID
         $paymentStatus = $this->mollieAPIController->getPaymentStatus($paymentId);
 
         if ($paymentStatus !== 'paid') {
-            // Redirect to a failure page or handle the failure scenario
             header('Location: /my-program/payment-failure');
             exit;
         }
 
-        // If payment is successful, proceed with the existing code
+        if (!isset($_SESSION['user']) || !isset($_SESSION['user']['userID'])) {
+            echo json_encode(['status' => 'error', 'message' => 'User information is missing.']);
+            exit;
+        }
         $userId = $_SESSION['user']['userID'];
+
+        if (!isset($_SESSION['shopping_cart']) || empty($_SESSION['shopping_cart'])) {
+            echo json_encode(['status' => 'error', 'message' => 'Shopping cart is empty.']);
+            exit;
+        }
+
         $orderProcessingResult = $this->myProgramService->processOrder($userId, $_SESSION['shopping_cart'], $paymentStatus);
 
         if ($orderProcessingResult['status'] === 'success') {
-            // Empty the shopping cart session data after successful order processing
+            $itemHashes = $orderProcessingResult['itemHashes'];
+
+            $firstCartItem = $_SESSION['shopping_cart'][0];
+            if (isset($firstCartItem['user']) && isset($firstCartItem['user']['email']) && isset($firstCartItem['user']['firstName'])) {
+                $email = $firstCartItem['user']['email'];
+                $firstName = $firstCartItem['user']['firstName'];
+                $this->smtpcontroller->sendInvoice($email, $firstName,  $_SESSION['shopping_cart']);
+                $this->smtpcontroller->sendTickets($email, $firstName, $itemHashes);
+            } else {
+                echo json_encode(['status' => 'error', 'message' => 'User email or first name is missing from the first cart item.']);
+                exit;
+            }
+
             $_SESSION['shopping_cart'] = [];
             header('Location: /my-program/order-confirmation');
             exit;
@@ -461,6 +484,9 @@ class Myprogramcontroller
             exit;
         }
     }
+
+
+
 
     //this checks if tickets are still available in database from session data 
     function checkTicketsAvailability($cart)
@@ -542,8 +568,4 @@ class Myprogramcontroller
         }
     }
 
-
-
 }
-
-

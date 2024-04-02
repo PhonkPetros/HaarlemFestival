@@ -1,6 +1,4 @@
 <div class="container-wrapper">
-
-
     <div class="container mt-4 myprogram-container ">
         <h1>My Program</h1>
         <div class="row justify-content-between align-items-center mb-3 ">

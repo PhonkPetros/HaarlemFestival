@@ -1,5 +1,7 @@
 {
     "require": {
-        "mollie/mollie-api-php": "^2.65"
+        "mollie/mollie-api-php": "^2.65",
+        "chillerlan/php-qrcode": "^5.0",
+        "endroid/qr-code": "^5.0"
     }
 }

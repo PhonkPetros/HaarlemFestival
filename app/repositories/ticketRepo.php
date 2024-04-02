@@ -7,11 +7,13 @@ use PDO;
 use PDOException;
 use model\Event;
 use model\Ticket;
+use model\User;
 
 
 require_once __DIR__ . '/../config/dbconfig.php';
 require_once __DIR__ . '/../model/event.php';
 require_once __DIR__ . '/../model/ticket.php';
+require_once __DIR__ . '/../model/user.php';
 
 class TicketRepo extends dbconfig
 {
@@ -137,11 +139,75 @@ class TicketRepo extends dbconfig
             return null; 
         }
     }
+
+
+    public function getReservedTicketsByUserId($userID) {
+        // Adjusted SQL to include JOIN with Event table and filter by 'Reserved' state
+        $sql = 'SELECT Ticket.*, Event.* FROM Ticket 
+                JOIN Event ON Event.event_id = Ticket.event_id 
+                WHERE Ticket.user_id = :userID AND Ticket.state = \'Reserved\'';
+    
+        $tickets = [];
+        try {
+            $stmt = $this->getConnection()->prepare($sql);
+            $stmt->bindParam(':userID', $userID, \PDO::PARAM_INT);
+            $stmt->execute();
+    
+            $ticketsData = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    
+            foreach ($ticketsData as $ticketData) {
+                $ticket = new Ticket();
+                $ticket->setTicketId($ticketData['ticket_id']);
+                $ticket->setUserId($ticketData['user_id']);
+                $ticket->setQuantity($ticketData['quantity']);
+                $ticket->setTicketHash($ticketData['ticket_hash']);
+                $ticket->setState($ticketData['state']);
+                $ticket->setEventId($ticketData['event_id']);
+                $ticket->setTicketDate($ticketData['Date']); 
+                $ticket->setTicketTime($ticketData['Time']);
+                $ticket->setPrice($ticketData['price']);
+                $ticket->setSpecialRequest($ticketData['special_request']);
+    
+                $tickets[] = $ticket;
+            }
+        } catch (\PDOException $e) {
+            echo "Error: " . $e->getMessage();
+        }
+        return $tickets;
+    }
     
 
+    public function getUserDetails($userID) {
+        $sql = 'SELECT * FROM [User] WHERE user_id = :userID';
+        try {
+            $stmt = $this->getConnection()->prepare($sql);
+            $stmt->bindParam(':userID', $userID, \PDO::PARAM_INT);
+            $stmt->execute();
 
+            $stmt->setFetchMode(\PDO::FETCH_ASSOC);
+            $userDetails = $stmt->fetch();
 
+            if (!$userDetails) {
+                return null;
+            }
 
+            $user = new \model\User();
+            $user->setUserID($userDetails['user_id']);
+            $user->setUserEmail($userDetails['email']);
+            $user->setUsername($userDetails['username']);
+            $user->setPassword($userDetails['password_hash']);
+            $user->setUserRole($userDetails['role']);
+            $user->setRegistrationDate($userDetails['created_at']);
+            $user->setFirstname($userDetails['firstname']);
+            $user->setLastname($userDetails['lastname']);
+            $user->setAddress($userDetails['address']);
+            $user->setPhoneNumber($userDetails['phone_number']);
 
+            return $user;
+        } catch (\PDOException $e) {
+            echo "Error: " . $e->getMessage();
+            return null;
+        }
+    }
 
 }

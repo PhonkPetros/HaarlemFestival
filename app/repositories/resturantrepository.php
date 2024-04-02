@@ -238,21 +238,24 @@ class resturantrepository extends dbconfig {
                         $restaurantDetails = new \model\Restaurant();
                         $restaurantDetails->setId($result['resturant_id'] ?? '');
                         $restaurantDetails->setLocation($result['location'] ?? '');
+                        $restaurantDetails->setName($result['name'] ?? '');
                         $restaurantDetails->setPrice($result['price'] ?? 0); // Assuming 0 is a sensible default for price
                         $restaurantDetails->setSeats(isset($result['seats']) ? (int)$result['seats'] : null);
                         $restaurantDetails->setStartDate($result['startDate'] ?? '');
                         $restaurantDetails->setEndDate($result['endDate'] ?? '');
                         $restaurantDetails->setPicture($result['picture'] ?? '');
+                        $restaurantDetails->setEventId($result['event_id'] ?? '');
                     }
             
                     $ticketStmt = $this->connection->prepare("SELECT * FROM Ticket WHERE event_id = :eventId");
-                    $ticketStmt->bindValue(':eventId', $result['event_id'] ?? 0, PDO::PARAM_INT);
+                    $ticketStmt->bindValue(':eventId', $restaurantDetails->getEventId(), PDO::PARAM_INT);
                     $ticketStmt->execute();
                     $ticketResults = $ticketStmt->fetchAll(PDO::FETCH_ASSOC);
             
                     foreach ($ticketResults as $ticketResult) {
                         $ticket = new \model\Ticket();
                         $ticket->setEventId($ticketResult['event_id'] ?? '');
+                        $ticket->setTicketId($ticketResult['ticket_id'] ?? '');
                         $ticket->setTicketHash($ticketResult['ticket_hash'] ?? '');
                         $ticket->setTicketDate($ticketResult['Date'] ?? '');
                         $ticket->setTicketTime($ticketResult['Time'] ?? '');
@@ -342,5 +345,47 @@ class resturantrepository extends dbconfig {
         }
 
     }
+
+    public function addReservation($ticket_id, $user_id, $specialRequest, $address, $firstName, $lastName, $phoneNumber) {
+        try {
+            $this->connection->beginTransaction();
+            
+            $stmtTicket = $this->connection->prepare("
+                UPDATE Ticket 
+                SET user_id = :user_id, 
+                    state = 'Reserved', 
+                    special_request = :specialRequest
+                WHERE ticket_id = :ticket_id");
+            $stmtTicket->bindValue(':ticket_id', $ticket_id);
+            $stmtTicket->bindValue(':user_id', $user_id);
+            $stmtTicket->bindValue(':specialRequest', $specialRequest);
+            $stmtTicket->execute();
+            
+            $stmtUser = $this->connection->prepare("
+                UPDATE [User] 
+                SET address = :address, 
+                    firstname = :firstname, 
+                    lastname = :lastname, 
+                    phone_number = :phone_number
+                WHERE user_id = :user_id");
+            $stmtUser->bindValue(':user_id', $user_id);
+            $stmtUser->bindValue(':address', $address);
+            $stmtUser->bindValue(':firstname', $firstName);
+            $stmtUser->bindValue(':lastname', $lastName);
+            $stmtUser->bindValue(':phone_number', $phoneNumber);
+            $stmtUser->execute();
+            
+            $this->connection->commit();
+            
+            return true;
+        } catch (PDOException $e) {
+            $this->connection->rollBack();
+            echo "Error: " . $e->getMessage();
+            return false;
+        }
+    }
+    
+
+
 
 }

@@ -1,4 +1,7 @@
 <?php
+
+
+
 session_start();
 
 use controllers\logincontroller;
@@ -15,13 +18,10 @@ use controllers\overview;
 use controllers\Templatecontroller;
 use controllers\yummycontroller;
 use controllers\Pagecontroller;
-use controllers\resetpasswordcontroller;
 use controllers\Myprogramcontroller;
 use controllers\orderoverviewcontroller;
 
 require_once __DIR__ . '/../controllers/overview.php';
-require_once __DIR__ . '/../controllers/myprogramcontroller.php';
-require_once __DIR__ . '/../config/constant-paths.php';
 require_once __DIR__ . '/../controllers/registercontroller.php';
 require_once __DIR__ . '/../controllers/logincontroller.php';
 require_once __DIR__ . '/../controllers/logoutcontroller.php';
@@ -35,6 +35,7 @@ require_once __DIR__ . '/../controllers/navigationcontroller.php';
 require_once __DIR__ . '/../controllers/pagecontroller.php';
 require_once __DIR__ . '/../controllers/templatecontroller.php';
 require_once __DIR__ . '/../controllers/yummycontroller.php';
+require_once __DIR__ . '/../controllers/myprogramcontroller.php';
 require_once __DIR__ . '/../controllers/resetpasswordcontroller.php';
 require_once __DIR__ . '/../controllers/orderoverviewcontroller.php';
 
@@ -45,16 +46,12 @@ $method = $_SERVER['REQUEST_METHOD'];
 //Please do not touch this
 $editPageID = null;
 $sectionEdit = null;
-$token = null;
-$dancePageID = null;
-
 $queryString = parse_url($request, PHP_URL_QUERY);
 $queryParams = [];
 if ($queryString !== null) {
     parse_str($queryString, $queryParams);
 }
 $pageID = htmlspecialchars($queryParams["pageid"] ?? '');
-
 $eventID = null;
 if (strpos($request, '/manage-event-details/') === 0) {
     $eventID = htmlspecialchars($queryParams["id"] ?? '');
@@ -65,12 +62,10 @@ if (strpos($request, '/edit-content/') === 0) {
 if (strpos($request, '/sectionEdit/') === 0) {
     $sectionEdit = htmlspecialchars($queryParams['section_id'] ?? '');
 }
-if (strpos($request, '/new-password/') === 0) {
-    $token = htmlspecialchars($queryParams["token"] ?? '');
-}
-if (strpos($request, '/dance/') === 0) {
-    $dancePageID = htmlspecialchars($queryParams["artist"] ?? '');
-}
+
+
+
+
 
 //Please do not touch this
 if ($request === '/') {
@@ -85,8 +80,6 @@ function respondWith404()
     require __DIR__ . '/../views/404.php';
     exit;
 }
-
-
 
 if ($pageID || $eventID || $editPageID || $sectionEdit || $token || $dancePageID) {
     //this has to do with the editing of event details
@@ -132,36 +125,47 @@ if ($pageID || $eventID || $editPageID || $sectionEdit || $token || $dancePageID
                     respondWith404();
                 }
                 break;
-            default:
+            case $eventID > 8:
+                $controller = new Restaurantcontroller();
+                if ($method === 'GET') {
+                    $controller->editEventDetails($eventID);
+                }
                 break;
+            default:
+                $controller = new TemplateController();
+                if ($method === 'GET') {
+                    $controller->show();
+                }
+            break;
+
         }
         exit;
     } elseif ($pageID) {
         //this has to with our own pages
         switch ($pageID) {
-            case PAGE_ID_HOME:
+            case "1":
                 $controller = new overview();
                 $controller->show();
                 break;
-            case PAGE_ID_HISTORY:
+            case '2':
                 $controller = new Historycontroller();
                 if ($method === 'GET') {
                     $controller->show();
                 }
                 break;
-            case PAGE_ID_DANCE:
+            case '3':
                 $controller = new Dancecontroller();
                 if ($method === 'GET') {
                     $controller->show();
                 }
                 break;
-            case PAGE_ID_JAZZ:
+            case '4':
                 $controller = new Jazzcontroller();
                 if ($method === 'GET') {
                     $controller->show();
                 }
                 break;
-            case PAGE_ID_YUMMY:
+            case '5':
                 $controller = new yummycontroller();
                 if ($method === 'GET') {
                     $controller->showYummyOverview();
@@ -219,16 +223,6 @@ if ($pageID || $eventID || $editPageID || $sectionEdit || $token || $dancePageID
                 break;
         }
         exit;
-    } elseif ($dancePageID) {
-        switch ($dancePageID) {
-            default;
-                $controller = new Dancecontroller();
-                if ($method === 'GET') {
-                    $controller->showArtist($dancePageID);
-                }
-                break;
-        }
-        exit;
     }
 }
 
@@ -262,10 +256,11 @@ switch ($request) {
             $controller->loginAction();
         }
         break;
+
     case '/reset-password':
         $controller = new resetpasswordcontroller();
         if ($method === 'GET') {
-            $controller->showResetPasswordForm();
+            $controller->show();
         } elseif ($method === 'POST') {
             $controller->resetpasswordAction();
         }
@@ -286,7 +281,6 @@ switch ($request) {
             $controller->successfulNewPassword();
         }
         break;
-
     case '/register':
         $controller = new registercontroller();
         if ($method === 'GET') {
@@ -295,7 +289,6 @@ switch ($request) {
             $controller->registerAction();
         }
         break;
-
     case '/logout':
         $logoutController = new Logoutcontroller();
         $logoutController->logout();
@@ -578,6 +571,16 @@ switch ($request) {
             respondWith404();
         }
         break;
+    case "/editRestaurantDetails/addRestaurant":
+        if ($_SESSION['role'] === 'admin') {
+        $controller = new Restaurantcontroller();
+        if ($method === 'POST') {
+            $controller->addRestaurant();
+        } }else {
+            http_response_code(404);
+        }
+        break;
+
     case '/admin/add-section':
         if ($_SESSION['role'] === 'admin') {
             $controller = new Pagecontroller();
@@ -588,10 +591,23 @@ switch ($request) {
             respondWith404();
         }
         break;
-    case '/submit-reservation':
-        $controller = new Myprogramcontroller();
+    case "/restaurant/delete":
+        if ($_SESSION['role'] === 'admin') {
+        $controller = new Restaurantcontroller();
         if ($method === 'POST') {
-            $controller->createReservation();
+            $controller->deleteRestaurant();
+        }
+    }else {
+        http_response_code(404);
+    }
+        break;
+    case "/restaurant/deletetimeslot":
+        if ($_SESSION['role'] === 'admin') {
+        $controller = new Restaurantcontroller();
+        if ($method === 'POST') {
+            $controller->deleteTimeSlot();
+        } } else {
+            http_response_code(404);
         }
         break;
     case '/my-program':
@@ -616,12 +632,6 @@ switch ($request) {
         $controller = new Myprogramcontroller();
         if ($method === 'GET') {
             $controller->updateTotalCartPrice();
-        }
-        break;
-    case '/get-share-link':
-        $controller = new Myprogramcontroller();
-        if ($method === 'GET') {
-            $controller->generateShareableLink();
         }
         break;
     case '/my-program/payment':
@@ -650,10 +660,17 @@ switch ($request) {
         break;
     case '/my-program/payment-failure':
         $controller = new Myprogramcontroller();
-        if ($method == 'GET') {
+        if($method == 'GET'){
             $controller->showFailure();
+        }    
+        break;
+    case '/reservation/restaurant':
+        $controller = new Restaurantcontroller();
+        if ($method === 'POST') {
+            $controller->makeAnReservation();
         }
         break;
+    
     case '/admin/order-overview':
         if ($_SESSION['role'] === 'admin') {
             $controller = new orderoverviewcontroller();
@@ -673,6 +690,12 @@ switch ($request) {
             }
         } else {
             respondWith404();
+        }
+        break;
+    case '/submit-reservation':
+        $controller = new Myprogramcontroller();
+        if ($method === 'POST') {
+            $controller->createReservation();
         }
         break;
     default:

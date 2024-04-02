@@ -166,5 +166,65 @@ class Restaurantcontroller
             exit(); 
         }        
     }
+
+
+    public function makeAnReservation() {
+        if (!isset($_SESSION['user']['userID'])) {
+            echo json_encode(['error' => 'User not logged in', 'login_required' => true]);
+            return;
+        }
+    
+        $data = json_decode(file_get_contents('php://input'), true);
+    
+        $errors = $this->validateReservationFields($data);
+        if (!empty($errors)) {
+            echo json_encode(['errors' => $errors]);
+            return;
+        }
+    
+        $ticketId = $data['ticketId'];
+        $user_id = $_SESSION['user']['userID']; 
+        $specialRequest = $data['specialRequest'];
+        $address = $data['address'];
+        $firstName = $data['firstName'];
+        $lastName = $data['lastName'];
+        $phoneNumber = $data['phoneNumber'];
+        $quantity = $data['quantity'];
+        $reservationPrice = 10.00; // Assuming a fixed price per reservation
+        $totalPrice = $quantity * $reservationPrice;
+    
+        $mollieController = new MollieAPIController();
+        $paymentResponse = $mollieController->createPayment($user_id, [
+            ['quantity' => $quantity, 'ticketPrice' => $totalPrice]
+        ], "creditcard");
+    
+        if ($paymentResponse['status'] === 'success') {
+            $this->restaurantService->addReservation($ticketId, $user_id, $specialRequest, $address, $firstName, $lastName, $phoneNumber);
+            
+            echo json_encode(['success' => true, 'paymentUrl' => $paymentResponse['paymentUrl']]);
+        } else {
+            echo json_encode(['error' => $paymentResponse['message']]);
+        }
+        exit;
+    }
+    
+    
+    private function validateReservationFields($data) {
+        $errors = [];
+        $fieldsToCheck = ['firstName', 'lastName', 'phoneNumber', 'email', 'quantity', 'ticketId'];
+    
+        foreach ($fieldsToCheck as $field) {
+            if (empty($data[$field])) {
+                $errors[] = ['error' => "$field field is required", 'field' => $field];
+            }
+        }
+    
+        if (isset($data['quantity']) && $data['quantity'] <= 0) {
+            $errors[] = ['error' => "Quantity must be greater than 0", 'field' => 'quantity'];
+        }
+    
+        return $errors;
+    }
+    
     
 }
