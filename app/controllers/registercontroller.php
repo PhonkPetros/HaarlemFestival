@@ -48,11 +48,9 @@ class registercontroller
                 return;
             }
     
-            $hashedPassword = password_hash($passwordRaw, PASSWORD_DEFAULT); 
-    
             $newUser = new User();
             $newUser->setUsername($username);
-            $newUser->setPassword($hashedPassword);
+            $newUser->setPassword($passwordRaw);
             $newUser->setUserEmail($email);
     
             if (!$this->registerService->username_exists($username) && !$this->registerService->email_exists($email)) {

@@ -83,6 +83,7 @@ class registerrepository extends dbconfig {
             return false;
         }
     }
+    
 
     public function updateUser($userInfo)
     {
