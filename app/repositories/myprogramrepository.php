@@ -123,7 +123,7 @@ class Myprogramrepository extends dbconfig
          return $itemHash;
 
     }
-
+    
     private function updateTicketQuantity($ticketId, $quantityPurchased)
     {
         try {

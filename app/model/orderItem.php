@@ -7,7 +7,7 @@ class OrderItem implements \JsonSerializable
     private int $order_id;
     private int $user_id;
     private int $quantity;
-    private ?string $language; // Can be null
+    private ?string $language; 
     private string $date;
     private string $start_time;
     private string $end_time;
@@ -18,6 +18,7 @@ class OrderItem implements \JsonSerializable
     private ?string $artist_name;
     private ?string $restaurant_name; 
     private ?string $special_remarks;
+    private ?string $status;
 
     public function jsonSerialize(): mixed {
         return [
@@ -36,8 +37,19 @@ class OrderItem implements \JsonSerializable
             'artist_name' => $this->getArtistName(),
             'restaurant_name' => $this->getRestaurantName(),
             'special_remarks' => $this->getSpecialRemarks(),
+            'status' => $this->getStatus(),
         ];
     }
+
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?string $status): void {
+        $this->status = $status;
+    }
+
     public function getEventId(): ?int {
         return $this->event_id;
     }

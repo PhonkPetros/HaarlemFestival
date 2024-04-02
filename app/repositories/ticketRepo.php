@@ -210,4 +210,56 @@ class TicketRepo extends dbconfig
         }
     }
 
+    public function checkTicket($hash) {
+        // First, check the current status of the order item
+        $sqlStatusCheck = 'SELECT status, order_id FROM [OrderItems] WHERE item_hash = :item_hash';
+    
+        try {
+            $stmt = $this->getConnection()->prepare($sqlStatusCheck);
+            $stmt->bindParam(':item_hash', $hash, \PDO::PARAM_STR);
+            $stmt->execute();
+    
+            $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+    
+            if ($result) {
+                if ($result['status'] === 'Inactive') {
+                    return ["status" => "error", "message" => "Ticket already scanned."];
+                } else {
+                    $updateResult = $this->updateOrderStatusToInactive($result['order_id']);
+                    if ($updateResult) {
+                        return ["status" => "success", "message" => "Order status updated successfully."];
+                    } else {
+                        return ["status" => "error", "message" => "Failed to update order status."];
+                    }
+                }
+            } else {
+                return ["status" => "error", "message" => "No matching order found for QR code."];
+            }
+        } catch (\PDOException $e) {
+            return ["status" => "error", "message" => $e->getMessage()];
+        }
+    }
+    
+    public function updateOrderStatusToInactive($orderId) {
+        $sql = 'UPDATE [OrderItems] SET status = :status WHERE order_id = :order_id';
+    
+        try {
+            $stmt = $this->getConnection()->prepare($sql);
+            $status = 'Inactive';
+            $stmt->bindParam(':status', $status, \PDO::PARAM_STR);
+            $stmt->bindParam(':order_id', $orderId, \PDO::PARAM_INT);
+            
+            $stmt->execute();
+    
+            if ($stmt->rowCount() > 0) {
+                return true; 
+            } else {
+                return false; 
+            }
+        } catch (\PDOException $e) {
+            echo "Error: " . $e->getMessage();
+            return false;
+        }
+    }
+    
 }

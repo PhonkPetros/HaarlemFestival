@@ -36,4 +36,8 @@ class ticketservice {
     function getUserDetails($userID){
         return $this->ticketRepo->getUserDetails($userID);
     }
+
+    function checkTicket($hash){
+        return $this->ticketRepo->checkTicket($hash);
+    }
 }

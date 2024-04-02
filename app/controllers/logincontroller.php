@@ -68,6 +68,9 @@ class logincontroller
                 case 'admin':
                     header('Location: /admin/dashboard');
                     exit();
+                case 'employee':
+                    header('Location: /employee/dashboard');
+                    exit();
                 default:
                     header('Location: /');
                     exit();

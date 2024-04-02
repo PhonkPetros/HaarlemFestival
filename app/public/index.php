@@ -20,6 +20,7 @@ use controllers\yummycontroller;
 use controllers\Pagecontroller;
 use controllers\Myprogramcontroller;
 use controllers\orderoverviewcontroller;
+use controllers\EmployeeController;
 
 require_once __DIR__ . '/../controllers/overview.php';
 require_once __DIR__ . '/../controllers/registercontroller.php';
@@ -38,6 +39,7 @@ require_once __DIR__ . '/../controllers/yummycontroller.php';
 require_once __DIR__ . '/../controllers/myprogramcontroller.php';
 require_once __DIR__ . '/../controllers/resetpasswordcontroller.php';
 require_once __DIR__ . '/../controllers/orderoverviewcontroller.php';
+require_once __DIR__ . '/../controllers/employeecontroller.php';
 
 
 $request = $_SERVER['REQUEST_URI'];
@@ -234,16 +236,16 @@ if ($pageID || $eventID || $editPageID || $sectionEdit || $token || $dancePageID
     }
 }
 
-if (strpos($request, '/share-cart/') === 0) {
-    $encodedCart = htmlspecialchars($queryParams["cart"] ?? '');
-    $hash = htmlspecialchars($queryParams["hash"] ?? '');
+// if (strpos($request, '/share-cart/') === 0) {
+//     $encodedCart = htmlspecialchars($queryParams["cart"] ?? '');
+//     $hash = htmlspecialchars($queryParams["hash"] ?? '');
 
-    $controller = new Myprogramcontroller();
-    if ($method === 'GET' && $encodedCart !== null && $hash !== null) {
-        $controller->showSharedCart($encodedCart, $hash);
-    }
-    exit;
-}
+//     $controller = new Myprogramcontroller();
+//     if ($method === 'GET' && $encodedCart !== null && $hash !== null) {
+//         $controller->showSharedCart($encodedCart, $hash);
+//     }
+//     exit;
+// }
 
 
 if (preg_match("/^\/restaurant\/details\/(\d+)$/", $request, $matches)) {
@@ -706,6 +708,19 @@ switch ($request) {
         $controller = new Myprogramcontroller();
         if ($method === 'POST') {
             $controller->createReservation();
+        }
+        break;
+    case '/employee/dashboard':
+        if ($_SESSION['role'] === 'employee'){
+            $controller = new EmployeeController();
+            if ($method === 'GET'){
+                $controller->showScanner();
+            }
+            elseif ($method === 'POST'){
+                $controller->scanTicket();
+            }
+        } else {
+            respondWith404();
         }
         break;
     default:
