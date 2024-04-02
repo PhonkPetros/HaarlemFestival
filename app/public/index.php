@@ -64,9 +64,6 @@ if (strpos($request, '/sectionEdit/') === 0) {
 }
 
 
-
-
-
 //Please do not touch this
 if ($request === '/') {
     $pageID = PAGE_ID_HOME;
