@@ -64,14 +64,13 @@
 </div>
 
 <div id="successPopup" class="modal" tabindex="-1" role="dialog">
-
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-body text-center">
                 <div id="successPopupContent">
-                    <div class="checkmark-circle">
-                        <div class="background"></div>
-                        <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                    <div class="checkmark-circle" style="width: 20px; height: 20px; position: relative; display: inline-block; vertical-align: middle; margin-bottom: 1rem;">
+                        <div class="background" style="width: 80px; height: 80px; border-radius: 50%; background: #4bb543; position: absolute;"></div>
+                        <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52" style="position: relative; display: inline-block;">
                             <circle class="checkmark-circle" cx="26" cy="26" r="25" fill="none"/>
                             <path class="checkmark-check" stroke="#fff" stroke-width="2" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
                         </svg>
@@ -83,6 +82,7 @@
         </div>
     </div>
 </div>
+
 
 <?php
 $userSession = isset ($_SESSION['user']) ? json_encode([
@@ -100,29 +100,6 @@ $userSession = isset ($_SESSION['user']) ? json_encode([
     ]);
 ?>
 
-<style>
-.checkmark-circle {
-    width: 20px;
-    height: 20px;
-    position: relative;
-    display: inline-block;
-    vertical-align: middle;
-    margin-bottom: 1rem;
-}
-
-.background {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    background: #4bb543;
-    position: absolute;
-}
-
-
-
-
-
-</style>
 <script>
     var userSession = <?php echo $userSession; ?>;
 </script>

@@ -1,4 +1,6 @@
-
+body {
+    background-image: url('/img/danceDetailBackground.png');
+}
 
 .dance-detail {
     color: #FFF;

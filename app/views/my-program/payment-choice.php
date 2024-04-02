@@ -1,12 +1,11 @@
-<div class="container mt-4 item-container">
+<div class="container mt-4 item-container" style="margin-top: 20px;">
     <h3>Select Payment Method</h3>
     <div class="row">
-
         <div class="col-sm-6 mb-3">
-            <div class="payment-option card shadow-sm">
-                <label for="ideal-banks" class="payment-label d-flex align-items-center">
-                    <img src="/../img/IDEAL_Logo.png" class="img-fluid" alt="iDEAL">
-                    <select id="ideal-banks" name="paymentMethod" class="form-control payment-method">
+            <div class="payment-option card shadow-sm" style="background-color: white; border: 1px black; padding: 12px;">
+                <label for="ideal-banks" class="payment-label d-flex align-items-center" style="display: flex; align-items: center;">
+                    <img src="/../img/IDEAL_Logo.png" class="img-fluid" alt="iDEAL" style="max-width: 80px; height: auto; margin-right: 10px;">
+                    <select id="ideal-banks" name="paymentMethod" class="form-control payment-method" style="background-color: white; -webkit-appearance: none; -moz-appearance: none; appearance: none; padding: 5px 10px; cursor: pointer;">
                         <option value="">Choose a Bank</option>
                         <option value="abn_amro">ABN AMRO</option>
                         <option value="ing">ING</option>
@@ -16,9 +15,9 @@
             </div>
         </div>
         <div class="col-sm-6 mb-3">
-            <div class="payment-option card shadow-sm">
-                <button type="button" class="payment-label d-flex align-items-center">
-                    <img class="img-fluid" src="/../img/visa.jpg" alt="Credit / Debit card">
+            <div class="payment-option card shadow-sm" style="background-color: white; border: 1px black; padding: 12px;">
+                <button type="button" class="payment-label d-flex align-items-center" style="width: 100%; border: none; background: transparent; padding: 10px; text-align: left;">
+                    <img class="img-fluid" src="/../img/visa.jpg" alt="Credit / Debit card" style="max-width: 80px; height: auto; margin-right: 10px;">
                     <span>Credit / Debit card</span>
                 </button>
             </div>
@@ -30,83 +29,4 @@
 </button>
 
 
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        var checkoutButton = document.getElementById('checkout-button');
-        checkoutButton.addEventListener('click', function () {
-            var paymentMethodElement = document.querySelector('.payment-method');
-            var paymentMethod = paymentMethodElement.value;
-            var issuerElement = document.getElementById('ideal-banks');
-            var issuer = paymentMethod === 'ideal' ? issuerElement.value : null;
-
-            var dataToSend = {
-                paymentMethod: paymentMethod,
-                issuer: issuer 
-            };
-
-
-            fetch('/create-payment', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(dataToSend)
-            })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok ' + response.statusText);
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    if (data.status === 'success') {
-                        window.location.href = data.paymentUrl;
-                    } else {
-                        alert('Error: ' + data.message);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('Error: Could not initiate payment.');
-                });
-        });
-    });
-
-</script>
-
-
-<style>
-    .payment-label img {
-        max-width: 80px;
-        height: auto;
-        margin-right: 10px;
-    }
-
-    .form-control {
-
-        background-color: white;
-        -webkit-appearance: none;
-        -moz-appearance: none;
-        appearance: none;
-        padding: 5px 10px;
-        cursor: pointer;
-    }
-
-    .payment-option {
-        background-color: white;
-        border: 1px black;
-        padding: 12px;
-    }
-
-    .payment-option button {
-        width: 100%;
-        border: none;
-        background: transparent;
-        padding: 10px;
-        text-align: left;
-    }
-
-    .payment-option button:hover {
-        background-color: #f2f2f2;
-    }
-</style>
+<script src="/js/payement-choice.js"></script>

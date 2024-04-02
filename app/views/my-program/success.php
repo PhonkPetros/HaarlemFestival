@@ -1,3 +1,4 @@
+<div class="container-wrapper">
 <div class="container-fluid text-center" style="max-width: 800px; margin: auto;">
 
     <div class="py-4">
@@ -15,6 +16,7 @@
             <h3 class="text-white m-0">Go To Program</h3>
         </a>
     </div>
+</div>
 </div>
 
 

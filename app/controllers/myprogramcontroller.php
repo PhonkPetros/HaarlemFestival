@@ -49,13 +49,13 @@ class Myprogramcontroller
         $structuredOrderedItems = [];
         $uniqueTimes = [];
 
-        if (isset ($_SESSION['shopping_cart']) && !empty ($_SESSION['shopping_cart'])) {
+        if (isset($_SESSION['shopping_cart']) && !empty($_SESSION['shopping_cart'])) {
             $structuredTickets = $this->structureTicketsWithImages();
 
         }
 
-        if(!isset($_SESSION['user'])){
-            $user = null; 
+        if (!isset($_SESSION['user'])) {
+            $user = null;
         }
         $structuredOrderedItems = $this->getStructuredPurchasedOrderItemsByUserID();
 
@@ -71,20 +71,10 @@ class Myprogramcontroller
         $uniqueTimes = [];
         $userInfo = $this->getUserInfoFromCart();
 
-        if (isset ($_SESSION['shopping_cart']) && !empty ($_SESSION['shopping_cart'])) {
+        if (isset($_SESSION['shopping_cart']) && !empty($_SESSION['shopping_cart'])) {
             $structuredTickets = $this->structureTicketsWithImages();
         }
-
-        $userInfo = $this->getUserInfoFromCart();
-        if (!$this->userService->email_exists($userInfo['email'])) {
-            echo json_encode(['status' => 'error', 'message' => 'User needs to register.']);
-            exit;
-        }
-        else{
-            require_once __DIR__ . "/../views/my-program/payment.php";
-        }
-
-      
+        require_once __DIR__ . "/../views/my-program/payment.php";
     }
 
     function showSuccess()
@@ -214,7 +204,7 @@ class Myprogramcontroller
     //creates a shopping cart if a shopping cart does not exist in the session data
     function createShoppingCart()
     {
-        if (!isset ($_SESSION['shopping_cart'])) {
+        if (!isset($_SESSION['shopping_cart'])) {
             $_SESSION['shopping_cart'] = array();
         }
     }
@@ -293,7 +283,7 @@ class Myprogramcontroller
             }
         }
 
-        if (empty ($_SESSION['shopping_cart'])) {
+        if (empty($_SESSION['shopping_cart'])) {
             $message = 'The shopping cart is now empty.';
         } else {
             $message = 'Item removed successfully.';
@@ -388,7 +378,7 @@ class Myprogramcontroller
     function getUserInfoFromCart()
     {
         foreach ($_SESSION['shopping_cart'] as $item) {
-            if (isset ($item['user'])) {
+            if (isset($item['user'])) {
                 return $item['user'];
             }
         }
@@ -440,7 +430,7 @@ class Myprogramcontroller
         }
 
         // Check if the payment ID is stored in the session
-        if (!isset ($_SESSION['payment_id'])) {
+        if (!isset($_SESSION['payment_id'])) {
             echo json_encode(['status' => 'error', 'message' => 'Payment ID is required.']);
             exit;
         }
@@ -492,7 +482,7 @@ class Myprogramcontroller
     function getStructuredPurchasedOrderItemsByUserID()
     {
         $structuredOrderItems = [];
-        if (isset ($_SESSION['user']) && isset ($_SESSION['user']['userID'])) {
+        if (isset($_SESSION['user']) && isset($_SESSION['user']['userID'])) {
             $userID = $_SESSION['user']['userID'];
             $purchasedOrderItems = $this->myProgramService->getOrderItemsByUser($userID);
 

@@ -1,14 +1,13 @@
+<div class="container-wrapper">
+    <div class="container mt-4 myprogram-container">
+        <h1>Payment</h1>
 
+        <? require_once __DIR__ . '/user-info.php'; ?>
+        <? require_once __DIR__ . '/cart-item.php'; ?>
+        <? require_once __DIR__ . '/payment-choice.php'; ?>
 
-<div class="container mt-4 myprogram-container">
-    <h1>Payment</h1>
-
-    <? require_once __DIR__ . '/user-info.php'; ?>
-    <? require_once __DIR__ . '/cart-item.php'; ?>
-    <? require_once __DIR__ . '/payment-choice.php'; ?>
-
+    </div>
 </div>
-
 
 <script src="/js/modifyBasket.js"></script>
 
