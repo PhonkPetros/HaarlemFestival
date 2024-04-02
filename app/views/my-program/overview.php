@@ -19,7 +19,6 @@
 </script>
 
 <script src="/js/my-program-agenda.js"></script>
-<script src="/js/checkingifuserexists.js"></script>
 <script src="/js/modifyBasket.js"></script>
 
 <?php

@@ -28,27 +28,32 @@ class Myprogramrepository extends dbconfig
 
 
     public function processOrder($userId, $cart, $paymentStatus)
-    {
-        $this->connection->beginTransaction();
-        try {
-            $totalPrice = 0.0; // Initialize as float
-            foreach ($cart as $item) {
-                $totalPrice += (int) $item['quantity'] * (float) $item['ticketPrice'];
-            }
-
-            $orderId = $this->createOrder($userId, $totalPrice, $paymentStatus);
-
-            foreach ($cart as $item) {
-                $itemHash = $this->createOrderItem($orderId, $userId, $item); // Capture the returned ItemHash
-                $itemHashes[] = $itemHash;
-            }
-            $this->connection->commit();
-            return ['status' => 'success', 'message' => 'Order processed successfully', 'itemHashes' => $itemHashes];
-        } catch (\Exception $e) {
-            $this->connection->rollback();
-            return ['status' => 'error', 'message' => 'Order processing failed: ' . $e->getMessage()];
+{
+    $this->connection->beginTransaction();
+    try {
+        $totalPrice = 0.0;
+        foreach ($cart as $item) {
+            $totalPrice += (int) $item['quantity'] * (float) $item['ticketPrice'];
         }
+
+        $orderId = $this->createOrder($userId, $totalPrice, $paymentStatus);
+
+        foreach ($cart as $item) {
+            $ticketId = $item['ticketId']; 
+            $quantityPurchased = $item['quantity'];
+
+            $itemHash = $this->createOrderItem($orderId, $userId, $item);
+            $itemHashes[] = $itemHash;
+            $this->updateTicketQuantity($ticketId, $quantityPurchased);
+        }
+        $this->connection->commit();
+        return ['status' => 'success', 'message' => 'Order processed successfully', 'itemHashes' => $itemHashes];
+    } catch (\Exception $e) {
+        $this->connection->rollback();
+        return ['status' => 'error', 'message' => 'Order processing failed: ' . $e->getMessage()];
     }
+}
+
 
     private function createOrder($userId, $totalPrice, $paymentStatus)
     {
@@ -68,11 +73,9 @@ class Myprogramrepository extends dbconfig
     //modify this to contain event id location ticket type artistname restaurant name and special remarks
     private function createOrderItem($orderId, $userId, $item)
     {
-        // Ensure the date format matches the one in your database
         $date = new DateTime($item['ticketDate']);
         $formattedDate = $date->format('Y-m-d');
 
-        // Similarly for time, ensure format matches your database's expectation
         $startTime = new DateTime($item['ticketTime']);
         $formattedStartTime = $startTime->format('H:i:s');
         $endTime = new DateTime($item['ticketEndTime']);
@@ -88,7 +91,6 @@ class Myprogramrepository extends dbconfig
             $ticketType = 'daypass';
         }
 
-        //intializing 
         $language = $item['ticketLanguage'] ?? null;
         $eventId = $item['eventId'] ?? null;
         $location = $item['ticketLocation'] ?? null;

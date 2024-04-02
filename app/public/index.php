@@ -221,6 +221,16 @@ if ($pageID || $eventID || $editPageID || $sectionEdit || $token || $dancePageID
                 break;
         }
         exit;
+    } elseif ($dancePageID) {
+        switch ($dancePageID) {
+            default;
+                $controller = new Dancecontroller();
+                if ($method === 'GET') {
+                    $controller->showArtist($dancePageID);
+                }
+                break;
+        }
+        exit;
     }
 }
 
