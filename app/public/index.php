@@ -77,6 +77,17 @@ if ($request === '/') {
     $pageID = PAGE_ID_HOME;
 }
 
+function respondWith404()
+{
+    http_response_code(404);
+    $navigation = new Navigationcontroller();
+    $navigation->displayHeader();
+    require __DIR__ . '/../views/404.php';
+    exit;
+}
+
+
+
 if ($pageID || $eventID || $editPageID || $sectionEdit || $token || $dancePageID) {
     //this has to do with the editing of event details
     if ($eventID) {
@@ -88,7 +99,7 @@ if ($pageID || $eventID || $editPageID || $sectionEdit || $token || $dancePageID
                         $controller->editEventDetails();
                     }
                 } else {
-                    http_response_code(404);
+                    respondWith404();
                 }
                 break;
             case EVENT_ID_JAZZ:
@@ -98,7 +109,7 @@ if ($pageID || $eventID || $editPageID || $sectionEdit || $token || $dancePageID
                         $controller->showEventDetails();
                     }
                 } else {
-                    http_response_code(404);
+                    respondWith404();
                 }
                 break;
             case $eventID > EVENT_ID_HISTORY:
@@ -108,7 +119,7 @@ if ($pageID || $eventID || $editPageID || $sectionEdit || $token || $dancePageID
                         $controller->editEventDetails($eventID);
                     }
                 } else {
-                    http_response_code(404);
+                    respondWith404();
                 }
                 break;
             case EVENT_ID_HISTORY:
@@ -118,7 +129,7 @@ if ($pageID || $eventID || $editPageID || $sectionEdit || $token || $dancePageID
                         $controller->showeditEventDetails();
                     }
                 } else {
-                    http_response_code(404);
+                    respondWith404();
                 }
                 break;
             default:
@@ -176,7 +187,7 @@ if ($pageID || $eventID || $editPageID || $sectionEdit || $token || $dancePageID
                         $controller->deleteSection();
                     }
                 } else {
-                    http_response_code(404);
+                    respondWith404();
                 }
                 break;
         }
@@ -193,7 +204,7 @@ if ($pageID || $eventID || $editPageID || $sectionEdit || $token || $dancePageID
                         $controller->updateContent();
                     }
                 } else {
-                    http_response_code(404);
+                    respondWith404();
                 }
                 break;
         }
@@ -294,7 +305,7 @@ switch ($request) {
             $controller = new Dancecontroller();
             $controller->addNewEvent();
         } else {
-            http_response_code(404);
+            respondWith404();
         }
         break;
     case '/dance/updateEvent':
@@ -302,7 +313,7 @@ switch ($request) {
             $controller = new Dancecontroller();
             $controller->updateEvent();
         } else {
-            http_response_code(404);
+            respondWith404();
         }
         break;
     case '/dance/addNewArtist':
@@ -310,7 +321,7 @@ switch ($request) {
             $controller = new Dancecontroller();
             $controller->addNewArtist();
         } else {
-            http_response_code(404);
+            respondWith404();
         }
         break;
     case '/dance/updateArtist':
@@ -318,7 +329,7 @@ switch ($request) {
             $controller = new Dancecontroller();
             $controller->updateArtist();
         } else {
-            http_response_code(404);
+            respondWith404();
         }
         break;
     case '/dance/deleteArtist':
@@ -326,7 +337,7 @@ switch ($request) {
             $controller = new Dancecontroller();
             $controller->deleteArtist();
         } else {
-            http_response_code(404);
+            respondWith404();
         }
         break;
     case '/dance/deleteEvent':
@@ -334,7 +345,7 @@ switch ($request) {
             $controller = new Dancecontroller();
             $controller->deleteEvent();
         } else {
-            http_response_code(404);
+            respondWith404();
         }
         break;
     case '/dance/addNewVenue':
@@ -342,7 +353,7 @@ switch ($request) {
             $controller = new Dancecontroller();
             $controller->addVenue();
         } else {
-            http_response_code(404);
+            respondWith404();
         }
         break;
     case '/dance/updateVenue':
@@ -350,7 +361,7 @@ switch ($request) {
             $controller = new Dancecontroller();
             $controller->updateVenue();
         } else {
-            http_response_code(404);
+            respondWith404();
         }
         break;
     case '/dance/deleteVenue':
@@ -358,7 +369,7 @@ switch ($request) {
             $controller = new Dancecontroller();
             $controller->deleteVenue();
         } else {
-            http_response_code(404);
+            respondWith404();
         }
         break;
     case '/admin/dashboard':
@@ -368,7 +379,7 @@ switch ($request) {
                 $controller->show();
             }
         } else {
-            http_response_code(404);
+            respondWith404();
         }
         break;
     case '/admin/manage-users':
@@ -379,7 +390,7 @@ switch ($request) {
 
             }
         } else {
-            http_response_code(404);
+            respondWith404();
         }
         break;
     case '/admin/delete-user':
@@ -389,7 +400,7 @@ switch ($request) {
                 $controller->deleteUsers();
             }
         } else {
-            http_response_code(404);
+            respondWith404();
         }
         break;
     case '/admin/filter-users':
@@ -399,7 +410,7 @@ switch ($request) {
                 $controller->filterUsers();
             }
         } else {
-            http_response_code(404);
+            respondWith404();
         }
         break;
     case '/admin/fetch-all-users':
@@ -409,7 +420,7 @@ switch ($request) {
                 $controller->getAllUsers();
             }
         } else {
-            http_response_code(404);
+            respondWith404();
         }
         break;
     case '/account':
@@ -423,7 +434,7 @@ switch ($request) {
                 $controller->addUsers();
             }
         } else {
-            http_response_code(404);
+            respondWith404();
         }
         break;
     case '/admin/edit-user':
@@ -433,7 +444,7 @@ switch ($request) {
                 $controller->editUsers();
             }
         } else {
-            http_response_code(404);
+            respondWith404();
         }
         break;
 
@@ -444,7 +455,7 @@ switch ($request) {
                 $controller->manageFestivals();
             }
         } else {
-            http_response_code(404);
+            respondWith404();
         }
         break;
     case '/admin/page-management/editfestival':
@@ -454,7 +465,7 @@ switch ($request) {
                 $controller->editFestivals();
             }
         } else {
-            http_response_code(404);
+            respondWith404();
         }
         break;
     case '/admin/orders':
@@ -464,7 +475,7 @@ switch ($request) {
                 $controller->manageOrders();
             }
         } else {
-            http_response_code(404);
+            respondWith404();
         }
         break;
     case '/editDetailsHistory/addNewTimeSlot':
@@ -474,7 +485,7 @@ switch ($request) {
                 $controller->addNewTimeSlot();
             }
         } else {
-            http_response_code(404);
+            respondWith404();
         }
         break;
     case '/editDetailsHistory/editEventDetails':
@@ -484,7 +495,7 @@ switch ($request) {
                 $controller->editEventDetails();
             }
         } else {
-            http_response_code(404);
+            respondWith404();
         }
         break;
     case '/editDetailsHistory/deleteTimeSlot':
@@ -494,7 +505,7 @@ switch ($request) {
                 $controller->removeTimeslot();
             }
         } else {
-            http_response_code(404);
+            respondWith404();
         }
         break;
     case '/modify-navigation/edit-navigation':
@@ -504,7 +515,7 @@ switch ($request) {
                 $controller->modifyNavigationPage();
             }
         } else {
-            http_response_code(404);
+            respondWith404();
         }
         break;
     case '/edit-navigation/modified':
@@ -514,7 +525,7 @@ switch ($request) {
                 $controller->updateNavigation();
             }
         } else {
-            http_response_code(404);
+            respondWith404();
         }
         break;
     case '/add-page':
@@ -524,7 +535,7 @@ switch ($request) {
                 $controller->addNewPage();
             }
         } else {
-            http_response_code(404);
+            respondWith404();
         }
         break;
     case '/sectionDelete':
@@ -534,7 +545,7 @@ switch ($request) {
                 $controller->deleteSection();
             }
         } else {
-            http_response_code(404);
+            respondWith404();
         }
         break;
     case '/delete-page':
@@ -544,7 +555,7 @@ switch ($request) {
                 $controller->deletePage();
             }
         } else {
-            http_response_code(404);
+            respondWith404();
         }
         break;
     case "/editResturantDetails/updateRestaurantDetails":
@@ -554,7 +565,7 @@ switch ($request) {
                 $controller->updateRestaurantDetails();
             }
         } else {
-            http_response_code(404);
+            respondWith404();
         }
         break;
     case "/editResturantDetails/addTimeSlot":
@@ -564,7 +575,7 @@ switch ($request) {
                 $controller->addTimeSlot();
             }
         } else {
-            http_response_code(404);
+            respondWith404();
         }
         break;
     case '/admin/add-section':
@@ -574,7 +585,7 @@ switch ($request) {
                 $controller->addNewSection();
             }
         } else {
-            http_response_code(404);
+            respondWith404();
         }
         break;
     case '/submit-reservation':
@@ -650,7 +661,7 @@ switch ($request) {
                 $controller->showOverviewTable();
             }
         } else {
-            http_response_code(404);
+            respondWith404();
         }
 
         break;
@@ -661,13 +672,10 @@ switch ($request) {
                 $controller->exportExcel();
             }
         } else {
-            http_response_code(404);
+            respondWith404();
         }
         break;
     default:
-        http_response_code(404);
-        $navigation = new Navigationcontroller();
-        $navigation->displayHeader();
-        require __DIR__ . '/../views/404.php';
+        respondWith404();
         break;
 }
