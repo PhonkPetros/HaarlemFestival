@@ -42,3 +42,6 @@
             </nav>
         </div>
     </main>
+
+    
+<script src="/js/logout.js"></script>

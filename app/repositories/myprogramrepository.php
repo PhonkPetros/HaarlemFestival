@@ -28,31 +28,31 @@ class Myprogramrepository extends dbconfig
 
 
     public function processOrder($userId, $cart, $paymentStatus)
-{
-    $this->connection->beginTransaction();
-    try {
-        $totalPrice = 0.0;
-        foreach ($cart as $item) {
-            $totalPrice += (int) $item['quantity'] * (float) $item['ticketPrice'];
+    {
+        $this->connection->beginTransaction();
+        try {
+            $totalPrice = 0.0;
+            foreach ($cart as $item) {
+                $totalPrice += (int) $item['quantity'] * (float) $item['ticketPrice'];
+            }
+
+            $orderId = $this->createOrder($userId, $totalPrice, $paymentStatus);
+
+            foreach ($cart as $item) {
+                $ticketId = $item['ticketId'];
+                $quantityPurchased = $item['quantity'];
+
+                $itemHash = $this->createOrderItem($orderId, $userId, $item);
+                $itemHashes[] = $itemHash;
+                $this->updateTicketQuantity($ticketId, $quantityPurchased);
+            }
+            $this->connection->commit();
+            return ['status' => 'success', 'message' => 'Order processed successfully', 'itemHashes' => $itemHashes];
+        } catch (\Exception $e) {
+            $this->connection->rollback();
+            return ['status' => 'error', 'message' => 'Order processing failed: ' . $e->getMessage()];
         }
-
-        $orderId = $this->createOrder($userId, $totalPrice, $paymentStatus);
-
-        foreach ($cart as $item) {
-            $ticketId = $item['ticketId']; 
-            $quantityPurchased = $item['quantity'];
-
-            $itemHash = $this->createOrderItem($orderId, $userId, $item);
-            $itemHashes[] = $itemHash;
-            $this->updateTicketQuantity($ticketId, $quantityPurchased);
-        }
-        $this->connection->commit();
-        return ['status' => 'success', 'message' => 'Order processed successfully', 'itemHashes' => $itemHashes];
-    } catch (\Exception $e) {
-        $this->connection->rollback();
-        return ['status' => 'error', 'message' => 'Order processing failed: ' . $e->getMessage()];
     }
-}
 
 
     private function createOrder($userId, $totalPrice, $paymentStatus)
@@ -73,16 +73,15 @@ class Myprogramrepository extends dbconfig
     //modify this to contain event id location ticket type artistname restaurant name and special remarks
     private function createOrderItem($orderId, $userId, $item)
     {
-        $date = new DateTime($item['ticketDate']);
+        $date = new \DateTime($item['ticketDate']);
         $formattedDate = $date->format('Y-m-d');
 
-        $startTime = new DateTime($item['ticketTime']);
+        $startTime = new \DateTime($item['ticketTime']);
         $formattedStartTime = $startTime->format('H:i:s');
-        $endTime = new DateTime($item['ticketEndTime']);
+        $endTime = new \DateTime($item['ticketEndTime']);
         $formattedEndTime = $endTime->format('H:i:s');
 
         $itemHash = hash('sha256', $userId . $orderId . microtime());
-
 
         $ticketType = '';
         if (isset($item['allAccessPass'])) {
@@ -94,13 +93,14 @@ class Myprogramrepository extends dbconfig
         $language = $item['ticketLanguage'] ?? null;
         $eventId = $item['eventId'] ?? null;
         $location = $item['ticketLocation'] ?? null;
-        $ticketType = $ticketType ?: null; 
+        $ticketType = $ticketType ?: null;
         $artistName = $item['artistName'] ?? null;
         $restaurantName = $item['restaurantName'] ?? null;
         $specialRemarks = $item['specialRemarks'] ?? null;
+        $status = 'Active'; 
 
-        $sql = "INSERT INTO OrderItems (order_id, user_id, quantity, language, date, start_time, end_time, item_hash, event_id, location, ticket_type, artist_name, restaurant_name, special_remarks) 
-        VALUES (:order_id, :user_id, :quantity, :language, :date, :start_time, :end_time, :item_hash, :event_id, :location, :ticket_type, :artist_name, :restaurant_name, :special_remarks)";
+        $sql = "INSERT INTO OrderItems (order_id, user_id, quantity, language, date, start_time, end_time, item_hash, event_id, location, ticket_type, artist_name, restaurant_name, special_remarks, status) 
+            VALUES (:order_id, :user_id, :quantity, :language, :date, :start_time, :end_time, :item_hash, :event_id, :location, :ticket_type, :artist_name, :restaurant_name, :special_remarks, :status)";
 
         $stmt = $this->connection->prepare($sql);
         $stmt->bindParam(':order_id', $orderId, PDO::PARAM_INT);
@@ -117,13 +117,13 @@ class Myprogramrepository extends dbconfig
         $stmt->bindParam(':artist_name', $artistName, PDO::PARAM_STR);
         $stmt->bindParam(':restaurant_name', $restaurantName, PDO::PARAM_STR);
         $stmt->bindParam(':special_remarks', $specialRemarks, PDO::PARAM_STR);
-    
+        $stmt->bindParam(':status', $status, PDO::PARAM_STR); 
 
         $stmt->execute();
-         return $itemHash;
-
+        return $itemHash;
     }
-    
+
+
     private function updateTicketQuantity($ticketId, $quantityPurchased)
     {
         try {
@@ -188,15 +188,16 @@ class Myprogramrepository extends dbconfig
         return false;
     }
 
-    public function getOrderItemsByUser($userID){
+    public function getOrderItemsByUser($userID)
+    {
         $stmt = $this->connection->prepare("SELECT * FROM OrderItems WHERE user_id = :user_id ORDER BY date DESC");
         $stmt->bindParam(':user_id', $userID, PDO::PARAM_INT);
-        $stmt->execute(); 
-        $stmt->setFetchMode(PDO::FETCH_CLASS, OrderItem::class); 
-        $orders = $stmt->fetchAll(); 
+        $stmt->execute();
+        $stmt->setFetchMode(PDO::FETCH_CLASS, OrderItem::class);
+        $orders = $stmt->fetchAll();
         return $orders;
     }
-    
+
     public function getAllOrders()
     {
         $stmt = $this->connection->prepare("SELECT  OrderItems.order_item_id, OrderItems.date, [User].username, OrderItems.restaurant_name, OrderItems.artist_name, OrderItems.location, OrderItems.quantity, OrderItems.language,OrderItems.start_time,OrderItems.end_time,OrderItems.ticket_type, OrderItems.special_remarks
@@ -206,7 +207,7 @@ class Myprogramrepository extends dbconfig
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         return $result;
-        
+
     }
 
 
