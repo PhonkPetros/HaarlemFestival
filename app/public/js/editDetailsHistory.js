@@ -14,7 +14,6 @@ document.addEventListener('DOMContentLoaded', function () {
         addTimeslotModal.style.display = 'block';
     });
 
-
     if (closeAddTimeslotModalBtn) {
         closeAddTimeslotModalBtn.addEventListener('click', function () {
             addTimeslotModal.style.display = 'none';
@@ -50,17 +49,18 @@ document.addEventListener('DOMContentLoaded', function () {
         })
         .then(response => {
             if (!response.ok) {
-                throw new Error('Failed with status: ' + response.status);
+                throw new Error('Network response was not ok.');
             }
             return response.json();
         })
         .then(data => {
-            alert("New Timeslot added");
-            window.location.reload();
+            swal("New Timeslot added", "", "success").then(() => {
+                window.location.reload();
+            });
         })
         .catch(error => {
             console.error('Fetch error:', error);
-            alert(error.message);
+            swal("Error", error.message, "error");
         });
     });
 
@@ -76,17 +76,18 @@ document.addEventListener('DOMContentLoaded', function () {
         })
         .then(response => {
             if (!response.ok) {
-                throw new Error('Failed with status: ' + response.status);
+                throw new Error('Network response was not ok.');
             }
             return response.json();
         })
         .then(data => {
-            alert("Event Details Edited Successfully");
-            window.location.reload();
+            swal("Event Details Edited Successfully", "", "success").then(() => {
+                window.location.reload();
+            });
         })
         .catch(error => {
             console.error('Fetch error:', error);
-            alert("Error: " + error.message);
+            swal("Error", "Error: " + error.message, "error");
         });
     });
 
@@ -94,30 +95,41 @@ document.addEventListener('DOMContentLoaded', function () {
     deleteTimeslotButtons.forEach(function(button) {
         button.addEventListener('click', function() {
             var ticketId = this.getAttribute('data-ticket-id');
-            const confirmed = confirm(`Are you sure you want to delete timeslot ${ticketId}?`);
-            if (confirmed) {
-                let formData = new FormData();
-                formData.append('ticket_id', ticketId);
+            swal({
+                title: "Are you sure?",
+                text: `Do you want to delete timeslot ${ticketId}?`,
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+            .then((willDelete) => {
+                if (willDelete) {
+                    let formData = new FormData();
+                    formData.append('ticket_id', ticketId);
 
-                fetch('/editDetailsHistory/deleteTimeSlot', {
-                    method: 'POST',
-                    body: formData
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Failed with status: ' + response.status);
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    alert(`Timeslot ${ticketId} deleted successfully.`);
-                    window.location.reload();
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('Error deleting timeslot.');
-                });
-            }
+                    fetch('/editDetailsHistory/deleteTimeSlot', {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok.');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        swal(`Timeslot ${ticketId} deleted successfully.`, {
+                            icon: "success",
+                        }).then(() => {
+                            window.location.reload();
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        swal("Error", "Error deleting timeslot.", "error");
+                    });
+                }
+            });
         });
     });
 });

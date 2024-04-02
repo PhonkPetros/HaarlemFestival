@@ -55,25 +55,40 @@ function filterUsers(username, role) {
     .catch(error => console.error('Error:', error));
 }
 function deleteUser(userId) {
-    const confirmed = confirm(`Are you sure you want to delete user ${userId}?`);
-    if (confirmed) {
-        let formData = new FormData();
-        formData.append('user_id', userId);
+    swal({
+        title: "Are you sure?",
+        text: `Do you want to delete user ${userId}? This action cannot be undone.`,
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+    })
+    .then((willDelete) => {
+        if (willDelete) {
+            let formData = new FormData();
+            formData.append('user_id', userId);
 
-        fetch('/admin/delete-user', {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => response.json())
-        .then(() => {
-            fetchUsers();
-            alert(`User ${userId} deleted.`);
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('Error deleting user.');
-        });
-    }
+            fetch('/admin/delete-user', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (!response.ok) throw new Error('Failed to delete user');
+                return response.json();
+            })
+            .then(() => {
+                swal("User deleted successfully", {
+                    icon: "success",
+                }).then(() => {
+                    fetchUsers(); 
+                });
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                swal("Error", "Error deleting user.", "error");
+            });
+        }
+    });
 }
+
 
 

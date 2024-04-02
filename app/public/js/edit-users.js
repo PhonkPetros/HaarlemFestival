@@ -8,18 +8,14 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('editUserEmail').value = email;
         document.getElementById('editUserRole').value = role;
     
-        var editUserModal = document.getElementById('editUserModal');
         editUserModal.style.display = "block";
     };
     
-    var closeEditModalBtn = document.querySelector('#editUserModal .closeBtn');
     closeEditModalBtn.onclick = function() {
-        var editUserModal = document.getElementById('editUserModal');
         editUserModal.style.display = "none";
     };
     
     window.onclick = function(event) {
-        var editUserModal = document.getElementById('editUserModal');
         if (event.target == editUserModal) {
             editUserModal.style.display = "none";
         }
@@ -42,20 +38,21 @@ function submitEditUserForm() {
         body: formData
     })
     .then(response => {
-        if (response.ok) return response.json();
-        return Promise.reject('Failed to edit user');
+        if (!response.ok) throw new Error('Failed to edit user');
+        return response.json();
     })
     .then(data => {
         if(data.success) {
-            alert('User has been edited');
-            fetchUsers();
-            document.getElementById('editUserModal').style.display = 'none';
+            swal("Success", "User has been edited", "success").then(() => {
+                fetchUsers(); 
+                document.getElementById('editUserModal').style.display = 'none';
+            });
         } else {
             throw new Error(data.message || 'Failed to edit user');
         }
     })
     .catch(error => {
         console.error('Error:', error);
-        alert(error.message || 'Error editing user.');
+        swal("Error", error.message || "Error editing user.", "error");
     });
 }

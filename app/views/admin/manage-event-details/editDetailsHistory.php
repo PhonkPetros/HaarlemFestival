@@ -182,4 +182,5 @@
 
 
 <script src="/js/editDetailsHistory.js"></script>
+<? include __DIR__ . '/../../general_views/popupmessage.php'?>
 <?php include __DIR__ . '/../../general_views/footer.php'; ?>
