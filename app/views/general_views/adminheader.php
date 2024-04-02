@@ -52,12 +52,5 @@
     </div>
 </main>
 
-<script type="text/javascript">
-    function confirmLogout() {
-        var logout = confirm("Are you sure you want to log out?");
-        if (logout) {
-            window.location.href = '/logout'; 
-        }
-    }
-</script>
+<script src="/js/logout.js"></script>
 

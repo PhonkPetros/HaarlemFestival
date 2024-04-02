@@ -12,17 +12,23 @@ document.addEventListener('DOMContentLoaded', function() {
                     pageId: pageId
                 })
             })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) throw new Error('Failed to add section');
+                return response.json();
+            })
             .then(data => {
                 if(data.success) {
-                    alert('Section added successfully!');
-                    window.location.reload(); 
+                    swal('Success!', 'Section added successfully!', 'success')
+                    .then(() => {
+                        window.location.reload();
+                    });
                 } else {
-                    alert('Failed to add section.');
+                    swal('Failed!', 'Failed to add section.', 'error');
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
+                swal('Error!', error.message, 'error');
             });
         });
     }

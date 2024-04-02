@@ -10,18 +10,20 @@ function modifyItemQuantity(ticketId, eventId, change) {
         },
         body: JSON.stringify({ ticketId, eventId, change })
     })
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === 'success') {
-                document.querySelector(`#quantity-${ticketId}`).textContent = data.newQuantity;
-                document.querySelector(`#total-price-${ticketId}`).textContent = data.newTotalPrice.toFixed(2);
-                updateTotalCartPrice();
-            } else if (data.status === 'error') {
-                alert(data.message);
-            }
-        })
-
-        .catch(error => console.error('Error:', error));
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            document.querySelector(`#quantity-${ticketId}`).textContent = data.newQuantity;
+            document.querySelector(`#total-price-${ticketId}`).textContent = data.newTotalPrice.toFixed(2);
+            updateTotalCartPrice();
+        } else if (data.status === 'error') {
+            swal("Error", data.message, "error");
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        swal("Error", "An unexpected error occurred.", "error");
+    });
 }
 
 function deleteItemFromCart(ticketId, eventId) {
@@ -32,15 +34,21 @@ function deleteItemFromCart(ticketId, eventId) {
         },
         body: JSON.stringify({ ticketId, eventId })
     })
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === 'success') {
-                document.querySelector(`#ticket-container-${ticketId}`).remove();
-                updateTotalCartPrice();
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            document.querySelector(`#ticket-container-${ticketId}`).remove();
+            updateTotalCartPrice();
+            swal("Removed!", "The item was removed from your cart.", "success")
+            .then(() => {
                 window.location.reload();
-            }
-        })
-        .catch(error => console.error('Error:', error));
+            });
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        swal("Error", "Failed to delete item from cart.", "error");
+    });
 }
 
 function updateTotalCartPrice() {
@@ -81,11 +89,12 @@ function generateAndShareLink() {
 }
 
 function copyToClipboard(event) {
-    const shareLink = document.getElementById('shareLink');
     event.preventDefault();
+    const shareLink = document.getElementById('shareLink');
     navigator.clipboard.writeText(shareLink.href).then(function () {
-        alert('Link copied to clipboard!');
+        swal("Copied!", "Link copied to clipboard!", "success");
     }, function (err) {
         console.error('Could not copy text: ', err);
+        swal("Error", "Could not copy link to clipboard.", "error");
     });
 }
