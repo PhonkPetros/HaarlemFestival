@@ -487,8 +487,6 @@ class Myprogramcontroller
     }
 
 
-
-
     //this checks if tickets are still available in database from session data 
     function checkTicketsAvailability($cart)
     {

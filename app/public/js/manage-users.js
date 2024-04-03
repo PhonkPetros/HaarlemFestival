@@ -3,12 +3,8 @@ document.addEventListener('DOMContentLoaded', function() {
     setupEventListeners();
 });
 
-function fetchUsers(sortParam = '') {
+function fetchUsers() {
     let url = '/admin/fetch-all-users';
-    if (sortParam) {
-        url += `?sort=${sortParam}`;
-    }
-    
     fetch(url, {
         method: 'GET',
     })
@@ -54,6 +50,8 @@ function filterUsers(username, role) {
     })
     .catch(error => console.error('Error:', error));
 }
+
+
 function deleteUser(userId) {
     swal({
         title: `Are you sure?`,
