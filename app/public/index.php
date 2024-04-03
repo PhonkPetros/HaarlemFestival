@@ -605,17 +605,12 @@ switch ($request) {
     case "/restaurant/delete":
         if ($_SESSION['role'] === 'admin') {
         $controller = new Restaurantcontroller();
-<<<<<<< HEAD
         }
         break;
     case '/submit-reservation':
         $controller = new Myprogramcontroller();
         if ($method === 'POST') {
             $controller->createReservation();
-=======
-        if ($method === 'POST') {
-            $controller->deleteRestaurant();
->>>>>>> parent of 6855781 (Merge branch 'Aura' into newfinalbranch)
         }
         break;
     case "/restaurant/deletetimeslot":
@@ -681,15 +676,6 @@ switch ($request) {
             $controller->showFailure();
         }    
         break;
-<<<<<<< HEAD
-=======
-    case '/reservation/restaurant':
-        $controller = new Restaurantcontroller();
-        if ($method === 'POST') {
-            $controller->makeAnReservation();
-        }
-        break;
->>>>>>> parent of 6855781 (Merge branch 'Aura' into newfinalbranch)
     
     case '/admin/order-overview':
         if ($_SESSION['role'] === 'admin') {
