@@ -3,7 +3,7 @@
 namespace repositories;
 
 use PDO;
-use PDOException;
+use Exception;
 use DateTime;
 
 use Repositories\TicketRepo;
@@ -26,12 +26,12 @@ class Myprogramrepository extends dbconfig
         $this->ticketRepo = new TicketRepo();
     }
 
-
     public function processOrder($userId, $cart, $paymentStatus)
     {
         $this->connection->beginTransaction();
         try {
             $totalPrice = 0.0;
+            $itemHashes = [];
             foreach ($cart as $item) {
                 $totalPrice += (int) $item['quantity'] * (float) $item['ticketPrice'];
             }
@@ -47,12 +47,13 @@ class Myprogramrepository extends dbconfig
                 $this->updateTicketQuantity($ticketId, $quantityPurchased);
             }
             $this->connection->commit();
-            return ['status' => 'success', 'message' => 'Order processed successfully', 'itemHashes' => $itemHashes];
-        } catch (\Exception $e) {
+            return ['status' => 'success', 'message' => 'Order processed successfully', 'orderId' => $orderId, 'itemHashes' => $itemHashes];
+        } catch (Exception $e) {
             $this->connection->rollback();
             return ['status' => 'error', 'message' => 'Order processing failed: ' . $e->getMessage()];
         }
     }
+
 
 
     private function createOrder($userId, $totalPrice, $paymentStatus)
@@ -73,12 +74,12 @@ class Myprogramrepository extends dbconfig
     //modify this to contain event id location ticket type artistname restaurant name and special remarks
     private function createOrderItem($orderId, $userId, $item)
     {
-        $date = new \DateTime($item['ticketDate']);
+        $date = new DateTime($item['ticketDate']);
         $formattedDate = $date->format('Y-m-d');
 
-        $startTime = new \DateTime($item['ticketTime']);
+        $startTime = new DateTime($item['ticketTime']);
         $formattedStartTime = $startTime->format('H:i:s');
-        $endTime = new \DateTime($item['ticketEndTime']);
+        $endTime = new DateTime($item['ticketEndTime']);
         $formattedEndTime = $endTime->format('H:i:s');
 
         $itemHash = hash('sha256', $userId . $orderId . microtime());
@@ -97,7 +98,7 @@ class Myprogramrepository extends dbconfig
         $artistName = $item['artistName'] ?? null;
         $restaurantName = $item['restaurantName'] ?? null;
         $specialRemarks = $item['specialRemarks'] ?? null;
-        $status = 'Active'; 
+        $status = 'Active';
 
         $sql = "INSERT INTO OrderItems (order_id, user_id, quantity, language, date, start_time, end_time, item_hash, event_id, location, ticket_type, artist_name, restaurant_name, special_remarks, status) 
             VALUES (:order_id, :user_id, :quantity, :language, :date, :start_time, :end_time, :item_hash, :event_id, :location, :ticket_type, :artist_name, :restaurant_name, :special_remarks, :status)";
@@ -117,7 +118,7 @@ class Myprogramrepository extends dbconfig
         $stmt->bindParam(':artist_name', $artistName, PDO::PARAM_STR);
         $stmt->bindParam(':restaurant_name', $restaurantName, PDO::PARAM_STR);
         $stmt->bindParam(':special_remarks', $specialRemarks, PDO::PARAM_STR);
-        $stmt->bindParam(':status', $status, PDO::PARAM_STR); 
+        $stmt->bindParam(':status', $status, PDO::PARAM_STR);
 
         $stmt->execute();
         return $itemHash;
@@ -132,11 +133,11 @@ class Myprogramrepository extends dbconfig
 
 
             if ($currentQuantity === false) {
-                throw new \Exception("Ticket ID $ticketId not found");
+                throw new Exception("Ticket ID $ticketId not found");
             }
 
             if ($currentQuantity < $quantityPurchased) {
-                throw new \Exception("Not enough tickets available for Ticket ID $ticketId");
+                throw new Exception("Not enough tickets available for Ticket ID $ticketId");
             }
 
             $newQuantity = $currentQuantity - $quantityPurchased;
@@ -154,7 +155,7 @@ class Myprogramrepository extends dbconfig
             }
 
             return true;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             error_log("Update ticket quantity failed: " . $e->getMessage());
             return false;
         }

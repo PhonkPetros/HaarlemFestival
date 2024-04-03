@@ -58,10 +58,10 @@ class SMTPController
         }
     }
 
-    public function sendInvoice($toEmail, $firstName, $shoppingCart)
+    public function sendInvoice($toEmail, $firstName, $shoppingCart, $orderID)
     {
         $subject = "Your Invoice from HaarlemFestival";
-        $message = $this->generateInvoiceHtml($shoppingCart);
+        $message = $this->generateInvoiceHtml($shoppingCart, $orderID);
 
         if (!$message) {
             return false;
@@ -70,7 +70,7 @@ class SMTPController
         return $this->sendEmail($toEmail, $firstName, $subject, $message, $attachment = null);
     }
 
-    private function generateInvoiceHtml($shoppingCartItems)
+    private function generateInvoiceHtml($shoppingCartItems, $orderID)
     {
         $invoiceDate = date('Y-m-d');
 
@@ -89,7 +89,7 @@ class SMTPController
             $firstItem = $shoppingCartItems[0];
             $userInfo = $firstItem['user'];
 
-            $html .= "<p>Invoice Number: <span>" . htmlspecialchars($firstItem['ticketId']) . "</span></p>";
+            $html .= "<p>Invoice Number: <span>" . htmlspecialchars($orderID) . "</span></p>";
             $html .= "<p>Invoice Date: <span>$invoiceDate</span></p>";
             $html .= "<p>Name: <span>" . htmlspecialchars($userInfo['firstName'] . ' ' . $userInfo['lastName']) . "</span></p>";
             $html .= "<p>Phone Number: <span>" . htmlspecialchars($userInfo['phoneNumber']) . "</span></p>";
@@ -129,16 +129,6 @@ class SMTPController
 
         return $html;
     }
-
-
-
-
-
-
-
-
-
-
 
     public function sendTickets($toEmail, $toName, $ticketHashes)
     {

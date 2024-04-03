@@ -21,6 +21,7 @@ use controllers\Pagecontroller;
 use controllers\Myprogramcontroller;
 use controllers\orderoverviewcontroller;
 use controllers\EmployeeController;
+use controllers\resetpasswordcontroller;
 
 require_once __DIR__ . '/../controllers/overview.php';
 require_once __DIR__ . '/../controllers/registercontroller.php';
@@ -270,7 +271,7 @@ switch ($request) {
     case '/reset-password':
         $controller = new resetpasswordcontroller();
         if ($method === 'GET') {
-            $controller->show();
+            $controller->showResetPasswordForm();
         } elseif ($method === 'POST') {
             $controller->resetpasswordAction();
         }

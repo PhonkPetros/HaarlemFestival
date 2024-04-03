@@ -464,12 +464,13 @@ class Myprogramcontroller
 
         if ($orderProcessingResult['status'] === 'success') {
             $itemHashes = $orderProcessingResult['itemHashes'];
+            $orderID = $orderProcessingResult['orderId'];
 
             $firstCartItem = $_SESSION['shopping_cart'][0];
             if (isset($firstCartItem['user']) && isset($firstCartItem['user']['email']) && isset($firstCartItem['user']['firstName'])) {
                 $email = $firstCartItem['user']['email'];
                 $firstName = $firstCartItem['user']['firstName'];
-                $this->smtpcontroller->sendInvoice($email, $firstName,  $_SESSION['shopping_cart']);
+                $this->smtpcontroller->sendInvoice($email, $firstName,  $_SESSION['shopping_cart'], $orderID);
                 $this->smtpcontroller->sendTickets($email, $firstName, $itemHashes);
             } else {
                 echo json_encode(['status' => 'error', 'message' => 'User email or first name is missing from the first cart item.']);
