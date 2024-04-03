@@ -690,7 +690,7 @@ switch ($request) {
     case '/admin/order-overview/export':
         if ($_SESSION['role'] === 'admin') {
             $controller = new orderoverviewcontroller();
-            if ($method == 'GET') {
+            if ($method == 'POST') {
                 $controller->exportExcel();
             }
         } else {
