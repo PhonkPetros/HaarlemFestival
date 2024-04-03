@@ -67,7 +67,7 @@ if (strpos($request, '/edit-content/') === 0) {
 if (strpos($request, '/sectionEdit/') === 0) {
     $sectionEdit = htmlspecialchars($queryParams['section_id'] ?? '');
 }
-if (strpos($request, '/new-password/') === 0) {
+if (strpos($request, '/new-passwords/') === 0) {
     $token = htmlspecialchars($queryParams["token"] ?? '');
 }
 if (strpos($request, '/dance/') === 0) {
@@ -276,7 +276,7 @@ switch ($request) {
         }
         break;
 
-    case '/new-password':
+    case '/new-passwords':
         $controller = new resetpasswordcontroller();
         if ($method === 'GET') {
             $controller->showNewPasswordForm();
@@ -430,6 +430,9 @@ switch ($request) {
         $controller = new accountcontroller();
         if ($method === 'GET') {
             $controller->show();
+        }
+        else if($method === 'POST'){
+            $controller->handlingPost();
         }
         break;
     case '/admin/add-user':

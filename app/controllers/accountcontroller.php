@@ -46,6 +46,16 @@ class AccountController
 
         $navigationController = $this->navigationController->displayHeader();
 
+
+        require_once '../views/user/account.php';
+
+        // if (isset($_SESSION['response'])) {
+        //     unset($_SESSION['response']);
+        // }
+
+    }
+
+    function handlingPost(){
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (isset($_POST['updateEmailBtn'])) {
                 $this->updateEmail();
@@ -55,12 +65,6 @@ class AccountController
                 $this->updatePassword();
             }
         }
-
-        require_once '../views/user/account.php';
-
-        // if (isset($_SESSION['response'])) {
-        //     unset($_SESSION['response']);
-        // }
 
     }
 

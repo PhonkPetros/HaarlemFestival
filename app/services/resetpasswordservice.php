@@ -26,7 +26,7 @@ class ResetPasswordService {
             $message = "Click the following link to reset your password: http://localhost/new-password/?token=$token";
 
             // Send the email
-            $sent = $this->smtpController->sendEmail($email, "Haarlem Visitor", $subject, $message);
+            $sent = $this->smtpController->sendEmail($email, "Haarlem Visitor", $subject, $message, null);
 
             if ($sent) {
                 return true; // Password reset email sent successfully

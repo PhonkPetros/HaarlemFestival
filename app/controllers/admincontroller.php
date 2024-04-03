@@ -107,9 +107,6 @@ class AdminController
         $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
         $role = filter_input(INPUT_POST, 'role', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         $password = $_POST['password'] ?? ''; 
-
-        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-    
         $usernameInUse = $this->adminservice->username_exists($username);
         $emailInUse = $this->adminservice->email_exists($email);
     
@@ -117,7 +114,7 @@ class AdminController
         $newUser->setUsername($username);
         $newUser->setUserEmail($email);
         $newUser->setUserRole($role);
-        $newUser->setPassword($hashedPassword);
+        $newUser->setPassword($password);
     
         if($usernameInUse || $emailInUse) {
             $message = 'Username and/or email already in use';
