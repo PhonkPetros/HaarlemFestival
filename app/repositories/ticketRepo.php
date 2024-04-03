@@ -191,7 +191,7 @@ class TicketRepo extends dbconfig
                 return null;
             }
 
-            $user = new \model\User();
+            $user = new User();
             $user->setUserID($userDetails['user_id']);
             $user->setUserEmail($userDetails['email']);
             $user->setUsername($userDetails['username']);
