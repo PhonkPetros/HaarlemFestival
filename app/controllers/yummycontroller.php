@@ -4,21 +4,25 @@
 namespace controllers;
 
 require_once __DIR__ . '/../controllers/navigationcontroller.php';
+require_once __DIR__ . '/../controllers/pagecontroller.php';
 require_once __DIR__ . '/../services/restaurantservice.php';
 use controllers\Navigationcontroller;
 use repositories\resturantrepository;
+use controllers\Pagecontroller;
 
 
 class yummycontroller
 {
 
     public function __construct() {
+        $this->pageController = new Pagecontroller();
         $this->navigationController = new Navigationcontroller();
         $this->restaurantService = new resturantrepository();
     }
 
     private $navigationController;
     private $restaurantService;
+    private $pageController;
 
     public function showYummyOverview()
     {
@@ -37,7 +41,7 @@ class yummycontroller
     $restaurantDetails = $restaurantData['restaurantDetails'];
     $timeslots = $restaurantData['timeslots'];
     
-    $contentData = $this->pagecontroller->getContentAndImagesForResutrant($restaurantId);
+    $contentData = $this->pageController->getContentAndImagesForResutrant($restaurantId);
     
     require_once __DIR__ . '/../views/yummy/resturant.php';
     }

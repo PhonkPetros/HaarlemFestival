@@ -79,7 +79,6 @@ if (strpos($request, '/dance/') === 0) {
 if ($request === '/') {
     $pageID = PAGE_ID_HOME;
 }
-
 function respondWith404()
 {
     http_response_code(404);
@@ -448,7 +447,6 @@ switch ($request) {
             respondWith404();
         }
         break;
-
     case '/admin/managefestival':
         if ($_SESSION['role'] === 'admin') {
             $controller = new admincontroller();
@@ -604,20 +602,11 @@ switch ($request) {
         $controller = new Restaurantcontroller();
         }
         break;
-    case '/admin/add-section':
-        $controller = new Pagecontroller();
-        if ($method === 'POST') {
-            $controller->addNewSection();
-        }
-        break;
     case '/submit-reservation':
         $controller = new Myprogramcontroller();
         if ($method === 'POST') {
             $controller->createReservation();
         }
-    }else {
-        http_response_code(404);
-    }
         break;
     case "/restaurant/deletetimeslot":
         if ($_SESSION['role'] === 'admin') {
@@ -682,16 +671,6 @@ switch ($request) {
             $controller->showFailure();
         }    
         break;
-    case '/reservation/restaurant':
-        $controller = new Restaurantcontroller();
-        if ($method === 'POST') {
-            $controller->makeAnReservation();
-    case '/admin/order-overview':
-        $controller = new orderoverviewcontroller();
-        if ($method == 'GET') {
-            $controller->showOverviewTable();
-        }
-        break;
     
     case '/admin/order-overview':
         if ($_SESSION['role'] === 'admin') {
@@ -702,7 +681,6 @@ switch ($request) {
         } else {
             respondWith404();
         }
-
         break;
     case '/admin/order-overview/export':
         if ($_SESSION['role'] === 'admin') {
@@ -712,12 +690,6 @@ switch ($request) {
             }
         } else {
             respondWith404();
-        }
-        break;
-    case '/submit-reservation':
-        $controller = new Myprogramcontroller();
-        if ($method === 'POST') {
-            $controller->createReservation();
         }
         break;
     case '/employee/dashboard':
@@ -732,17 +704,6 @@ switch ($request) {
         } else {
             respondWith404();
         }
-        break;
-        $controller = new orderoverviewcontroller();
-        if ($method == 'POST') {
-            $controller->exportExcel();
-        }
-        break;
-     case '/my-program/payment-failure':
-        $controller = new Myprogramcontroller();
-        if($method == 'GET'){
-            $controller->showFailure();
-        }    
         break;
     default:
         respondWith404();
