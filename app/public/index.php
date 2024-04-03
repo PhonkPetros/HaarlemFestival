@@ -1,7 +1,4 @@
 <?php
-
-
-
 session_start();
 
 use controllers\logincontroller;
@@ -23,7 +20,10 @@ use controllers\orderoverviewcontroller;
 use controllers\EmployeeController;
 use controllers\resetpasswordcontroller;
 
+
 require_once __DIR__ . '/../controllers/overview.php';
+require_once __DIR__ . '/../controllers/myprogramcontroller.php';
+require_once __DIR__ . '/../config/constant-paths.php';
 require_once __DIR__ . '/../controllers/registercontroller.php';
 require_once __DIR__ . '/../controllers/logincontroller.php';
 require_once __DIR__ . '/../controllers/logoutcontroller.php';
@@ -57,6 +57,7 @@ if ($queryString !== null) {
     parse_str($queryString, $queryParams);
 }
 $pageID = htmlspecialchars($queryParams["pageid"] ?? '');
+
 $eventID = null;
 if (strpos($request, '/manage-event-details/') === 0) {
     $eventID = htmlspecialchars($queryParams["id"] ?? '');
@@ -133,12 +134,7 @@ if ($pageID || $eventID || $editPageID || $sectionEdit || $token || $dancePageID
                 }
                 break;
             default:
-                $controller = new TemplateController();
-                if ($method === 'GET') {
-                    $controller->show();
-                }
-            break;
-
+                break;
         }
         exit;
     } elseif ($pageID) {
@@ -267,7 +263,6 @@ switch ($request) {
             $controller->loginAction();
         }
         break;
-
     case '/reset-password':
         $controller = new resetpasswordcontroller();
         if ($method === 'GET') {
@@ -607,8 +602,18 @@ switch ($request) {
     case "/restaurant/delete":
         if ($_SESSION['role'] === 'admin') {
         $controller = new Restaurantcontroller();
+        }
+        break;
+    case '/admin/add-section':
+        $controller = new Pagecontroller();
         if ($method === 'POST') {
-            $controller->deleteRestaurant();
+            $controller->addNewSection();
+        }
+        break;
+    case '/submit-reservation':
+        $controller = new Myprogramcontroller();
+        if ($method === 'POST') {
+            $controller->createReservation();
         }
     }else {
         http_response_code(404);
@@ -681,6 +686,10 @@ switch ($request) {
         $controller = new Restaurantcontroller();
         if ($method === 'POST') {
             $controller->makeAnReservation();
+    case '/admin/order-overview':
+        $controller = new orderoverviewcontroller();
+        if ($method == 'GET') {
+            $controller->showOverviewTable();
         }
         break;
     
@@ -723,6 +732,17 @@ switch ($request) {
         } else {
             respondWith404();
         }
+        break;
+        $controller = new orderoverviewcontroller();
+        if ($method == 'POST') {
+            $controller->exportExcel();
+        }
+        break;
+     case '/my-program/payment-failure':
+        $controller = new Myprogramcontroller();
+        if($method == 'GET'){
+            $controller->showFailure();
+        }    
         break;
     default:
         respondWith404();

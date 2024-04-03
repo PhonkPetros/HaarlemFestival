@@ -462,6 +462,7 @@ class Myprogramcontroller
 
         $orderProcessingResult = $this->myProgramService->processOrder($userId, $_SESSION['shopping_cart'], $paymentStatus);
 
+        
         if ($orderProcessingResult['status'] === 'success') {
             $itemHashes = $orderProcessingResult['itemHashes'];
             $orderID = $orderProcessingResult['orderId'];

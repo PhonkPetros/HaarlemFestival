@@ -248,7 +248,6 @@ class Pagecontroller
 
         return $all;
     }
-    
 
     public function addNewPage()
     {

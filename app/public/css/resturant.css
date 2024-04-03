@@ -106,6 +106,12 @@ th, td {
   }
 }
 
+body, html {
+  margin: 0;
+  padding: 0;
+  font-family: 'Arial', sans-serif;
+}
+
 .container {
   display: flex;
   align-items: center;
@@ -113,6 +119,7 @@ th, td {
 }
 
 .chef-image {
+  /* You should replace `path-to-your-chefs-image.jpg` with the actual path to the chef's image */
   background-image: url('path-to-your-chefs-image.jpg');
   background-size: cover;
   width: 50%;
