@@ -191,13 +191,15 @@ class Myprogramrepository extends dbconfig
 
     public function getOrderItemsByUser($userID)
     {
-        $stmt = $this->connection->prepare("SELECT * FROM OrderItems WHERE user_id = :user_id ORDER BY date DESC");
+        // Added conditions in the WHERE clause to check for status = 'Active' or status IS NULL
+        $stmt = $this->connection->prepare("SELECT * FROM OrderItems WHERE user_id = :user_id AND (status = 'Active' OR status IS NULL) ORDER BY date DESC");
         $stmt->bindParam(':user_id', $userID, PDO::PARAM_INT);
         $stmt->execute();
         $stmt->setFetchMode(PDO::FETCH_CLASS, OrderItem::class);
         $orders = $stmt->fetchAll();
         return $orders;
     }
+    
 
     public function getAllOrders()
     {
