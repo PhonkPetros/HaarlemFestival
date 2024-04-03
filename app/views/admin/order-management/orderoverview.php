@@ -10,13 +10,12 @@
 <div class = container>
     <h1> Order Summary</h1>
     <h2> order summaries from all users</h2>
-    <a class="btn btn-primary btn-export">Export .xls</a>
+    <a class="btn btn-primary" href="/admin/order-overview/export">Export .xls</a>
     
     <div class = "table-container">
         <table class="table">
             <thead>
                 <tr>
-                <th scope="col"> </th>
                 <th scope="col">order ID</th>
                 <th scope="col">Date</th>
                 <th scope="col">Username</th>
@@ -26,7 +25,6 @@
             <tbody>
                 <?php foreach ($ordersContent as $order): ?>
                     <tr>
-                        <td><input type="checkbox" name="checkbox" data-orderid="<?php echo $order['order_item_id'] ?>"></td>
                         <th scope="row"><?php echo $order['order_item_id'] ?></th>
                         <td><?php echo $order['date'] ?></td>
                         <td><?php echo $order['username'] ?></td>

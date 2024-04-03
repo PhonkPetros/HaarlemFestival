@@ -1,4 +1,7 @@
 <?php
+
+
+
 session_start();
 
 use controllers\logincontroller;
@@ -20,10 +23,7 @@ use controllers\orderoverviewcontroller;
 use controllers\EmployeeController;
 use controllers\resetpasswordcontroller;
 
-
 require_once __DIR__ . '/../controllers/overview.php';
-require_once __DIR__ . '/../controllers/myprogramcontroller.php';
-require_once __DIR__ . '/../config/constant-paths.php';
 require_once __DIR__ . '/../controllers/registercontroller.php';
 require_once __DIR__ . '/../controllers/logincontroller.php';
 require_once __DIR__ . '/../controllers/logoutcontroller.php';
@@ -57,7 +57,6 @@ if ($queryString !== null) {
     parse_str($queryString, $queryParams);
 }
 $pageID = htmlspecialchars($queryParams["pageid"] ?? '');
-
 $eventID = null;
 if (strpos($request, '/manage-event-details/') === 0) {
     $eventID = htmlspecialchars($queryParams["id"] ?? '');
@@ -133,7 +132,12 @@ if ($pageID || $eventID || $editPageID || $sectionEdit || $token || $dancePageID
                 }
                 break;
             default:
-                break;
+                $controller = new TemplateController();
+                if ($method === 'GET') {
+                    $controller->show();
+                }
+            break;
+
         }
         exit;
     } elseif ($pageID) {
@@ -262,6 +266,7 @@ switch ($request) {
             $controller->loginAction();
         }
         break;
+
     case '/reset-password':
         $controller = new resetpasswordcontroller();
         if ($method === 'GET') {
@@ -600,12 +605,17 @@ switch ($request) {
     case "/restaurant/delete":
         if ($_SESSION['role'] === 'admin') {
         $controller = new Restaurantcontroller();
+<<<<<<< HEAD
         }
         break;
     case '/submit-reservation':
         $controller = new Myprogramcontroller();
         if ($method === 'POST') {
             $controller->createReservation();
+=======
+        if ($method === 'POST') {
+            $controller->deleteRestaurant();
+>>>>>>> parent of 6855781 (Merge branch 'Aura' into newfinalbranch)
         }
         break;
     case "/restaurant/deletetimeslot":
@@ -671,6 +681,15 @@ switch ($request) {
             $controller->showFailure();
         }    
         break;
+<<<<<<< HEAD
+=======
+    case '/reservation/restaurant':
+        $controller = new Restaurantcontroller();
+        if ($method === 'POST') {
+            $controller->makeAnReservation();
+        }
+        break;
+>>>>>>> parent of 6855781 (Merge branch 'Aura' into newfinalbranch)
     
     case '/admin/order-overview':
         if ($_SESSION['role'] === 'admin') {

@@ -23,30 +23,23 @@ class orderoverviewcontroller {
 
     public function exportExcel()
     {
-        $orderIds = $_POST['orderIds'];
+        $ordersContent = $this->service->getAllOrders();
 
-        //if user actually select something
-        if (isset($orderIds)) {
-            $orderIds = explode(',', $orderIds);
-            $ordersContent = $this->service->getAllOrders();
+        // File Name & Content Header For Download
+        $file_name = "ordersContent.xls";
+        header("Content-Disposition: attachment; filename=\"$file_name\"");
+        header("Content-Type: application/vnd.ms-excel");
 
-            // File Name & Content Header For Download
-            $file_name = "ordersContent.xls";
-            header("Content-Disposition: attachment; filename=\"$file_name\"");
-            header("Content-Type: application/vnd.ms-excel");
-    
-            $column_names = false;
-            // run loop through each row in $ordersContent
-            foreach($ordersContent as $row) {
-                if(!$column_names) {
-                    echo implode("\t", array_keys($row)) . "\n";
-                    $column_names = true;
-                }
-
-                if (in_array($row['order_item_id'], $orderIds)) {
-                    echo implode("\t", array_values($row)) . "\n";
-                }
+        $column_names = false;
+        // run loop through each row in $ordersContent
+        foreach($ordersContent as $row) {
+            if(!$column_names) {
+                echo implode("\t", array_keys($row)) . "\n";
+                $column_names = true;
             }
+            // The array_walk() function runs each array element in a user-defined function.
+            // array_walk($row, 'filterCustomerData');
+            echo implode("\t", array_values($row)) . "\n";
         }
     }
 }

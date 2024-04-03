@@ -25,18 +25,14 @@ if ($restaurantDetails !== null) {
 ?>
 <img src="/img/<?= $picture ?>" class="img"/>
   <div class="div-2">
-    <div class="div-3">Ratatouille</div>
-    <div class="div-4">
-      Establishing his restaurant in 2013, the cook made his goal to serve
-      French meals, with a friendly atmosphere. The success of chef Jouza
-      Jaring, made the restaurant one of a kind Michelin rated restaurant.
-    </div>
+    <?php echo $contentData[0]['content']?>
+    <?php echo $contentData[1]['content']?>
   </div>
 </div>
 
 <section class="cuisine-container">
-  <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/0d286cbf245c9e57217c741827e1d1c8a5afd459f83c01192dfd4630a93d8270?apiKey=3023167e7a8a4e649532aa6db2acfe06&" alt="French cuisine" class="cuisine-image" />
-  <h2 class="cuisine-text">The cuisine la french</h2>
+  <img src="/img/<?php echo $contentData[2]['image']?>" alt="French cuisine" class="cuisine-image" />
+  <?php echo $contentData[2]['content']?>
 </section>
 
 <div class="container mt-5">
@@ -143,25 +139,25 @@ if ($restaurantDetails !== null) {
   </div>
 </div>
 
-<h2 class="gallery">Gallery</h2>
+
+<?php echo $contentData[9]['content']?>
 <div class="container mt-5">
   <div class="row">
     <div class="col-md-4 mb-4">
-      <img src="/img/uploadshaarlem.jpg" alt="Image 1" class="img-fluid">
+      <img src="/img/<?php echo $contentData[9]['image']?>" alt="Image 1" class="img-fluid">
     </div>
     <div class="col-md-4 mb-4">
-      <img src="/img/uploadshaarlem.jpg" alt="Image 2" class="img-fluid">
+      <img src="/img/<?php echo $contentData[9]['image']?>" alt="Image 2" class="img-fluid">
     </div>
     <div class="col-md-4 mb-4">
-      <img src="/img/uploadshaarlem.jpg" alt="Image 3" class="img-fluid">
+      <img src="/img/<?php echo $contentData[9]['image']?>" alt="Image 3" class="img-fluid">
     </div>
   </div>
 </div>
 
-<h2 class="location-google-maps">Location</h2>
-
+<?php echo $contentData[10]['content']?>
 <div class="picture-location">
-  <img src="/img/uploadshaarlem.jpg" alt="Location Picture" class="img-location">
+  <img src="/img/<?php echo $contentData[10]['image']?>" alt="Location Picture" class="img-location">
 </div>
 
 <?php require_once __DIR__ . '/../../views/reservation-form/popup-reservation-restaurant.php' ?>

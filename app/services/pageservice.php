@@ -47,6 +47,11 @@ class Pageservice
         return $this->pagerepo->getSectionTitle($sectionID);
     }
 
+    public function getPageIdByRestaurantId($restuarantId)
+    {
+        return $this->pagerepo->getPageIdByRestaurantId($restuarantId);
+    }
+
     public function updateSectionContent($sectionID, $content, $image)
     {
         try {
