@@ -51,6 +51,21 @@ function filterUsers(username, role) {
     .catch(error => console.error('Error:', error));
 }
 
+function sortUsers(sort) {
+    var formData = new FormData();
+    formData.append('sort', sort);
+
+    fetch('/admin/sort-users', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        updateTable(data);
+    })
+    .catch(error => console.error('Error:', error));
+}
+
 
 function deleteUser(userId) {
     swal({

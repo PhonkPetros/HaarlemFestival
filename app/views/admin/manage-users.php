@@ -12,6 +12,13 @@
             <option value="employee">Employee</option>
         </select>
         <button type="button" id="filterBtn">Filter</button>
+        <select name="sort" id="sort">
+            <option value="">Select Sorting Option</option>
+            <option value="sortID">Sort By ID</option>
+            <option value="sortUsername">Sort By Username</option>
+            <option value="sortDate">Sort By Registration Date</option>
+        </select>
+        <button type="button" id="sortBtn">Sort</button>
         <button type="button" id="resetBtn">Reset</button>
         <button id="openAddUserModal" type="button" class="btn btn-secondary" title="Create New User">Create New
             User</button>

@@ -151,5 +151,50 @@ class AdminRepository extends dbconfig {
         }
         return $events;
     }
+
+    public function sortByUserID() {
+        $users = [];
+        try {
+            $stmt = $this->connection->prepare("SELECT * FROM [User] ORDER BY user_id ASC");
+            $stmt->execute();
+            $stmt->setFetchMode(PDO::FETCH_CLASS, User::class);
+            while ($user = $stmt->fetch()) {
+                $users[] = $user;
+            }
+        } catch (PDOException $e) {
+            error_log("Error sorting users by ID: " . $e->getMessage());
+        }
+        return $users;
+    }
+
+    public function sortByUsername() {
+        $users = [];
+        try {
+            $stmt = $this->connection->prepare("SELECT * FROM [User] ORDER BY username ASC");
+            $stmt->execute();
+            $stmt->setFetchMode(PDO::FETCH_CLASS, User::class);
+            while ($user = $stmt->fetch()) {
+                $users[] = $user;
+            }
+        } catch (PDOException $e) {
+            error_log("Error sorting users by username: " . $e->getMessage());
+        }
+        return $users;
+    }
+
+    public function sortByRegistrationDate() {
+        $users = [];
+        try {
+            $stmt = $this->connection->prepare("SELECT * FROM [User] ORDER BY created_at DESC");
+            $stmt->execute();
+            $stmt->setFetchMode(PDO::FETCH_CLASS, User::class);
+            while ($user = $stmt->fetch()) {
+                $users[] = $user;
+            }
+        } catch (PDOException $e) {
+            error_log("Error sorting users by registration date: " . $e->getMessage());
+        }
+        return $users;
+    }
     
 }

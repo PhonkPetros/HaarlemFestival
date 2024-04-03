@@ -136,7 +136,7 @@ if ($pageID || $eventID || $editPageID || $sectionEdit || $token || $dancePageID
                 if ($method === 'GET') {
                     $controller->show();
                 }
-            break;
+                break;
 
         }
         exit;
@@ -416,6 +416,16 @@ switch ($request) {
             respondWith404();
         }
         break;
+    case '/admin/sort-users':
+        if ($_SESSION['role'] === 'admin') {
+            $controller = new admincontroller();
+            if ($method === 'POST') {
+                $controller->sortUsers();
+            }
+        } else {
+            respondWith404();
+        }
+        break;
     case '/admin/fetch-all-users':
         if ($_SESSION['role'] === 'admin') {
             $controller = new admincontroller();
@@ -430,8 +440,7 @@ switch ($request) {
         $controller = new accountcontroller();
         if ($method === 'GET') {
             $controller->show();
-        }
-        else if($method === 'POST'){
+        } else if ($method === 'POST') {
             $controller->handlingPost();
         }
         break;
@@ -587,10 +596,11 @@ switch ($request) {
         break;
     case "/editRestaurantDetails/addRestaurant":
         if ($_SESSION['role'] === 'admin') {
-        $controller = new Restaurantcontroller();
-        if ($method === 'POST') {
-            $controller->addRestaurant();
-        } }else {
+            $controller = new Restaurantcontroller();
+            if ($method === 'POST') {
+                $controller->addRestaurant();
+            }
+        } else {
             http_response_code(404);
         }
         break;
@@ -607,7 +617,7 @@ switch ($request) {
         break;
     case "/restaurant/delete":
         if ($_SESSION['role'] === 'admin') {
-        $controller = new Restaurantcontroller();
+            $controller = new Restaurantcontroller();
         }
         break;
     case '/submit-reservation':
@@ -618,10 +628,11 @@ switch ($request) {
         break;
     case "/restaurant/deletetimeslot":
         if ($_SESSION['role'] === 'admin') {
-        $controller = new Restaurantcontroller();
-        if ($method === 'POST') {
-            $controller->deleteTimeSlot();
-        } } else {
+            $controller = new Restaurantcontroller();
+            if ($method === 'POST') {
+                $controller->deleteTimeSlot();
+            }
+        } else {
             http_response_code(404);
         }
         break;
@@ -675,11 +686,11 @@ switch ($request) {
         break;
     case '/my-program/payment-failure':
         $controller = new Myprogramcontroller();
-        if($method == 'GET'){
+        if ($method == 'GET') {
             $controller->showFailure();
-        }    
+        }
         break;
-    
+
     case '/admin/order-overview':
         if ($_SESSION['role'] === 'admin') {
             $controller = new orderoverviewcontroller();
@@ -701,12 +712,11 @@ switch ($request) {
         }
         break;
     case '/employee/dashboard':
-        if ($_SESSION['role'] === 'employee'){
+        if ($_SESSION['role'] === 'employee') {
             $controller = new EmployeeController();
-            if ($method === 'GET'){
+            if ($method === 'GET') {
                 $controller->showScanner();
-            }
-            elseif ($method === 'POST'){
+            } elseif ($method === 'POST') {
                 $controller->scanTicket();
             }
         } else {

@@ -52,5 +52,23 @@ class AdminService {
         return $this->adminRepository->getListOfEvents();
     }
 
+    public function sortUsers($sortOption)
+    {
+        switch ($sortOption) {
+            case 'sortID':
+                return $this->adminRepository->sortByUserID(); 
+                break;
+            case 'sortUsername':
+                return $this->adminRepository->sortByUsername(); 
+                break;
+            case 'sortDate':
+                return $this->adminRepository->sortByRegistrationDate(); 
+                break;
+            default:
+                return $this->getAllUsers(); 
+        }
+    }
+    
+
 
 }

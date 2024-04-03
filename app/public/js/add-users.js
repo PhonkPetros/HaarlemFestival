@@ -2,6 +2,7 @@ function setupEventListeners() {
     setupFilterButton();
     setupResetButton();
     setupModalControls();
+    setupSortButton();
     setupAddUserFormSubmission();
     var editUserForm = document.getElementById('editUserForm');
     if (editUserForm) {
@@ -18,6 +19,13 @@ function setupFilterButton() {
         const username = document.getElementById('username').value;
         const role = document.getElementById('role').value;
         filterUsers(username, role);
+    });
+}
+
+function setupSortButton() {
+    document.getElementById('sortBtn').addEventListener('click', function() {
+        const sort = document.getElementById('sort').value;
+        sortUsers(sort);
     });
 }
 

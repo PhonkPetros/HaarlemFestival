@@ -98,6 +98,13 @@ class AdminController
         $filteredUsers = $this->adminservice->filterUsers($username, $role);
         echo json_encode($filteredUsers);
     }
+
+    public function sortUsers(){
+        header('Content-Type: application/json');
+        $sortOption = filter_input(INPUT_POST, 'sort', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $sortedUsers = $this->adminservice->sortUsers($sortOption);
+        echo json_encode($sortedUsers);
+    }
     
 
     public function addUsers() {
