@@ -127,10 +127,11 @@ class TicketRepo extends dbconfig
             $stmt->execute();
     
             $stmt->setFetchMode(PDO::FETCH_ASSOC);
-            $event = $stmt->fetch();
+            $event = $stmt->fetch(); // fetch() returns ONLY the first row, not all rows
     
             if ($event) {
-                return (int) $event['quantity']; 
+                // this returns the quantityfirst ticket that matches the ticketID
+                return (int) $event['quantity'];
             } else {
                 return 0; 
             }

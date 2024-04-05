@@ -23,7 +23,8 @@ class Dancerepository extends dbconfig {
 
     public function getDanceEvents() {
         $sql = 'SELECT * FROM dance_events
-        JOIN venues ON dance_events.venue = venues.venueId';
+        JOIN venues ON dance_events.venue = venues.venueId
+        JOIN [Event] ON dance_events.danceEventId = [Event].dance_event_id';
         try {
             $stmt = $this->getConnection()->prepare($sql);
             $stmt->execute();
@@ -64,12 +65,13 @@ class Dancerepository extends dbconfig {
         $sql = "SELECT
         dance_artists.name as artistName, dance_artists.description, dance_artists.profile, 
         dance_artists.image1, dance_artists.image2, dance_artists.image3, dance_artists.video, dance_artists.album,
-        dance_events.dateTime, dance_events.image, dance_events.price, venues.name as venueName, venues.location, venues.picture as venuePicture,
+        dance_events.danceEventId, [Event].event_id, dance_events.dateTime, dance_events.endDateTime, dance_events.image, dance_events.price, venues.name as venueName, venues.location, venues.picture as venuePicture,
         dance_events.allDaysPrice, dance_events.oneDayPrice
         FROM dance_artists
         JOIN dance_participating_artists ON dance_artists.artistId = dance_participating_artists.danceArtistId
         JOIN dance_events ON dance_participating_artists.danceEventId = dance_events.danceEventId
         JOIN venues ON dance_events.venue = venues.venueId
+        JOIN [Event] ON dance_events.danceEventId = [Event].dance_event_id
         WHERE dance_artists.artistId = :artistId";
         try {
             $stmt = $this->getConnection()->prepare($sql);
@@ -284,6 +286,34 @@ class Dancerepository extends dbconfig {
 
             $danceEventId = $this->getConnection()->lastInsertId();
             $this->addArtistsToEvent($danceEventId, $artists);
+            $this->addEvent($danceEventId);
+
+            return true;
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+            return false;
+        }
+    }
+
+    private function addEvent($danceEventId) {
+        $sql = 'INSERT INTO [Event] (dance_event_id) VALUES (:dance_event_id)';
+        try {
+            $stmt = $this->getConnection()->prepare($sql);
+            $stmt->bindParam(':dance_event_id', $danceEventId, PDO::PARAM_INT);
+            $stmt->execute();
+            return true;
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+            return false;
+        }
+    }
+
+    private function deleteEvent($danceEventId) {
+        $sql = 'DELETE FROM [Event] WHERE dance_event_id = :dance_event_id';
+        try {
+            $stmt = $this->getConnection()->prepare($sql);
+            $stmt->bindParam(':dance_event_id', $danceEventId, PDO::PARAM_INT);
+            $stmt->execute();
             return true;
         } catch (PDOException $e) {
             echo "Error: " . $e->getMessage();
@@ -340,6 +370,8 @@ class Dancerepository extends dbconfig {
             $stmt = $this->getConnection()->prepare($sql);
             $stmt->bindParam(':danceEventId', $danceEventId, PDO::PARAM_INT);
             $stmt->execute();
+
+            $this->deleteEvent($danceEventId);
             return true;
         } catch (PDOException $e) {
             echo "Error: " . $e->getMessage();

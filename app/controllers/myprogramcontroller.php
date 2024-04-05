@@ -7,7 +7,6 @@ use services\registerservice;
 use services\ticketservice;
 use controllers\NavigationController;
 use controllers\MollieAPIController;
-use model\OrderItem;
 
 //call the user service to check update user data 
 
@@ -17,13 +16,10 @@ require_once __DIR__ . '/../services/registerservice.php';
 require_once __DIR__ . '/../config/constant-paths.php';
 require_once __DIR__ . '/../controllers/navigationcontroller.php';
 require_once __DIR__ . '/../services/ticketservice.php';
-require_once __DIR__ . '/../controllers/smtpcontroller.php';
-require_once __DIR__ . '/../model/orderItem.php';
 
 
 class Myprogramcontroller
 {
-    private $smtpcontroller;
     private $navigationController;
     private $mollieAPIController;
     private $ticketservice;
@@ -40,7 +36,6 @@ class Myprogramcontroller
         $this->userService = new registerservice();
         $this->navcontroller = new NavigationController();
         $this->mollieAPIController = new MollieAPIController();
-        $this->smtpcontroller = new SMTPController();
 
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
@@ -54,16 +49,13 @@ class Myprogramcontroller
         $structuredOrderedItems = [];
         $uniqueTimes = [];
 
-        if (isset($_SESSION['shopping_cart']) && !empty($_SESSION['shopping_cart'])) {
+        if (isset ($_SESSION['shopping_cart']) && !empty ($_SESSION['shopping_cart'])) {
             $structuredTickets = $this->structureTicketsWithImages();
 
         }
 
-        if (!isset($_SESSION['user'])) {
-            $user = null;
-        }
         $structuredOrderedItems = $this->getStructuredPurchasedOrderItemsByUserID();
-
+        print_r($structuredOrderedItems);
         require_once __DIR__ . "/../views/my-program/overview.php";
 
     }
@@ -76,7 +68,7 @@ class Myprogramcontroller
         $uniqueTimes = [];
         $userInfo = $this->getUserInfoFromCart();
 
-        if (isset($_SESSION['shopping_cart']) && !empty($_SESSION['shopping_cart'])) {
+        if (isset ($_SESSION['shopping_cart']) && !empty ($_SESSION['shopping_cart'])) {
             $structuredTickets = $this->structureTicketsWithImages();
         }
         require_once __DIR__ . "/../views/my-program/payment.php";
@@ -128,6 +120,19 @@ class Myprogramcontroller
             'email' => $input['email'] ?? ''
         ];
 
+        //updates the user object in the session
+        $_SESSION['user']['firstName'] = $userInfo['firstName'];
+        $_SESSION['user']['lastName'] = $userInfo['lastName'];
+        $_SESSION['user']['address'] = $userInfo['address'];
+        $_SESSION['user']['phoneNumber'] = $userInfo['phoneNumber'];
+        $_SESSION['user']['email'] = $userInfo['email'];
+
+        $this->updateUserInfo();
+
+        // !!! In user session you should only store what user can change
+        // !!!! only ticketId, eventId, quantity should be stored in the session
+        // !!!! ticket date, time, end time, location are already stored in the ticket object,
+        // don't need to be coming from the user, it is already a data RELATED to the ticket (this is a relational database)
         $ticketInfo = [
             'ticketId' => $input['ticketId'] ?? '',
             'eventId' => $input['eventId'] ?? '',
@@ -139,7 +144,6 @@ class Myprogramcontroller
             'ticketLocation' => $input['ticketLocation'] ?? '',
             'user' => $userInfo
         ];
-        
 
         //If your event has extra info that needs to be added to a shopping cart then add it below
         switch ($ticketInfo['eventId']) {
@@ -160,7 +164,6 @@ class Myprogramcontroller
                 break;
         }
 
-
         //Checking if the ticket already exists in the cart
         foreach ($_SESSION['shopping_cart'] as $item) {
             if (
@@ -180,14 +183,14 @@ class Myprogramcontroller
         }
 
         //Checking if the ticket quantity being set in form is greater than what is set in database for that one ticket
-        $ticketQuantity = $this->ticketservice->getTicketQuantity($ticketInfo['ticketId']);
+        $ticketQuantity = $this->ticketservice->getTicketQuantity($ticketInfo['ticketId'], $ticketInfo['eventId']);
         if ($ticketQuantity === null) {
             echo json_encode([
                 'status' => 'error',
                 'message' => 'Could not retrieve ticket quantity.',
             ]);
             exit;
-        } elseif ($ticketQuantity < $ticketInfo['quantity']) {
+        } elseif (100 - intval($ticketQuantity) < $ticketInfo['quantity']) {
             echo json_encode([
                 'status' => 'error',
                 'message' => 'Requested quantity exceeds available quantity.',
@@ -197,21 +200,41 @@ class Myprogramcontroller
 
         $_SESSION['shopping_cart'][] = $ticketInfo;
 
-
         header('Content-Type: application/json');
         echo json_encode([
             'status' => 'success',
             'message' => 'Reservation successfully created!',
         ]);
 
+
         exit;
+    }
+
+    //updates user info in database
+    function updateUserInfo()
+    {
+        $userInfo = [
+            'firstName' => $_SESSION['user']['firstName'] ?? '',
+            'lastName' => $_SESSION['user']['lastName'] ?? '',
+            'address' => $_SESSION['user']['address'] ?? '',
+            'phoneNumber' => $_SESSION['user']['phoneNumber'] ?? '',
+            'email' => $_SESSION['user']['email'] ?? ''
+        ];
+
+
+        $userEmail = $userInfo['email'];
+        $userExists = $this->userService->email_exists($userEmail);
+
+        if ($userExists) {
+            $this->userService->updateUser($userInfo);
+        }
     }
 
 
     //creates a shopping cart if a shopping cart does not exist in the session data
     function createShoppingCart()
     {
-        if (!isset($_SESSION['shopping_cart'])) {
+        if (!isset ($_SESSION['shopping_cart'])) {
             $_SESSION['shopping_cart'] = array();
         }
     }
@@ -290,7 +313,7 @@ class Myprogramcontroller
             }
         }
 
-        if (empty($_SESSION['shopping_cart'])) {
+        if (empty ($_SESSION['shopping_cart'])) {
             $message = 'The shopping cart is now empty.';
         } else {
             $message = 'Item removed successfully.';
@@ -385,7 +408,7 @@ class Myprogramcontroller
     function getUserInfoFromCart()
     {
         foreach ($_SESSION['shopping_cart'] as $item) {
-            if (isset($item['user'])) {
+            if (isset ($item['user'])) {
                 return $item['user'];
             }
         }
@@ -428,64 +451,47 @@ class Myprogramcontroller
         exit;
     }
 
+    //if the mollie api returns with a good response then 
     public function paymentSuccess()
     {
+        // Start the session if it hasn't been started already
         if (session_status() == PHP_SESSION_NONE) {
             session_start();
         }
 
         // Check if the payment ID is stored in the session
-        if (!isset($_SESSION['payment_id'])) {
+        if (!isset ($_SESSION['payment_id'])) {
             echo json_encode(['status' => 'error', 'message' => 'Payment ID is required.']);
             exit;
         }
 
+        // Retrieve the payment ID from the session
         $paymentId = $_SESSION['payment_id'];
 
+        // Retrieve the payment status using the payment ID
         $paymentStatus = $this->mollieAPIController->getPaymentStatus($paymentId);
 
         if ($paymentStatus !== 'paid') {
-            header('Location: /my-program/payment-failure');
+            // Redirect to a failure page or handle the failure scenario
+            header('Location: http://localhost/my-program/payment-failure');
             exit;
         }
 
-        if (!isset($_SESSION['user']) || !isset($_SESSION['user']['userID'])) {
-            echo json_encode(['status' => 'error', 'message' => 'User information is missing.']);
-            exit;
-        }
+        // If payment is successful, proceed with the existing code
         $userId = $_SESSION['user']['userID'];
-
-        if (!isset($_SESSION['shopping_cart']) || empty($_SESSION['shopping_cart'])) {
-            echo json_encode(['status' => 'error', 'message' => 'Shopping cart is empty.']);
-            exit;
-        }
-
         $orderProcessingResult = $this->myProgramService->processOrder($userId, $_SESSION['shopping_cart'], $paymentStatus);
 
+        
         if ($orderProcessingResult['status'] === 'success') {
-            $itemHashes = $orderProcessingResult['itemHashes'];
-            $orderID = $orderProcessingResult['orderId'];
-
-            $firstCartItem = $_SESSION['shopping_cart'][0];
-            if (isset($firstCartItem['user']) && isset($firstCartItem['user']['email']) && isset($firstCartItem['user']['firstName'])) {
-                $email = $firstCartItem['user']['email'];
-                $firstName = $firstCartItem['user']['firstName'];
-                $this->smtpcontroller->sendInvoice($email, $firstName,  $_SESSION['shopping_cart'], $orderID);
-                $this->smtpcontroller->sendTickets($email, $firstName, $itemHashes);
-            } else {
-                echo json_encode(['status' => 'error', 'message' => 'User email or first name is missing from the first cart item.']);
-                exit;
-            }
-
+            // Empty the shopping cart session data after successful order processing
             $_SESSION['shopping_cart'] = [];
-            header('Location: /my-program/order-confirmation');
+            header('Location: http://localhost/my-program/order-confirmation');
             exit;
         } else {
             echo json_encode(['status' => 'error', 'message' => 'Processing Order Failed.']);
             exit;
         }
     }
-
 
     //this checks if tickets are still available in database from session data 
     function checkTicketsAvailability($cart)
@@ -495,7 +501,7 @@ class Myprogramcontroller
             $requestedQuantity = $cartItem['quantity'];
             $availableQuantity = $this->ticketservice->getTicketQuantity($ticketId);
 
-            if ($availableQuantity === null || $requestedQuantity > $availableQuantity) {
+            if ($availableQuantity === null || $requestedQuantity > 100 - intval($availableQuantity)) {
                 return false;
             }
         }
@@ -507,23 +513,22 @@ class Myprogramcontroller
     function getStructuredPurchasedOrderItemsByUserID()
     {
         $structuredOrderItems = [];
-        if (isset($_SESSION['user']) && isset($_SESSION['user']['userID'])) {
+        if (isset ($_SESSION['user']) && isset ($_SESSION['user']['userID'])) {
             $userID = $_SESSION['user']['userID'];
             $purchasedOrderItems = $this->myProgramService->getOrderItemsByUser($userID);
-
             foreach ($purchasedOrderItems as $orderitem) {
                 $event_details = $this->ticketservice->getEventDetails($orderitem->getEventId());
                 $structuredItem = [
-                    'order_item_id' => $orderitem->getOrderItemId(),
-                    'order_id' => $orderitem->getOrderId(),
-                    'user_id' => $orderitem->getUserId(),
-                    'quantity' => $orderitem->getQuantity(),
-                    'date' => $orderitem->getDate(),
-                    'start_time' => $orderitem->getStartTime(),
-                    'end_time' => $orderitem->getEndTime(),
-                    'item_hash' => $orderitem->getItemHash(),
-                    'event_id' => $orderitem->getEventId(),
-                    'location' => $orderitem->getLocation(),
+                    'order_item_id' => $orderitem->getOrderItemId() ?? null,
+                    'order_id' => $orderitem->getOrderId() ?? null,
+                    'user_id' => $orderitem->getUserId() ?? null,
+                    'quantity' => $orderitem->getQuantity() ?? null,
+                    'date' => $orderitem->getDate() ?? null,
+                    'start_time' => $orderitem->getStartTime() ?? null,
+                    'end_time' => $orderitem->getEndTime() ?? null,
+                    'item_hash' => $orderitem->getItemHash() ?? null,
+                    'event_id' => $orderitem->getEventId() ?? null,
+                    'location' => $orderitem->getLocation() ?? null,
                     'event_details' => [
                         'image' => $event_details['picture'] ?? null,
                         'event_name' => $event_details['name'] ?? null,
@@ -542,29 +547,34 @@ class Myprogramcontroller
                         break;
                     case EVENT_ID_DANCE:
                     case EVENT_ID_JAZZ: // Events Dance and Jaz
-                        $structuredItem['ticket_type'] = $orderitem->getTicketType();
-                        $structuredItem['artist_name'] = $orderitem->getArtistName();
+                        $structuredItem['ticket_type'] = $orderitem->getTicketType() ?? null;
+                        $structuredItem['artist_name'] = $orderitem->getArtistName() ?? null;
                         break;
                 }
 
                 $structuredOrderItems[] = $structuredItem;
             }
+
             // Filter the structured order items to include only those within the specified date range
-            $filteredOrderedItems = array_filter($structuredOrderItems, function ($item) {
-                // Convert the item's date to a timestamp for easy comparison
-                $itemDateTimestamp = strtotime($item['date']);
-                // Define the start and end of the desired date range
-                $startDateTimestamp = strtotime("2024-06-26");
-                $endDateTimestamp = strtotime("2024-06-30");
-                // Include the item if its date is within the range
-                return $itemDateTimestamp >= $startDateTimestamp && $itemDateTimestamp <= $endDateTimestamp;
-            });
+            // $filteredOrderedItems = array_filter($structuredOrderItems, function ($item) {
+            //     // Convert the item's date to a timestamp for easy comparison
+            //     $itemDateTimestamp = strtotime($item['date']);
+            //     // Define the start and end of the desired date range
+            //     $startDateTimestamp = strtotime("2024-06-26");
+            //     $endDateTimestamp = strtotime("2024-06-30");
+            //     // Include the item if its date is within the range
+            //     return $itemDateTimestamp >= $startDateTimestamp && $itemDateTimestamp <= $endDateTimestamp;
+            // });
 
             // Return only the items that passed the filtering
-            return $filteredOrderedItems;
+            return $structuredOrderItems;
         } else {
             return [];
         }
     }
 
+
+
 }
+
+

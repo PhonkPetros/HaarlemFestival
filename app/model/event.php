@@ -5,17 +5,18 @@ class Event implements \JsonSerializable
 {
     
     private int $event_id;
-    private string $name;
-    private string $startDate;
-    private string $location;
-    private float $price;
-    private string $picture;
-    private string $endDate;
+    private ?string $name;
+    private ?string $startDate;
+    private ?string $location;
+    private ?float $price;
+    private ?string $picture;
+    private ?string $endDate;
     private ?string $artist;
     private ?int $dayPass;
     private ?int $allDayPass;
     private ?int $seats;
     private ?int $restaurant_id;
+    private ?int $dance_event_id;
 
     public function jsonSerialize(): mixed {
         return [
@@ -31,6 +32,7 @@ class Event implements \JsonSerializable
             'allDayPass'=> $this->getAllDayPass(),
             'seats'=> $this->getSeats(),
             'restaurant_id' =>$this->getRestaurantID(),
+            'dance_event_id' => $this->getDanceEventId()
         ];
     }
 
@@ -71,6 +73,14 @@ class Event implements \JsonSerializable
     }
     public function setRestaurantID(?int $restaurant_id) {
         return $this->$restaurant_id = $restaurant_id;
+    }
+
+    public function setDanceEventId(?int $dance_event_id) {
+        return $this->dance_event_id = $dance_event_id;
+    }
+
+    public function getDanceEventId(): int {
+        return $this->dance_event_id;
     }
 
     public function setArtist(?string $artist) {
