@@ -129,8 +129,7 @@ if ($restaurantDetails !== null) {
                 data-date="<?= htmlspecialchars($ticket->getTicketDate()) ?>"
                 data-time="<?= htmlspecialchars($ticket->getTicketTime()) ?>"
                 data-location="<?= htmlspecialchars($restaurantDetails->getLocation()) ?>"
-                data-restaurant-name="<?= htmlspecialchars($restaurantDetails->getName()) ?>"
-                data-special-remarks="">Reserve</button>
+                data-restaurant-name="<?= htmlspecialchars($restaurantDetails->getName()) ?>">Reserve</button>
               </td>
           </tr>
         <?php endforeach; ?>

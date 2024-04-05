@@ -20,6 +20,7 @@ use controllers\yummycontroller;
 use controllers\Pagecontroller;
 use controllers\Myprogramcontroller;
 use controllers\orderoverviewcontroller;
+use controllers\resetpasswordcontroller;
 
 require_once __DIR__ . '/../controllers/overview.php';
 require_once __DIR__ . '/../controllers/registercontroller.php';
