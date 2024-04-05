@@ -180,7 +180,7 @@ class Myprogramcontroller
         }
 
         //Checking if the ticket quantity being set in form is greater than what is set in database for that one ticket
-        $ticketQuantity = $this->ticketservice->getTicketQuantity($ticketInfo['ticketId']);
+        $ticketQuantity = $this->ticketservice->getTicketQuantity($ticketInfo['ticketId'], $ticketInfo['eventId']);
         if ($ticketQuantity === null) {
             echo json_encode([
                 'status' => 'error',
@@ -514,16 +514,16 @@ class Myprogramcontroller
             foreach ($purchasedOrderItems as $orderitem) {
                 $event_details = $this->ticketservice->getEventDetails($orderitem->getEventId());
                 $structuredItem = [
-                    'order_item_id' => $orderitem->getOrderItemId(),
-                    'order_id' => $orderitem->getOrderId(),
-                    'user_id' => $orderitem->getUserId(),
-                    'quantity' => $orderitem->getQuantity(),
-                    'date' => $orderitem->getDate(),
-                    'start_time' => $orderitem->getStartTime(),
-                    'end_time' => $orderitem->getEndTime(),
-                    'item_hash' => $orderitem->getItemHash(),
-                    'event_id' => $orderitem->getEventId(),
-                    'location' => $orderitem->getLocation(),
+                    'order_item_id' => $orderitem->getOrderItemId() ?? null,
+                    'order_id' => $orderitem->getOrderId() ?? null,
+                    'user_id' => $orderitem->getUserId() ?? null,
+                    'quantity' => $orderitem->getQuantity() ?? null,
+                    'date' => $orderitem->getDate() ?? null,
+                    'start_time' => $orderitem->getStartTime() ?? null,
+                    'end_time' => $orderitem->getEndTime() ?? null,
+                    'item_hash' => $orderitem->getItemHash() ?? null,
+                    'event_id' => $orderitem->getEventId() ?? null,
+                    'location' => $orderitem->getLocation() ?? null,
                     'event_details' => [
                         'image' => $event_details['picture'] ?? null,
                         'event_name' => $event_details['name'] ?? null,
@@ -542,26 +542,26 @@ class Myprogramcontroller
                         break;
                     case EVENT_ID_DANCE:
                     case EVENT_ID_JAZZ: // Events Dance and Jaz
-                        $structuredItem['ticket_type'] = $orderitem->getTicketType();
-                        $structuredItem['artist_name'] = $orderitem->getArtistName();
+                        $structuredItem['ticket_type'] = $orderitem->getTicketType() ?? null;
+                        $structuredItem['artist_name'] = $orderitem->getArtistName() ?? null;
                         break;
                 }
 
                 $structuredOrderItems[] = $structuredItem;
             }
-            // Filter the structured order items to include only those within the specified date range
-            $filteredOrderedItems = array_filter($structuredOrderItems, function ($item) {
-                // Convert the item's date to a timestamp for easy comparison
-                $itemDateTimestamp = strtotime($item['date']);
-                // Define the start and end of the desired date range
-                $startDateTimestamp = strtotime("2024-06-26");
-                $endDateTimestamp = strtotime("2024-06-30");
-                // Include the item if its date is within the range
-                return $itemDateTimestamp >= $startDateTimestamp && $itemDateTimestamp <= $endDateTimestamp;
-            });
+            // // Filter the structured order items to include only those within the specified date range
+            // $filteredOrderedItems = array_filter($structuredOrderItems, function ($item) {
+            //     // Convert the item's date to a timestamp for easy comparison
+            //     $itemDateTimestamp = strtotime($item['date']);
+            //     // Define the start and end of the desired date range
+            //     $startDateTimestamp = strtotime("2024-06-26");
+            //     $endDateTimestamp = strtotime("2024-06-30");
+            //     // Include the item if its date is within the range
+            //     return $itemDateTimestamp >= $startDateTimestamp && $itemDateTimestamp <= $endDateTimestamp;
+            // });
 
             // Return only the items that passed the filtering
-            return $filteredOrderedItems;
+            return $structuredOrderItems;
         } else {
             return [];
         }

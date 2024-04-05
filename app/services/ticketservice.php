@@ -25,8 +25,12 @@ class ticketservice {
         return $this->ticketRepo->getEventDetails($eventId);
     }
 
-    function getTicketQuantity($ticketID){
-        return $this->ticketRepo->getTicketQuantity($ticketID);
+    function getTicketQuantity($ticketID, $eventID = null){
+        if ($eventID == "3") {
+            return $this->ticketRepo->getTicketQuantity($ticketID, 'musicTickets');
+        } else {
+            return $this->ticketRepo->getTicketQuantity($ticketID);
+        }
     }
 
     function getReservedTicketsByUserId($userID) {

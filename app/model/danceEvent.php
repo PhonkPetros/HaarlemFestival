@@ -3,6 +3,7 @@ namespace model;
 
 class DanceEvent implements \JsonSerializable {
     private int $danceEventId;
+    private int $eventId;
     private string $venueId;
     private string $venue;
     private string $address;
@@ -13,8 +14,9 @@ class DanceEvent implements \JsonSerializable {
     private string $image;
     private array $artists;
 
-    public function __construct(int $danceEventId, string $venueId, string $venue, string $address, string $dateTime, float $price, float $oneDayPrice, float $allDaysPrice, string $image, array $artists) {
+    public function __construct(int $danceEventId, int $eventId, string $venueId, string $venue, string $address, string $dateTime, float $price, float $oneDayPrice, float $allDaysPrice, string $image, array $artists) {
         $this->danceEventId = $danceEventId;
+        $this->eventId = $eventId;
         $this->venueId = $venueId;
         $this->venue = $venue;
         $this->address = $address;
@@ -29,6 +31,7 @@ class DanceEvent implements \JsonSerializable {
     public function jsonSerialize(): mixed {
         return [
             'id' => $this->getDanceEventId(),
+            'eventId' => $this->getEventId(),
             'venueId' => $this->getVenueId(),
             'venue' => $this->getVenue(),
             'address' => $this->getAddress(),
@@ -43,6 +46,10 @@ class DanceEvent implements \JsonSerializable {
 
     public function getDanceEventId(): int {
         return $this->danceEventId;
+    }
+
+    public function getEventId(): int {
+        return $this->eventId;
     }
 
     public function getVenueId(): string {

@@ -150,10 +150,10 @@ class TicketRepo extends dbconfig
         $tickets = [];
         try {
             $stmt = $this->getConnection()->prepare($sql);
-            $stmt->bindParam(':userID', $userID, \PDO::PARAM_INT);
+            $stmt->bindParam(':userID', $userID, PDO::PARAM_INT);
             $stmt->execute();
     
-            $ticketsData = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+            $ticketsData = $stmt->fetchAll(PDO::FETCH_ASSOC);
     
             foreach ($ticketsData as $ticketData) {
                 $ticket = new Ticket();
