@@ -35,9 +35,8 @@ class Section implements \JsonSerializable
     }
 
     public function setTitle(string $title): void{
-        $this->title = $title;
+        $this->title = filter_var($title, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     }
-
     public function setEditorId(?int $editor_id): void {
         $this->editor_id = $editor_id;
     }

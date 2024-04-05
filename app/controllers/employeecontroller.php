@@ -41,11 +41,21 @@ class EmployeeController
                         "message" => "QR Code processed successfully.",
                         "qrCodeText" => $qrCodeText
                     ]);
-                } else {
+                    exit;
+                } 
+                else if ($qrProcessingResult['status'] === 'Inactive'){
+                    echo json_encode([
+                        "success" => false,
+                        "message" => "Ticket has already been scanned.",
+                    ]);
+                    exit;
+                }
+                else {
                     echo json_encode([
                         "success" => false,
                         "message" => "QR Code processing failed.",
                     ]);
+                    exit;
                 }
             } else {
                 echo json_encode([

@@ -1,5 +1,4 @@
 <?php
-
 namespace model;
 
 class Navigation implements \JsonSerializable {
@@ -29,7 +28,7 @@ class Navigation implements \JsonSerializable {
     }
 
     public function setPageName(string $pageName): void {
-        $this->pageName = $pageName;
+        $this->pageName = filter_var($pageName, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     }
 
     public function jsonSerialize(): mixed {
@@ -40,3 +39,4 @@ class Navigation implements \JsonSerializable {
         ];
     }
 }
+?>

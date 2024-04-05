@@ -19,7 +19,7 @@ class Page implements \JsonSerializable
     }
 
     public function setName(string $name): void {
-        $this->name = $name;
+        $this->name = filter_var($name, FILTER_SANITIZE_SPECIAL_CHARS);
     }
 
     public function jsonSerialize(): mixed {

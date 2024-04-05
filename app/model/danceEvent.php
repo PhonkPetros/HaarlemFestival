@@ -103,4 +103,18 @@ class DanceEvent implements \JsonSerializable {
         }
         return rtrim($artists, ", ");
     }
+
+    // Sanitize string properties before setting
+    public function setVenue(string $venue): void {
+        $this->venue = filter_var($venue, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    }
+
+    public function setAddress(string $address): void {
+        $this->address = filter_var($address, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    }
+
+    public function setImage(string $image): void {
+        $this->image = filter_var($image, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    }
 }
+?>

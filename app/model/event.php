@@ -114,7 +114,8 @@ class Event implements \JsonSerializable
     }
 
     public function setName(string $name): void {
-        $this->name = $name;
+
+        $this->name = filter_var($name, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     }
 
     public function setStartDate(string $date): void {
@@ -126,7 +127,7 @@ class Event implements \JsonSerializable
     }
 
     public function setLocation(string $location): void {
-        $this->location = $location;
+        $this->location = filter_var($location, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     }
 
     public function setPrice(float $price): void {
@@ -134,7 +135,7 @@ class Event implements \JsonSerializable
     }
 
     public function setPicture(string $picture): void {
-        $this->picture = $picture;
+        $this->picture = filter_var($picture, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     }
-
 }
+?>

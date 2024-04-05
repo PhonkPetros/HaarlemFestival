@@ -20,7 +20,7 @@ class Image implements \JsonSerializable
     }
 
     public function setFilePath(?string $file_path): void {
-        $this->file_path = $file_path;
+        $this->file_path = filter_var($file_path, FILTER_SANITIZE_URL);
     }
 
     public function jsonSerialize(): mixed {
@@ -30,3 +30,4 @@ class Image implements \JsonSerializable
         ];
     }
 }
+?>

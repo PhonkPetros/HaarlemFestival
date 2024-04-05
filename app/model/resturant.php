@@ -1,10 +1,10 @@
-<?
+<?php
 
 namespace model;
 
 use JsonSerializable;
 
-class Restaurant implements \JsonSerializable{
+class Restaurant implements JsonSerializable{
     private int $id;
     private string $name;
     private string $location;
@@ -45,7 +45,7 @@ class Restaurant implements \JsonSerializable{
     }
 
     public function setName(string $name): void {
-        $this->name = $name;
+        $this->name = filter_var($name, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     }
 
     public function getLocation(): string {
@@ -53,7 +53,7 @@ class Restaurant implements \JsonSerializable{
     }
 
     public function setLocation(string $location): void {
-        $this->location = $location;
+        $this->location = filter_var($location, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     }
 
     public function getPrice(): int {
@@ -87,7 +87,7 @@ class Restaurant implements \JsonSerializable{
 
 
     public function setDescription(string $description): void {
-        $this->description = $description;
+        $this->description = filter_var($description, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     }
 
     public function getDescription(): string {

@@ -13,22 +13,23 @@ class Carousel implements \JsonSerializable
     }
 
     public function setCarouselId(int $carousel_id): void {
-        $this->carousel_id = $carousel_id;
+        $this->carousel_id = filter_var($carousel_id, FILTER_SANITIZE_NUMBER_INT);
     }
 
     public function getLabel(): ?string {
         return $this->label;
     }
 
-    public function setLabel(?string $lable): void {
-        $this->label = $lable;  
+    public function setLabel(?string $label): void {
+        $this->label = $label !== null ? filter_var($label, FILTER_SANITIZE_FULL_SPECIAL_CHARS) : null;  
     }
+
     public function getSectionId(): int {
         return $this->section_id;
     }
 
     public function setSectionId(int $section_id): void {
-        $this->section_id = $section_id;
+        $this->section_id = filter_var($section_id, FILTER_SANITIZE_NUMBER_INT);
     }
 
     public function getImageId(): int {
@@ -36,7 +37,7 @@ class Carousel implements \JsonSerializable
     }
 
     public function setImageId(int $image_id): void {
-        $this->image_id = $image_id;
+        $this->image_id = filter_var($image_id, FILTER_SANITIZE_NUMBER_INT);
     }
 
     public function jsonSerialize(): mixed {
@@ -48,3 +49,4 @@ class Carousel implements \JsonSerializable
         ];
     }
 }
+?>

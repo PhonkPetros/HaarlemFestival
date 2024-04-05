@@ -36,7 +36,7 @@ class User implements \JsonSerializable
     }
 
     public function setFirstname(?string $firstname): void {
-        $this->firstname = $firstname;
+        $this->firstname = filter_var($firstname, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     }
 
     public function getRating(): ?int {
@@ -53,7 +53,7 @@ class User implements \JsonSerializable
     }
 
     public function setLastname(?string $lastname): void {
-        $this->lastname = $lastname;
+        $this->lastname = filter_var($lastname, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     }
 
     public function getAddress(): ?string {
@@ -61,7 +61,7 @@ class User implements \JsonSerializable
     }
 
     public function setAddress(?string $address): void {
-        $this->address = $address;
+        $this->address = filter_var($address, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     }
 
     public function getPhoneNumber(): ?string {
@@ -69,7 +69,7 @@ class User implements \JsonSerializable
     }
 
     public function setPhoneNumber(?string $phone_number): void {
-        $this->phone_number = $phone_number;
+        $this->phone_number = filter_var($phone_number, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     }
     public function getUserID(): int
     {
@@ -120,7 +120,7 @@ class User implements \JsonSerializable
 
     public function setUserEmail(string $email): void
     {
-        $this->email = $email;
+        $this->email = filter_var($email, FILTER_SANITIZE_EMAIL);
     }
 
     public function getRegistrationDate(): string {

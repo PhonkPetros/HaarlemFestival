@@ -31,4 +31,9 @@ class DanceArtist implements \JsonSerializable {
     public function getProfile() {
         return $this->profile;
     }
+
+    public function setName(string $name): void {
+        $this->name = filter_var($name, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    }
 }
+?>

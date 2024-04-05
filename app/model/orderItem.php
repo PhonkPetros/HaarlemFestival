@@ -1,4 +1,4 @@
-<?
+<?php
 namespace model;
 
 class OrderItem implements \JsonSerializable
@@ -47,7 +47,7 @@ class OrderItem implements \JsonSerializable
     }
 
     public function setStatus(?string $status): void {
-        $this->status = $status;
+        $this->status = filter_var($status, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     }
 
     public function getEventId(): ?int {
@@ -63,7 +63,7 @@ class OrderItem implements \JsonSerializable
     }
 
     public function setLocation(?string $location): void {
-        $this->location = $location;
+        $this->location = filter_var($location, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     }
 
     public function getTicketType(): ?string {
@@ -71,7 +71,7 @@ class OrderItem implements \JsonSerializable
     }
 
     public function setTicketType(?string $ticket_type): void {
-        $this->ticket_type = $ticket_type;
+        $this->ticket_type = filter_var($ticket_type, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     }
 
     public function getArtistName(): ?string {
@@ -79,7 +79,7 @@ class OrderItem implements \JsonSerializable
     }
 
     public function setArtistName(?string $artist_name): void {
-        $this->artist_name = $artist_name;
+        $this->artist_name = filter_var($artist_name, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     }
 
     public function getRestaurantName(): ?string {
@@ -87,7 +87,7 @@ class OrderItem implements \JsonSerializable
     }
 
     public function setRestaurantName(?string $restaurant_name): void {
-        $this->restaurant_name = $restaurant_name;
+        $this->restaurant_name = filter_var($restaurant_name, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     }
 
     public function getSpecialRemarks(): ?string {
@@ -95,7 +95,7 @@ class OrderItem implements \JsonSerializable
     }
 
     public function setSpecialRemarks(?string $special_remarks): void {
-        $this->special_remarks = $special_remarks;
+        $this->special_remarks = filter_var($special_remarks, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     }
 
     public function getOrderItemId(): int {

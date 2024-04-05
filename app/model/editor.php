@@ -20,10 +20,10 @@ class Editor implements \JsonSerializable
     }
 
     public function setContent(string $content): void {
-        $this->content = $content;
+        // Sanitize string input
+        $this->content = filter_var($content, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     }
 
-    
     public function getCreated(): string {
         return $this->created;
     }
@@ -40,3 +40,4 @@ class Editor implements \JsonSerializable
         ];
     }
 }
+?>

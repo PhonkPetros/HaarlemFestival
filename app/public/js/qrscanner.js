@@ -7,10 +7,15 @@ function domReady(fn) {
 }
 
 domReady(function () {
-    function onScanSuccess(decodedText, decodedResult) {
-        swal("Success!", "QR Code detected: " + decodedText, "success");
-        const data = { qrCodeText: decodedText };
+    let isScanning = false;
 
+    let htmlscanner = new Html5QrcodeScanner("my-qr-reader", { fps: 10, qrbox: 250 }, false);
+    
+    function onScanSuccess(decodedText, decodedResult) {
+        if (!isScanning) return;
+        isScanning = false;
+        const data = { qrCodeText: decodedText };
+    
         fetch('/employee/dashboard', {
             method: 'POST',
             headers: {
@@ -21,16 +26,33 @@ domReady(function () {
         .then(response => response.json())
         .then(data => {
             console.log('Success:', data);
-            swal("Success!", "QR Code data sent successfully", "success");
-            htmlscanner.clear();
+            if (data.success) {
+                swal("Success!", "QR Code processed successfully: " + decodedText, "success");
+            } else {
+                if (data.message === "Ticket has already been scanned.") {
+                    swal("Notice!", data.message, "warning");
+                } else {
+                    swal("Error!", data.message, "error");
+                }
+            }
+            htmlscanner.clear(); // Clear QR code scanner drawing regardless of the outcome
         })
         .catch((error) => {
             console.error('Error:', error);
             swal("Error!", "Failed to send QR Code data", "error");
-            htmlscanner.clear(); 
+            htmlscanner.clear(); // Clear QR code scanner drawing on error
         });
     }
+    
+    
 
-    let htmlscanner = new Html5QrcodeScanner("my-qr-reader", { fps: 10, qrbox: 250 });
-    htmlscanner.render(onScanSuccess);
+    function startScanning() {
+        if (!isScanning) {
+            isScanning = true;
+            htmlscanner.render(onScanSuccess);
+        }
+    }
+
+    // Add event listener to your scan button
+    document.getElementById('start-scan-btn').addEventListener('click', startScanning);
 });

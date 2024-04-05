@@ -5,6 +5,7 @@
         <h1>Scan QR Codes</h1>
         <div class="section">
             <div id="my-qr-reader"></div>
+            <button id="start-scan-btn">Start Scanning</button>
         </div>
     </div>
 </div>

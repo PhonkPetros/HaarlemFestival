@@ -1,4 +1,4 @@
-<?
+<?php
 namespace model;
 
 class Order implements \JsonSerializable
@@ -50,7 +50,7 @@ class Order implements \JsonSerializable
     }
 
     public function setOrderHash(string $order_hash): void {
-        $this->order_hash = $order_hash;
+        $this->order_hash = filter_var($order_hash, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     }
 
     public function getStatus(): string {
@@ -58,7 +58,7 @@ class Order implements \JsonSerializable
     }
 
     public function setStatus(string $status): void {
-        $this->status = $status;
+        $this->status = filter_var($status, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     }
 
     public function getCreatedAt(): string {
@@ -69,3 +69,4 @@ class Order implements \JsonSerializable
         $this->created_at = $created_at;
     }
 }
+?>

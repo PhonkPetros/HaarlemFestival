@@ -223,7 +223,7 @@ class TicketRepo extends dbconfig
     
             if ($result) {
                 if ($result['status'] === 'Inactive') {
-                    return ["status" => "error", "message" => "Ticket already scanned."];
+                    return ["status" => "Inactive", "message" => "Ticket already scanned."];
                 } else {
                     $updateResult = $this->updateOrderStatusToInactive($result['order_id']);
                     if ($updateResult) {

@@ -23,7 +23,7 @@ class Ticket implements \JsonSerializable
     }
 
     public function setTicketEndTime(?string $endTime): void { 
-        $this->endTime = $endTime;
+        $this->endTime = filter_var($endTime, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     }
 
     public function getTicketId(): int {
@@ -72,7 +72,7 @@ class Ticket implements \JsonSerializable
     }
 
     public function setState(string $state): void {
-        $this->state = $state;
+        $this->state = filter_var($state, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     }
 
     public function getEventId(): int {
@@ -88,7 +88,7 @@ class Ticket implements \JsonSerializable
     }
 
     public function setTicketLanguage(string $language): void {
-        $this->language = $language;
+        $this->language = filter_var($language, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     }
 
     public function getTicketDate(): ?string { 
@@ -112,7 +112,7 @@ class Ticket implements \JsonSerializable
     }
 
     public function setSpecialRequest(?string $special_request): void { 
-        $this->special_request = $special_request;
+        $this->special_request = filter_var($special_request, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     }
 
     public function jsonSerialize(): mixed {
