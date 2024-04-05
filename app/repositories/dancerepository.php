@@ -21,7 +21,7 @@ class Dancerepository extends dbconfig {
      * dance_participating_artists: id, danceEventId, danceArtistId
      */
 
-    public function getDanceEvents() {
+     public function getDanceEvents() {
         $sql = 'SELECT * FROM dance_events
         JOIN venues ON dance_events.venue = venues.venueId
         JOIN [Event] ON dance_events.danceEventId = [Event].dance_event_id';
@@ -36,7 +36,7 @@ class Dancerepository extends dbconfig {
                 $artists = array_map(function($artist) {
                     return new DanceArtist($artist['artistId'], $artist['name'], $artist['profile']);
                 }, $artists);
-                $danceEvent = new DanceEvent($event['danceEventId'], $event["venueId"], $event['name'], $event['location'], $event['dateTime'], $event['price'], $event['oneDayPrice'], $event['allDaysPrice'], $event['image'], $artists);
+                $danceEvent = new DanceEvent($event['danceEventId'], $event['event_id'], $event["venueId"], $event['name'], $event['location'], $event['dateTime'], $event['price'], $event['oneDayPrice'], $event['allDaysPrice'], $event['image'], $artists);
                 array_push($events, $danceEvent);
             }
 
