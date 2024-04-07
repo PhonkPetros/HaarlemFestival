@@ -80,21 +80,21 @@
             </tr>
         </thead>
         <tbody>
-            <?php if (isset($tickets) && is_array($tickets)): ?>
-                <?php foreach ($tickets as $ticket): ?>
+            <?php if (isset($timeslots) && is_array($timeslots)): ?>
+                <?php foreach ($timeslots as $timeslot): ?>
                     <tr>
-                        <td><?= htmlspecialchars($ticket->getQuantity()) ?></td>
-                        <td><?= htmlspecialchars($ticket->getTicketDate()) ?></td>
-                        <td><?= htmlspecialchars($ticket->getTicketTime()) ?></td>
+                        <td><?= htmlspecialchars($timeslot->getQuantity()) ?></td>
+                        <td><?= htmlspecialchars($timeslot->getTicketDate()) ?></td>
+                        <td><?= htmlspecialchars($timeslot->getTicketTime()) ?></td>
                         <td>
                         <form method="post" action="/restaurant/deletetimeslot">
-                            <input type="hidden" name="delete_timeslot_id" value="<?= htmlspecialchars($ticket->getTicketHash()) ?>">
+                            <input type="hidden" name="delete_timeslot_id" value="<?= htmlspecialchars($timeslot->getTicketHash()) ?>">
                             <button type="submit" class="btn btn-danger delete-timeslot-btn">Delete</button> 
                         </form>
                     </td>
                     </tr>
                 <?php endforeach; ?>
-                <?php if (empty($tickets)): ?>
+                <?php if (empty($timeslots)): ?>
                     <tr>
                         <td colspan="3">No timeslots found.</td>
                     </tr>
@@ -103,6 +103,68 @@
         </tbody>
     </table>
 </div>
+
+<div class="container mt-5">
+    <h2>Reservations</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Order Item ID</th>
+                <th>Order ID</th>
+                <th>User ID</th>
+                <th>Quantity</th>
+                <th>Date</th>
+                <th>Start Time</th>
+                <th>End Time</th>
+                <th>Event ID</th>
+                <th>Location</th>
+                <th>Special Remarks</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php if (isset($reservations) && is_array($reservations)): ?>
+                <?php foreach ($reservations as $reservation): ?>
+                    <tr>
+                        <td><?= htmlspecialchars($reservation["order_item_id"]) ?></td>
+                        <td><?= htmlspecialchars($reservation["order_id"]) ?></td>
+                        <td><?= htmlspecialchars($reservation["user_id"]) ?></td>
+                        <td><?= htmlspecialchars($reservation["quantity"]) ?></td>
+                        <td><?= (new DateTime($reservation["start_time"]))->format('H:i') ?></td>
+                        <td><?= (new DateTime($reservation["end_time"]))->format('H:i') ?></td>
+                        <td><?= htmlspecialchars($reservation["event_id"]) ?></td>
+                        <td><?= htmlspecialchars($reservation["location"]) ?></td>
+                        <td><?= htmlspecialchars($reservation["special_remarks"]) ?></td>
+                        <td><?= htmlspecialchars($reservation["status"]) ?></td>
+                        <td>
+                        <?php if ($reservation["status"] == "Active"): ?>
+                            <form method="POST" action="/reservation/updateStatus">
+                                <input type="hidden" name="order_id" value="<?= htmlspecialchars($reservation["order_id"]) ?>">
+                                <input type="hidden" name="new_status" value="Disabled">
+                                <input type="hidden" name="event_id" value="<?= htmlspecialchars($reservation["event_id"]) ?>">
+                                <button type="submit" class="btn btn-danger">Disable</button>
+                            </form>
+                        <?php else: ?>
+                            <form method="POST" action="/reservation/updateStatus">
+                                <input type="hidden" name="order_id" value="<?= htmlspecialchars($reservation["order_id"]) ?>">
+                                <input type="hidden" name="new_status" value="Active">
+                                <input type="hidden" name="event_id" value="<?= htmlspecialchars($reservation["event_id"]) ?>">
+                                <button type="submit" class="btn btn-success">Activate</button>
+                            </form>
+                        <?php endif; ?>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <tr>
+                    <td colspan="12">No reservations found.</td>
+                </tr>
+            <?php endif; ?>
+        </tbody>
+    </table>
+</div>
+
 
 <div id="editModal" class="modal">
     <div class="modal-dialog">

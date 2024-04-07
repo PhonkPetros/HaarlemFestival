@@ -436,7 +436,6 @@ class Myprogramcontroller
             exit;
         }
 
-        //calls the mollie api to create payment
         $userId = $_SESSION['user']['userID'];
         $paymentResult = $this->mollieAPIController->createPayment($userId, $_SESSION['shopping_cart'], $paymentMethod, $issuer);
 

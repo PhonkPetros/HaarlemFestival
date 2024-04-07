@@ -210,4 +210,45 @@ class TicketRepo extends dbconfig
         }
     }
 
+    public function getReservation($eventID){
+        $sql = 'SELECT * FROM [OrderItems] WHERE event_id = :eventID;';
+    
+        try {
+            $stmt = $this->getConnection()->prepare($sql);
+            $stmt->bindParam(':eventID', $eventID, PDO::PARAM_INT);
+            $stmt->execute();
+    
+            $reservationData = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+            return $reservationData;
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+            return null;
+        }
+    }
+
+    public function updateReservationStatus($orderId, $newStatus){
+        $sql = 'UPDATE [OrderItems] SET status = :newStatus WHERE order_id = :orderId;';
+    
+        try {
+            $stmt = $this->getConnection()->prepare($sql);
+    
+            $stmt->bindParam(':newStatus', $newStatus, PDO::PARAM_STR);
+            $stmt->bindParam(':orderId', $orderId, PDO::PARAM_INT);
+    
+            $stmt->execute();
+    
+            if ($stmt->rowCount() > 0) {
+                return true; // Update successful
+            } else {
+                return false; // No rows updated, possibly because the order ID was not found
+            }
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+            return false; // Indicate failure
+        }
+    }
+    
+    
+
 }

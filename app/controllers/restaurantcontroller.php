@@ -2,18 +2,21 @@
 
 namespace controllers;
 require_once __DIR__ . '/../services/restaurantservice.php';
+require_once __DIR__ . '/../services/ticketservice.php';
 
 use services\RestaurantService;
-
+use services\ticketservice;
 
 class Restaurantcontroller
 {
   
     public $restaurantService;
+    public $ticketService;
 
     public function __construct() {
         $this->navigationController = new Navigationcontroller();
         $this->restaurantService = new RestaurantService();
+        $this->ticketService = new ticketservice();
     }
 
     private $navigationController;
@@ -22,7 +25,8 @@ class Restaurantcontroller
     public function editEventDetails($eventId) {
         
         $restaurants = $this->restaurantService->getRestaurant($eventId);
-        $tickets = $this->restaurantService->getTimeslotsForRestaurant($eventId);
+        $timeslots = $this->restaurantService->getTimeslotsForRestaurant($eventId);
+        $reservations = $this->ticketService->getReservations($eventId);
         require_once __DIR__ . '/../views/admin/manage-event-details/editDetailsRestaurant.php';
     }
     
@@ -203,6 +207,30 @@ class Restaurantcontroller
             exit(); 
         }        
     }
+
+    public function updateStatus() {
+        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+            $orderId = $_POST['order_id'] ?? null;
+            $newStatus = $_POST['new_status'] ?? null;
+            $eventId = $_POST['event_id'] ?? null;
+            if ($orderId && $newStatus && $eventId) {
+                $result = $this->ticketService->updateReservationStatus($orderId, $newStatus);
+                if ($result) {
+                    // Redirect to the restaurant details page after successful update
+                    header("Location: /manage-event-details/editDetails?id=" . urlencode($eventId));
+                    exit();
+                } else {
+                    // Handle failure (consider logging the failure and providing feedback to the user)
+                    echo json_encode(['success' => false, 'message' => 'Failed to update status.']);
+                }
+            } else {
+                // Handle missing data
+                echo json_encode(['success' => false, 'message' => 'Missing required data.']);
+            }
+            exit();
+        }
+    }
+    
 
     public function deleteTimeSlot(){
         if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["delete_timeslot_id"])) {

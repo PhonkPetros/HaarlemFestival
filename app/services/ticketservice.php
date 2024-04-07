@@ -36,4 +36,11 @@ class ticketservice {
     function getUserDetails($userID){
         return $this->ticketRepo->getUserDetails($userID);
     }
+
+    function getReservations($eventID){
+        return $this->ticketRepo->getReservation($eventID);
+    }
+    function updateReservationStatus($orderId, $newStatus){
+        return $this->ticketRepo->updateReservationStatus($orderId, $newStatus);
+    }
 }

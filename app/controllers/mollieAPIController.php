@@ -20,7 +20,17 @@ class MollieAPIController
     public function createPayment($userId, $cart, $paymentMethod, $issuer = null)
     {
         $totalPrice = array_reduce($cart, function ($carry, $item) {
-            return $carry + ($item['quantity'] * $item['ticketPrice']) * 1.21;
+            $additionalFee = 0.00;
+
+            if ($item['eventId'] > 7) {
+                $additionalFee = 10.00;
+            }
+
+            $itemTotal = ($item['quantity'] * $item['ticketPrice']) + ($item['quantity'] * $additionalFee);
+            $itemTotalWithVAT = $itemTotal * 1.21;
+
+            // Add the calculated total for the current item to the running total
+            return $carry + $itemTotalWithVAT;
         }, 0);
 
         $totalPriceStr = number_format($totalPrice, 2, '.', '');
@@ -39,9 +49,8 @@ class MollieAPIController
                 ],
             ];
 
-
             $payment = $this->mollieClient->payments->create($paymentData);
-        
+
             $_SESSION['payment_id'] = $payment->id;
 
             return [
@@ -55,9 +64,8 @@ class MollieAPIController
                 'message' => "API call failed: " . htmlspecialchars($e->getMessage()),
             ];
         }
-
-
     }
+
 
     public function getPaymentStatus($paymentId)
     {

@@ -703,6 +703,13 @@ switch ($request) {
             respondWith404();
         }
         break;
+        case '/reservation/updateStatus':{
+            $controller = new Restaurantcontroller();
+            if ($method === "POST") {
+                $controller->updateStatus();
+            }
+            break;
+        }
     case '/submit-reservation':
         $controller = new Myprogramcontroller();
         if ($method === 'POST') {
