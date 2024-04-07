@@ -122,8 +122,9 @@ document.addEventListener('DOMContentLoaded', function() {
             const restaurantId = this.getAttribute('data-id');
             const row = document.getElementById(`restaurant-row-${restaurantId}`);
             if (row) {
-                const startDate = row.querySelector('.restaurant-start-date').textContent;
-                const endDate = row.querySelector('.restaurant-end-date').textContent;
+                const startDate = this.getAttribute('data-start-date');
+                const endDate = this.getAttribute('data-end-date');
+
 
                 let dateInput = document.querySelector('#timeslotDate');
                 if (dateInput) {
@@ -136,6 +137,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+
 
 function addTimeSlot() {
     event.preventDefault();
@@ -209,7 +211,6 @@ function addRestaurant(event) {
     event.preventDefault();
 
     const form = document.getElementById('addRestaurantForm');
-
     const formData = new FormData(form);
 
     fetch('/editRestaurantDetails/addRestaurant', {
@@ -218,40 +219,24 @@ function addRestaurant(event) {
     })
     .then(response => response.json())
     .then(data => {
-        console.log(data);
         if (data.success) {
-            Swal.fire({
-                icon: 'success',
-                title: 'Success',
-                text: 'Restaurant added successfully.',
-            }).then(() => {
-                closeModalAddRestaurant();
-                
-                const restaurantTableBody = document.querySelector('tbody');
-                const newRow = document.createElement('tr');
-                newRow.innerHTML = `
-                    <td>${formData.get('name')}</td>
-                    <td><a href="/manage-event-details/editDetails?id=${data.restaurantId}">Edit</a></td>
-                `;
-                restaurantTableBody.appendChild(newRow);
-            });
+            // Display success message (if not using SweetAlert, replace this with your preferred method)
+            alert('Restaurant added successfully.');
+
+            // Refresh the page to reflect the newly added restaurant
+            window.location.reload();
         } else {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'Failed to add the restaurant: ' + data.message,
-            });
+            // Handle the failure case
+            console.error('Failed to add the restaurant:', data.message);
+            alert('Failed to add the restaurant: ' + data.message);
         }
     })
     .catch(error => {
         console.error('Error:', error);
-        Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'An error occurred while adding the restaurant.',
-        });
+        alert('An error occurred while adding the restaurant.');
     });
 }
+
 
 
 

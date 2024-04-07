@@ -54,6 +54,7 @@ class Myprogramcontroller
         $structuredOrderedItems = [];
         $uniqueTimes = [];
 
+        //create 10 euro fee here
         if (isset($_SESSION['shopping_cart']) && !empty($_SESSION['shopping_cart'])) {
             $structuredTickets = $this->structureTicketsWithImages();
 
@@ -258,23 +259,43 @@ class Myprogramcontroller
     }
 
 
-    //updates the total cart price
+   
     function updateTotalCartPrice()
     {
-        $totalCartPrice = array_sum(array_map(function ($item) {
-            return $item['quantity'] * $item['ticketPrice'];
-        }, $_SESSION['shopping_cart']));
+        $subtotal = 0; // Initialize subtotal
+        $reservationFeeTotal = 0; // Initialize total reservation fees
+        $reservationFee = 10; // Reservation fee per applicable ticket
 
-        $iva = $totalCartPrice * 0.21;
-        $totalCartPriceWithIVA = $totalCartPrice + $iva;
+        // Iterate over each item to calculate subtotal and reservation fees
+        foreach ($_SESSION['shopping_cart'] as $item) {
+            $itemSubtotal = $item['quantity'] * $item['ticketPrice'];
+            $subtotal += $itemSubtotal; // Add to subtotal
+
+            // Check if the event ID requires a reservation fee
+            if ($item['eventId'] > 8) {
+                $itemReservationFee = $reservationFee * $item['quantity'];
+                $reservationFeeTotal += $itemReservationFee; // Add to total reservation fees
+            }
+        }
+
+        // Calculate total price with reservation fees
+        $totalCartPrice = $subtotal + $reservationFeeTotal;
+
+        // Calculate tax on the total cart price before reservation fees
+        $iva = $totalCartPrice * 0.21; // Assuming 21% is the tax rate
+        $totalCartPriceWithIVA = $totalCartPrice + $iva; // Final total price with tax
 
         header('Content-Type: application/json');
         echo json_encode([
             'status' => 'success',
-            'message' => 'Total cart price updated successfully.',
-            'totalCartPrice' => $totalCartPriceWithIVA,
+            'subtotal' => $subtotal, // Subtotal before taxes and fees
+            'reservationFeeTotal' => $reservationFeeTotal, // Total reservation fees applied
+            'tax' => $iva, // Total tax applied
+            'totalCartPrice' => $totalCartPriceWithIVA, // Final total price
         ]);
     }
+
+
 
     // deletes items from shopping cart
     function deleteItemFromCart()

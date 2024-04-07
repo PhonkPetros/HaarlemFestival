@@ -58,14 +58,20 @@ function updateTotalCartPrice() {
             'Content-Type': 'application/json',
         }
     })
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === 'success') {
-                document.getElementById('total-cart-price').textContent = data.totalCartPrice.toFixed(2);
-            }
-        })
-        .catch(error => console.error('Error:', error));
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            document.getElementById('subtotal-price').textContent = data.subtotal.toFixed(2);
+            document.getElementById('tax-price').textContent = data.tax.toFixed(2);
+            document.getElementById('reservation-fee').textContent = data.reservationFeeTotal.toFixed(2);
+            document.getElementById('total-cart-price').textContent = data.totalCartPrice.toFixed(2);
+        }
+    })
+    .catch(error => console.error('Error:', error));
 }
+
+
+
 
 function generateAndShareLink() {
     fetch('/get-share-link', {

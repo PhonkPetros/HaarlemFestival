@@ -55,7 +55,10 @@
             <div class="col-auto"></div>
             <div class="col-auto">
                 <div>
-                    <h2>Total with VAT 21%: €<span id="total-cart-price">0.00</span></h2>
+                    <h4>Subtotal: €<span id="subtotal-price">0.00</span></h4>
+                    <h4>Tax (21% VAT): €<span id="tax-price">0.00</span></h4>
+                    <h4>Reservation fee: €<span id="reservation-fee">0.00</span></h4>
+                    <h2>Total with VAT 21%: €<span id="total-cart-price">0.00</span></h2>                
                 </div>
             </div>
         </div>

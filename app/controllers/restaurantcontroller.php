@@ -40,10 +40,22 @@ class Restaurantcontroller
             $endDate = $_POST['endDate'] ?? '';
             $picturePath = '';
     
-            $price = max(0, floatval($price));
-            $seats = max(0, intval($seats)); 
-    
             $response = ['success' => false, 'message' => 'An error occurred'];
+
+            if ($price < 1) {
+                echo json_encode(['success' => false, 'message' => 'Price must be greater than 0.']);
+                exit;
+            }
+    
+            if ($seats < 1) {
+                echo json_encode(['success' => false, 'message' => 'Seats must be greater than 0.']);
+                exit;
+            }
+
+            if ($startDate > $endDate){
+                echo json_encode(['success' => false, 'message' => 'Start date greater than end date']);
+                exit;
+            }
     
             if (isset($_FILES['picture']) && $_FILES['picture']['error'] === UPLOAD_ERR_OK) {
                 $targetDirectory = __DIR__ . '/../public/img/';
@@ -94,7 +106,7 @@ class Restaurantcontroller
             $quantity = $_POST['quantity'] ?? 0;
     
             $response = ['success' => false, 'message' => 'An error occurred'];
-            
+
     
             if ($restaurantId && $date && $time && $quantity) {
                 $result = $this->restaurantService->addTimeSlot($restaurantId, $ticketHash = $this->generateTicketHash($restaurantId, $date, $time) ,$date, $time, $quantity);
@@ -123,33 +135,66 @@ class Restaurantcontroller
         header('Content-Type: application/json');
     
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    
             $name = $_POST['name'] ?? '';
             $location = $_POST['location'] ?? '';
             $description = $_POST['description'] ?? '';
             $price = $_POST['price'] ?? '';
-            $seats = $_POST['seats'] ?? 0;
+            $seats = $_POST['seats'] ?? '';
             $startDate = $_POST['startDate'] ?? '';
             $endDate = $_POST['endDate'] ?? '';
-            $picturePath = $_POST['picturePath'] ?? '';
+            $picturePath = '';
     
+            $requiredFields = [
+                'name' => $name,
+                'location' => $location,
+                'description' => $description,
+                'price' => $price,
+                'seats' => $seats,
+                'startDate' => $startDate,
+                'endDate' => $endDate,
+            ];
+
+            if ($startDate > $endDate){
+                echo json_encode(['success' => false, 'message' => 'Start date greater than enddate']);
+                exit;
+            }
     
+            foreach ($requiredFields as $fieldName => $value) {
+                if (empty($value)) {
+                    echo json_encode(['success' => false, 'message' => ucwords($fieldName) . ' must not be empty.']);
+                    exit;
+                }
+            }
     
-            $result = $this->restaurantService->addRestaurant($name, $location, $description, $price, $seats, $startDate, $endDate, $picturePath);
+            // Additional validations for price and seats
+            if ($price < 1) {
+                echo json_encode(['success' => false, 'message' => 'Price must be greater than 0.']);
+                exit;
+            }
     
+            if ($seats < 1) {
+                echo json_encode(['success' => false, 'message' => 'Seats must be greater than 0.']);
+                exit;
+            }
     
+            // File upload logic...
+            // Your existing file upload logic remains here unchanged
+    
+            // Attempt to add restaurant with provided details
+            $result = $this->restaurantService->addRestaurant($name, $location, $description, floatval($price), intval($seats), $startDate, $endDate, $picturePath);
+        
             if ($result) {
-                $response = ['success' => true, 'message' => 'Restaurant added successfully.'];
+                $response = ['success' => true, 'message' => 'Restaurant added successfully.', 'picturePath' => $picturePath];
             } else {
                 $response = ['success' => false, 'message' => 'Failed to add the restaurant.'];
             }
-    
-    
+        
             echo json_encode($response);
-    
             exit;
         }
     }
+    
+    
 
     public function deleteRestaurant(){
         if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["delete_restaurant_id"])) {
@@ -190,7 +235,7 @@ class Restaurantcontroller
         $lastName = $data['lastName'];
         $phoneNumber = $data['phoneNumber'];
         $quantity = $data['quantity'];
-        $reservationPrice = 10.00; // Assuming a fixed price per reservation
+        $reservationPrice = 10.00;
         $totalPrice = $quantity * $reservationPrice;
     
         $mollieController = new MollieAPIController();

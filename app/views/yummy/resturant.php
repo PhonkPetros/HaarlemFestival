@@ -83,16 +83,10 @@ if ($restaurantDetails !== null) {
       </div>
       <?php echo $contentData[8]['content'] ?>
       <div class="restaurant-contact">
-        <div class="restaurant-address">
-          <p><?php echo htmlspecialchars($restaurantDetails->getLocation())?></p>
-        </div>
-        <div class="restaurant-phone">
-          <p><?php echo htmlspecialchars($restaurantDetails->getStartDate())?></p>
-        </div>
-        <div class="restaurant-email">
-          <p><?php echo htmlspecialchars($restaurantDetails->getEndDate())?></p> 
-        </div>
-        <?php echo $restaurantDetails->getPrice()?>
+        <p> Address: <?php echo htmlspecialchars($restaurantDetails->getLocation())?></p>
+        <p> Start date: <?php echo htmlspecialchars($restaurantDetails->getStartDate())?></p>
+        <p>End date: <?php echo htmlspecialchars($restaurantDetails->getEndDate())?></p> 
+        <p>Restaurant price: <?php echo $restaurantDetails->getPrice()?><p>
       </div>
     </div>
   </div>

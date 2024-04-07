@@ -94,6 +94,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     function submitReservation() {
+        event.preventDefault();
         var formData = {
             firstName: document.getElementById('firstName').value,
             lastName: document.getElementById('lastName').value,

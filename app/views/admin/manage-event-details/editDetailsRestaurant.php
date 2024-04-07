@@ -43,7 +43,11 @@
                                     data-end-date="<?= htmlspecialchars($restaurant->getEndDate()) ?>">
                                 Edit
                             </button>
-                            <button type="button" class="btn btn-primary add-timeslot-btn" data-id="<?= htmlspecialchars($restaurant->getId()) ?>">Add Timeslot</button>
+                            <button type="button" class="btn btn-primary add-timeslot-btn"
+                            data-id="<?= htmlspecialchars($restaurant->getId()) ?>"
+                            data-start-date="<?= htmlspecialchars($restaurant->getStartDate()) ?>"
+                            data-end-date="<?= htmlspecialchars($restaurant->getEndDate()) ?>">
+                                Add Timeslot</button>
                         </td>
                         <td>
                         <form method="POST" action="/restaurant/delete">

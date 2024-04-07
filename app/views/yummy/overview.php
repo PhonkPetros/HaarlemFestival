@@ -42,11 +42,12 @@
             <div class="col-sm-12 col-md-6 col-lg-4 mb-4">
                 <a href="/restaurant/details/<?= htmlspecialchars($restaurant->getId()) ?>" class="text-decoration-none">
                     <div class="card">
-                        <img src="/img/<?= htmlspecialchars($restaurant->getPicture()) ?>" class="card-img-top" alt="<?= htmlspecialchars($restaurant->getLocation()) ?>">
+                    <img src="/img/<?= htmlspecialchars($restaurant->getPicture()) ?>" class="card-img-top img-fluid img-fixed-height" alt="<?= htmlspecialchars($restaurant->getLocation()) ?>">
                         <div class="card-body">
                             <h5 class="card-title"><?= htmlspecialchars($restaurant->getName()) ?></h5>
                             <ul class="list-group list-group-flush">
                                 <li class="list-group-item">Description: <?= htmlspecialchars($restaurant->getDescription()) ?></li>
+                                <li class="list-group-item">Location: <?= htmlspecialchars($restaurant->getLocation()) ?></li>
                                 <li class="list-group-item">Price: <?= htmlspecialchars($restaurant->getPrice()) ?></li>
                                 <li class="list-group-item">Seats: <?= htmlspecialchars($restaurant->getSeats()) ?></li>
                             </ul>
@@ -58,6 +59,14 @@
     </div>
 </div>
 
+<style>
+    .img-fixed-height {
+  max-width: 100% !important;
+  height: 200px !important;
+  object-fit: cover !important;
+}
+
+</style>
 
 
 

@@ -29,7 +29,7 @@
         </div>
         <div id="addRestaurantModal" class="modal">
         <div class="modal-dialog">
-            <form method="post" id="addRestaurantForm">
+            <form method="post" id="addRestaurantForm" enctype="multipart/form-data">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">Add Restaurant</h5>
