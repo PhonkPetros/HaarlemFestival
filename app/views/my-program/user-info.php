@@ -11,24 +11,24 @@
                 <div class="col-md-6 mb-3">
                     <label for="firstname">First name</label>
                     <input type="text" class="form-control input-shadow" id="firstname" name="firstname"
-                        value="<?php echo htmlspecialchars($userInfo['firstName'] ?? ''); ?>"  disabled>
+                        value="<?php echo htmlspecialchars($userInfo['username'] ?? ''); ?>"  enable>
                 </div>
                 <div class="col-md-6 mb-3">
                     <label for="lastname">Last name</label>
                     <input type="text" class="form-control input-shadow" id="lastname" name="lastname"
-                        value="<?php echo htmlspecialchars($userInfo['lastName'] ?? ''); ?>"  disabled>
+                        value="<?php echo htmlspecialchars($userInfo['lastName'] ?? ''); ?>"  enable>
                 </div>
             </div>
         </div>
         <div class="form-group mb-3" style="margin: 6px;">
             <label for="phonenumber">Phone number</label>
             <input type="text" class="form-control input-shadow" id="phonenumber" name="phonenumber"
-                value="<?php echo htmlspecialchars($userInfo['phoneNumber'] ?? ''); ?>"  disabled>
+                value="<?php echo htmlspecialchars($userInfo['phoneNumber'] ?? ''); ?>"  enable>
         </div>
         <div class="form-group mb-3" style="margin: 6px;"> 
             <label for="emailaddress">Email-Address</label>
             <input type="email" class="form-control input-shadow" id="emailaddress" name="emailaddress"
-                value="<?php echo htmlspecialchars($userInfo['email'] ?? ''); ?>" disabled>
+                value="<?php echo htmlspecialchars($userInfo['email'] ?? ''); ?>" enable>
         </div>
     </form>
 </div>
