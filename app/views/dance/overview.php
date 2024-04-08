@@ -23,14 +23,17 @@ include __DIR__ . '/../general_views/navbar.php';
 
     <?php elseif ($index === 1): ?>
         <?= ($sectionData['content']) ?>
+    <?php elseif ($index === 2): ?>
+        <div class="ticketAdvertisement"> <img src="/img/uploads/<?= htmlspecialchars($sectionData['image']) ?>" width="100%" alt=""> </div>
+    <?php elseif ($index === 3): ?>
+        <div class="jazzAdvertisement"> <img src="/img/uploads/<?= htmlspecialchars($sectionData['image']) ?>" width="100%" alt=""> </div>
     <?php endif; ?>
+
 <?php endforeach; ?>
 
 
 
 
-<div class="ticketAdvertisement"> <img src="/img/ticketAdvertisement.png" width="100%" alt=""> </div>
-<div class="jazzAdvertisement"> <img src="/img/jazzAdvertisement.png" width="100%" alt=""> </div>
 
 <?php
 include __DIR__ . '/../general_views/footer.php';
