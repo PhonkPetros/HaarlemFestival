@@ -5,7 +5,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Darumadrop+One&display=swap" rel="stylesheet">
-    <? include __DIR__ . "/../views/general_views/favicondata.php" ?>
+    <? include __DIR__ . "/favicondata.php" ?>
     <title>
         <?php echo htmlspecialchars($pageTitle ?? "HAARLEM FESTIVALS"); ?>
     </title>
