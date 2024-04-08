@@ -276,7 +276,7 @@ class Myprogramcontroller
             $subtotal += $itemSubtotal; // Add to subtotal
 
             // Check if the event ID requires a reservation fee
-            if ($item['eventId'] > 8) {
+            if ($item['eventId'] > 8 && $item['eventId'] != 68) {
                 $itemReservationFee = $reservationFee * $item['quantity'];
                 $reservationFeeTotal += $itemReservationFee; // Add to total reservation fees
             }
