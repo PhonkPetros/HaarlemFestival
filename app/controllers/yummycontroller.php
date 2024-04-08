@@ -32,6 +32,7 @@ class yummycontroller
         $pagetitle = "Yummy";
         $navigationController = $this->navigationController->displayHeader($pagetitle);
         $restaurants = $this->restaurantService->getAllRestaurants();
+        $overviewContent = $this->pagecontroller->getContentAndImagesByPage();
         require_once __DIR__ . '/../views/yummy/overview.php';
     }
 
