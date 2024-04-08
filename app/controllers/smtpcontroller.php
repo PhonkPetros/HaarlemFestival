@@ -8,25 +8,32 @@ use Endroid\QrCode\QrCode;
 use Endroid\QrCode\Writer\PngWriter;
 use smtpconfig\smtpconfig;
 use services\ticketservice;
+use mPDF\mpdf;
 
 
+
+
+require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../PHPMailer-master/src/PHPMailer.php';
 require_once __DIR__ . '/../PHPMailer-master/src/Exception.php';
 require_once __DIR__ . '/../PHPMailer-master/src/SMTP.php';
 require_once __DIR__ . '/../config/smtpconfig.php';
-require_once __DIR__ . '/../vendor/autoload.php';
+
 require_once __DIR__ . '/../services/ticketservice.php';
 
 
 class SMTPController
 {
+    private $mPDF;
     private $mailer;
     private $config;
     private $ticketService;
+    private $mpdf;
 
 
     public function __construct()
     {
+        $mpdf = new \mPDF\mpdf();
         $this->mailer = new PHPMailer(true);
         $configClass = new smtpconfig(); 
         $this->ticketService = new ticketservice();
@@ -65,14 +72,29 @@ class SMTPController
     public function sendInvoice($toEmail, $firstName, $shoppingCart, $orderID)
     {
         $subject = "Your Invoice from HaarlemFestival";
-        $message = $this->generateInvoiceHtml($shoppingCart, $orderID);
         
-        if (!$message) {
+        // Generate the PDF invoice and get its file path
+        $pdfFilePath = $this->generateInvoicePdf($shoppingCart, $orderID);
+        
+        if (!$pdfFilePath || !file_exists($pdfFilePath)) {
             return false;
         }
-
-        return $this->sendEmail($toEmail, $firstName, $subject, $message, $attachment = null);
+        
+        $message = "Dear " . htmlspecialchars($firstName) . ",<br><br>" .
+                "Thank you for your purchase at HaarlemFestival. Please find attached your invoice.<br><br>" .
+                "Best regards,<br>" .
+                "HaarlemFestival Team";
+        
+        // Prepare the attachment array with the correct path and filename
+        $attachment = [
+            'path' => $pdfFilePath,
+            'name' => 'Invoice_' . $orderID . '.pdf'
+        ];
+        
+        // Call sendEmail with the correct parameters
+        return $this->sendEmail($toEmail, $firstName, $subject, $message, $attachment);
     }
+
 
     private function generateInvoiceHtml($shoppingCartItems, $orderID)
     {
@@ -171,5 +193,36 @@ class SMTPController
 
         return true;
     }
+
+
+    private function generateInvoicePdf($shoppingCartItems, $orderID)
+    {
+        // Generate the invoice HTML as before
+        $htmlContent = $this->generateInvoiceHtml($shoppingCartItems, $orderID);
+        
+        // Include the mPDF library
+        require_once __DIR__ . '/../vendor/autoload.php';
+        
+        // Create an instance of mPDF
+        $mpdf = new \mPDF\Mpdf([
+            'tempDir' => __DIR__ . '/../tmp', // Specify a temporary directory if needed
+            'mode' => 'utf-8', 
+            'format' => 'A4', 
+            'orientation' => 'P'
+        ]);
+        
+        // Write the HTML content to the PDF
+        $mpdf->WriteHTML($htmlContent);
+        
+        // Define the PDF file path
+        $pdfFilePath = __DIR__ . '/invoices/invoice_' . $orderID . '.pdf';
+        
+        // Save the PDF to a file
+        $mpdf->Output($pdfFilePath, \Mpdf\Output\Destination::FILE);
+        
+        // Return the path to the generated PDF for attaching to email
+        return $pdfFilePath;
+    }
+
 
 }

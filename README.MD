@@ -57,6 +57,6 @@ The database uses Azure. The login information can be found in the database conf
 Features removed from the project due to Solomain leaving:
 - Personal program management (agenda view)
 - Personal program sharing (read-only)
-- Homepage editing
+- Landing page for Haarlem Festival (Home page) not dynamic
 
 ---
