@@ -159,10 +159,6 @@ class Myprogramcontroller
             case EVENT_ID_HISTORY:
                 $ticketInfo['ticketLanguage'] = $input['ticketLanguage'] ?? '';
                 break;
-            case ($ticketInfo['eventId'] > EVENT_ID_HISTORY):
-                $ticketInfo['restaurantName'] = $input['restaurantName'] ?? '';
-                $ticketInfo['specialRemarks'] = $input['specialRemarks'] ?? '';
-                break;
             default:
                 break;
         }
