@@ -84,7 +84,12 @@ class TicketRepo extends dbconfig
 
     public function getEventDetails($eventId)
     {
-        $sql = 'SELECT name, picture, location FROM [Event] WHERE event_id = :event_id;';
+        $sql = 'SELECT e.name, e.picture, e.location, de.image as danceImage, venues.name as danceVenueName, de.quota as danceQuota
+        FROM Event e
+        LEFT JOIN dance_events de ON e.dance_event_id = de.danceEventId
+        LEFT JOIN venues ON de.venue = venues.venueId
+        WHERE e.event_id = :event_id;';
+
         try {
             $stmt = $this->getConnection()->prepare($sql);
             $stmt->bindParam(':event_id', $eventId, PDO::PARAM_INT);

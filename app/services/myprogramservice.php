@@ -40,12 +40,12 @@ class Myprogramservice
 
         for ($i = 0; $i < count($allOrders); $i++) 
         {
-            if (isset($allOrders[$i]['location'])) {
+            if (isset($allOrders[$i]['language'])) {
                 $allOrders[$i]['events'] = "History";
-            } else if (isset($allOrders[$i]['restaurant_name'])) {
-                $allOrders[$i]['events'] = "Yummy ({$allOrders[$i]['restaurant_name']})";
-            } else if (isset($allOrders[$i]['artist_name'])) {
-                $allOrders[$i]['events'] = "Dance ({$allOrders[$i]['artist_name']})";
+            } else if (isset($allOrders[$i]['dance_event_id'])) {
+                $allOrders[$i]['events'] = "Dance";
+            } else {
+                $allOrders[$i]['events'] = "Yummy";
             }
         }
 

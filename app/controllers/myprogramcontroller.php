@@ -136,6 +136,7 @@ class Myprogramcontroller
         $ticketInfo = [
             'ticketId' => $input['ticketId'] ?? '',
             'eventId' => $input['eventId'] ?? '',
+            'ticketType' => $input['ticketType'] ?? '',
             'ticketPrice' => $input['ticketPrice'] ?? '',
             'quantity' => $input['quantity'] ?? '',
             'ticketDate' => $input['ticketDate'] ?? '',
@@ -150,8 +151,6 @@ class Myprogramcontroller
             case EVENT_ID_DANCE:
             case EVENT_ID_JAZZ:
                 $ticketInfo['artistName'] = $input['artistName'] ?? '';
-                $ticketInfo['allAccessPass'] = $input['allAccesPass'] ?? '';
-                $ticketInfo['dayPass'] = $inputJSON['dayPass'] ?? '';
                 break;
             case EVENT_ID_RESTAURANT:
                 $ticketInfo['restaurantName'] = $input['restaurantName'] ?? '';
@@ -162,24 +161,6 @@ class Myprogramcontroller
                 break;
             default:
                 break;
-        }
-
-        //Checking if the ticket already exists in the cart
-        foreach ($_SESSION['shopping_cart'] as $item) {
-            if (
-                $item['ticketId'] == $ticketInfo['ticketId'] &&
-                $item['eventId'] == $ticketInfo['eventId'] &&
-                $item['ticketDate'] == $ticketInfo['ticketDate'] &&
-                $item['ticketTime'] == $ticketInfo['ticketTime'] &&
-                $item['ticketEndTime'] == $ticketInfo['ticketEndTime']
-            ) {
-                header('Content-Type: application/json');
-                echo json_encode([
-                    'status' => 'error',
-                    'message' => 'This ticket is already in your shopping cart.',
-                ]);
-                exit;
-            }
         }
 
         //Checking if the ticket quantity being set in form is greater than what is set in database for that one ticket
@@ -198,7 +179,26 @@ class Myprogramcontroller
             exit;
         }
 
-        $_SESSION['shopping_cart'][] = $ticketInfo;
+        $isAlreadyInCart = false;
+
+        foreach ($_SESSION['shopping_cart'] as &$item) {
+            if ($item['ticketId'] == $ticketInfo['ticketId'] && 
+                $item['eventId'] == $ticketInfo['eventId'] && 
+                isset($item['ticketType']) && 
+                isset($ticketInfo['ticketType']) && 
+                $item['ticketType'] == $ticketInfo['ticketType']) {
+
+                $item['quantity'] += $ticketInfo['quantity'];
+                $newQuantity = $item['quantity'];
+                $newTotalPrice = $item['quantity'] * $item['ticketPrice'];
+                $isAlreadyInCart = true;
+                break;
+            }
+        } 
+
+        if (!$isAlreadyInCart) {
+            $_SESSION['shopping_cart'][] = $ticketInfo;
+        }
 
         header('Content-Type: application/json');
         echo json_encode([
@@ -253,7 +253,7 @@ class Myprogramcontroller
         foreach ($_SESSION['shopping_cart'] as &$item) {
             if ($item['ticketId'] == $ticketId && $item['eventId'] == $eventId) {
                 $newTotalQuantity = $item['quantity'] + $change;
-                if ($newTotalQuantity > $ticketQuantity) {
+                if ($newTotalQuantity > 100 - intval($ticketQuantity)) {
                     header('Content-Type: application/json');
                     echo json_encode([
                         'status' => 'error',
@@ -336,8 +336,9 @@ class Myprogramcontroller
                 $eventDetails = $this->ticketservice->getEventDetails($eventId);
                 $structuredTickets[$eventId] = [
                     'tickets' => [],
-                    'image' => $eventDetails['picture'] ?? null,
+                    'image' => $eventDetails['picture'] ?? $eventDetails['danceImage'] ?? null,
                     'event_name' => $eventDetails['name'] ?? null,
+                    'location' => $eventDetails['location'] ?? $eventDetails['danceVenueName'] ?? null,
                     'totalPrice' => 0
                 ];
             }
@@ -518,6 +519,7 @@ class Myprogramcontroller
             $purchasedOrderItems = $this->myProgramService->getOrderItemsByUser($userID);
             foreach ($purchasedOrderItems as $orderitem) {
                 $event_details = $this->ticketservice->getEventDetails($orderitem->getEventId());
+
                 $structuredItem = [
                     'order_item_id' => $orderitem->getOrderItemId() ?? null,
                     'order_id' => $orderitem->getOrderId() ?? null,
@@ -528,12 +530,11 @@ class Myprogramcontroller
                     'end_time' => $orderitem->getEndTime() ?? null,
                     'item_hash' => $orderitem->getItemHash() ?? null,
                     'event_id' => $orderitem->getEventId() ?? null,
-                    'location' => $orderitem->getLocation() ?? null,
+                    'location' => $event_details['danceVenueName'] ?? $orderitem->getLocation() ?? null,
                     'event_details' => [
-                        'image' => $event_details['picture'] ?? null,
+                        'image' => $event_details['picture'] ?? $event_details['danceImage'] ?? null,
                         'event_name' => $event_details['name'] ?? null,
                     ],
-
                 ];
 
                 // Customize the structured item based on the event ID
