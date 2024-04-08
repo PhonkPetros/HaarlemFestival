@@ -7,6 +7,7 @@ use PHPMailer\PHPMailer\Exception;
 use Endroid\QrCode\QrCode;
 use Endroid\QrCode\Writer\PngWriter;
 use smtpconfig\smtpconfig;
+use services\ticketservice;
 
 
 require_once __DIR__ . '/../PHPMailer-master/src/PHPMailer.php';
@@ -14,18 +15,21 @@ require_once __DIR__ . '/../PHPMailer-master/src/Exception.php';
 require_once __DIR__ . '/../PHPMailer-master/src/SMTP.php';
 require_once __DIR__ . '/../config/smtpconfig.php';
 require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/../services/ticketservice.php';
 
 
 class SMTPController
 {
     private $mailer;
     private $config;
+    private $ticketService;
 
 
     public function __construct()
     {
         $this->mailer = new PHPMailer(true);
         $configClass = new smtpconfig(); 
+        $this->ticketService = new ticketservice();
         $this->config = $configClass->getConfiguration();
     }
 
@@ -62,7 +66,7 @@ class SMTPController
     {
         $subject = "Your Invoice from HaarlemFestival";
         $message = $this->generateInvoiceHtml($shoppingCart, $orderID);
-
+        
         if (!$message) {
             return false;
         }
@@ -110,8 +114,10 @@ class SMTPController
 
             $totalPriceBeforeVAT += $pricePerItemBeforeVAT * $quantity;
             $totalVAT += $vatAmountPerItem * $quantity;
+            $eventName = $this->ticketService->getEventName($item['eventId']);
+         
 
-            $description = "Date: " . $item['ticketDate'] . " Time: " . $item['ticketTime'];
+            $description = "Event Name: " .$eventName . " Date: " . $item['ticketDate'] . " Time: " . $item['ticketTime'];
 
             $html .= "<tr>";
             $html .= "<td $tdStyle>$description</td>";
@@ -133,71 +139,35 @@ class SMTPController
     public function sendTickets($toEmail, $toName, $ticketHashes)
     {
         $subject = "Your Tickets for HaarlemFestival";
-        $message = "<h2>Here are your tickets!</h2>"
-                    . "<p>Please scan the QR codes below to use your tickets.</p>";
+        $message = "<h2>Here are your tickets!</h2>
+                <p>Thank you for your purchase! Below, you can find your tickets as attachments.</p>
+                <p>Please scan the QR codes below to use your tickets.</p>";
 
-                    foreach ($ticketHashes as $ticketHash) {
-                        $ticketHashString = (string)$ticketHash;
-                    
-                        // Generate QR code and save it temporarily
-                        $qrCode = QrCode::create($ticketHashString)
-                                    ->setSize(300)
-                                    ->setMargin(10);
-                        $writer = new PngWriter();
-                        // Saving the QR code image temporarily
-                        $tempQrCodePath = "temp_qr_$ticketHashString.png";
-                        $writer->write($qrCode)->saveToFile($tempQrCodePath);
-                    
-                        // Load the QR code image
-                        $qrCodeImage = imagecreatefrompng($tempQrCodePath);
-                    
-                        // Create a new image with extra space for the title
-                        $finalImage = imagecreatetruecolor(300, 350); // Height adjusted to add space for the title
-                    
-                        // Set colors
-                        $white = imagecolorallocate($finalImage, 255, 255, 255);
-                        $black = imagecolorallocate($finalImage, 0, 0, 0);
-                    
-                        // Fill background with white
-                        imagefill($finalImage, 0, 0, $white);
-                    
-                        // Copy the QR code onto the new image, positioned below the space for the title
-                        imagecopy($finalImage, $qrCodeImage, 0, 50, 0, 0, 300, 300);
-                    
-                        // Add the title on the white space above the QR code
-                        $title = 'HaarlemFestival'; // Customize your title text here
-                        $fontPath = '/path/to/your/font.ttf'; // Specify the path to your TTF font
-                        imagettftext($finalImage, 20, 0, 10, 30, $black, $fontPath, $title); // Adjust font size and positioning as needed
-                    
-                        // Save the final image or output directly
-                        $finalImagePath = "ticket_with_title_$ticketHashString.png";
-                        imagepng($finalImage, $finalImagePath);
-                    
-                        // Clean up
-                        imagedestroy($qrCodeImage);
-                        imagedestroy($finalImage);
-                        unlink($tempQrCodePath); // Remove the temporary QR code file
-                    
-                        // Prepare the email content
-                        $base64Image = base64_encode(file_get_contents($finalImagePath));
-                        $dataUri = 'data:image/png;base64,' . $base64Image;
-                    
-                        $message .= "<p><img src='" . $dataUri . "' alt='Ticket QR Code'></p>
-                                    <p>Ticket Hash: " . $ticketHashString . "</p>";
-                    
-                        $attachment = [
-                            'data' => file_get_contents($finalImagePath),
-                            'filename' => $finalImagePath,
-                            'type' => 'image/png'
-                        ];
-                    
-                        // Send the email with the QR code and the title
-                        $this->sendEmail($toEmail, $toName, $subject, $message, $attachment);
-                    
-                        // Optionally, clean up the final image file if not needed anymore
-                        unlink($finalImagePath);
-                    }
-                    
+        foreach ($ticketHashes as $ticketHash) {
+            $ticketHashString = (string) $ticketHash;
+
+            $qrCode = QrCode::create($ticketHashString)
+                ->setSize(300)
+                ->setMargin(10);
+            $writer = new PngWriter();
+
+            ob_start();
+            $writer->write($qrCode)->saveToFile('php://output');
+            $imageData = ob_get_contents();
+            ob_end_clean();
+
+            $base64Image = base64_encode($imageData);
+            $dataUri = 'data:image/png;base64,' . $base64Image;
+
+
+            $attachment = [
+                'data' => $imageData,
+                'filename' => "ticket_$ticketHashString.png",
+                'type' => 'image/png'
+            ];
+
+            $this->sendEmail($toEmail, $toName, $subject, $message, $attachment);
+        }
 
         return true;
     }
