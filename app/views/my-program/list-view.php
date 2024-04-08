@@ -44,37 +44,36 @@
                         </div>
                     </div>
                 <?php else: ?>
-                <div class="ticket-container" id="ticket-container-<?= $ticket['ticketId'] ?>"
-                    style="background-image: url('<?php echo $eventData['image']; ?>');">
-
-                    <div class="ticket-details">
-                        <h5 class="ticket-title">
-                            <?php echo htmlspecialchars($eventData['event_name']); ?>
-                        </h5>
-                        <p class="ticket-info" style="font-size: 19px;">
-                            Location:
-                            <?php echo htmlspecialchars($ticket['ticketLocation']); ?><br>
-                            Date:
-                            <?php echo htmlspecialchars($ticket['ticketDate']); ?><br>
-                            Start Time:
-                            <?php echo htmlspecialchars($ticket['ticketTime']); ?><br>
-                            End Time:
-                            <?php echo htmlspecialchars($ticket['ticketEndTime']); ?><br>
-                            Price: $<span id="total-price-<?= $ticket['ticketId'] ?>">
-                                <?= htmlspecialchars($ticket['totalPrice']); ?>
-                            </span>
-                        </p>
-                        <div class="ticket-controls">
-                            <button onclick="modifyItemQuantity('<?= $ticket['ticketId'] ?>', '<?= $eventId ?>', -1)">-</button>
-                            <span class="quantity" id="quantity-<?= $ticket['ticketId'] ?>">
-                                <?= htmlspecialchars($ticket['quantity']) ?>
-                            </span>
-                            <button onclick="modifyItemQuantity('<?= $ticket['ticketId'] ?>', '<?= $eventId ?>', 1)">+</button>
+                    <div class="ticket-container" id="ticket-container-<?= $ticket['ticketId'] ?>"
+                        style="background-image: url('<?php echo $eventData['image']; ?>'); background-size: cover;">
+                        <div class="ticket-details">
+                            <h5 class="ticket-title">
+                                <?php echo htmlspecialchars($eventData['event_name']); ?>
+                            </h5>
+                            <p class="ticket-info" style="font-size: 19px;">
+                                Location:
+                                <?php echo htmlspecialchars($ticket['ticketLocation']); ?><br>
+                                Date:
+                                <?php echo htmlspecialchars($ticket['ticketDate']); ?><br>
+                                Start Time:
+                                <?php echo htmlspecialchars($ticket['ticketTime']); ?><br>
+                                End Time:
+                                <?php echo htmlspecialchars($ticket['ticketEndTime']); ?><br>
+                                Price: $<span id="total-price-<?= $ticket['ticketId'] ?>">
+                                    <?= htmlspecialchars($ticket['totalPrice']); ?>
+                                </span>
+                            </p>
+                            <div class="ticket-controls">
+                                <button onclick="modifyItemQuantity('<?= $ticket['ticketId'] ?>', '<?= $eventId ?>', -1)">-</button>
+                                <span class="quantity" id="quantity-<?= $ticket['ticketId'] ?>">
+                                    <?= htmlspecialchars($ticket['quantity']) ?>
+                                </span>
+                                <button onclick="modifyItemQuantity('<?= $ticket['ticketId'] ?>', '<?= $eventId ?>', 1)">+</button>
+                            </div>
+                            <button class="remove-btn"
+                                onclick="deleteItemFromCart('<?= $ticket['ticketId'] ?>', '<?= $eventId ?>')">Remove</button>
                         </div>
-                        <button class="remove-btn"
-                            onclick="deleteItemFromCart('<?= $ticket['ticketId'] ?>', '<?= $eventId ?>')">Remove</button>
                     </div>
-                </div>
                 <?php endif; ?>
             <?php endforeach; ?>
         <?php endforeach; ?>

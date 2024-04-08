@@ -12,7 +12,7 @@
     <h2> order summaries from all users</h2>
     <a class="btn btn-primary btn-export">Export .xls</a>
     
-    <div class = "table-container">
+    <div class="table-container overflow-auto" style="max-height: 400px;">
         <table class="table">
             <thead>
                 <tr>
