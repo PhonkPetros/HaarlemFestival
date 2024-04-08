@@ -723,6 +723,7 @@ switch ($request) {
         } else {
             respondWith404();
         }
+        break;
     case '/reservation/updateStatus':
         if ($_SESSION['role'] === 'admin') {
             $controller = new Restaurantcontroller();
