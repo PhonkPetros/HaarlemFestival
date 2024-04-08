@@ -12,7 +12,8 @@
     <h2> order summaries from all users</h2>
     <a class="btn btn-primary btn-export">Export .xls</a>
     
-    <div class = "table-container">
+    <div class="table-container scrollable-table-container" style="overflow-y: auto;
+    max-height: 300px;">
         <table class="table">
             <thead>
                 <tr>
@@ -20,7 +21,7 @@
                 <th scope="col">order ID</th>
                 <th scope="col">Date</th>
                 <th scope="col">Username</th>
-                <th scope="col">Events</th>
+            
                 </tr>
             </thead>
             <tbody>
@@ -30,7 +31,6 @@
                         <th scope="row"><?php echo $order['order_item_id'] ?></th>
                         <td><?php echo $order['date'] ?></td>
                         <td><?php echo $order['username'] ?></td>
-                        <td><?php echo $order['events'] ?></td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>
@@ -54,4 +54,6 @@
     </div>
 </div>
 
+
 <script src="/js/orderoverview.js"></script>
+<?php include __DIR__ . '/../../general_views/footer.php'; ?>
