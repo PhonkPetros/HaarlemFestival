@@ -170,7 +170,7 @@ class TicketRepo extends dbconfig
     
                 $tickets[] = $ticket;
             }
-        } catch (\PDOException $e) {
+        } catch (PDOException $e) {
             echo "Error: " . $e->getMessage();
         }
         return $tickets;
@@ -181,10 +181,10 @@ class TicketRepo extends dbconfig
         $sql = 'SELECT * FROM [User] WHERE user_id = :userID';
         try {
             $stmt = $this->getConnection()->prepare($sql);
-            $stmt->bindParam(':userID', $userID, \PDO::PARAM_INT);
+            $stmt->bindParam(':userID', $userID, PDO::PARAM_INT);
             $stmt->execute();
 
-            $stmt->setFetchMode(\PDO::FETCH_ASSOC);
+            $stmt->setFetchMode(PDO::FETCH_ASSOC);
             $userDetails = $stmt->fetch();
 
             if (!$userDetails) {
@@ -204,22 +204,22 @@ class TicketRepo extends dbconfig
             $user->setPhoneNumber($userDetails['phone_number']);
 
             return $user;
-        } catch (\PDOException $e) {
+        } catch (PDOException $e) {
             echo "Error: " . $e->getMessage();
             return null;
         }
     }
 
     public function checkTicket($hash) {
-        // First, check the current status of the order item
+   
         $sqlStatusCheck = 'SELECT status, order_id FROM [OrderItems] WHERE item_hash = :item_hash';
     
         try {
             $stmt = $this->getConnection()->prepare($sqlStatusCheck);
-            $stmt->bindParam(':item_hash', $hash, \PDO::PARAM_STR);
+            $stmt->bindParam(':item_hash', $hash, PDO::PARAM_STR);
             $stmt->execute();
     
-            $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
     
             if ($result) {
                 if ($result['status'] === 'Inactive') {
@@ -235,7 +235,7 @@ class TicketRepo extends dbconfig
             } else {
                 return ["status" => "error", "message" => "No matching order found for QR code."];
             }
-        } catch (\PDOException $e) {
+        } catch (PDOException $e) {
             return ["status" => "error", "message" => $e->getMessage()];
         }
     }
@@ -246,8 +246,8 @@ class TicketRepo extends dbconfig
         try {
             $stmt = $this->getConnection()->prepare($sql);
             $status = 'Inactive';
-            $stmt->bindParam(':status', $status, \PDO::PARAM_STR);
-            $stmt->bindParam(':order_id', $orderId, \PDO::PARAM_INT);
+            $stmt->bindParam(':status', $status, PDO::PARAM_STR);
+            $stmt->bindParam(':order_id', $orderId, PDO::PARAM_INT);
             
             $stmt->execute();
     
@@ -256,10 +256,51 @@ class TicketRepo extends dbconfig
             } else {
                 return false; 
             }
-        } catch (\PDOException $e) {
+        } catch (PDOException $e) {
             echo "Error: " . $e->getMessage();
             return false;
         }
     }
     
+    public function getReservation($eventID){
+        $sql = 'SELECT * FROM [OrderItems] WHERE event_id = :eventID;';
+    
+        try {
+            $stmt = $this->getConnection()->prepare($sql);
+            $stmt->bindParam(':eventID', $eventID, PDO::PARAM_INT);
+            $stmt->execute();
+    
+            $reservationData = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+            return $reservationData;
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+            return null;
+        }
+    }
+
+    public function updateReservationStatus($orderId, $newStatus){
+        $sql = 'UPDATE [OrderItems] SET status = :newStatus WHERE order_id = :orderId;';
+    
+        try {
+            $stmt = $this->getConnection()->prepare($sql);
+    
+            $stmt->bindParam(':newStatus', $newStatus, PDO::PARAM_STR);
+            $stmt->bindParam(':orderId', $orderId, PDO::PARAM_INT);
+    
+            $stmt->execute();
+    
+            if ($stmt->rowCount() > 0) {
+                return true; // Update successful
+            } else {
+                return false; // No rows updated, possibly because the order ID was not found
+            }
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+            return false; // Indicate failure
+        }
+    }
+    
+    
+
 }

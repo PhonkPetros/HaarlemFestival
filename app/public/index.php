@@ -722,7 +722,17 @@ switch ($request) {
         } else {
             respondWith404();
         }
-        break;
+    case '/reservation/updateStatus':
+        if ($_SESSION['role'] === 'admin') {
+            $controller = new Restaurantcontroller();
+            if ($method === "POST") {
+                $controller->updateStatus();
+            } else {
+                respondWith404();
+            }
+            break;
+        }
+
     default:
         respondWith404();
         break;

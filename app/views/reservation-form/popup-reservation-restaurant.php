@@ -37,7 +37,7 @@
                     </div>
                     <div class="form-group">
                         <label for="specialRequest">Special Request</label>
-                        <textarea class="form-control" id="specialRequest" rows="3"></textarea>
+                        <textarea id="specialRequest" class="form-control" rows="3"></textarea>
                     </div>
                     <div class="form-group">
                         <label for="quantity">Quantity</label>

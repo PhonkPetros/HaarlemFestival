@@ -16,8 +16,8 @@ document.addEventListener('DOMContentLoaded', function () {
         if (document.getElementById('ticketInfoEndTime')) document.getElementById('ticketInfoEndTime').textContent = endTime || '';
         if (document.getElementById('ticketInfoLanguage')) document.getElementById('ticketInfoLanguage').textContent = language || '';
         if (document.getElementById('ticketInfoRestaurant')) document.getElementById('ticketInfoRestaurant').textContent = restaurantName || '';
-        if (document.getElementById('specialRequest')) document.getElementById('specialRequest').value = specialRemarks || '';
-
+        if (document.getElementById('specialRemarks')) document.getElementById('specialRemarks').value = specialRemarks || '';
+      
         
         ['ticketId', 'eventId', 'ticketPrice', 'ticketDate', 'ticketTime', 'ticketEndTime', 'ticketLocation', 'ticketRestaurantName', 'specialRequest'].forEach(id => {
             if (document.getElementById(id)) {
@@ -94,8 +94,24 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     function submitReservation() {
-        var formData = {};
-    
+        event.preventDefault();
+        var formData = {
+            firstName: document.getElementById('firstName').value,
+            lastName: document.getElementById('lastName').value,
+            address: document.getElementById('address').value,
+            phoneNumber: document.getElementById('phoneNumber').value,
+            email: document.getElementById('email').value,
+            quantity: document.getElementById('quantity').value,
+            ticketId: document.getElementById('ticketId').value,
+            eventId: document.getElementById('eventId').value,
+            ticketPrice: document.getElementById('ticketPrice').value,
+            ticketDate: document.getElementById('ticketDate').value,
+            ticketTime: document.getElementById('ticketTime').value,
+            ticketEndTime: document.getElementById('ticketEndTime').value,
+            ticketLocation: document.getElementById('ticketLocation').value,
+            ticketRestaurantName: document.getElementById('ticketRestaurantName').value,
+            specialRemarks: document.getElementById('specialRequest').value || " "
+        };    
         if (document.getElementById('firstName')) {
             formData.firstName = document.getElementById('firstName').value;
         }

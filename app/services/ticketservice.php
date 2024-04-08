@@ -40,4 +40,10 @@ class ticketservice {
     function checkTicket($hash){
         return $this->ticketRepo->checkTicket($hash);
     }
+    function getReservations($eventID){
+        return $this->ticketRepo->getReservation($eventID);
+    }
+    function updateReservationStatus($orderId, $newStatus){
+        return $this->ticketRepo->updateReservationStatus($orderId, $newStatus);
+    }
 }
