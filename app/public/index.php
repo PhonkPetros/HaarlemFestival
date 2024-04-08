@@ -82,7 +82,8 @@ function respondWith404()
 {
     http_response_code(404);
     $navigation = new Navigationcontroller();
-    $navigation->displayHeader();
+    $pagetitle= "404 Page - HAARLEM FESTIVALS";
+    $navigation->displayHeader($pagetitle);
     require __DIR__ . '/../views/404.php';
     exit;
 }
