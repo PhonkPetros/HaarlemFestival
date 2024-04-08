@@ -1,7 +1,4 @@
 <?php
-
-
-
 session_start();
 
 use controllers\logincontroller;

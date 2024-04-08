@@ -8,7 +8,7 @@ use Endroid\QrCode\QrCode;
 use Endroid\QrCode\Writer\PngWriter;
 use smtpconfig\smtpconfig;
 use services\ticketservice;
-use mPDF\mpdf;
+
 
 
 
@@ -28,12 +28,13 @@ class SMTPController
     private $mailer;
     private $config;
     private $ticketService;
-    private $mpdf;
+    private $mypdf;
+
 
 
     public function __construct()
     {
-        $mpdf = new \mPDF\mpdf();
+        $this->mypdf = new \TCPDF();
         $this->mailer = new PHPMailer(true);
         $configClass = new smtpconfig(); 
         $this->ticketService = new ticketservice();
@@ -73,8 +74,9 @@ class SMTPController
     {
         $subject = "Your Invoice from HaarlemFestival";
         
-        // Generate the PDF invoice and get its file path
         $pdfFilePath = $this->generateInvoicePdf($shoppingCart, $orderID);
+        var_dump($pdfFilePath);
+        die();
         
         if (!$pdfFilePath || !file_exists($pdfFilePath)) {
             return false;
@@ -195,34 +197,41 @@ class SMTPController
     }
 
 
+
     private function generateInvoicePdf($shoppingCartItems, $orderID)
     {
-        // Generate the invoice HTML as before
         $htmlContent = $this->generateInvoiceHtml($shoppingCartItems, $orderID);
-        
-        // Include the mPDF library
-        require_once __DIR__ . '/../vendor/autoload.php';
-        
-        // Create an instance of mPDF
-        $mpdf = new \mPDF\Mpdf([
-            'tempDir' => __DIR__ . '/../tmp', // Specify a temporary directory if needed
-            'mode' => 'utf-8', 
-            'format' => 'A4', 
-            'orientation' => 'P'
-        ]);
-        
-        // Write the HTML content to the PDF
-        $mpdf->WriteHTML($htmlContent);
-        
-        // Define the PDF file path
-        $pdfFilePath = __DIR__ . '/invoices/invoice_' . $orderID . '.pdf';
-        
-        // Save the PDF to a file
-        $mpdf->Output($pdfFilePath, \Mpdf\Output\Destination::FILE);
-        
-        // Return the path to the generated PDF for attaching to email
-        return $pdfFilePath;
+    
+        $tempDir = sys_get_temp_dir();
+    
+        $tempFilePath = tempnam($tempDir, 'HF_invoice_');
+    
+        // Instantiate a new TCPDF object.
+        $pdf = new \TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+    
+        // Set document information.
+        $pdf->SetCreator(PDF_CREATOR);
+        $pdf->SetAuthor('HaarlemFestival');
+        $pdf->SetTitle('Invoice ' . $orderID);
+        $pdf->SetSubject('Invoice PDF');
+    
+        // (Optional) Set header and footer, if needed.
+    
+        // Add a page.
+        $pdf->AddPage();
+    
+        // Write HTML content.
+        $pdf->writeHTML($htmlContent, true, false, true, false, '');
+    
+        // Output the PDF to the temporary file path. Use 'F' to save the file to a local file.
+        $pdf->Output($tempFilePath, 'F');
+    
+        // Return the path to the temporary file.
+        // You can then attach this file to your email.
+        // After sending the email, remember to delete the temporary file.
+        return $tempFilePath;
     }
+
 
 
 }
