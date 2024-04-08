@@ -1,14 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Restaurant Details</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
     <link rel="stylesheet" href="/css/resturant.css">
     <link rel="stylesheet" href="/css/yum.css">
-</head>
-<body>
+
 <div class="div">
 <?php
 if ($restaurantDetails !== null) {
@@ -168,5 +161,3 @@ if ($restaurantDetails !== null) {
 
 <?php include __DIR__ . '/../general_views/footer.php'; ?>
 
-</body>
-</html>
