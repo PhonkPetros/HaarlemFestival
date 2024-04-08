@@ -21,8 +21,11 @@ class Dancerepository extends dbconfig {
      * dance_participating_artists: id, danceEventId, danceArtistId
      */
 
-     public function getDanceEvents() {
-        $sql = 'SELECT * FROM dance_events
+    public function getDanceEvents() {
+        $sql = 'SELECT 
+        dance_events.danceEventId, dance_events.venue, dance_events.dateTime, dance_events.endDateTime, dance_events.price, dance_events.image, dance_events.allDaysPrice, dance_events.oneDayPrice, dance_events.quota,
+        venues.venueId, venues.name, venues.location, venues.picture, [Event].event_id, [Event].name
+        FROM dance_events
         JOIN venues ON dance_events.venue = venues.venueId
         JOIN [Event] ON dance_events.danceEventId = [Event].dance_event_id';
         try {

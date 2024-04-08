@@ -29,13 +29,20 @@ function updateTotalPrice() {
     const event = artistDetails.find(detail => detail.event_id === document.getElementById('ticketId').value);
     const ticketType = $('#ticket-type').val();
 
+    let totalPrice = 0;
+
     if (ticketType === 'regular') {
         $('#totalPrice').html(`€${event.price * quantity}`);
+        totalPrice = event.price * quantity;
     } else if (ticketType === 'onedayaccess') {
         $('#totalPrice').html(`€${event.oneDayPrice * quantity}`);
+        totalPrice = event.oneDayPrice * quantity;
     } else if (ticketType === 'alldaysaccess') {
         $('#totalPrice').html(`€${event.allDaysPrice * quantity}`);
+        totalPrice = event.allDaysPrice * quantity;
     }
+
+    $("#ticketPrice").val(totalPrice);
 }
 
 $('#submitReservationButton').on('click', function () {
@@ -47,6 +54,7 @@ function submitReservation() {
         quantity: document.getElementById('quantity').value,
         eventId: document.getElementById('eventId').value,
         ticketId: document.getElementById('ticketId').value,
+        ticketType: document.getElementById('ticket-type').value,
         ticketPrice: document.getElementById('ticketPrice').value,
         ticketDate: document.getElementById('ticketDate').value,
         ticketTime: document.getElementById('ticketTime').value,

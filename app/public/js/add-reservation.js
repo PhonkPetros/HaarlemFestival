@@ -93,6 +93,10 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
+    function getFieldValue(fieldId, fallbackValue = "") {
+        const element = document.getElementById(fieldId);
+        return element ? element.value : fallbackValue;
+    }
     function submitReservation() {
         event.preventDefault();
         var formData = {
@@ -109,8 +113,9 @@ document.addEventListener('DOMContentLoaded', function () {
             ticketTime: document.getElementById('ticketTime').value,
             ticketEndTime: document.getElementById('ticketEndTime').value,
             ticketLocation: document.getElementById('ticketLocation').value,
-            ticketRestaurantName: document.getElementById('ticketRestaurantName').value,
-            specialRemarks: document.getElementById('specialRequest').value || " "
+            ticketRestaurantName: getFieldValue('ticketRestaurantName'),
+            specialRemarks: getFieldValue('specialRequest', " "),
+            ticketLanguage: getFieldValue('ticketLanguage', " ") 
         };    
         if (document.getElementById('firstName')) {
             formData.firstName = document.getElementById('firstName').value;

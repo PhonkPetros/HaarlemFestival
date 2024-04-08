@@ -203,14 +203,14 @@ class Myprogramrepository extends dbconfig
 
     public function getAllOrders()
     {
-        $stmt = $this->connection->prepare("SELECT  OrderItems.order_item_id, OrderItems.date, [User].username, OrderItems.restaurant_name, OrderItems.artist_name, OrderItems.location, OrderItems.quantity, OrderItems.language,OrderItems.start_time,OrderItems.end_time,OrderItems.ticket_type, OrderItems.special_remarks
+        $stmt = $this->connection->prepare("SELECT OrderItems.order_item_id, OrderItems.date, [User].username, OrderItems.restaurant_name, OrderItems.artist_name, [Event].dance_event_id, OrderItems.location, OrderItems.quantity, OrderItems.language,OrderItems.start_time,OrderItems.end_time,OrderItems.ticket_type, OrderItems.special_remarks
         FROM OrderItems
-		JOIN [User] ON OrderItems.user_id = [User].user_id");
+		JOIN [User] ON OrderItems.user_id = [User].user_id
+        LEFT JOIN Event ON OrderItems.event_id = Event.event_id");
         $stmt->execute();
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         return $result;
-
     }
 
 

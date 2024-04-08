@@ -73,6 +73,7 @@ class Myprogramcontroller
 
     function showPayment()
     {
+
         $pagetitle = "My Program - Payement";
         $this->navigationController->displayHeader($pagetitle);
         $structuredTickets = [];
@@ -82,6 +83,7 @@ class Myprogramcontroller
         if (isset($_SESSION['shopping_cart']) && !empty($_SESSION['shopping_cart'])) {
             $structuredTickets = $this->structureTicketsWithImages();
         }
+
         require_once __DIR__ . "/../views/my-program/payment.php";
     }
 
@@ -137,6 +139,7 @@ class Myprogramcontroller
             'ticketId' => $input['ticketId'] ?? '',
             'eventId' => $input['eventId'] ?? '',
             'ticketPrice' => $input['ticketPrice'] ?? '',
+            'ticketType' => $input['ticketType'] ?? '',
             'quantity' => $input['quantity'] ?? '',
             'ticketDate' => $input['ticketDate'] ?? '',
             'ticketTime' => $input['ticketTime'] ?? '',
@@ -152,8 +155,6 @@ class Myprogramcontroller
             case EVENT_ID_DANCE:
             case EVENT_ID_JAZZ:
                 $ticketInfo['artistName'] = $input['artistName'] ?? '';
-                $ticketInfo['allAccessPass'] = $input['allAccesPass'] ?? '';
-                $ticketInfo['dayPass'] = $inputJSON['dayPass'] ?? '';
                 break;
 
             case EVENT_ID_HISTORY:
@@ -164,24 +165,6 @@ class Myprogramcontroller
         }
 
 
-        //Checking if the ticket already exists in the cart
-        foreach ($_SESSION['shopping_cart'] as $item) {
-            if (
-                $item['ticketId'] == $ticketInfo['ticketId'] &&
-                $item['eventId'] == $ticketInfo['eventId'] &&
-                $item['ticketDate'] == $ticketInfo['ticketDate'] &&
-                $item['ticketTime'] == $ticketInfo['ticketTime'] &&
-                $item['ticketEndTime'] == $ticketInfo['ticketEndTime']
-            ) {
-                header('Content-Type: application/json');
-                echo json_encode([
-                    'status' => 'error',
-                    'message' => 'This ticket is already in your shopping cart.',
-                ]);
-                exit;
-            }
-        }
-
         //Checking if the ticket quantity being set in form is greater than what is set in database for that one ticket
         $ticketQuantity = $this->ticketservice->getTicketQuantity($ticketInfo['ticketId'], $ticketInfo['eventId']);
         if ($ticketQuantity === null) {
@@ -190,22 +173,42 @@ class Myprogramcontroller
                 'message' => 'Could not retrieve ticket quantity.',
             ]);
             exit;
-        } elseif ($ticketQuantity < $ticketInfo['quantity']) {
+        } elseif (100 - intval($ticketQuantity) < $ticketInfo['quantity']) {
             echo json_encode([
                 'status' => 'error',
                 'message' => 'Requested quantity exceeds available quantity.',
             ]);
             exit;
         }
+        $isAlreadyInCart = false;
 
-        $_SESSION['shopping_cart'][] = $ticketInfo;
+        foreach ($_SESSION['shopping_cart'] as &$item) {
+            if (
+                $item['ticketId'] == $ticketInfo['ticketId'] &&
+                $item['eventId'] == $ticketInfo['eventId'] &&
+                isset($item['ticketType']) &&
+                isset($ticketInfo['ticketType']) &&
+                $item['ticketType'] == $ticketInfo['ticketType']
+            ) {
 
+                $item['quantity'] += $ticketInfo['quantity'];
+                $newQuantity = $item['quantity'];
+                $newTotalPrice = $item['quantity'] * $item['ticketPrice'];
+                $isAlreadyInCart = true;
+                break;
+            }
+        }
+
+        if (!$isAlreadyInCart) {
+            $_SESSION['shopping_cart'][] = $ticketInfo;
+        }
 
         header('Content-Type: application/json');
         echo json_encode([
             'status' => 'success',
             'message' => 'Reservation successfully created!',
         ]);
+
 
         exit;
     }
@@ -233,7 +236,7 @@ class Myprogramcontroller
         foreach ($_SESSION['shopping_cart'] as &$item) {
             if ($item['ticketId'] == $ticketId && $item['eventId'] == $eventId) {
                 $newTotalQuantity = $item['quantity'] + $change;
-                if ($newTotalQuantity > $ticketQuantity) {
+                if ($newTotalQuantity > 100 - intval($ticketQuantity)) {
                     header('Content-Type: application/json');
                     echo json_encode([
                         'status' => 'error',
@@ -336,8 +339,9 @@ class Myprogramcontroller
                 $eventDetails = $this->ticketservice->getEventDetails($eventId);
                 $structuredTickets[$eventId] = [
                     'tickets' => [],
-                    'image' => $eventDetails['picture'] ?? null,
+                    'image' => $eventDetails['picture'] ?? $eventDetails['danceImage'] ?? null,
                     'event_name' => $eventDetails['name'] ?? null,
+                    'location' => $eventDetails['location'] ?? $eventDetails['danceVenueName'] ?? null,
                     'totalPrice' => 0
                 ];
             }
@@ -512,16 +516,32 @@ class Myprogramcontroller
     //this checks if tickets are still available in database from session data 
     function checkTicketsAvailability($cart)
     {
-        foreach ($cart as $cartItem) {
-            $ticketId = $cartItem['ticketId'];
-            $requestedQuantity = $cartItem['quantity'];
-            $availableQuantity = $this->ticketservice->getTicketQuantity($ticketId);
+        $totalTicketsForEvent64 = 0;
 
-            if ($availableQuantity === null || $requestedQuantity > $availableQuantity) {
-                return false;
+        foreach ($_SESSION['shopping_cart'] as $item) {
+            if ($item['eventId'] == 64) {
+                $totalTicketsForEvent64 += intval($item['quantity']);
             }
         }
-        return true;
+
+        foreach ($cart as $cartItem) {
+            $ticketId = $cartItem['ticketId'];
+            $requestedQuantity = intval($cartItem['quantity']);
+            $eventId = $cartItem['eventId'];
+
+            if ($eventId == 64) {
+                $totalTicketsForEvent64 += $requestedQuantity;
+                if ($totalTicketsForEvent64 > 100) {
+                    return false;
+                }
+            } else {
+                $availableQuantity = $this->ticketservice->getTicketQuantity($ticketId);
+                if ($availableQuantity === null || $requestedQuantity > $availableQuantity) {
+                    return false;
+                }
+            }
+            return true;
+        }
     }
 
 
@@ -545,9 +565,9 @@ class Myprogramcontroller
                     'end_time' => $orderitem->getEndTime() ?? null,
                     'item_hash' => $orderitem->getItemHash() ?? null,
                     'event_id' => $orderitem->getEventId() ?? null,
-                    'location' => $orderitem->getLocation() ?? null,
+                    'location' => $event_details['danceVenueName'] ?? $orderitem->getLocation() ?? null,
                     'event_details' => [
-                        'image' => $event_details['picture'] ?? null,
+                        'image' => $event_details['picture'] ?? $event_details['danceImage'] ?? null,
                         'event_name' => $event_details['name'] ?? null,
                     ],
 
