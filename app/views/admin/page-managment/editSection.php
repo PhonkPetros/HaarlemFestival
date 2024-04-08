@@ -6,40 +6,8 @@
         <input type="hidden" name="section_id" value="<?php echo $sectionID; ?>">
 
         <? include __DIR__ . '/../components/editTitleSectionType.php' ?>
-
-        <?php if ($editorContent !== null): ?>
-            <div class="mb-3">
-                <label for="editor" class="form-label">Content</label>
-                <textarea id="editor" name="content"
-                    class="form-control"><?php echo htmlspecialchars($editorContent); ?></textarea>
-                <script>
-                    tinymce.init({
-                        selector: '#editor',
-                        height: 300,
-                        plugins: 'link code',
-                        toolbar: 'undo redo | styleselect | bold italic | alignleft aligncenter alignright | code'
-                    });
-                </script>
-            </div>
-        <?php else: ?>
-            <div class="alert alert-info" role="alert">
-                This section does not have editable content.
-            </div>
-        <?php endif; ?>
-
-        <?php if ($imageFilePath !== null): ?>
-            <div class="mb-3">
-                <label for="formFile" class="form-label">Current Image</label>
-                <div class="mb-3">
-                    <img src="/img/uploads/<?php echo htmlspecialchars($imageFilePath); ?>" class="img-fluid img-thumbnail"
-                        alt="Current Image">
-                </div>
-                <input class="form-control" type="file" id="formFile" name="newImage">
-                <button type="submit" name="resetImage" value="1" class="btn btn-warning mt-2">Reset to Default
-                    Image</button>
-            </div>
-        <?php endif; ?>
-
+        <? include __DIR__ . '/../components/editTextItems.php' ?>
+        <? include __DIR__ . '/../components/editImageItems.php' ?>
         <? include __DIR__ . '/../components/editCarouselItems.php' ?>
 
         <div class="mb-3">

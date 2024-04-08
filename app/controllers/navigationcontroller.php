@@ -33,6 +33,7 @@ class NavigationController
     }
 
     public function modifyNavigationPage(){
+        $pageTitle = "Modify Navigation";
         $existingNavigation = $this->existingNavigation;
         $allPages = $this->allPages;
         $existingPageIds = $this->existingPageIds;
