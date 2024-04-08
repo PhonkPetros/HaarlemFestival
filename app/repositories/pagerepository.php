@@ -70,7 +70,22 @@ class Pagerepository extends dbconfig
         }
         return $page;
     }
-
+    function getPageName($pageid) {
+        $pageName = null; 
+        try {
+            $stmt = $this->connection->prepare('SELECT name FROM page WHERE id = :page_id'); 
+            $stmt->bindParam(':page_id', $pageid, PDO::PARAM_INT);
+            $stmt->execute();
+            $page = $stmt->fetchObject(Page::class); 
+            if ($page) {
+                $pageName = $page->getName(); 
+            }
+        } catch (PDOException $e) {
+            error_log('Failed to fetch page details: ' . $e->getMessage());
+        }
+        return $pageName; 
+    }
+    
 
     public function getSectionContentImages($pageId)
     {

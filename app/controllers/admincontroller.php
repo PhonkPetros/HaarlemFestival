@@ -25,25 +25,30 @@ class AdminController
     public function show()
     {
         $userDetails = $_SESSION['user'];
+        $pageTitle = "Admin Dashboard";
         require_once __DIR__ . '/../views/admin/dashboard.php';
     }
 
     public function manageUsers(){
+        $pageTitle = "Manage Users";
         require_once __DIR__ . '/../views/admin/manage-users.php';
     }
 
     public function manageFestivals(){
+        $pageTitle = "Manage Festivals";
         $allEvents = $this->adminservice->getListOfEvents();
         require_once __DIR__ . '/../views/admin/managefestival.php';
     }
     
 
     public function editFestivals(){
+        $pageTitle = "Page Managment";
         $allPages = $this->pageservice->getPages();
         require_once __DIR__ . '/../views/admin/editfestival.php';
     }
 
     public function manageOrders(){
+        $pageTitle = "Order Dashboard";
         require_once __DIR__ . '/../views/admin/orders.php';
     }
 

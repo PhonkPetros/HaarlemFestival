@@ -16,6 +16,7 @@ class orderoverviewcontroller {
 
     public function showOverviewTable ()
     {   
+        $pageTitle = "Order Overview";
         $ordersContent = $this->service->getAllOrders();
         require_once __DIR__ ."/../views/admin/order-management/orderoverview.php";
 

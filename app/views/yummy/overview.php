@@ -42,7 +42,7 @@
             <div class="col-sm-12 col-md-6 col-lg-4 mb-4">
                 <a href="/restaurant/details/<?= htmlspecialchars($restaurant->getId()) ?>" class="text-decoration-none">
                     <div class="card">
-                    <img src="/img/<?= htmlspecialchars($restaurant->getPicture()) ?>" class="card-img-top img-fluid img-fixed-height" alt="<?= htmlspecialchars($restaurant->getLocation()) ?>">
+                    <img src="<?= htmlspecialchars($restaurant->getPicture()) ?>" class="card-img-top img-fluid img-fixed-height" alt="<?= htmlspecialchars($restaurant->getLocation()) ?>">
                         <div class="card-body">
                             <h5 class="card-title"><?= htmlspecialchars($restaurant->getName()) ?></h5>
                             <ul class="list-group list-group-flush">

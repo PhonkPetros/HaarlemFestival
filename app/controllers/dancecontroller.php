@@ -18,7 +18,8 @@ class Dancecontroller
     private $repository;
     private $service;
     private $pagecontroller;
-    public function __construct() {
+    public function __construct()
+    {
         $this->navcontroller = new NavigationController();
         $this->repository = new DanceRepository();
         $this->service = new DanceService();
@@ -28,32 +29,38 @@ class Dancecontroller
 
     public function show()
     {
-        $navigation = $this->navcontroller->displayHeader();
+        $pageTitle = "Dance!";
+        $navigation = $this->navcontroller->displayHeader($pageTitle);
         $contentData = $this->pagecontroller->getContentAndImagesByPage();
         $artists = $this->service->getArtists();
-        require_once __DIR__ ."/../views/dance/overview.php";
+        require_once __DIR__ . "/../views/dance/overview.php";
     }
 
-    public function showArtist($artistId) {
-        $navigation = $this->navcontroller->displayHeader();
+    public function showArtist($artistId)
+    {
         $artistDetails = $this->service->getArtistById($artistId);
-        require_once __DIR__ ."/../views/dance/details.php";
+        if (!empty($artistDetails)) {
+            $artistName = $artistDetails[0]['artistName'];
+        } else {
+            $artistName = 'Artist Not Found';
+        }
+        $navigation = $this->navcontroller->displayHeader($artistName);
+        require_once __DIR__ . "/../views/dance/details.php";
     }
 
-    public function editEventDetails(){
+    public function editEventDetails()
+    {
         $danceEvents = $this->repository->getDanceEvents();
         $artists = $this->repository->getArtists();
         $venues = $this->repository->getVenues();
+        $pageTitle = "Manage Dance";
         require_once __DIR__ . '/../views/admin/manage-event-details/editDetailsDance.php';
     }
 
-    public function editContent(){
-        require_once __DIR__ ."/../views/admin/page-managment/editDance.php";
-    }
-
-    public function addNewEvent() {
+    public function addNewEvent()
+    {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            
+
             $venue = $_POST['venue'];
             $dateTime = $_POST['dateTime'];
             $dateTime = date('Y-m-d H:i:s', strtotime($dateTime));
@@ -66,11 +73,11 @@ class Dancecontroller
             if (isset($_FILES["image"]) && $_FILES["image"]["error"] == 0) {
                 $uploadDir = "../public/img/Music_img/events/";
                 $uploadFile = $uploadDir . basename($_FILES["image"]["name"]);
-                
+
                 if (file_exists($uploadFile)) {
                     unlink($uploadFile);
                 }
-                
+
                 if (move_uploaded_file($_FILES["image"]["tmp_name"], $uploadFile)) {
                     $this->repository->addDanceEvent($venue, $dateTime, $price, $oneDayPrice, $allDaysPrice, $artists, "/img/Music_img/events/" . basename($_FILES["image"]["name"]));
                 } else {
@@ -80,7 +87,8 @@ class Dancecontroller
         }
     }
 
-    public function updateEvent() {
+    public function updateEvent()
+    {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $danceEventId = $_POST['danceEventId'];
             $venue = $_POST['venue'];
@@ -95,11 +103,11 @@ class Dancecontroller
             if (isset($_FILES["image"]) && $_FILES["image"]["error"] == 0) {
                 $uploadDir = "../public/img/Music_img/events/";
                 $uploadFile = $uploadDir . basename($_FILES["image"]["name"]);
-                
+
                 if (file_exists($uploadFile)) {
                     unlink($uploadFile);
                 }
-                
+
                 if (move_uploaded_file($_FILES["image"]["tmp_name"], $uploadFile)) {
                     $this->repository->updateDanceEventWithImage($danceEventId, $venue, $dateTime, $price, $oneDayPrice, $allDaysPrice, $artists, "/img/Music_img/events/" . basename($_FILES["image"]["name"]));
                 } else {
@@ -111,14 +119,16 @@ class Dancecontroller
         }
     }
 
-    public function deleteEvent() {
+    public function deleteEvent()
+    {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $danceEventId = $_POST['danceEventId'];
             $this->repository->deleteDanceEvent($danceEventId);
         }
     }
 
-    public function addNewArtist() {
+    public function addNewArtist()
+    {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $name = $_POST['name'];
             $description = $_POST['description'];
@@ -128,11 +138,11 @@ class Dancecontroller
             $image3 = $_FILES['image3'];
             $video = $_FILES['video'];
             $album = $_POST['album'];
-    
+
             $uploadDirectory = '../public/img/Music_img/artists/';
-    
+
             $uploadedFiles = array();
-    
+
             $imageFiles = array($profile, $image1, $image2, $image3);
             foreach ($imageFiles as $image) {
                 if (!empty($image['tmp_name'])) {
@@ -145,7 +155,7 @@ class Dancecontroller
                     $uploadedFiles[] = null;
                 }
             }
-    
+
             if (!empty($video['tmp_name'])) {
                 $videoName = uniqid('video_', true) . '.' . pathinfo($video['name'], PATHINFO_EXTENSION);
                 $videoPath = $uploadDirectory . $videoName;
@@ -153,12 +163,13 @@ class Dancecontroller
                     $uploadedFiles[] = "/img/Music_img/artists/" . $videoPath;
                 }
             }
-    
+
             return $this->service->addArtist($name, $description, $uploadedFiles[0], $uploadedFiles[1], $uploadedFiles[2], $uploadedFiles[3], $uploadedFiles[4], $album);
         }
     }
-    
-    public function updateArtist() {
+
+    public function updateArtist()
+    {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $artistId = $_POST['artistId'];
             $name = $_POST['name'];
@@ -169,11 +180,11 @@ class Dancecontroller
             $image3 = isset($_FILES['image3']) ? $_FILES['image3'] : null;
             $video = isset($_FILES['video']) ? $_FILES['video'] : null;
             $album = $_POST['album'];
-    
+
             $uploadDirectory = '../public/img/Music_img/artists/';
-    
+
             $uploadedFiles = array();
-    
+
             $imageFiles = array($profile, $image1, $image2, $image3);
             foreach ($imageFiles as $image) {
                 if (!empty($image['tmp_name'])) {
@@ -186,7 +197,7 @@ class Dancecontroller
                     $uploadedFiles[] = null;
                 }
             }
-    
+
             if (!empty($video['tmp_name'])) {
                 $videoName = uniqid('video_', true) . '.' . pathinfo($video['name'], PATHINFO_EXTENSION);
                 $videoPath = $uploadDirectory . $videoName;
@@ -194,7 +205,7 @@ class Dancecontroller
                     $uploadedFiles[] = "/img/Music_img/artists/" . $videoName;
                 }
             }
-            
+
             $this->service->updateArtist(
                 $artistId,
                 $name,
@@ -212,23 +223,25 @@ class Dancecontroller
         }
     }
 
-    public function deleteArtist() {
+    public function deleteArtist()
+    {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $artistId = $_POST['artistId'];
             $this->service->deleteArtist($artistId);
         }
     }
 
-    public function addVenue() {
+    public function addVenue()
+    {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $name = $_POST['name'];
             $location = $_POST['location'];
             $picture = $_FILES['picture'];
 
             $uploadDirectory = '../public/img/Music_img/venues/';
-    
+
             $uploadedFiles = array();
-    
+
             $imageFiles = array($picture);
             foreach ($imageFiles as $image) {
                 if (!empty($image['tmp_name'])) {
@@ -244,7 +257,8 @@ class Dancecontroller
         }
     }
 
-    public function updateVenue() {
+    public function updateVenue()
+    {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $venueId = $_POST['venueId'];
             $name = $_POST['name'];
@@ -252,9 +266,9 @@ class Dancecontroller
             $picture = $_FILES['picture'];
 
             $uploadDirectory = '../public/img/Music_img/venues/';
-    
+
             $uploadedFiles = array();
-    
+
             $imageFiles = array($picture);
             foreach ($imageFiles as $image) {
                 if (!empty($image['tmp_name'])) {
@@ -270,7 +284,8 @@ class Dancecontroller
         }
     }
 
-    public function deleteVenue() {
+    public function deleteVenue()
+    {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $venueId = $_POST['venueId'];
             $this->service->deleteVenue($venueId);

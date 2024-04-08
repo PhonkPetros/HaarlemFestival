@@ -22,6 +22,10 @@ class Pageservice
 
     }
 
+    public function getPageName($page){
+        return $this->pagerepo->getPageName($page);
+    }
+
     public function getAllSections($page)
     {
         return $this->pagerepo->getAllSections($page);

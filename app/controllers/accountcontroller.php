@@ -42,10 +42,9 @@ class AccountController
 
     public function show()
     {
+        $pageTitle = "Account";
 
-
-        $navigationController = $this->navigationController->displayHeader();
-
+        $navigationController = $this->navigationController->displayHeader($pageTitle);
 
         require_once '../views/user/account.php';
 

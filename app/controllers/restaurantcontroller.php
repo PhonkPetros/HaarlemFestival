@@ -23,7 +23,7 @@ class Restaurantcontroller
 
 
     public function editEventDetails($eventId) {
-        
+        $pageTitle = "Manage Yummy";
         $restaurants = $this->restaurantService->getRestaurant($eventId);
         $timeslots = $this->restaurantService->getTimeslotsForRestaurant($eventId);
         $reservations = $this->ticketService->getReservations($eventId);

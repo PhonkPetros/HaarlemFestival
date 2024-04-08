@@ -15,7 +15,8 @@ use controllers\Pagecontroller;
 class yummycontroller
 {
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->pageController = new Pagecontroller();
         $this->navigationController = new Navigationcontroller();
         $this->restaurantService = new resturantrepository();
@@ -28,7 +29,8 @@ class yummycontroller
 
     public function showYummyOverview()
     {
-        $navigationController = $this->navigationController->displayHeader();
+        $pagetitle = "Yummy";
+        $navigationController = $this->navigationController->displayHeader($pagetitle);
         $restaurants = $this->restaurantService->getAllRestaurants();
         require_once __DIR__ . '/../views/yummy/overview.php';
     }
@@ -36,21 +38,17 @@ class yummycontroller
 
     public function showChoseResturant($restaurantId)
     {
-    $navigationController = $this->navigationController->displayHeader();
-    
-    $restaurantData = $this->restaurantService->getRestaurantByIdWithTimeslots($restaurantId);
-    
-    $restaurantDetails = $restaurantData['restaurantDetails'];
-    $timeslots = $restaurantData['timeslots'];
-    
-    $contentData = $this->pageController->getContentAndImagesForResutrant($restaurantId);
-    
-    require_once __DIR__ . '/../views/yummy/resturant.php';
+        $restaurantName = $this->restaurantService->getRestaurantName($restaurantId);
+        $navigationController = $this->navigationController->displayHeader($restaurantName);
+
+        $restaurantData = $this->restaurantService->getRestaurantByIdWithTimeslots($restaurantId);
+
+        $restaurantDetails = $restaurantData['restaurantDetails'];
+        $timeslots = $restaurantData['timeslots'];
+
+        $contentData = $this->pageController->getContentAndImagesForResutrant($restaurantId);
+
+        require_once __DIR__ . '/../views/yummy/resturant.php';
     }
 
-
-
-    public function editContent(){
-        require_once __DIR__ ."/../views/admin/page-managment/editYummy.php";
-    }
 }

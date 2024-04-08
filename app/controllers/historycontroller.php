@@ -30,26 +30,21 @@ class Historycontroller
 
     public function show()
     {
+        $pagetitle = "Strolling Through History";
         $eventDetails = $this->historyService->getEventDetails(8);
         $structuredTickets = $this->getStructuredTickets($eventDetails->getEventId());
         $uniqueTimes = $this->getUniqueTimes($structuredTickets);
-        $navigationController = $this->navigationController->displayHeader();
+        $navigationController = $this->navigationController->displayHeader($pagetitle);
 
         $contentData = $this->pagecontroller->getContentAndImagesByPage();
         $carouselItems = $this->pagecontroller->getCarouselImagesForHistory(14);
         require_once __DIR__ . '/../views/history/overview.php';
     }
 
-    public function editContent()
-    {
-        $allSections = $this->pagecontroller->getSectionsFromPageID();
-        $pageDetails = $this->pagecontroller->getPageDetails();
-        require_once __DIR__ . "/../views/admin/page-managment/editHistory.php";
-    }
-
 
     public function showeditEventDetails()
     {
+        $pageTitle = "Manage Strolling Through History";
         $eventDetails = $this->historyService->getEventDetails(8);
         $eventId = $eventDetails->getEventId();
         $eventTickets = $this->historyService->getTickets($eventId);

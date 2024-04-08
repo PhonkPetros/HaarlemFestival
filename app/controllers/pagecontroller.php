@@ -9,9 +9,11 @@ use Exception;
 use services\ContentService;
 
 
+
 require_once __DIR__ . "/../services/pageservice.php";
 require_once __DIR__ . "/../services/contentservice.php";
 require_once __DIR__ . '/../config/constant-paths.php';
+
 
 
 class Pagecontroller
@@ -19,15 +21,16 @@ class Pagecontroller
     private $pageService;
     private $contentService;
 
-
     public function __construct()
     {
         $this->pageService = new Pageservice();
         $this->contentService = new ContentService();
+     
     }
 
     public function editContent()
     {
+        $pageTitle = "Page Management";
         $allSections = $this->getSectionsFromPageID();
         $pageDetails = $this->getPageDetails();
         require_once __DIR__ . "/../views/admin/page-managment/editPageOverview.php";
@@ -36,6 +39,7 @@ class Pagecontroller
 
     public function editSectionContent()
     {
+        $pageTitle = "Edit Page";
         $sectionID = htmlspecialchars($_GET["section_id"] ?? '');
         $sectionTitle = $this->pageService->getSectionTitle($sectionID);
       
@@ -211,7 +215,6 @@ class Pagecontroller
         }
         return $contentData;
     }
-
 
     public function getContentAndImagesForResutrant($restaurnatId) {
         $pageIdArray = $this->pageService->getPageIdByRestaurantId($restaurnatId);

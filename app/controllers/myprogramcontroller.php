@@ -49,7 +49,8 @@ class Myprogramcontroller
 
     function show()
     {
-        $this->navigationController->displayHeader();
+        $pagetitle = "My Program";
+        $this->navigationController->displayHeader($pagetitle);
         $structuredTickets = [];
         $structuredOrderedItems = [];
         $uniqueTimes = [];
@@ -60,11 +61,11 @@ class Myprogramcontroller
 
         }
 
+
         if (!isset($_SESSION['user'])) {
             $user = null;
         }
         $structuredOrderedItems = $this->getStructuredPurchasedOrderItemsByUserID();
-
         require_once __DIR__ . "/../views/my-program/overview.php";
 
     }
@@ -72,7 +73,8 @@ class Myprogramcontroller
 
     function showPayment()
     {
-        $this->navigationController->displayHeader();
+        $pagetitle = "My Program - Payement";
+        $this->navigationController->displayHeader($pagetitle);
         $structuredTickets = [];
         $uniqueTimes = [];
         $userInfo = $this->getUserInfoFromCart();
@@ -85,13 +87,15 @@ class Myprogramcontroller
 
     function showSuccess()
     {
-        $this->navigationController->displayHeader();
+        $pagetitle = "My Program - Success";
+        $this->navigationController->displayHeader($pagetitle);
         require_once __DIR__ . "/../views/my-program/success.php";
     }
 
     function showFailure()
     {
-        $this->navigationController->displayHeader();
+        $pagetitle = "My Program - Failure";
+        $this->navigationController->displayHeader($pagetitle);
         require_once __DIR__ . "/../views/my-program/failure.php";
     }
 
@@ -141,7 +145,7 @@ class Myprogramcontroller
             'specialRemarks' => $input['specialRemarks'] ?? '',
             'user' => $userInfo
         ];
-        
+
 
         //If your event has extra info that needs to be added to a shopping cart then add it below
         switch ($ticketInfo['eventId']) {
@@ -151,12 +155,13 @@ class Myprogramcontroller
                 $ticketInfo['allAccessPass'] = $input['allAccesPass'] ?? '';
                 $ticketInfo['dayPass'] = $inputJSON['dayPass'] ?? '';
                 break;
-            case EVENT_ID_RESTAURANT:
-                $ticketInfo['restaurantName'] = $input['restaurantName'] ?? '';
-                $ticketInfo['specialRemarks'] = $input['specialRemarks'] ?? '';
-                break;
+
             case EVENT_ID_HISTORY:
                 $ticketInfo['ticketLanguage'] = $input['ticketLanguage'] ?? '';
+                break;
+            case ($ticketInfo['eventId'] > EVENT_ID_HISTORY):
+                $ticketInfo['restaurantName'] = $input['restaurantName'] ?? '';
+                $ticketInfo['specialRemarks'] = $input['specialRemarks'] ?? '';
                 break;
             default:
                 break;
@@ -259,7 +264,7 @@ class Myprogramcontroller
     }
 
 
-   
+
     function updateTotalCartPrice()
     {
         $subtotal = 0; // Initialize subtotal
@@ -491,7 +496,7 @@ class Myprogramcontroller
             if (isset($firstCartItem['user']) && isset($firstCartItem['user']['email']) && isset($firstCartItem['user']['firstName'])) {
                 $email = $firstCartItem['user']['email'];
                 $firstName = $firstCartItem['user']['firstName'];
-                $this->smtpcontroller->sendInvoice($email, $firstName,  $_SESSION['shopping_cart'], $orderID);
+                $this->smtpcontroller->sendInvoice($email, $firstName, $_SESSION['shopping_cart'], $orderID);
                 $this->smtpcontroller->sendTickets($email, $firstName, $itemHashes);
             } else {
                 echo json_encode(['status' => 'error', 'message' => 'User email or first name is missing from the first cart item.']);
@@ -570,19 +575,8 @@ class Myprogramcontroller
 
                 $structuredOrderItems[] = $structuredItem;
             }
-            // // Filter the structured order items to include only those within the specified date range
-            // $filteredOrderedItems = array_filter($structuredOrderItems, function ($item) {
-            //     // Convert the item's date to a timestamp for easy comparison
-            //     $itemDateTimestamp = strtotime($item['date']);
-            //     // Define the start and end of the desired date range
-            //     $startDateTimestamp = strtotime("2024-06-26");
-            //     $endDateTimestamp = strtotime("2024-06-30");
-            //     // Include the item if its date is within the range
-            //     return $itemDateTimestamp >= $startDateTimestamp && $itemDateTimestamp <= $endDateTimestamp;
-            // });
-
-            // Return only the items that passed the filtering
             return $structuredOrderItems;
+
         } else {
             return [];
         }

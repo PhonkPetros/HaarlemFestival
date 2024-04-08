@@ -26,7 +26,8 @@ class NavigationController
         }, $this->existingNavigation);
     }
 
-    public function displayHeader() {
+    public function displayHeader($pagetitle) {
+        $pageTitle = $pagetitle;
         $allPages = $this->existingNavigation;
         require_once __DIR__ . '/../views/general_views/header.php';
     }

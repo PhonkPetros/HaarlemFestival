@@ -52,6 +52,28 @@ class resturantrepository extends dbconfig {
         return $restaurants;
     }
 
+    public function getRestaurantName($restaurant_id) {
+        $restaurantName = '';
+        try {
+            $stmt = $this->connection->prepare(
+                "SELECT name
+                FROM Event
+                WHERE restaurant_id = :restaurant_id"
+            );
+            $stmt->bindValue(':restaurant_id', $restaurant_id);
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+            if ($result) {
+                $restaurantName = $result['name'];
+            }
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+        }
+        return $restaurantName;
+    }
+    
+
     public function getAllRestaurants() {
         $restaurants = [];
         try {
