@@ -139,8 +139,7 @@ class SMTPController
             $totalPriceBeforeVAT += $pricePerItemBeforeVAT * $quantity;
             $totalVAT += $vatAmountPerItem * $quantity;
             $eventName = $this->ticketService->getEventName($item['eventId']);
-         
-
+    
             $description = "Event Name: " .$eventName . " Date: " . $item['ticketDate'] . " Time: " . $item['ticketTime'];
 
             $html .= "<tr>";
