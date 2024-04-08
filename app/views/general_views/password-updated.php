@@ -10,6 +10,7 @@
 </head>
 
 <body class="bg-danger p-5 text-white">
+<a href="/" style="font-size: 24px; position: absolute; top: 20px; left: 20px; color: white;">← Go Home</a>
 <div class="container">
     <div class="d-flex flex-column justify-content-center align-items-center" style="min-height: 100vh;">
         <h1>Your password successfully updated</h1>
