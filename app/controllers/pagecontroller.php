@@ -229,7 +229,7 @@ class Pagecontroller
         }
         return $contentData;
     }
-    
+
     public function getCarouselImagesForHistory($sectionID)
     {
         $carouselItems = $this->contentService->getCarouselItemsBySectionId($sectionID);
