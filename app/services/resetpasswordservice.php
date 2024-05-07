@@ -2,12 +2,15 @@
 
 namespace services;
 use repositories\accountrepository;
+use controllers\SMTPController;
 
 class ResetPasswordService {
     private $repository;
+    private $smtpController;
 
     public function __construct() {
         $this->repository = new accountrepository();
+        $this->smtpController = new SMTPController();
     }
 
     public function resetPassword($email) {
@@ -15,24 +18,27 @@ class ResetPasswordService {
         // Generate a unique token
         $token = bin2hex(random_bytes(32));
     
-        $repository->saveResetPasswordToken($token, $email);
-    
-        // Compose the email message
-        $subject = "Password Reset";
-        $message = "Click the following link to reset your password: http://localhost/reset?token=$token";
-    
-        // Send the email
-        $sent = $this->sendEmail($email, $subject, $message);
-    
-        if ($sent) {
-            return true; // Password reset email sent successfully
+        $result = $this->repository->saveResetPasswordToken($token, $email);
+
+        if ($result) {
+            // Compose the email message
+            $subject = "Password Reset";
+            $message = "Click the following link to reset your password: http://localhost/new-password/?token=$token";
+
+            // Send the email
+            $sent = $this->smtpController->sendEmail($email, "Haarlem Visitor", $subject, $message);
+
+            if ($sent) {
+                return true; // Password reset email sent successfully
+            } else {
+                return false; // Error sending email
+            }
         } else {
-            return false; // Error sending email
+            return false;
         }
     }
-    
-    private function sendEmail($to, $subject, $message) {
-        // Implement email sending logic here
-        // Return true if email sent successfully, false otherwise
+
+    public function renewPassword($token, $newPassword) {
+        return $this->repository->renewPassword($token, $newPassword);
     }
 }

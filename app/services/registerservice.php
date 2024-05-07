@@ -17,11 +17,19 @@ class registerservice
         return $this->registerrepository->registerUser($newuser);
     }
 
+    public function getUserIDThroughEmail($email){
+        return $this->registerrepository->getUserIDThroughEmail($email);
+    }
+
     public function username_exists($username){
         return $this->registerrepository->usernameExists($username);
     }
 
     public function email_exists($email){
         return $this->registerrepository->emailExists($email);
+    }
+
+    public function updateUser($userInfo){
+        return $this->registerrepository->updateUser($userInfo);
     }
 }

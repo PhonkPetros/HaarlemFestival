@@ -10,6 +10,11 @@ class User implements \JsonSerializable
     private string $password_hash;
     private string $role;
     private string $created_at;
+    private ?string $firstname;
+    private ?string $lastname;
+    private ?string $address;
+    private ?string $phone_number;
+    private ?int $rating = null;
 
     public function jsonSerialize() : mixed{
         return [
@@ -18,9 +23,54 @@ class User implements \JsonSerializable
             'username' => $this->getUsername(),
             'role' => $this->getUserRole(),
             'created_at' => $this->getRegistrationDate(),
+            'firstname' => $this->getFirstname(),
+            'lastname' => $this->getLastname(),
+            'address' => $this->getAddress(),
+            'phone_number' => $this->getPhoneNumber(),
+            'rating' => $this->getRating(),
         ];
     }
 
+    public function getFirstname(): ?string {
+        return $this->firstname;
+    }
+
+    public function setFirstname(?string $firstname): void {
+        $this->firstname = $firstname;
+    }
+
+    public function getRating(): ?int {
+        return $this->rating;
+    }
+
+    public function setRating(?int $rating): void {
+        $this->rating = $rating;
+    }
+
+
+    public function getLastname(): ?string {
+        return $this->lastname;
+    }
+
+    public function setLastname(?string $lastname): void {
+        $this->lastname = $lastname;
+    }
+
+    public function getAddress(): ?string {
+        return $this->address;
+    }
+
+    public function setAddress(?string $address): void {
+        $this->address = $address;
+    }
+
+    public function getPhoneNumber(): ?string {
+        return $this->phone_number;
+    }
+
+    public function setPhoneNumber(?string $phone_number): void {
+        $this->phone_number = $phone_number;
+    }
     public function getUserID(): int
     {
         return $this->user_id;

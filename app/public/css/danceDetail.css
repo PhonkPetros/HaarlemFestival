@@ -1,0 +1,62 @@
+body {
+    background-image: url('/img/danceDetailBackground.png');
+}
+
+.dance-detail {
+    color: #FFF;
+}
+
+.dance-detail .artist-details {
+    text-align: center;
+    margin: 2rem 0;
+}
+
+.dance-detail .artist-name {
+    font-size: 60px;
+    font-style: normal;
+    font-weight: 700;
+}
+
+.dance-detail .artist-description {
+    margin: 3rem 5rem;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 35px;
+}
+
+.dance-detail .spotify-embed {
+    display: block;
+    border-radius: 12px;
+    margin: 4rem auto;
+    text-align: center;
+}
+
+.dance-detail .artist-dates {
+    font-size: 30px;
+    font-style: normal;
+    font-weight: 300;
+}
+
+.artist-events .event {
+    text-align: center;
+    padding: 2rem 0;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.artist-events .event-time {
+    font-size: 25px;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.artist-events .event-venue {
+    font-size: 22px;
+    font-weight: 400;
+    margin: 1rem 0;
+}
+
+.artist-events .event-pricing {
+    font-size: 18px;
+}

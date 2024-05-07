@@ -16,9 +16,11 @@ use controllers\Templatecontroller;
 use controllers\yummycontroller;
 use controllers\Pagecontroller;
 use controllers\resetpasswordcontroller;
-
+use controllers\Myprogramcontroller;
+use controllers\orderoverviewcontroller;
 
 require_once __DIR__ . '/../controllers/overview.php';
+require_once __DIR__ . '/../controllers/myprogramcontroller.php';
 require_once __DIR__ . '/../config/constant-paths.php';
 require_once __DIR__ . '/../controllers/registercontroller.php';
 require_once __DIR__ . '/../controllers/logincontroller.php';
@@ -34,21 +36,25 @@ require_once __DIR__ . '/../controllers/pagecontroller.php';
 require_once __DIR__ . '/../controllers/templatecontroller.php';
 require_once __DIR__ . '/../controllers/yummycontroller.php';
 require_once __DIR__ . '/../controllers/resetpasswordcontroller.php';
+require_once __DIR__ . '/../controllers/orderoverviewcontroller.php';
+
 
 $request = $_SERVER['REQUEST_URI'];
 $method = $_SERVER['REQUEST_METHOD'];
 
-
-
 //Please do not touch this
 $editPageID = null;
 $sectionEdit = null;
+$token = null;
+$dancePageID = null;
+
 $queryString = parse_url($request, PHP_URL_QUERY);
 $queryParams = [];
 if ($queryString !== null) {
     parse_str($queryString, $queryParams);
 }
 $pageID = htmlspecialchars($queryParams["pageid"] ?? '');
+
 $eventID = null;
 if (strpos($request, '/manage-event-details/') === 0) {
     $eventID = htmlspecialchars($queryParams["id"] ?? '');
@@ -59,13 +65,19 @@ if (strpos($request, '/edit-content/') === 0) {
 if (strpos($request, '/sectionEdit/') === 0) {
     $sectionEdit = htmlspecialchars($queryParams['section_id'] ?? '');
 }
+if (strpos($request, '/new-password/') === 0) {
+    $token = htmlspecialchars($queryParams["token"] ?? '');
+}
+if (strpos($request, '/dance/') === 0) {
+    $dancePageID = htmlspecialchars($queryParams["artist"] ?? '');
+}
 
 //Please do not touch this
 if ($request === '/') {
     $pageID = '1';
 }
 
-if ($pageID || $eventID || $editPageID || $sectionEdit) {
+if ($pageID || $eventID || $editPageID || $sectionEdit || $token || $dancePageID) {
     //this has to do with the editing of event details
     if ($eventID) {
         switch ($eventID) {
@@ -98,8 +110,6 @@ if ($pageID || $eventID || $editPageID || $sectionEdit) {
         }
         exit;
     } elseif ($pageID) {
-
-
         //this has to with our own pages
         switch ($pageID) {
             case PAGE_ID_HOME:
@@ -164,8 +174,41 @@ if ($pageID || $eventID || $editPageID || $sectionEdit) {
                 break;
         }
         exit;
+    } elseif ($token) {
+        switch ($token) {
+            default;
+                $controller = new resetpasswordcontroller();
+                if ($method === 'GET' && $token !== null) {
+                    $controller->showNewPasswordForm();
+                }
+                break;
+        }
+        exit;
+    } elseif ($dancePageID) {
+        switch ($dancePageID) {
+            default;
+                $controller = new Dancecontroller();
+                if ($method === 'GET') {
+                    $controller->showArtist($dancePageID);
+                }
+                break;
+        }
+        exit;
     }
 }
+
+if (strpos($request, '/share-cart/') === 0) {
+    $encodedCart = htmlspecialchars($queryParams["cart"] ?? '');
+    $hash = htmlspecialchars($queryParams["hash"] ?? '');
+
+    $controller = new Myprogramcontroller();
+    if ($method === 'GET' && $encodedCart !== null && $hash !== null) {
+        $controller->showSharedCart($encodedCart, $hash);
+    }
+    exit;
+}
+
+
 if (preg_match("/^\/restaurant\/details\/(\d+)$/", $request, $matches)) {
     $restaurantId = $matches[1]; // This captures the numeric ID from the URL.
     $controller = new yummycontroller();
@@ -174,7 +217,6 @@ if (preg_match("/^\/restaurant\/details\/(\d+)$/", $request, $matches)) {
     }
     exit;
 }
-
 //Add routes for actions or admin routes that do not have to do with displaying detail pages or overview pages for your individual events
 switch ($request) {
     case '/login':
@@ -198,8 +240,15 @@ switch ($request) {
         $controller = new resetpasswordcontroller();
         if ($method === 'GET') {
             $controller->showNewPasswordForm();
-        } elseif ($method === 'POST') {
-            $controller->resetPasswordAction();
+        } else if ($method === 'POST') {
+            $controller->updatePasswordAction();
+        }
+        break;
+
+    case '/success-reset-password':
+        $controller = new resetpasswordcontroller();
+        if ($method === 'GET') {
+            $controller->successfulNewPassword();
         }
         break;
 
@@ -215,6 +264,42 @@ switch ($request) {
     case '/logout':
         $logoutController = new Logoutcontroller();
         $logoutController->logout();
+        break;
+    case '/dance/addNewEvent':
+        $controller = new Dancecontroller();
+        $controller->addNewEvent();
+        break;
+    case '/dance/updateEvent':
+        $controller = new Dancecontroller();
+        $controller->updateEvent();
+        break;
+    case '/dance/addNewArtist':
+        $controller = new Dancecontroller();
+        $controller->addNewArtist();
+        break;
+    case '/dance/updateArtist':
+        $controller = new Dancecontroller();
+        $controller->updateArtist();
+        break;
+    case '/dance/deleteArtist':
+        $controller = new Dancecontroller();
+        $controller->deleteArtist();
+        break;
+    case '/dance/deleteEvent':
+        $controller = new Dancecontroller();
+        $controller->deleteEvent();
+        break;
+    case '/dance/addNewVenue':
+        $controller = new Dancecontroller();
+        $controller->addVenue();
+        break;
+    case '/dance/updateVenue':
+        $controller = new Dancecontroller();
+        $controller->updateVenue();
+        break;
+    case '/dance/deleteVenue':
+        $controller = new Dancecontroller();
+        $controller->deleteVenue();
         break;
     case '/admin/dashboard':
         $controller = new admincontroller();
@@ -346,6 +431,85 @@ switch ($request) {
             $controller->addNewSection();
         }
         break;
+    case '/submit-reservation':
+        $controller = new Myprogramcontroller();
+        if ($method === 'POST') {
+            $controller->createReservation();
+        }
+        break;
+    case '/my-program':
+        $controller = new Myprogramcontroller();
+        if ($method === 'GET') {
+            $controller->show();
+        }
+        break;
+    case '/modifyQuantity':
+        $controller = new Myprogramcontroller();
+        if ($method === 'POST') {
+            $controller->modifyItemQuantity();
+        }
+        break;
+    case '/deleteItem':
+        $controller = new Myprogramcontroller();
+        if ($method === 'POST') {
+            $controller->deleteItemFromCart();
+        }
+        break;
+    case '/getTotalCartPrice':
+        $controller = new Myprogramcontroller();
+        if ($method === 'GET') {
+            $controller->updateTotalCartPrice();
+        }
+        break;
+    case '/get-share-link':
+        $controller = new Myprogramcontroller();
+        if ($method === 'GET') {
+            $controller->generateShareableLink();
+        }
+        break;
+    case '/my-program/payment':
+        $controller = new Myprogramcontroller();
+        if ($method == 'GET') {
+            $controller->showPayment();
+        }
+        break;
+    case '/create-payment':
+        $controller = new Myprogramcontroller();
+        if ($method == 'POST') {
+            $controller->initiatePayment();
+        }
+        break;
+    case '/my-program/payment-success':
+        $controller = new Myprogramcontroller();
+        if ($method == 'GET') {
+            $controller->paymentSuccess();
+        }
+        break;
+    case '/my-program/order-confirmation':
+        $controller = new Myprogramcontroller();
+        if ($method == 'GET') {
+            $controller->showSuccess();
+        }
+        break;
+    case '/admin/order-overview':
+        $controller = new orderoverviewcontroller();
+        if ($method == 'GET') {
+            $controller->showOverviewTable();
+        }
+        break;
+    
+    case '/admin/order-overview/export':
+        $controller = new orderoverviewcontroller();
+        if ($method == 'POST') {
+            $controller->exportExcel();
+        }
+        break;
+     case '/my-program/payment-failure':
+        $controller = new Myprogramcontroller();
+        if($method == 'GET'){
+            $controller->showFailure();
+        }    
+        break;
     default:
         http_response_code(404);
         $navigation = new Navigationcontroller();
@@ -353,4 +517,3 @@ switch ($request) {
         require __DIR__ . '/../views/404.php';
         break;
 }
-

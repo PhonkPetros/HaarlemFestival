@@ -1,0 +1,25 @@
+.dance-event {
+    display: flex;
+}
+
+.dance-event-information {
+    margin-left: 1rem;
+}
+
+.dance-event-information p {
+    margin-bottom: 0.75rem;
+}
+
+.event-img {
+    width: 100%;
+    height: 200px;
+    background-size: cover;
+    background-position: center;
+}
+
+.artist-img {
+    width: 200px;
+    height: 200px;
+    background-size: cover;
+    background-position: center;
+}

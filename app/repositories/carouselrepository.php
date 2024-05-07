@@ -26,7 +26,7 @@ class Carouselrepository extends dbconfig
     public function updateCarouselItemAndLabel($carouselId, $newFilePath, $newCarouselLabel)
     {
         try {
-            $this->connection->beginTransaction();
+        
 
             if ($newFilePath !== null) {
                 $stmt = $this->connection->prepare("SELECT image_id FROM carousel WHERE carousel_id = :carousel_id");
@@ -47,9 +47,9 @@ class Carouselrepository extends dbconfig
             $stmt->bindParam(':carousel_id', $carouselId, PDO::PARAM_INT);
             $stmt->execute();
 
-            $this->connection->commit();
+
         } catch (PDOException $e) {
-            $this->connection->rollback();
+
             error_log('Failed to update carousel item and label: ' . $e->getMessage());
             throw $e;
         }
